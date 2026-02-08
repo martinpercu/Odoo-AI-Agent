@@ -1,0 +1,126 @@
+{
+  "Metadata": {
+    "title": "Odoo Agent - AI Agent Platform for Odoo",
+    "description": "Query and manage your Odoo data with artificial intelligence. Inventory, invoicing, sales and more."
+  },
+  "Sidebar": {
+    "appName": "Odoo Agent",
+    "newChat": "New Query",
+    "plans": "Plans",
+    "settings": "Settings",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode"
+  },
+  "ChatGroups": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 days",
+    "older": "Older"
+  },
+  "NewChat": {
+    "heading": "How can I help you?",
+    "subheading": "Query inventory, invoicing, sales, HR and more directly from your Odoo.",
+    "connectedMessage": "Securely connected to your Odoo instance",
+    "notConnected": "Odoo not configured. Go to Settings to connect.",
+    "suggestions": {
+      "inventory": "View current product inventory",
+      "invoices": "Show pending invoices",
+      "sales": "Generate monthly sales report",
+      "employees": "List employees by department"
+    }
+  },
+  "ChatInput": {
+    "placeholder": "Ask about your Odoo data...",
+    "disclaimer": "The agent queries your Odoo instance in real time. Your data is private and secure."
+  },
+  "ChatMessages": {
+    "typingIndicator": "Querying Odoo",
+    "configNotSet": "Odoo connection not configured. Go to Settings to set up your connection."
+  },
+  "Pricing": {
+    "heading": "Plans & Pricing",
+    "subheading": "Choose the plan that best fits your business. Scale when you need to.",
+    "mostPopular": "Most Popular",
+    "perMonth": "/mo",
+    "free": "Free",
+    "custom": "Custom",
+    "footer": "All plans include data encryption and secure connection to your Odoo.",
+    "needSpecial": "Need something special?",
+    "contactUs": "Contact Us",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Explore the AI agent's capabilities with Odoo.",
+        "cta": "Start Free",
+        "features": {
+          "agents": "1 AI Agent",
+          "queries": "50 queries per month",
+          "instances": "1 Odoo instance",
+          "history": "7-day history",
+          "support": "Community support"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For professionals who need full access to their Odoo.",
+        "cta": "Choose Pro",
+        "features": {
+          "agents": "Unlimited agents",
+          "queries": "Unlimited queries",
+          "instances": "1 Odoo instance",
+          "history": "Full history",
+          "support": "Priority email support",
+          "export": "Report export",
+          "markdown": "Advanced Markdown responses"
+        }
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For companies with multiple instances and advanced needs.",
+        "cta": "Contact Sales",
+        "features": {
+          "includesPro": "Everything in Pro",
+          "instances": "Multiple Odoo instances",
+          "agents": "Custom agents",
+          "api": "Dedicated API",
+          "sso": "SSO / SAML",
+          "support": "24/7 priority support",
+          "sla": "Guaranteed SLA",
+          "onboarding": "Dedicated onboarding"
+        }
+      }
+    }
+  },
+  "Settings": {
+    "heading": "Odoo Settings",
+    "subheading": "Connect your Odoo instance so the agent can access your data.",
+    "security": {
+      "title": "Security",
+      "description": "Your API Key is stored securely and encrypted. It is only used to perform authorized queries to your Odoo instance. We never share your credentials with third parties."
+    },
+    "form": {
+      "urlLabel": "Odoo URL",
+      "urlPlaceholder": "https://your-company.odoo.com",
+      "databaseLabel": "Database",
+      "databasePlaceholder": "your-database-name",
+      "loginLabel": "Login / Email",
+      "loginPlaceholder": "admin@your-company.com",
+      "apiKeyLabel": "API Key",
+      "apiKeyPlaceholder": "Your Odoo API key",
+      "testConnection": "Test Connection",
+      "saveConfig": "Save Settings",
+      "saved": "Saved",
+      "statusTesting": "Testing connection to Odoo...",
+      "statusSuccess": "Connection successful.",
+      "statusSuccessCompany": "Connected to {company}",
+      "statusError": "Could not connect. Check your credentials and try again."
+    }
+  },
+  "LocaleSwitcher": {
+    "es": "Español",
+    "en": "English",
+    "fr": "Français",
+    "de": "Deutsch",
+    "pt": "Português"
+  }
+}

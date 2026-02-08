@@ -1,0 +1,126 @@
+{
+  "Metadata": {
+    "title": "Odoo Agent - Plataforma de Agentes IA para Odoo",
+    "description": "Consulta y gestiona tus datos de Odoo con inteligencia artificial. Inventario, facturación, ventas y más."
+  },
+  "Sidebar": {
+    "appName": "Odoo Agent",
+    "newChat": "Nueva Consulta",
+    "plans": "Planes",
+    "settings": "Configuración",
+    "lightMode": "Modo Claro",
+    "darkMode": "Modo Oscuro"
+  },
+  "ChatGroups": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "last7Days": "Últimos 7 días",
+    "older": "Anteriores"
+  },
+  "NewChat": {
+    "heading": "¿En qué puedo ayudarte?",
+    "subheading": "Consulta inventario, facturación, ventas, RRHH y más directamente desde tu Odoo.",
+    "connectedMessage": "Conectado a tu instancia de Odoo de forma segura",
+    "notConnected": "Odoo no configurado. Ve a Configuración para conectar.",
+    "suggestions": {
+      "inventory": "Ver el inventario actual de productos",
+      "invoices": "Mostrar facturas pendientes de cobro",
+      "sales": "Generar reporte de ventas del mes",
+      "employees": "Lista de empleados por departamento"
+    }
+  },
+  "ChatInput": {
+    "placeholder": "Pregunta sobre tus datos de Odoo...",
+    "disclaimer": "El agente consulta tu instancia de Odoo en tiempo real. Los datos son privados y seguros."
+  },
+  "ChatMessages": {
+    "typingIndicator": "Consultando Odoo",
+    "configNotSet": "Conexión de Odoo no configurada. Ve a Configuración para establecer tu conexión."
+  },
+  "Pricing": {
+    "heading": "Planes y Precios",
+    "subheading": "Elige el plan que mejor se adapte a tu negocio. Escala cuando lo necesites.",
+    "mostPopular": "Más Popular",
+    "perMonth": "/mes",
+    "free": "Gratis",
+    "custom": "A medida",
+    "footer": "Todos los planes incluyen cifrado de datos y conexión segura con tu Odoo.",
+    "needSpecial": "¿Necesitas algo especial?",
+    "contactUs": "Contáctanos",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Para explorar las capacidades del agente de IA con Odoo.",
+        "cta": "Comenzar Gratis",
+        "features": {
+          "agents": "1 Agente de IA",
+          "queries": "50 consultas por mes",
+          "instances": "1 instancia de Odoo",
+          "history": "Historial de 7 días",
+          "support": "Soporte comunitario"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Para profesionales que necesitan acceso completo a su Odoo.",
+        "cta": "Elegir Pro",
+        "features": {
+          "agents": "Agentes ilimitados",
+          "queries": "Consultas ilimitadas",
+          "instances": "1 instancia de Odoo",
+          "history": "Historial completo",
+          "support": "Soporte por email prioritario",
+          "export": "Exportación de reportes",
+          "markdown": "Respuestas con Markdown avanzado"
+        }
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Para empresas con múltiples instancias y necesidades avanzadas.",
+        "cta": "Contactar Ventas",
+        "features": {
+          "includesPro": "Todo lo de Pro",
+          "instances": "Múltiples instancias de Odoo",
+          "agents": "Agentes personalizados",
+          "api": "API dedicada",
+          "sso": "SSO / SAML",
+          "support": "Soporte prioritario 24/7",
+          "sla": "SLA garantizado",
+          "onboarding": "Onboarding dedicado"
+        }
+      }
+    }
+  },
+  "Settings": {
+    "heading": "Configuración de Odoo",
+    "subheading": "Conecta tu instancia de Odoo para que el agente pueda acceder a tus datos.",
+    "security": {
+      "title": "Seguridad",
+      "description": "Tu API Key se almacena de forma segura y cifrada. Solo se utiliza para realizar consultas autorizadas a tu instancia de Odoo. Nunca compartimos tus credenciales con terceros."
+    },
+    "form": {
+      "urlLabel": "URL de Odoo",
+      "urlPlaceholder": "https://tu-empresa.odoo.com",
+      "databaseLabel": "Base de Datos",
+      "databasePlaceholder": "nombre-de-tu-base-de-datos",
+      "loginLabel": "Login / Email",
+      "loginPlaceholder": "admin@tu-empresa.com",
+      "apiKeyLabel": "API Key",
+      "apiKeyPlaceholder": "Tu clave de API de Odoo",
+      "testConnection": "Probar Conexión",
+      "saveConfig": "Guardar Configuración",
+      "saved": "Guardado",
+      "statusTesting": "Probando conexión con Odoo...",
+      "statusSuccess": "Conexión exitosa.",
+      "statusSuccessCompany": "Conectado a {company}",
+      "statusError": "No se pudo conectar. Verifica tus credenciales e intenta de nuevo."
+    }
+  },
+  "LocaleSwitcher": {
+    "es": "Español",
+    "en": "English",
+    "fr": "Français",
+    "de": "Deutsch",
+    "pt": "Português"
+  }
+}

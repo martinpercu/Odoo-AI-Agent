@@ -1,0 +1,241 @@
+"use client";
+
+import { useState, useCallback, useRef } from "react";
+import type { Message, Chat, ChatGroup } from "@/lib/types";
+import { API_BASE, toBackendConfig } from "@/lib/api";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useLocale, useTranslations } from "next-intl";
+
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const yesterday = new Date(today.getTime() - 86400000);
+
+function groupChatsByDate(chats: Chat[]): ChatGroup[] {
+  const groups: ChatGroup[] = [];
+  const todayChats: Chat[] = [];
+  const yesterdayChats: Chat[] = [];
+  const weekChats: Chat[] = [];
+  const olderChats: Chat[] = [];
+
+  for (const chat of chats) {
+    const chatDate = new Date(
+      chat.updatedAt.getFullYear(),
+      chat.updatedAt.getMonth(),
+      chat.updatedAt.getDate()
+    );
+    if (chatDate.getTime() === today.getTime()) {
+      todayChats.push(chat);
+    } else if (chatDate.getTime() === yesterday.getTime()) {
+      yesterdayChats.push(chat);
+    } else if (chatDate.getTime() > today.getTime() - 86400000 * 7) {
+      weekChats.push(chat);
+    } else {
+      olderChats.push(chat);
+    }
+  }
+
+  if (todayChats.length) groups.push({ label: "today", chats: todayChats });
+  if (yesterdayChats.length) groups.push({ label: "yesterday", chats: yesterdayChats });
+  if (weekChats.length) groups.push({ label: "last7Days", chats: weekChats });
+  if (olderChats.length) groups.push({ label: "older", chats: olderChats });
+
+  return groups;
+}
+
+export function useChat(chatId?: string) {
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<string | undefined>(chatId);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const { config: odooConfig } = useOdooConfig();
+  const locale = useLocale();
+  const t = useTranslations("ChatMessages");
+
+  const currentChat = chats.find((c) => c.id === currentChatId) ?? null;
+  const chatGroups = groupChatsByDate(chats);
+
+  const createChat = useCallback(
+    (firstMessage: string): string => {
+      const id = Date.now().toString();
+      const title = firstMessage.length > 50 ? firstMessage.slice(0, 47) + "..." : firstMessage;
+      const newChat: Chat = {
+        id,
+        title,
+        messages: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      setChats((prev) => [newChat, ...prev]);
+      setCurrentChatId(id);
+      return id;
+    },
+    []
+  );
+
+  const sendMessage = useCallback(
+    async (content: string, explicitChatId?: string) => {
+      let targetId = explicitChatId ?? currentChatId;
+      if (!targetId) {
+        targetId = createChat(content);
+      }
+
+      const userMessage: Message = {
+        id: `msg-${Date.now()}`,
+        role: "user",
+        content,
+        timestamp: new Date(),
+      };
+
+      const assistantId = `msg-${Date.now() + 1}`;
+
+      // Add user message + empty assistant message
+      setChats((prev) =>
+        prev.map((c) =>
+          c.id === targetId
+            ? {
+                ...c,
+                messages: [
+                  ...c.messages,
+                  userMessage,
+                  { id: assistantId, role: "assistant" as const, content: "", timestamp: new Date() },
+                ],
+                updatedAt: new Date(),
+              }
+            : c
+        )
+      );
+
+      setIsStreaming(true);
+
+      // Guard: require Odoo config before calling backend
+      if (!odooConfig) {
+        setChats((prev) =>
+          prev.map((c) =>
+            c.id === targetId
+              ? {
+                  ...c,
+                  messages: c.messages.map((m) =>
+                    m.id === assistantId
+                      ? { ...m, content: `⚠️ ${t("configNotSet")}` }
+                      : m
+                  ),
+                }
+              : c
+          )
+        );
+        setIsStreaming(false);
+        return;
+      }
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
+      try {
+        const res = await fetch(`${API_BASE}/chat/${targetId}/stream`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: content, odoo_config: toBackendConfig(odooConfig), language: locale }),
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          throw new Error(`API error: ${res.status}`);
+        }
+
+        const reader = res.body?.getReader();
+        if (!reader) throw new Error("No response body");
+
+        const decoder = new TextDecoder();
+        let accumulated = "";
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          // Parse SSE lines: "data: <text>\n\n"
+          const lines = buffer.split("\n");
+          // Keep the last potentially incomplete line in the buffer
+          buffer = lines.pop() ?? "";
+
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const chunk = line.slice(6);
+
+              // Skip metadata events like {"step":"..."}
+              if (chunk.startsWith("{")) {
+                try {
+                  const parsed = JSON.parse(chunk);
+                  if (parsed && typeof parsed === "object" && "step" in parsed) {
+                    continue;
+                  }
+                } catch {
+                  // Not valid JSON — treat as content
+                }
+              }
+
+              accumulated += chunk;
+
+              setChats((prev) =>
+                prev.map((c) =>
+                  c.id === targetId
+                    ? {
+                        ...c,
+                        messages: c.messages.map((m) =>
+                          m.id === assistantId ? { ...m, content: accumulated } : m
+                        ),
+                      }
+                    : c
+                )
+              );
+            }
+          }
+        }
+      } catch (err) {
+        if ((err as Error).name === "AbortError") {
+          // User stopped streaming — keep what we have
+        } else {
+          // Show error in the assistant message
+          const errorMsg = (err as Error).message || "Error de conexión";
+          setChats((prev) =>
+            prev.map((c) =>
+              c.id === targetId
+                ? {
+                    ...c,
+                    messages: c.messages.map((m) =>
+                      m.id === assistantId
+                        ? { ...m, content: `⚠️ ${errorMsg}` }
+                        : m
+                    ),
+                  }
+                : c
+            )
+          );
+        }
+      } finally {
+        abortControllerRef.current = null;
+        setIsStreaming(false);
+      }
+    },
+    [currentChatId, createChat, odooConfig, locale]
+  );
+
+  const stopStreaming = useCallback(() => {
+    abortControllerRef.current?.abort();
+    setIsStreaming(false);
+  }, []);
+
+  return {
+    chats,
+    chatGroups,
+    currentChat,
+    currentChatId,
+    setCurrentChatId,
+    sendMessage,
+    isStreaming,
+    stopStreaming,
+    createChat,
+  };
+}
