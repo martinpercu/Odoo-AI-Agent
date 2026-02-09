@@ -162,21 +162,28 @@ export function useChat(chatId?: string) {
 
           for (const line of lines) {
             if (line.startsWith("data: ")) {
-              const chunk = line.slice(6);
+              const raw = line.slice(6);
 
-              // Skip metadata events like {"step":"..."}
-              if (chunk.startsWith("{")) {
-                try {
-                  const parsed = JSON.parse(chunk);
-                  if (parsed && typeof parsed === "object" && "step" in parsed) {
+              // Try to parse as JSON
+              let text = "";
+              try {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === "object") {
+                  // Skip metadata events like {"step":"..."}
+                  if ("step" in parsed) continue;
+                  // Extract content from {"content": "..."} chunks
+                  if ("content" in parsed) {
+                    text = parsed.content;
+                  } else {
                     continue;
                   }
-                } catch {
-                  // Not valid JSON — treat as content
                 }
+              } catch {
+                // Not valid JSON — treat as plain text content
+                text = raw;
               }
 
-              accumulated += chunk;
+              accumulated += text;
 
               setChats((prev) =>
                 prev.map((c) =>
