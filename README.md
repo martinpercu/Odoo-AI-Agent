@@ -1,6 +1,6 @@
 # Odoo Agent Front
 
-> Frontend conversacional estilo ChatGPT para interactuar con Odoo ERP mediante un agente de IA
+> ChatGPT-style conversational frontend for interacting with Odoo ERP through an AI agent
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.1-000000.svg)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-61DAFB.svg)](https://react.dev/)
@@ -8,71 +8,71 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4.svg)](https://tailwindcss.com/)
 [![next-intl](https://img.shields.io/badge/next--intl-4.8-blue.svg)](https://next-intl.dev/)
 
-## 📋 Descripcion
+## Description
 
-Interfaz moderna y responsive que permite a los usuarios consultar datos de su instancia de Odoo (inventario, facturas, ventas, empleados) usando lenguaje natural a traves de un chat con IA. Principales funcionalidades:
+A modern, responsive interface that allows users to query data from their Odoo instance (inventory, invoices, sales, employees) using natural language through an AI-powered chat. Key features:
 
-- 💬 Chat en tiempo real con streaming SSE
-- 🤖 Respuestas con formato Markdown enriquecido
-- 💡 Sugerencias predefinidas para empezar a consultar rapidamente
-- 📂 Historial de conversaciones agrupado por fecha (hoy, ayer, ultimos 7 dias)
-- 🔗 Configuracion y validacion de conexion a Odoo
-- 🌐 Soporte multilingue (Espanol, Ingles, Frances, Aleman, Portugues)
-- 🌙 Modo claro / oscuro
-- 📱 Sidebar colapsable y responsive (mobile-friendly)
-- 💳 Pagina de planes y precios (Free, Pro, Enterprise)
+- Real-time chat with SSE streaming
+- Rich Markdown-formatted responses
+- Predefined suggestions to quickly start querying
+- Conversation history grouped by date (today, yesterday, last 7 days)
+- Odoo connection configuration and validation
+- Multi-language support (Spanish, English, French, German, Portuguese)
+- Light / dark mode
+- Collapsible and responsive sidebar (mobile-friendly)
+- Plans and pricing page (Free, Pro, Enterprise)
 
-## 🏗️ Arquitectura
+## Architecture
 
-### Stack Tecnologico
+### Tech Stack
 
 **Core:**
-- **Next.js 16** - Framework React con App Router
-- **React 19** - Libreria de UI
-- **TypeScript 5** - Tipado estatico
+- **Next.js 16** - React framework with App Router
+- **React 19** - UI library
+- **TypeScript 5** - Static typing
 
 **Styling & UI:**
-- **Tailwind CSS v4** - Utilidades CSS (config via `@theme`)
-- **Framer Motion** - Animaciones y transiciones fluidas
-- **Lucide React** - Libreria de iconos
+- **Tailwind CSS v4** - CSS utilities (configured via `@theme`)
+- **Framer Motion** - Smooth animations and transitions
+- **Lucide React** - Icon library
 
-**Internacionalizacion:**
-- **next-intl** - Routing por locale, 5 idiomas soportados
+**Internationalization:**
+- **next-intl** - Locale-based routing, 5 supported languages
 
 **Rendering:**
-- **react-markdown** - Renderizado de Markdown en respuestas del agente
+- **react-markdown** - Markdown rendering for agent responses
 
-### Estructura del Proyecto
+### Project Structure
 
 ```
 app/
   [locale]/
-    layout.tsx                  # Layout raiz con i18n y providers
-    chat/page.tsx               # Nueva consulta (sugerencias + input)
-    chat/[id]/page.tsx          # Conversacion con streaming SSE
-    pricing/page.tsx            # Planes de suscripcion
-    settings/page.tsx           # Configuracion de conexion Odoo
+    layout.tsx                  # Root layout with i18n and providers
+    chat/page.tsx               # New query (suggestions + input)
+    chat/[id]/page.tsx          # Conversation with SSE streaming
+    pricing/page.tsx            # Subscription plans
+    settings/page.tsx           # Odoo connection settings
 components/
-  app-shell.tsx                 # Wrapper con ChatContext global
+  app-shell.tsx                 # Wrapper with global ChatContext
   chat/
-    sidebar.tsx                 # Sidebar colapsable + historial
-    chat-messages.tsx           # Burbujas de mensajes con Markdown
-    chat-input.tsx              # Input con auto-resize
-  pricing/pricing-cards.tsx     # Cards de planes (Free, Pro, Enterprise)
-  odoo/connection-form.tsx      # Formulario de credenciales Odoo
-  locale-switcher.tsx           # Selector de idioma
+    sidebar.tsx                 # Collapsible sidebar + history
+    chat-messages.tsx           # Message bubbles with Markdown
+    chat-input.tsx              # Auto-resizing input
+  pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
+  odoo/connection-form.tsx      # Odoo credentials form
+  locale-switcher.tsx           # Language selector
 hooks/
-  use-chat.ts                   # Estado de chats + streaming SSE
-  use-odoo-config.tsx           # Contexto de config Odoo (localStorage)
+  use-chat.ts                   # Chat state + SSE streaming
+  use-odoo-config.tsx           # Odoo config context (localStorage)
 lib/
-  api.ts                        # Integracion con backend
-  types.ts                      # Interfaces TypeScript
+  api.ts                        # Backend integration
+  types.ts                      # TypeScript interfaces
 i18n/                           # Routing, request config, navigation
-messages/                       # Traducciones (es, en, fr, de, pt)
-proxy.ts                        # Middleware de deteccion de locale
+messages/                       # Translations (es, en, fr, de, pt)
+proxy.ts                        # Locale detection middleware
 ```
 
-## ⚡ Flujo de Comunicacion
+## Communication Flow
 
 ```
 ┌─────────────┐     POST /chat/{id}/stream      ┌─────────────────┐
@@ -81,63 +81,63 @@ proxy.ts                        # Middleware de deteccion de locale
 │  (Next.js)  │                                   │  (FastAPI/SSE)  │
 │             │  ◄──────────────────────────────  │                 │
 └─────────────┘     text/event-stream (SSE)       └─────────────────┘
-                    chunks en tiempo real
+                    real-time chunks
 ```
 
-**Endpoints consumidos:**
+**Consumed endpoints:**
 
-| Metodo | Endpoint | Descripcion |
+| Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/chat/{id}/stream` | Envio de mensaje + recepcion SSE |
-| `POST` | `/test-connection` | Validacion de credenciales Odoo |
+| `POST` | `/chat/{id}/stream` | Send message + receive SSE response |
+| `POST` | `/test-connection` | Validate Odoo credentials |
 
-## 🚀 Setup
+## Setup
 
-### Requisitos
+### Requirements
 
 - **Node.js 18+**
-- Backend corriendo en `http://localhost:8000` ([odoo-agent-back](../odoo-agent-back))
+- Backend running at `http://localhost:8000` ([odoo-agent-back](../odoo-agent-back))
 
-### Instalacion
+### Installation
 
 ```bash
-# Instalar dependencias
+# Install dependencies
 npm install
 
-# Iniciar servidor de desarrollo
+# Start development server
 npm run dev
 ```
 
-Abrir `http://localhost:3000` → redirige automaticamente a `/es/chat`.
+Open `http://localhost:3000` — it automatically redirects to `/es/chat`.
 
-### Scripts Disponibles
+### Available Scripts
 
-| Comando | Descripcion |
+| Command | Description |
 |---------|-------------|
-| `npm run dev` | Servidor de desarrollo (hot reload) |
-| `npm run build` | Build de produccion |
-| `npm run start` | Servidor de produccion |
-| `npm run lint` | Linting con ESLint |
+| `npm run dev` | Development server (hot reload) |
+| `npm run build` | Production build |
+| `npm run start` | Production server |
+| `npm run lint` | Linting with ESLint |
 
-## 🎨 Temas y Diseno
+## Themes and Design
 
-El sistema de colores soporta **modo claro y oscuro** con variables CSS:
+The color system supports **light and dark mode** with CSS variables:
 
 | Token | Light | Dark |
 |-------|-------|------|
-| Primary | `#6d28d9` (violeta) | `#8b5cf6` (violeta claro) |
+| Primary | `#6d28d9` (violet) | `#8b5cf6` (light violet) |
 | Background | `#ffffff` | `#0c0a14` |
 | Card | `#ffffff` | `#1a1625` |
 | Sidebar | `#f8fafc` | `#110e1c` |
 
-## 🌐 Idiomas Soportados
+## Supported Languages
 
-| Codigo | Idioma |
-|--------|--------|
-| `es` | Espanol (default) |
+| Code | Language |
+|------|----------|
+| `es` | Spanish (default) |
 | `en` | English |
-| `fr` | Francais |
-| `de` | Deutsch |
-| `pt` | Portugues |
+| `fr` | French |
+| `de` | German |
+| `pt` | Portuguese |
 
-Las traducciones se encuentran en `messages/[locale].json` con **126 claves** por idioma.
+Translations are located in `messages/[locale].json` with **126 keys** per language.
