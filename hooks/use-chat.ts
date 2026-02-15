@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import type { Message, Chat, ChatGroup } from "@/lib/types";
-import { API_BASE, toBackendConfig } from "@/lib/api";
+import { API_BASE, toBackendConfig, executeAction as executeActionAPI } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -166,6 +166,7 @@ export function useChat(chatId?: string) {
 
               // Try to parse as JSON
               let text = "";
+              let metadata = undefined;
               try {
                 const parsed = JSON.parse(raw);
                 if (parsed && typeof parsed === "object") {
@@ -174,6 +175,10 @@ export function useChat(chatId?: string) {
                   // Extract content from {"content": "..."} chunks
                   if ("content" in parsed) {
                     text = parsed.content;
+                    // Check for metadata in the chunk
+                    if ("metadata" in parsed && parsed.metadata) {
+                      metadata = parsed.metadata;
+                    }
                   } else {
                     continue;
                   }
@@ -191,7 +196,13 @@ export function useChat(chatId?: string) {
                     ? {
                         ...c,
                         messages: c.messages.map((m) =>
-                          m.id === assistantId ? { ...m, content: accumulated } : m
+                          m.id === assistantId
+                            ? {
+                                ...m,
+                                content: accumulated,
+                                ...(metadata && { metadata }),
+                              }
+                            : m
                         ),
                       }
                     : c
@@ -234,6 +245,33 @@ export function useChat(chatId?: string) {
     setIsStreaming(false);
   }, []);
 
+  const executeAction = useCallback(
+    async (action: string, context?: Record<string, any>) => {
+      if (!currentChatId || !odooConfig) return;
+
+      const result = await executeActionAPI(currentChatId, action, context, odooConfig, locale);
+
+      if (result.success && result.message) {
+        // Add confirmation message to chat
+        const confirmMessage: Message = {
+          id: `msg-${Date.now()}`,
+          role: "assistant",
+          content: result.message,
+          timestamp: new Date(),
+        };
+
+        setChats((prev) =>
+          prev.map((c) =>
+            c.id === currentChatId
+              ? { ...c, messages: [...c.messages, confirmMessage] }
+              : c
+          )
+        );
+      }
+    },
+    [currentChatId, odooConfig, locale]
+  );
+
   return {
     chats,
     chatGroups,
@@ -244,5 +282,6 @@ export function useChat(chatId?: string) {
     isStreaming,
     stopStreaming,
     createChat,
+    executeAction,
   };
 }

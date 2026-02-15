@@ -6,6 +6,10 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { Bot, User, Database } from "lucide-react";
 import type { Message } from "@/lib/types";
+import { useChatContext } from "@/components/app-shell";
+import { SuccessCard } from "./success-card";
+import { ValidationPrompt } from "./validation-prompt";
+import { OdooActionButton } from "./odoo-action-button";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -41,6 +45,7 @@ function TypingIndicator() {
 
 export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { executeAction } = useChatContext();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -88,9 +93,27 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
               {isUser ? (
                 <p className="text-sm leading-relaxed">{message.content}</p>
               ) : (
-                <div className="markdown-content text-sm">
-                  <ReactMarkdown>{message.content}</ReactMarkdown>
-                </div>
+                <>
+                  <div className="markdown-content text-sm">
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                  {message.metadata && (
+                    <>
+                      {message.metadata.type === "action_success" && (
+                        <SuccessCard metadata={message.metadata} />
+                      )}
+                      {message.metadata.type === "validation_error" && (
+                        <ValidationPrompt metadata={message.metadata} />
+                      )}
+                      {message.metadata.type === "action_prompt" && (
+                        <OdooActionButton
+                          metadata={message.metadata}
+                          onAction={executeAction}
+                        />
+                      )}
+                    </>
+                  )}
+                </>
               )}
             </div>
           </motion.div>

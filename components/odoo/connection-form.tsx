@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -19,7 +20,10 @@ import { useOdooConfig } from "@/hooks/use-odoo-config";
 
 export function ConnectionForm() {
   const t = useTranslations("Settings.form");
+  const router = useRouter();
+  const pathname = usePathname();
   const { config: savedConfig, saveConfig } = useOdooConfig();
+  const initialized = useRef(false);
 
   const [config, setConfig] = useState<OdooConfig>({
     url: "",
@@ -34,8 +38,10 @@ export function ConnectionForm() {
 
   // Pre-fill form with saved config on mount
   useEffect(() => {
-    if (savedConfig) {
+    if (!initialized.current && savedConfig) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConfig(savedConfig);
+      initialized.current = true;
     }
   }, [savedConfig]);
 
@@ -60,7 +66,8 @@ export function ConnectionForm() {
   function handleSave() {
     saveConfig(config);
     setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    const locale = pathname.split('/')[1] || 'en';
+    setTimeout(() => router.push(`/${locale}/chat`), 500);
   }
 
   const fields = [
