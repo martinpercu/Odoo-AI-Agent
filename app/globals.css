@@ -24,6 +24,7 @@
   --sidebar-active: #ede9fe;
   --success: #22c55e;
   --warning: #f59e0b;
+  --odoo-purple: #714B67;
 }
 
 .dark {
@@ -50,6 +51,7 @@
   --sidebar-active: #2d2155;
   --success: #22c55e;
   --warning: #f59e0b;
+  --odoo-purple: #8d6584;
 }
 
 @theme inline {
@@ -76,6 +78,7 @@
   --color-sidebar-active: var(--sidebar-active);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-odoo-purple: var(--odoo-purple);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

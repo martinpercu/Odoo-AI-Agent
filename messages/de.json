@@ -35,7 +35,16 @@
   },
   "ChatMessages": {
     "typingIndicator": "Odoo wird abgefragt",
-    "configNotSet": "Odoo-Verbindung nicht konfiguriert. Gehen Sie zu Einstellungen, um Ihre Verbindung einzurichten."
+    "configNotSet": "Odoo-Verbindung nicht konfiguriert. Gehen Sie zu Einstellungen, um Ihre Verbindung einzurichten.",
+    "success": {
+      "title": "Aktion erfolgreich abgeschlossen",
+      "recordId": "ID: {id}",
+      "viewInOdoo": "In Odoo anzeigen"
+    },
+    "validation": {
+      "title": "Fehlende Informationen",
+      "description": "Bitte geben Sie die folgenden Felder an:"
+    }
   },
   "Pricing": {
     "heading": "Pläne und Preise",
@@ -97,6 +106,12 @@
     "security": {
       "title": "Sicherheit",
       "description": "Ihr API-Schlüssel wird sicher und verschlüsselt gespeichert. Er wird nur verwendet, um autorisierte Abfragen an Ihre Odoo-Instanz durchzuführen. Wir teilen Ihre Anmeldedaten niemals mit Dritten."
+    },
+    "inspector": {
+      "heading": "Instanz-Inspektor",
+      "buttonLabel": "Instanz inspizieren",
+      "modulesFound": "{count} Module gefunden",
+      "errorGeneric": "Fehler beim Inspizieren der Instanz"
     },
     "form": {
       "urlLabel": "Odoo-URL",
