@@ -23,10 +23,29 @@ export interface ActionPromptMetadata {
   context?: Record<string, any>;
 }
 
+// Backend action proposal format (from SSE)
+export interface ActionProposalMetadata {
+  type: "action_proposal";
+  action: {
+    action: "create" | "write" | "unlink";
+    model: string;
+    vals?: Record<string, any>;
+    target_ids?: number[];
+    status: "pending_confirmation" | "confirmed" | "rejected";
+  };
+  labels: {
+    action_btn: string;
+    confirm_btn: string;
+    cancel_btn: string;
+    cancelled_msg: string;
+  };
+}
+
 export type MessageMetadata =
   | ActionSuccessMetadata
   | ValidationErrorMetadata
-  | ActionPromptMetadata;
+  | ActionPromptMetadata
+  | ActionProposalMetadata;
 
 export interface Message {
   id: string;

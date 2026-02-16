@@ -125,12 +125,27 @@ export async function executeAction(
 
     const data = await res.json();
 
+    // Success: 200 (update) or 201 (create)
     if (res.ok) {
       return { success: true, message: data.message };
     }
 
-    return { success: false, error: data.detail || "Action failed" };
+    // Error handling based on HTTP status codes
+    let errorMessage = data.detail || data.message || "Action failed";
+
+    if (res.status === 400) {
+      // Validation error
+      errorMessage = `Validation error: ${errorMessage}`;
+    } else if (res.status === 401) {
+      // Odoo authentication failed
+      errorMessage = `Authentication failed: ${errorMessage}`;
+    } else if (res.status === 500) {
+      // Server/Odoo execution error
+      errorMessage = `Execution error: ${errorMessage}`;
+    }
+
+    return { success: false, error: errorMessage };
   } catch {
-    return { success: false, error: "Network error" };
+    return { success: false, error: "Network error: Could not connect to backend" };
   }
 }
