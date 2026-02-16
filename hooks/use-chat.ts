@@ -170,16 +170,32 @@ export function useChat(chatId?: string) {
               try {
                 const parsed = JSON.parse(raw);
                 if (parsed && typeof parsed === "object") {
-                  // Skip metadata events like {"step":"..."}
+                  // Skip step events like {"step":"..."}
                   if ("step" in parsed) continue;
-                  // Extract content from {"content": "..."} chunks
-                  if ("content" in parsed) {
+
+                  // Handle new backend format with explicit type field
+                  if ("type" in parsed) {
+                    if (parsed.type === "text") {
+                      // Text chunk: {"type": "text", "content": "..."}
+                      text = parsed.content || "";
+                    } else if (parsed.type === "action_proposal") {
+                      // Action proposal: {"type": "action_proposal", "action": {...}}
+                      // Store as metadata, don't add to accumulated text
+                      metadata = parsed as any;
+                      text = ""; // No text content in action proposals
+                    } else {
+                      // Other typed events (ignore for now)
+                      continue;
+                    }
+                  } else if ("content" in parsed) {
+                    // Backward compatibility: {"content": "..."} without type
                     text = parsed.content;
-                    // Check for metadata in the chunk
+                    // Check for old-style nested metadata
                     if ("metadata" in parsed && parsed.metadata) {
                       metadata = parsed.metadata;
                     }
                   } else {
+                    // Unknown format, skip
                     continue;
                   }
                 }
@@ -251,23 +267,23 @@ export function useChat(chatId?: string) {
 
       const result = await executeActionAPI(currentChatId, action, context, odooConfig, locale);
 
-      if (result.success && result.message) {
-        // Add confirmation message to chat
-        const confirmMessage: Message = {
-          id: `msg-${Date.now()}`,
-          role: "assistant",
-          content: result.message,
-          timestamp: new Date(),
-        };
+      // Add response message to chat (success or error)
+      const responseMessage: Message = {
+        id: `msg-${Date.now()}`,
+        role: "assistant",
+        content: result.success
+          ? result.message || "Action completed successfully"
+          : `⚠️ ${result.error || "Action failed"}`,
+        timestamp: new Date(),
+      };
 
-        setChats((prev) =>
-          prev.map((c) =>
-            c.id === currentChatId
-              ? { ...c, messages: [...c.messages, confirmMessage] }
-              : c
-          )
-        );
-      }
+      setChats((prev) =>
+        prev.map((c) =>
+          c.id === currentChatId
+            ? { ...c, messages: [...c.messages, responseMessage] }
+            : c
+        )
+      );
     },
     [currentChatId, odooConfig, locale]
   );

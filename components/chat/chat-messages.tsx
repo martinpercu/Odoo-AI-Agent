@@ -10,6 +10,7 @@ import { useChatContext } from "@/components/app-shell";
 import { SuccessCard } from "./success-card";
 import { ValidationPrompt } from "./validation-prompt";
 import { OdooActionButton } from "./odoo-action-button";
+import { ActionProposalButton } from "./action-proposal-button";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -107,6 +108,12 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       )}
                       {message.metadata.type === "action_prompt" && (
                         <OdooActionButton
+                          metadata={message.metadata}
+                          onAction={executeAction}
+                        />
+                      )}
+                      {message.metadata.type === "action_proposal" && (
+                        <ActionProposalButton
                           metadata={message.metadata}
                           onAction={executeAction}
                         />
