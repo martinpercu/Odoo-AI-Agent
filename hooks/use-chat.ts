@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import type { Message, Chat, ChatGroup } from "@/lib/types";
+import type { Message, Chat, ChatGroup, ActionSuccessMetadata } from "@/lib/types";
 import { API_BASE, toBackendConfig, executeAction as executeActionAPI } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
@@ -180,9 +180,16 @@ export function useChat(chatId?: string) {
                       text = parsed.content || "";
                     } else if (parsed.type === "action_proposal") {
                       // Action proposal: {"type": "action_proposal", "action": {...}}
-                      // Store as metadata, don't add to accumulated text
                       metadata = parsed as any;
-                      text = ""; // No text content in action proposals
+                      text = "";
+                    } else if (parsed.type === "action_prompt") {
+                      // Action prompt (e.g. method_call): {"type": "action_prompt", ...}
+                      metadata = parsed as any;
+                      text = "";
+                    } else if (parsed.type === "action_success") {
+                      // Action success from stream: {"type": "action_success", ...}
+                      metadata = parsed as any;
+                      text = "";
                     } else {
                       // Other typed events (ignore for now)
                       continue;
@@ -267,6 +274,21 @@ export function useChat(chatId?: string) {
 
       const result = await executeActionAPI(currentChatId, action, context, odooConfig, locale);
 
+      // Build metadata for success responses
+      let metadata: ActionSuccessMetadata | undefined;
+      if (result.success && result.metadata) {
+        metadata = {
+          type: "action_success",
+          action: result.metadata.action ?? action,
+          recordId: result.metadata.record_id ?? "",
+          recordName: result.metadata.record_name,
+          model: result.metadata.model,
+          odooUrl: result.metadata.odoo_url,
+          actionType: result.metadata.action_type,
+          actionMessage: result.metadata.action_message,
+        };
+      }
+
       // Add response message to chat (success or error)
       const responseMessage: Message = {
         id: `msg-${Date.now()}`,
@@ -275,6 +297,7 @@ export function useChat(chatId?: string) {
           ? result.message || "Action completed successfully"
           : `⚠️ ${result.error || "Action failed"}`,
         timestamp: new Date(),
+        ...(metadata && { metadata }),
       };
 
       setChats((prev) =>

@@ -36,6 +36,8 @@
   "ChatMessages": {
     "typingIndicator": "Interrogation d'Odoo",
     "configNotSet": "Connexion Odoo non configurée. Allez dans Paramètres pour configurer votre connexion.",
+    "processing": "Traitement dans Odoo...",
+    "completed": "Terminé",
     "success": {
       "title": "Action terminée avec succès",
       "recordId": "ID : {id}",

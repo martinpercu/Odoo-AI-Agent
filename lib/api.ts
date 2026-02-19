@@ -98,10 +98,21 @@ export async function inspectInstance(
   }
 }
 
+export interface ExecuteActionResultMetadata {
+  action?: string;
+  record_id?: string | number;
+  record_name?: string;
+  model?: string;
+  odoo_url?: string;
+  action_type?: "method_call" | "crud";
+  action_message?: string;
+}
+
 export interface ExecuteActionResult {
   success: boolean;
   message?: string;
   error?: string;
+  metadata?: ExecuteActionResultMetadata;
 }
 
 export async function executeAction(
@@ -127,7 +138,7 @@ export async function executeAction(
 
     // Success: 200 (update) or 201 (create)
     if (res.ok) {
-      return { success: true, message: data.message };
+      return { success: true, message: data.message, metadata: data.metadata };
     }
 
     // Error handling based on HTTP status codes
