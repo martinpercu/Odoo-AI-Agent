@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ActionPromptMetadata } from "@/lib/types";
 
 interface OdooActionButtonProps {
@@ -13,6 +14,9 @@ interface OdooActionButtonProps {
 export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) {
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const t = useTranslations("ChatMessages");
+
+  const buttonLabel = metadata.action_btn ?? metadata.actionLabel;
 
   async function handleClick() {
     setLoading(true);
@@ -38,7 +42,13 @@ export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) 
       }}
     >
       {loading && <Loader2 size={16} className="animate-spin" />}
-      <span>{completed ? "✓ Completado" : metadata.actionLabel}</span>
+      <span>
+        {loading
+          ? t("processing")
+          : completed
+            ? `✓ ${t("completed")}`
+            : buttonLabel}
+      </span>
     </motion.button>
   );
 }
