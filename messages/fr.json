@@ -46,6 +46,16 @@
     "validation": {
       "title": "Informations manquantes",
       "description": "Veuillez fournir les champs suivants :"
+    },
+    "selection": {
+      "selected": "Sélectionné : {name}"
+    },
+    "fileCard": {
+      "downloadPdf": "Télécharger PDF",
+      "fileExpired": "Le fichier n'est plus disponible. Générez le rapport à nouveau."
+    },
+    "sequence": {
+      "autoSending": "Traitement de l'étape suivante..."
     }
   },
   "Pricing": {

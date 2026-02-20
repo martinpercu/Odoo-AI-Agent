@@ -1,4 +1,4 @@
-import type { OdooConfig } from "@/lib/types";
+import type { OdooConfig, ActionContext, ActionResult } from "@/lib/types";
 
 export const API_BASE = "http://localhost:8000";
 
@@ -98,60 +98,53 @@ export async function inspectInstance(
   }
 }
 
-export interface ExecuteActionResultMetadata {
-  action?: string;
-  record_id?: string | number;
-  record_name?: string;
-  model?: string;
-  odoo_url?: string;
-  action_type?: "method_call" | "crud";
-  action_message?: string;
-}
-
 export interface ExecuteActionResult {
   success: boolean;
   message?: string;
   error?: string;
-  metadata?: ExecuteActionResultMetadata;
+  result?: ActionResult;
+  queue_next?: { text: string };
 }
 
 export async function executeAction(
   chatId: string,
-  action: string,
-  context?: Record<string, any>,
-  odooConfig?: OdooConfig,
-  locale?: string
+  actionContext: ActionContext,
+  odooConfig: OdooConfig,
+  locale: string
 ): Promise<ExecuteActionResult> {
   try {
     const res = await fetch(`${API_BASE}/chat/${chatId}/action`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        action,
-        context,
-        odoo_config: odooConfig ? toBackendConfig(odooConfig) : undefined,
+        odoo_config: toBackendConfig(odooConfig),
+        action: "confirm_action",
+        context: actionContext,
         language: locale,
       }),
     });
 
     const data = await res.json();
 
-    // Success: 200 (update) or 201 (create)
-    if (res.ok) {
-      return { success: true, message: data.message, metadata: data.metadata };
+    if (data.status === "ok") {
+      return {
+        success: true,
+        message: data.message,
+        result: data.result,
+        queue_next: data.queue_next,
+      };
     }
 
     // Error handling based on HTTP status codes
     let errorMessage = data.detail || data.message || "Action failed";
 
     if (res.status === 400) {
-      // Validation error
       errorMessage = `Validation error: ${errorMessage}`;
     } else if (res.status === 401) {
-      // Odoo authentication failed
       errorMessage = `Authentication failed: ${errorMessage}`;
+    } else if (res.status === 422) {
+      errorMessage = errorMessage; // Odoo business error, use as-is
     } else if (res.status === 500) {
-      // Server/Odoo execution error
       errorMessage = `Execution error: ${errorMessage}`;
     }
 
