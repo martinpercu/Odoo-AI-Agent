@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import type { Message, Chat, ChatGroup, ActionSuccessMetadata } from "@/lib/types";
+import type {
+  Message,
+  MessageMetadata,
+  Chat,
+  ChatGroup,
+  ActionContext,
+  ActionSuccessMetadata,
+  FileAttachmentMetadata,
+} from "@/lib/types";
 import { API_BASE, toBackendConfig, executeAction as executeActionAPI } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
@@ -40,6 +48,10 @@ function groupChatsByDate(chats: Chat[]): ChatGroup[] {
   if (olderChats.length) groups.push({ label: "older", chats: olderChats });
 
   return groups;
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function useChat(chatId?: string) {
@@ -166,43 +178,39 @@ export function useChat(chatId?: string) {
 
               // Try to parse as JSON
               let text = "";
-              let metadata = undefined;
+              let metadata: MessageMetadata | undefined = undefined;
               try {
                 const parsed = JSON.parse(raw);
                 if (parsed && typeof parsed === "object") {
                   // Skip step events like {"step":"..."}
                   if ("step" in parsed) continue;
 
-                  // Handle new backend format with explicit type field
+                  // Handle backend format with explicit type field
                   if ("type" in parsed) {
                     if (parsed.type === "text") {
-                      // Text chunk: {"type": "text", "content": "..."}
                       text = parsed.content || "";
                     } else if (parsed.type === "action_proposal") {
-                      // Action proposal: {"type": "action_proposal", "action": {...}}
-                      metadata = parsed as any;
+                      metadata = parsed as MessageMetadata;
+                      text = "";
+                    } else if (parsed.type === "selection_prompt") {
+                      metadata = parsed as MessageMetadata;
                       text = "";
                     } else if (parsed.type === "action_prompt") {
-                      // Action prompt (e.g. method_call): {"type": "action_prompt", ...}
-                      metadata = parsed as any;
+                      metadata = parsed as MessageMetadata;
                       text = "";
                     } else if (parsed.type === "action_success") {
-                      // Action success from stream: {"type": "action_success", ...}
-                      metadata = parsed as any;
+                      metadata = parsed as MessageMetadata;
                       text = "";
                     } else {
-                      // Other typed events (ignore for now)
                       continue;
                     }
                   } else if ("content" in parsed) {
                     // Backward compatibility: {"content": "..."} without type
                     text = parsed.content;
-                    // Check for old-style nested metadata
                     if ("metadata" in parsed && parsed.metadata) {
                       metadata = parsed.metadata;
                     }
                   } else {
-                    // Unknown format, skip
                     continue;
                   }
                 }
@@ -260,7 +268,7 @@ export function useChat(chatId?: string) {
         setIsStreaming(false);
       }
     },
-    [currentChatId, createChat, odooConfig, locale]
+    [currentChatId, createChat, odooConfig, locale, t]
   );
 
   const stopStreaming = useCallback(() => {
@@ -269,33 +277,55 @@ export function useChat(chatId?: string) {
   }, []);
 
   const executeAction = useCallback(
-    async (action: string, context?: Record<string, any>) => {
+    async (actionContext: ActionContext) => {
       if (!currentChatId || !odooConfig) return;
 
-      const result = await executeActionAPI(currentChatId, action, context, odooConfig, locale);
+      const result = await executeActionAPI(currentChatId, actionContext, odooConfig, locale);
 
-      // Build metadata for success responses
-      let metadata: ActionSuccessMetadata | undefined;
-      if (result.success && result.metadata) {
-        metadata = {
-          type: "action_success",
-          action: result.metadata.action ?? action,
-          recordId: result.metadata.record_id ?? "",
-          recordName: result.metadata.record_name,
-          model: result.metadata.model,
-          odooUrl: result.metadata.odoo_url,
-          actionType: result.metadata.action_type,
-          actionMessage: result.metadata.action_message,
+      if (!result.success) {
+        const errorMessage: Message = {
+          id: `msg-${Date.now()}`,
+          role: "assistant",
+          content: `⚠️ ${result.error || "Action failed"}`,
+          timestamp: new Date(),
         };
+        setChats((prev) =>
+          prev.map((c) =>
+            c.id === currentChatId
+              ? { ...c, messages: [...c.messages, errorMessage] }
+              : c
+          )
+        );
+        return;
       }
 
-      // Add response message to chat (success or error)
+      // Build success metadata
+      let metadata: ActionSuccessMetadata | FileAttachmentMetadata | undefined;
+
+      if (result.result?.action === "report") {
+        // Report: show file card
+        metadata = {
+          type: "file_attachment",
+          file_url: result.result.file_url,
+          filename: result.result.filename,
+        } satisfies FileAttachmentMetadata;
+      } else if (result.result) {
+        // CRUD / method_call success
+        const r = result.result;
+        metadata = {
+          type: "action_success",
+          action: r.action,
+          recordId: "id" in r ? r.id : ("ids" in r ? r.ids[0] : ""),
+          model: r.model,
+          actionType: r.action === "method_call" ? "method_call" : "crud",
+          actionMessage: result.message,
+        } satisfies ActionSuccessMetadata;
+      }
+
       const responseMessage: Message = {
         id: `msg-${Date.now()}`,
         role: "assistant",
-        content: result.success
-          ? result.message || "Action completed successfully"
-          : `⚠️ ${result.error || "Action failed"}`,
+        content: result.message || "Action completed successfully",
         timestamp: new Date(),
         ...(metadata && { metadata }),
       };
@@ -307,8 +337,14 @@ export function useChat(chatId?: string) {
             : c
         )
       );
+
+      // Auto-sequence: if queue_next is present, send the next message after a delay
+      if (result.queue_next) {
+        await delay(500);
+        sendMessage(result.queue_next.text, currentChatId);
+      }
     },
-    [currentChatId, odooConfig, locale]
+    [currentChatId, odooConfig, locale, sendMessage]
   );
 
   return {

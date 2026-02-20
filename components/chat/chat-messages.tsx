@@ -11,6 +11,8 @@ import { SuccessCard } from "./success-card";
 import { ValidationPrompt } from "./validation-prompt";
 import { OdooActionButton } from "./odoo-action-button";
 import { ActionProposalButton } from "./action-proposal-button";
+import { SelectionCard } from "./selection-card";
+import { OdooFileCard } from "./odoo-file-card";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -46,7 +48,7 @@ function TypingIndicator() {
 
 export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { executeAction } = useChatContext();
+  const { executeAction, sendMessage } = useChatContext();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -117,6 +119,15 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                           metadata={message.metadata}
                           onAction={executeAction}
                         />
+                      )}
+                      {message.metadata.type === "selection_prompt" && (
+                        <SelectionCard
+                          metadata={message.metadata}
+                          onSelect={(value) => sendMessage(value)}
+                        />
+                      )}
+                      {message.metadata.type === "file_attachment" && (
+                        <OdooFileCard metadata={message.metadata} />
                       )}
                     </>
                   )}

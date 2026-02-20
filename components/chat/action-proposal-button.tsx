@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Check, X } from "lucide-react";
-import type { ActionProposalMetadata } from "@/lib/types";
+import { Loader2, X } from "lucide-react";
+import type { ActionProposalMetadata, ActionContext } from "@/lib/types";
 
 interface ActionProposalButtonProps {
   metadata: ActionProposalMetadata;
-  onAction: (action: string, context?: Record<string, any>) => Promise<void>;
+  onAction: (actionContext: ActionContext) => Promise<void>;
 }
 
 export function ActionProposalButton({ metadata, onAction }: ActionProposalButtonProps) {
@@ -18,13 +18,8 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
   async function handleConfirm() {
     setLoading(true);
     try {
-      // Send the entire action proposal as context
-      await onAction("confirm_action", {
-        action: metadata.action.action,
-        model: metadata.action.model,
-        vals: metadata.action.vals,
-        target_ids: metadata.action.target_ids,
-      });
+      // Send the full action context object as required by the backend contract
+      await onAction(metadata.action);
       setCompleted(true);
     } catch (error) {
       console.error("Action confirmation failed:", error);
