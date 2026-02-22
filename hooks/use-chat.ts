@@ -10,6 +10,7 @@ import type {
   ActionSuccessMetadata,
   FileAttachmentMetadata,
   ChartSSEEvent,
+  ExcelExportMetadata,
 } from "@/lib/types";
 import { API_BASE, toBackendConfig, executeAction as executeActionAPI } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -205,6 +206,13 @@ export function useChat(chatId?: string) {
                       text = "";
                     } else if (parsed.type === "chart") {
                       charts = [...charts, parsed as ChartSSEEvent];
+                      text = "";
+                    } else if (parsed.type === "export") {
+                      metadata = {
+                        type: "excel_export",
+                        export_url: parsed.export_url,
+                        filename: parsed.filename,
+                      } satisfies ExcelExportMetadata;
                       text = "";
                     } else {
                       continue;
