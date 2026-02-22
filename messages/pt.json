@@ -60,7 +60,9 @@
     "chart": {
       "globalTotal": "Total global",
       "noData": "Sem dados para exibir",
-      "groupedBy": "Agrupado por"
+      "groupedBy": "Agrupado por",
+      "downloadExcel": "Baixar Excel",
+      "exportReady": "Seu arquivo Excel está pronto"
     }
   },
   "Pricing": {

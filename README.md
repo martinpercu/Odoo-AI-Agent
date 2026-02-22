@@ -19,10 +19,17 @@ A modern, responsive interface that allows users to query and manage data from t
 - Conversation history grouped by date (today, yesterday, last 7 days)
 
 **Action Management:**
-- Visual feedback for write operations (create, update, confirm)
+- AI-proposed CRUD actions with confirm/cancel flow
+- Visual feedback for write operations (create, update, method calls)
 - Success cards with record links to Odoo
 - Validation error prompts with missing field indicators
-- Confirmable action buttons (e.g., "Confirm Quotation")
+- Ambiguity resolution with interactive selection cards
+
+**Analytics & Export:**
+- Interactive charts (bar, line, pie) powered by Recharts
+- Automatic Excel export button on chart cards
+- Standalone Excel download cards for explicit export requests
+- PDF report download cards
 
 **Configuration:**
 - Odoo connection configuration and validation
@@ -48,6 +55,9 @@ A modern, responsive interface that allows users to query and manage data from t
 - **Framer Motion** - Smooth animations and transitions
 - **Lucide React** - Icon library
 
+**Charts:**
+- **Recharts** - Composable charting library (bar, area, pie)
+
 **Internationalization:**
 - **next-intl** - Locale-based routing, 5 supported languages
 
@@ -60,27 +70,33 @@ A modern, responsive interface that allows users to query and manage data from t
 app/
   [locale]/
     layout.tsx                  # Root layout with i18n and providers
+    page.tsx                    # Root redirector (chat or settings)
     chat/page.tsx               # New query (suggestions + input)
     chat/[id]/page.tsx          # Conversation with SSE streaming
     pricing/page.tsx            # Subscription plans
     settings/page.tsx           # Odoo connection + instance inspector
-  globals.css                   # Theme variables (light/dark)
+  globals.css                   # Theme variables (light/dark) + markdown styles
 components/
   app-shell.tsx                 # Wrapper with global ChatContext
+  locale-switcher.tsx           # Language selector dropdown
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history
+    sidebar.tsx                 # Collapsible sidebar + history + theme toggle
     chat-messages.tsx           # Message bubbles with metadata handling
-    chat-input.tsx              # Auto-resizing input
+    chat-input.tsx              # Auto-resizing input with send/stop
     success-card.tsx            # Green card for successful actions
     validation-prompt.tsx       # Orange card for missing fields
     odoo-action-button.tsx      # Purple action confirmation button
+    action-proposal-button.tsx  # AI-proposed CRUD action confirm/cancel
+    selection-card.tsx          # Multi-option selector for ambiguity resolution
+    odoo-file-card.tsx          # PDF report download card
+    odoo-chart-card.tsx         # Interactive charts (bar/line/pie) + Excel export
+    excel-export-card.tsx       # Standalone Excel download card
   pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
   odoo/
     connection-form.tsx         # Odoo credentials form
     instance-inspector.tsx      # View installed Odoo modules
-  locale-switcher.tsx           # Language selector
 hooks/
-  use-chat.ts                   # Chat state + SSE + metadata parsing
+  use-chat.ts                   # Chat state + SSE + metadata/chart/export parsing
   use-odoo-config.tsx           # Odoo config context (localStorage)
 lib/
   api.ts                        # Backend integration (chat, actions, inspect)
@@ -90,28 +106,61 @@ messages/                       # Translations (es, en, fr, de, pt)
 proxy.ts                        # Locale detection middleware
 ```
 
-## Action Feedback System
+## UI Components
 
-The interface differentiates between **read queries** (e.g., "Show me all contacts") and **write actions** (e.g., "Create a new contact") with specialized UI components:
+The interface uses specialized cards to handle different response types from the AI agent:
 
 ### SuccessCard
 Displayed when the agent successfully performs a write operation:
-- ✅ Green card with CheckCircle icon
+- Green card with CheckCircle icon
 - Shows record ID and name
 - Direct link to view the record in Odoo (opens in new tab)
 
 ### ValidationPrompt
 Displayed when required fields are missing:
-- ⚠️ Orange card with AlertCircle icon
+- Orange card with AlertCircle icon
 - Lists missing fields as bullet points
 - Guides user to provide complete information
 
+### ActionProposalButton
+AI-proposed CRUD action with confirm/cancel flow:
+- Purple button using Odoo brand color (#714B67)
+- Shows action summary (model, operation, data)
+- Confirm executes the action; cancel shows a translated cancellation message
+- Loading and completed states with visual feedback
+
 ### OdooActionButton
-Interactive button for confirmable actions:
-- 🟣 Purple button using Odoo brand color (#714B67)
+Interactive button for confirmable method calls:
+- Purple button using Odoo brand color
 - Loading state with spinner during execution
 - Completed state with checkmark
 - Example: "Confirm Quotation", "Approve Purchase Order"
+
+### SelectionCard
+Displayed when the agent needs to resolve ambiguity:
+- Lists matching records as selectable options
+- Clicking an option sends the selection back as a chat message
+
+### OdooFileCard
+PDF report download card:
+- Red-themed icon for PDF files
+- Shows filename and download button
+- Links to backend-served static file
+
+### OdooChartCard
+Interactive analytics visualization:
+- Supports bar, line (area), and pie charts via Recharts
+- Responsive layout with horizontal bars on narrow containers
+- Custom tooltip with formatted values (currency, integer, decimal)
+- Purple color palette matching Odoo branding
+- Footer with global total and group-by info
+- **Excel export button** appears when `export_url` is present (ghost style, top-right)
+
+### ExcelExportCard
+Standalone Excel download card for explicit export requests:
+- Green Excel icon (#1D6F42) matching Microsoft Excel branding
+- Shows filename and "export ready" message
+- Download button with `download` attribute to force browser download
 
 ## Communication Flow
 
@@ -130,11 +179,11 @@ Interactive button for confirmable actions:
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/chat/{id}/stream` | Send message + receive SSE response with metadata |
+| `POST` | `/chat/{id}/action` | Execute confirmable action (e.g., confirm quotation) |
 | `POST` | `/test-connection` | Validate Odoo credentials |
 | `POST` | `/inspect-instance` | Fetch installed Odoo modules |
-| `POST` | `/chat/{id}/action` | Execute confirmable action (e.g., confirm quotation) |
 
-### SSE Event Format
+### SSE Event Types
 
 The backend sends typed events in the SSE stream. Each event has an explicit `type` field:
 
@@ -146,51 +195,83 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
 }
 ```
 
-**Action Proposal (after text streaming completes):**
+**Action Proposal (CRUD confirmation):**
 ```json
 {
   "type": "action_proposal",
   "action": {
     "action": "create",
     "model": "res.partner",
-    "vals": {
-      "name": "Juan Pérez",
-      "email": "juan@example.com"
-    },
+    "vals": { "name": "Juan Pérez", "email": "juan@example.com" },
     "target_ids": [],
     "status": "pending_confirmation"
   },
   "labels": {
-    "action_btn": "Crear Contacto",
-    "confirm_btn": "Confirmar",
-    "cancel_btn": "Cancelar",
-    "cancelled_msg": "Acción cancelada. ¿En qué más puedo ayudarte?"
+    "action_btn": "Create Contact",
+    "confirm_btn": "Confirm",
+    "cancel_btn": "Cancel",
+    "cancelled_msg": "Action cancelled. How else can I help you?"
   }
 }
 ```
 
-The `labels` field contains translated UI text based on the `language` sent in the request. The frontend uses these labels directly:
-- **action_btn**: Primary button text (e.g., "Create Contact", "Crear Contacto", "Kontakt erstellen")
-- **confirm_btn**: Text shown during loading (e.g., "Confirm", "Confirmar", "Bestätigen")
-- **cancel_btn**: Cancel button text
-- **cancelled_msg**: Message displayed when user cancels the action
+**Selection Prompt (ambiguity resolution):**
+```json
+{
+  "type": "selection_prompt",
+  "field": "partner_id",
+  "searchValue": "Juan",
+  "options": [
+    { "index": 0, "id": 42, "name": "Juan Pérez" },
+    { "index": 1, "id": 43, "name": "Juan García" }
+  ]
+}
+```
 
-The frontend renders this as a confirmation button. When clicked, it calls the `/chat/{id}/action` endpoint with `action: "confirm_action"` and the proposal data as context.
+**Chart (analytics visualization):**
+```json
+{
+  "type": "chart",
+  "chart_type": "bar",
+  "title": "Sales by Product",
+  "data": [
+    { "label": "Product A", "value": 15000 },
+    { "label": "Product B", "value": 8500 }
+  ],
+  "meta": {
+    "value_label": "Revenue",
+    "value_format": "currency",
+    "currency_symbol": "$",
+    "group_by": "product",
+    "model": "sale.order",
+    "period": "2026-02",
+    "total": 23500
+  },
+  "export_url": "/static/reports/sales_by_product_abc123.xlsx"
+}
+```
+
+**Export (explicit Excel export request):**
+```json
+{
+  "type": "export",
+  "export_url": "/static/reports/export_abc123.xlsx",
+  "filename": "sales_report_2026_02.xlsx"
+}
+```
+
+The `labels` field in action proposals contains translated UI text based on the `language` sent in the request. The frontend uses these labels directly for button text and cancellation messages.
 
 ### Action Confirmation Responses
 
-The `/chat/{id}/action` endpoint returns different HTTP status codes:
+The `/chat/{id}/action` endpoint returns:
 
 **Success (201 - Create):**
 ```json
 {
   "status": "ok",
   "message": "Contact created successfully (ID: 42)",
-  "result": {
-    "action": "create",
-    "model": "res.partner",
-    "id": 42
-  }
+  "result": { "action": "create", "model": "res.partner", "id": 42 }
 }
 ```
 
@@ -199,30 +280,26 @@ The `/chat/{id}/action` endpoint returns different HTTP status codes:
 {
   "status": "ok",
   "message": "Contact updated successfully (IDs: [42])",
-  "result": {
-    "action": "update",
-    "model": "res.partner",
-    "ids": [42],
-    "success": true
-  }
+  "result": { "action": "update", "model": "res.partner", "ids": [42], "success": true }
+}
+```
+
+**Success (200 - Report):**
+```json
+{
+  "status": "ok",
+  "message": "Report generated successfully",
+  "result": { "action": "report", "model": "account.move", "ids": [1], "file_url": "/static/reports/invoice.pdf", "filename": "INV-2026-001.pdf" }
 }
 ```
 
 **Error Responses:**
 - **400** - Validation error (missing fields, invalid data)
 - **401** - Odoo authentication failed
-- **500** - Odoo execution error (constraint violation, etc.)
+- **422** - Odoo business error (constraint violation)
+- **500** - Odoo execution error
 
-All error responses include:
-```json
-{
-  "status": "error",
-  "detail": "Error description..."
-}
-```
-
-**User Cancellation:**
-If the user clicks "Cancel" instead of confirming, no request is sent to the backend. The UI displays the translated cancellation message from `labels.cancelled_msg` (e.g., "Action cancelled. How else can I help you?" or "Acción cancelada. ¿En qué más puedo ayudarte?").
+**Auto-sequencing:** The response may include a `queue_next` field with `{ text: string }` to automatically trigger a follow-up action after a short delay.
 
 **Backward Compatibility:**
 The parser still supports the old format without `type` field for gradual migration:
@@ -272,10 +349,13 @@ The color system supports **light and dark mode** with CSS variables:
 | Card | `#ffffff` | `#1a1625` |
 | Sidebar | `#f8fafc` | `#110e1c` |
 
-**Action Button Colors:**
+**Component Color Coding:**
 - Success cards use `--color-success` (green)
 - Validation prompts use `--color-warning` (orange)
 - Action buttons use `--color-odoo-purple` (Odoo brand color)
+- PDF file cards use red accent
+- Excel export cards use `#1D6F42` (Excel green)
+- Charts use Odoo purple palette
 
 ## Supported Languages
 
@@ -287,10 +367,18 @@ The color system supports **light and dark mode** with CSS variables:
 | `de` | German |
 | `pt` | Portuguese |
 
-Translations are located in `messages/[locale].json` with **135+ keys** per language.
+Translations are located in `messages/[locale].json` with **132 keys** per language.
 
-### New Translation Keys (Phase 1 CRUD)
+### Translation Key Namespaces
 
-- `ChatMessages.success.*` - Action success feedback
-- `ChatMessages.validation.*` - Validation error prompts
-- `Settings.inspector.*` - Instance inspector UI
+| Namespace | Keys | Description |
+|-----------|------|-------------|
+| `Metadata` | 2 | Page title and description |
+| `Sidebar` | 6 | Navigation and theme toggle |
+| `ChatGroups` | 4 | Date-based grouping labels |
+| `NewChat` | 8 | Welcome screen and suggestions |
+| `ChatInput` | 2 | Input placeholder and disclaimer |
+| `ChatMessages` | 26 | All chat UI: typing, success, validation, selection, file, chart, export |
+| `Pricing` | 46 | Plans, features, and CTAs |
+| `Settings` | 24 | Connection form, inspector, security |
+| `LocaleSwitcher` | 5 | Language names |
