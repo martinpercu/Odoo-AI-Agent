@@ -56,6 +56,11 @@
     },
     "sequence": {
       "autoSending": "Nächster Schritt wird verarbeitet..."
+    },
+    "chart": {
+      "globalTotal": "Gesamtsumme",
+      "noData": "Keine Daten verfügbar",
+      "groupedBy": "Gruppiert nach"
     }
   },
   "Pricing": {

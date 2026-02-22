@@ -9,6 +9,7 @@ import type {
   ActionContext,
   ActionSuccessMetadata,
   FileAttachmentMetadata,
+  ChartSSEEvent,
 } from "@/lib/types";
 import { API_BASE, toBackendConfig, executeAction as executeActionAPI } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -160,6 +161,7 @@ export function useChat(chatId?: string) {
         const decoder = new TextDecoder();
         let accumulated = "";
         let buffer = "";
+        let charts: ChartSSEEvent[] = [];
 
         while (true) {
           const { done, value } = await reader.read();
@@ -201,6 +203,9 @@ export function useChat(chatId?: string) {
                     } else if (parsed.type === "action_success") {
                       metadata = parsed as MessageMetadata;
                       text = "";
+                    } else if (parsed.type === "chart") {
+                      charts = [...charts, parsed as ChartSSEEvent];
+                      text = "";
                     } else {
                       continue;
                     }
@@ -232,6 +237,7 @@ export function useChat(chatId?: string) {
                                 ...m,
                                 content: accumulated,
                                 ...(metadata && { metadata }),
+                                ...(charts.length > 0 && { charts }),
                               }
                             : m
                         ),
