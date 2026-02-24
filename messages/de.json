@@ -9,7 +9,8 @@
     "plans": "Pläne",
     "settings": "Einstellungen",
     "lightMode": "Heller Modus",
-    "darkMode": "Dunkler Modus"
+    "darkMode": "Dunkler Modus",
+    "alerts": "Warnungen"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -167,6 +168,24 @@
     "errorPin": "Element konnte nicht angepinnt werden. Bitte versuchen Sie es erneut.",
     "errorUnpin": "Element konnte nicht gelöst werden. Bitte versuchen Sie es erneut.",
     "errorClear": "Pins konnten nicht gelöscht werden. Bitte versuchen Sie es erneut."
+  },
+  "Notifications": {
+    "title": "Warnungen",
+    "empty": "Noch keine Warnungen",
+    "emptyHint": "Proaktive Einblicke erscheinen hier, wenn Anomalien erkannt werden.",
+    "markAllRead": "Alle als gelesen markieren",
+    "settingsTitle": "Warnungseinstellungen",
+    "salesAlerts": "Verkaufswarnungen",
+    "salesAlertsDesc": "Benachrichtigen, wenn der Umsatz um mehr als 30% sinkt",
+    "stockAlerts": "Niedrige Bestandswarnungen",
+    "stockAlertsDesc": "Benachrichtigen, wenn der Bestand unter das Minimum fällt",
+    "invoiceAlerts": "Rechnungswarnungen",
+    "invoiceAlertsDesc": "Benachrichtigen bei überfälligen oder ungewöhnlichen Rechnungen",
+    "dailySummary": "Tägliche Zusammenfassung",
+    "dailySummaryDesc": "Tägliche Zusammenfassung um 9:00 Uhr erhalten",
+    "save": "Speichern",
+    "close": "Schließen",
+    "timeAgo": "vor"
   },
   "LocaleSwitcher": {
     "es": "Español",

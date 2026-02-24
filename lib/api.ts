@@ -1,4 +1,4 @@
-import type { OdooConfig, ActionContext, ActionResult, PinnedInsight, ChartSSEEvent } from "@/lib/types";
+import type { OdooConfig, ActionContext, ActionResult, PinnedInsight, ChartSSEEvent, AppNotification, NotificationSettings } from "@/lib/types";
 
 export const API_BASE = "http://localhost:8000";
 
@@ -302,6 +302,98 @@ export async function deleteAllPins(chatId: string): Promise<DeletePinResult> {
     }
     const data = await res.json();
     return { success: false, error: data.detail || "Failed to clear pins" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+// ---- Notifications API ----
+
+export interface FetchNotificationsResult {
+  success: boolean;
+  notifications?: AppNotification[];
+  error?: string;
+}
+
+export async function fetchNotifications(
+  odooConfig: OdooConfig
+): Promise<FetchNotificationsResult> {
+  try {
+    const res = await fetch(`${API_BASE}/notifications`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ odoo_config: toBackendConfig(odooConfig) }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, notifications: data.notifications ?? data };
+    }
+    return { success: false, error: data.detail || "Failed to fetch notifications" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export interface MarkReadResult {
+  success: boolean;
+  error?: string;
+}
+
+export async function markNotificationRead(notificationId: string): Promise<MarkReadResult> {
+  try {
+    const res = await fetch(`${API_BASE}/notifications/${notificationId}/read`, {
+      method: "PATCH",
+    });
+    if (res.ok) {
+      return { success: true };
+    }
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to mark as read" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export interface FetchNotificationSettingsResult {
+  success: boolean;
+  settings?: NotificationSettings;
+  error?: string;
+}
+
+export async function fetchNotificationSettings(
+  odooConfig: OdooConfig
+): Promise<FetchNotificationSettingsResult> {
+  try {
+    const res = await fetch(`${API_BASE}/notification-settings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ odoo_config: toBackendConfig(odooConfig) }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, settings: data.settings ?? data };
+    }
+    return { success: false, error: data.detail || "Failed to fetch settings" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export async function updateNotificationSettings(
+  odooConfig: OdooConfig,
+  settings: NotificationSettings
+): Promise<MarkReadResult> {
+  try {
+    const res = await fetch(`${API_BASE}/notification-settings`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ odoo_config: toBackendConfig(odooConfig), settings }),
+    });
+    if (res.ok) {
+      return { success: true };
+    }
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to update settings" };
   } catch {
     return { success: false, error: "Network error: Could not connect to backend" };
   }
