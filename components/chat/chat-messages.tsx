@@ -96,7 +96,18 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
               }`}
             >
               {isUser ? (
-                <p className="text-sm leading-relaxed">{message.content}</p>
+                <div>
+                  {message.imageUrl && (
+                    <img
+                      src={message.imageUrl}
+                      alt="Uploaded"
+                      className="mb-2 max-w-48 rounded-lg"
+                    />
+                  )}
+                  {message.content && (
+                    <p className="text-sm leading-relaxed">{message.content}</p>
+                  )}
+                </div>
               ) : (
                 <>
                   <div className="markdown-content text-sm">

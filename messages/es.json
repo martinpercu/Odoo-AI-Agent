@@ -31,7 +31,9 @@
   },
   "ChatInput": {
     "placeholder": "Pregunta sobre tus datos de Odoo...",
-    "disclaimer": "El agente consulta tu instancia de Odoo en tiempo real. Los datos son privados y seguros."
+    "disclaimer": "El agente consulta tu instancia de Odoo en tiempo real. Los datos son privados y seguros.",
+    "attachImage": "Adjuntar imagen",
+    "removeImage": "Quitar imagen"
   },
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",

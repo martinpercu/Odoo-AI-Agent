@@ -16,6 +16,7 @@ import {
   createPin as apiCreatePin,
   deletePin as apiDeletePin,
   deleteAllPins as apiDeleteAllPins,
+  refreshPin as apiRefreshPin,
 } from "@/lib/api";
 import { useToast } from "@/components/ui/error-toast";
 
@@ -34,6 +35,7 @@ interface PinnedInsightsContextType {
   clearAll: (chatId?: string) => void;
   getPinId: (kind: string, identifier: string) => string | undefined;
   loadPins: (chatId: string) => void;
+  refreshPin: (pinId: string, chatId: string) => Promise<void>;
 }
 
 const PinnedInsightsContext = createContext<PinnedInsightsContextType | null>(null);
@@ -291,6 +293,26 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
     [pins, optimisticAdd, optimisticRemove]
   );
 
+  const refreshPin = useCallback(
+    async (pinId: string, chatId: string) => {
+      const result = await apiRefreshPin(chatId, pinId);
+      if (!result.success) {
+        showError(result.error || t("errorPin"));
+        return;
+      }
+      if (result.new_payload) {
+        setPins((prev) =>
+          prev.map((p) =>
+            p.id === pinId && p.kind === "chart"
+              ? { ...p, chart: result.new_payload!, pinnedAt: result.refreshed_at || p.pinnedAt }
+              : p
+          )
+        );
+      }
+    },
+    [showError, t]
+  );
+
   const clearAll = useCallback(
     (chatId?: string) => {
       const snapshot = pins;
@@ -324,6 +346,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         clearAll,
         getPinId,
         loadPins,
+        refreshPin,
       }}
     >
       {children}

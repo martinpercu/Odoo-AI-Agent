@@ -18,10 +18,10 @@ export default function NewChatPage() {
   const { sendMessage, isStreaming, stopStreaming, createChat } = useChatContext();
   const { isConfigured } = useOdooConfig();
 
-  async function handleSend(content: string) {
-    const id = createChat(content);
+  async function handleSend(content: string, image?: File) {
+    const id = createChat(content || "Image upload");
     router.push(`/chat/${id}`);
-    sendMessage(content, id);
+    sendMessage(content, id, image);
   }
 
   function handleSuggestion(text: string) {
