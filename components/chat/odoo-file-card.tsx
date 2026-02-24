@@ -5,14 +5,22 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { FileAttachmentMetadata } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
+import { usePinnedInsights } from "@/hooks/use-pinned-insights";
+import { useChatContext } from "@/components/app-shell";
+import { PinToggleButton } from "@/components/pinned/pin-toggle-button";
 
 interface OdooFileCardProps {
   metadata: FileAttachmentMetadata;
+  messageId: string;
 }
 
-export function OdooFileCard({ metadata }: OdooFileCardProps) {
+export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
   const t = useTranslations("ChatMessages");
   const fullUrl = `${API_BASE}${metadata.file_url}`;
+  const { currentChatId } = useChatContext();
+  const { isPinned, togglePinFile } = usePinnedInsights();
+  const chatId = currentChatId ?? "";
+  const filePinned = isPinned("file", metadata.file_url);
 
   return (
     <motion.div
@@ -28,6 +36,10 @@ export function OdooFileCard({ metadata }: OdooFileCardProps) {
           <p className="truncate text-sm font-medium">{metadata.filename}</p>
           <p className="text-xs text-muted-foreground">PDF</p>
         </div>
+        <PinToggleButton
+          pinned={filePinned}
+          onToggle={() => togglePinFile(chatId, messageId, metadata)}
+        />
         <a
           href={fullUrl}
           target="_blank"

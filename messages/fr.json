@@ -150,6 +150,22 @@
       "statusError": "Impossible de se connecter. Vérifiez vos identifiants et réessayez."
     }
   },
+  "PinnedInsights": {
+    "title": "Insights Épinglés",
+    "empty": "Aucun insight épinglé",
+    "emptyHint": "Épinglez des graphiques et fichiers de vos conversations pour les garder à portée de main.",
+    "pinTooltip": "Épingler au tableau de bord",
+    "unpinTooltip": "Détacher du tableau de bord",
+    "clearAll": "Tout effacer",
+    "chartPin": "Graphique épinglé",
+    "filePin": "Fichier épinglé",
+    "excelPin": "Export épinglé",
+    "viewInChat": "Voir dans le chat",
+    "pinnedCount": "{count} épinglés",
+    "errorPin": "Impossible d'épingler cet élément. Veuillez réessayer.",
+    "errorUnpin": "Impossible de détacher cet élément. Veuillez réessayer.",
+    "errorClear": "Impossible d'effacer les épingles. Veuillez réessayer."
+  },
   "LocaleSwitcher": {
     "es": "Español",
     "en": "English",
