@@ -150,6 +150,22 @@
       "statusError": "Não foi possível conectar. Verifique suas credenciais e tente novamente."
     }
   },
+  "PinnedInsights": {
+    "title": "Insights Fixados",
+    "empty": "Nenhum insight fixado",
+    "emptyHint": "Fixe gráficos e arquivos das suas conversas para mantê-los à mão.",
+    "pinTooltip": "Fixar no painel",
+    "unpinTooltip": "Desfixar do painel",
+    "clearAll": "Limpar tudo",
+    "chartPin": "Gráfico fixado",
+    "filePin": "Arquivo fixado",
+    "excelPin": "Exportação fixada",
+    "viewInChat": "Ver no chat",
+    "pinnedCount": "{count} fixados",
+    "errorPin": "Não foi possível fixar este item. Tente novamente.",
+    "errorUnpin": "Não foi possível desfixar este item. Tente novamente.",
+    "errorClear": "Não foi possível limpar os fixados. Tente novamente."
+  },
   "LocaleSwitcher": {
     "es": "Español",
     "en": "English",

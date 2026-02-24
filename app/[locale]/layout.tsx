@@ -5,6 +5,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { OdooConfigProvider } from "@/hooks/use-odoo-config";
+import { PinnedInsightsProvider } from "@/hooks/use-pinned-insights";
+import { ToastProvider } from "@/components/ui/error-toast";
 import { AppShell } from "@/components/app-shell";
 import "../globals.css";
 
@@ -50,7 +52,11 @@ export default async function LocaleLayout({ children, params }: Props) {
       >
         <NextIntlClientProvider>
           <OdooConfigProvider>
-            <AppShell>{children}</AppShell>
+            <ToastProvider>
+              <PinnedInsightsProvider>
+                <AppShell>{children}</AppShell>
+              </PinnedInsightsProvider>
+            </ToastProvider>
           </OdooConfigProvider>
         </NextIntlClientProvider>
       </body>
