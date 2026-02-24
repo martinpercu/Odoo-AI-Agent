@@ -100,6 +100,7 @@ export interface Message {
   timestamp: Date;
   metadata?: MessageMetadata;
   charts?: ChartSSEEvent[];
+  imageUrl?: string;
 }
 
 export interface Chat {

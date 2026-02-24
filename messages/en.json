@@ -31,7 +31,9 @@
   },
   "ChatInput": {
     "placeholder": "Ask about your Odoo data...",
-    "disclaimer": "The agent queries your Odoo instance in real time. Your data is private and secure."
+    "disclaimer": "The agent queries your Odoo instance in real time. Your data is private and secure.",
+    "attachImage": "Attach image",
+    "removeImage": "Remove image"
   },
   "ChatMessages": {
     "typingIndicator": "Querying Odoo",

@@ -1,4 +1,4 @@
-import type { OdooConfig, ActionContext, ActionResult, PinnedInsight } from "@/lib/types";
+import type { OdooConfig, ActionContext, ActionResult, PinnedInsight, ChartSSEEvent } from "@/lib/types";
 
 export const API_BASE = "http://localhost:8000";
 
@@ -216,6 +216,77 @@ export async function deletePin(chatId: string, pinId: string): Promise<DeletePi
     }
     const data = await res.json();
     return { success: false, error: data.detail || "Failed to delete pin" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+// ---- Image Upload API ----
+
+export interface UploadImageResult {
+  success: boolean;
+  data?: Record<string, unknown>;
+  error?: string;
+}
+
+export async function uploadImage(
+  chatId: string,
+  file: File,
+  odooConfig: OdooConfig,
+  locale: string
+): Promise<UploadImageResult> {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("odoo_config", JSON.stringify(toBackendConfig(odooConfig)));
+    formData.append("language", locale);
+
+    const res = await fetch(`${API_BASE}/chat/${chatId}/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      return { success: true, data };
+    }
+
+    return { success: false, error: data.detail || "Upload failed" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+// ---- Refresh Pin API ----
+
+export interface RefreshPinResult {
+  success: boolean;
+  new_payload?: ChartSSEEvent;
+  refreshed_at?: string;
+  error?: string;
+}
+
+export async function refreshPin(
+  chatId: string,
+  pinId: string
+): Promise<RefreshPinResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/pin/${pinId}/refresh`, {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.status === "ok") {
+      return {
+        success: true,
+        new_payload: data.new_payload,
+        refreshed_at: data.refreshed_at,
+      };
+    }
+
+    return { success: false, error: data.detail || "Refresh failed" };
   } catch {
     return { success: false, error: "Network error: Could not connect to backend" };
   }
