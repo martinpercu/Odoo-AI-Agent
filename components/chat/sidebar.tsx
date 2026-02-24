@@ -14,7 +14,9 @@ import {
   Bot,
   Sun,
   Moon,
+  Bell,
 } from "lucide-react";
+import { useNotifications } from "@/hooks/use-notifications";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import type { ChatGroup } from "@/lib/types";
 
@@ -23,15 +25,17 @@ interface SidebarProps {
   currentChatId?: string;
   onNewChat: () => void;
   onSelectChat: (id: string) => void;
+  onBellClick: () => void;
 }
 
-export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat }: SidebarProps) {
+export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("Sidebar");
   const tGroups = useTranslations("ChatGroups");
+  const { unreadCount } = useNotifications();
 
   function toggleTheme() {
     setIsDark((prev) => {
@@ -59,8 +63,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat }: 
           </motion.div>
         )}
         <button
+          onClick={onBellClick}
+          className="ml-auto relative rounded-md p-1.5 hover:bg-sidebar-hover"
+          title={t("alerts")}
+        >
+          <Bell size={18} />
+          {unreadCount > 0 && (
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </button>
+        <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto hidden rounded-md p-1.5 hover:bg-sidebar-hover lg:flex"
+          className="hidden rounded-md p-1.5 hover:bg-sidebar-hover lg:flex"
         >
           <ChevronLeft
             size={18}

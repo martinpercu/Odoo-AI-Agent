@@ -9,7 +9,8 @@
     "plans": "Planos",
     "settings": "Configurações",
     "lightMode": "Modo Claro",
-    "darkMode": "Modo Escuro"
+    "darkMode": "Modo Escuro",
+    "alerts": "Alertas"
   },
   "ChatGroups": {
     "today": "Hoje",
@@ -167,6 +168,24 @@
     "errorPin": "Não foi possível fixar este item. Tente novamente.",
     "errorUnpin": "Não foi possível desfixar este item. Tente novamente.",
     "errorClear": "Não foi possível limpar os fixados. Tente novamente."
+  },
+  "Notifications": {
+    "title": "Alertas",
+    "empty": "Sem alertas ainda",
+    "emptyHint": "Alertas proativos aparecerão aqui quando anomalias forem detectadas.",
+    "markAllRead": "Marcar tudo como lido",
+    "settingsTitle": "Configurações de Alertas",
+    "salesAlerts": "Alertas de Vendas",
+    "salesAlertsDesc": "Notificar quando as vendas caírem mais de 30%",
+    "stockAlerts": "Alertas de Estoque Baixo",
+    "stockAlertsDesc": "Notificar quando o estoque cair abaixo do mínimo",
+    "invoiceAlerts": "Alertas de Faturas",
+    "invoiceAlertsDesc": "Notificar sobre faturas vencidas ou incomuns",
+    "dailySummary": "Resumo Diário",
+    "dailySummaryDesc": "Receber um resumo diário às 9:00",
+    "save": "Salvar",
+    "close": "Fechar",
+    "timeAgo": "atrás"
   },
   "LocaleSwitcher": {
     "es": "Español",
