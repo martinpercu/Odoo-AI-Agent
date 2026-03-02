@@ -167,6 +167,12 @@ export interface ExportSSEEvent {
 
 export type ConnectionStatus = "idle" | "loading" | "success" | "error";
 
+// Entity search result for autocomplete (from name_search)
+export interface EntitySearchResult {
+  id: number;
+  name: string;
+}
+
 // ---- Pinned Insights ----
 
 export interface PinnedChart {
