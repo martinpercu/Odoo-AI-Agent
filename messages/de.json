@@ -66,6 +66,33 @@
       "groupedBy": "Gruppiert nach",
       "downloadExcel": "Excel herunterladen",
       "exportReady": "Ihre Excel-Datei ist bereit"
+    },
+    "actionProposal": {
+      "editField": "Bearbeiten",
+      "noResults": "Keine Ergebnisse",
+      "searching": "Suchen...",
+      "fieldEdited": "Geändert",
+      "originalValue": "Ursprünglicher Vorschlag",
+      "validationError": "Bitte korrigieren Sie die markierten Felder und versuchen Sie es erneut."
+    },
+    "audit": {
+      "title": "Aktionsverlauf",
+      "subtitle": "In dieser Konversation ausgeführte Aktionen",
+      "empty": "Noch keine Aktionen ausgeführt",
+      "userEdited": "Bearbeitete Felder"
+    }
+  },
+  "ChatHistory": {
+    "loading": "Konversation wird geladen..."
+  },
+  "WelcomeDashboard": {
+    "heading": "Was möchten Sie tun?",
+    "comingSoon": "Demnächst verfügbar",
+    "suggestions": {
+      "sales": "Verkäufe nach Zeitraum analysieren",
+      "invoice": "Rechnungsbild hochladen",
+      "inventory": "Produktbestand prüfen",
+      "report": "PDF-Bericht erstellen"
     }
   },
   "Pricing": {
@@ -133,7 +160,8 @@
       "heading": "Instanz-Inspektor",
       "buttonLabel": "Instanz inspizieren",
       "modulesFound": "{count} Module gefunden",
-      "errorGeneric": "Fehler beim Inspizieren der Instanz"
+      "errorGeneric": "Fehler beim Inspizieren der Instanz",
+      "networkError": "Verbindung zum Backend-Server konnte nicht hergestellt werden."
     },
     "form": {
       "urlLabel": "Odoo-URL",
@@ -150,7 +178,8 @@
       "statusTesting": "Verbindung zu Odoo wird getestet...",
       "statusSuccess": "Verbindung erfolgreich.",
       "statusSuccessCompany": "Verbunden mit {company}",
-      "statusError": "Verbindung fehlgeschlagen. Überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut."
+      "statusError": "Verbindung fehlgeschlagen. Überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut.",
+      "networkError": "Verbindung zum Backend-Server konnte nicht hergestellt werden."
     }
   },
   "PinnedInsights": {

@@ -66,6 +66,33 @@
       "groupedBy": "Agrupado por",
       "downloadExcel": "Baixar Excel",
       "exportReady": "Seu arquivo Excel está pronto"
+    },
+    "actionProposal": {
+      "editField": "Editar",
+      "noResults": "Nenhum resultado encontrado",
+      "searching": "Pesquisar...",
+      "fieldEdited": "Modificado",
+      "originalValue": "Sugestão original",
+      "validationError": "Corrija os campos destacados e tente novamente."
+    },
+    "audit": {
+      "title": "Histórico de Ações",
+      "subtitle": "Ações executadas nesta conversa",
+      "empty": "Nenhuma ação executada ainda",
+      "userEdited": "Campos editados"
+    }
+  },
+  "ChatHistory": {
+    "loading": "Carregando conversa..."
+  },
+  "WelcomeDashboard": {
+    "heading": "O que você gostaria de fazer?",
+    "comingSoon": "Em breve",
+    "suggestions": {
+      "sales": "Analisar vendas por período",
+      "invoice": "Enviar imagem de fatura",
+      "inventory": "Verificar inventário de produtos",
+      "report": "Gerar um relatório PDF"
     }
   },
   "Pricing": {
@@ -133,7 +160,8 @@
       "heading": "Inspetor de Instância",
       "buttonLabel": "Inspecionar Instância",
       "modulesFound": "{count} módulos encontrados",
-      "errorGeneric": "Falha ao inspecionar a instância"
+      "errorGeneric": "Falha ao inspecionar a instância",
+      "networkError": "Não foi possível conectar ao servidor backend."
     },
     "form": {
       "urlLabel": "URL do Odoo",
@@ -150,7 +178,8 @@
       "statusTesting": "Testando conexão com Odoo...",
       "statusSuccess": "Conexão bem-sucedida.",
       "statusSuccessCompany": "Conectado a {company}",
-      "statusError": "Não foi possível conectar. Verifique suas credenciais e tente novamente."
+      "statusError": "Não foi possível conectar. Verifique suas credenciais e tente novamente.",
+      "networkError": "Não foi possível conectar ao servidor backend."
     }
   },
   "PinnedInsights": {

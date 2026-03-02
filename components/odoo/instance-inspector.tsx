@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Loader2, Package, CheckCircle2, XCircle } from "lucide-react";
-import { inspectInstance, type OdooModule } from "@/lib/api";
+import { inspectInstance, NETWORK_ERROR, type OdooModule } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import type { ConnectionStatus } from "@/lib/types";
 
@@ -30,9 +30,13 @@ export function InstanceInspector() {
         setModules(result.modules);
       } else {
         setStatus("error");
-        setError(result.error ?? t("errorGeneric"));
+        setError(
+          result.error === NETWORK_ERROR
+            ? t("networkError")
+            : result.error ?? t("errorGeneric")
+        );
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
       setError(t("errorGeneric"));
     }

@@ -1,6 +1,9 @@
-import type { OdooConfig, ActionContext, ActionResult, PinnedInsight, ChartSSEEvent, AppNotification, NotificationSettings } from "@/lib/types";
+import type { OdooConfig, ActionContext, ActionResult, PinnedInsight, ChartSSEEvent, AppNotification, NotificationSettings, Message, EntitySearchResult } from "@/lib/types";
 
 export const API_BASE = "http://localhost:8000";
+
+/** Sentinel value for network errors — consumers should map this to an i18n key. */
+export const NETWORK_ERROR = "__NETWORK_ERROR__";
 
 /** Maps frontend OdooConfig fields to the backend's expected format. */
 export function toBackendConfig(config: OdooConfig) {
@@ -41,15 +44,15 @@ export async function testOdooConnection(
       };
     }
 
-    const detail = data.detail || data.msg || "Error en las credenciales";
+    const detail = data.detail || data.msg;
     return {
       success: false,
-      error: typeof detail === "object" ? JSON.stringify(detail) : detail,
+      error: detail ? (typeof detail === "object" ? JSON.stringify(detail) : detail) : undefined,
     };
   } catch {
     return {
       success: false,
-      error: "No se pudo conectar con el servidor backend.",
+      error: NETWORK_ERROR,
     };
   }
 }
@@ -88,12 +91,12 @@ export async function inspectInstance(
 
     return {
       success: false,
-      error: data.detail || data.error || "Failed to inspect instance",
+      error: data.detail || data.error || undefined,
     };
   } catch {
     return {
       success: false,
-      error: "No se pudo conectar con el servidor backend.",
+      error: NETWORK_ERROR,
     };
   }
 }
@@ -102,6 +105,7 @@ export interface ExecuteActionResult {
   success: boolean;
   message?: string;
   error?: string;
+  fieldErrors?: Record<string, string>;
   result?: ActionResult;
   queue_next?: { text: string };
 }
@@ -143,7 +147,10 @@ export async function executeAction(
     } else if (res.status === 401) {
       errorMessage = `Authentication failed: ${errorMessage}`;
     } else if (res.status === 422) {
-      errorMessage = errorMessage; // Odoo business error, use as-is
+      // Odoo business/validation error — may include per-field errors
+      const fieldErrors: Record<string, string> | undefined =
+        data.errors && typeof data.errors === "object" ? data.errors : undefined;
+      return { success: false, error: errorMessage, fieldErrors };
     } else if (res.status === 500) {
       errorMessage = `Execution error: ${errorMessage}`;
     }
@@ -396,5 +403,111 @@ export async function updateNotificationSettings(
     return { success: false, error: data.detail || "Failed to update settings" };
   } catch {
     return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+// ---- Chat History API ----
+
+export interface FetchChatHistoryResult {
+  success: boolean;
+  messages?: Message[];
+  error?: string;
+}
+
+export async function fetchChatHistory(
+  chatId: string,
+  odooConfig: OdooConfig
+): Promise<FetchChatHistoryResult> {
+  try {
+    const params = new URLSearchParams({
+      odoo_url: odooConfig.url,
+      odoo_db: odooConfig.db,
+      odoo_username: odooConfig.login,
+      odoo_api_key: odooConfig.apiKey,
+    });
+    const res = await fetch(`${API_BASE}/chat/${chatId}/history?${params}`);
+    const data = await res.json();
+    if (res.ok) {
+      const messages: Message[] = (data.messages ?? data).map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (m: any) => ({
+          ...m,
+          timestamp: new Date(m.timestamp ?? m.created_at ?? Date.now()),
+        })
+      );
+      return { success: true, messages };
+    }
+    return { success: false, error: data.detail || "Failed to fetch chat history" };
+  } catch {
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Audit History API ----
+
+export interface AuditEntry {
+  id: string;
+  action: string;
+  model: string;
+  record_id: number | null;
+  vals: Record<string, unknown>;
+  user_edits: Record<string, unknown> | null;
+  status: "success" | "error";
+  error_message?: string;
+  created_at: string;
+}
+
+export interface FetchAuditResult {
+  success: boolean;
+  entries?: AuditEntry[];
+  error?: string;
+}
+
+export async function fetchAuditHistory(
+  chatId: string
+): Promise<FetchAuditResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/audit`);
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, entries: data.entries ?? data };
+    }
+    return { success: false, error: data.detail || "Failed to fetch audit history" };
+  } catch {
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Entity Search API (Odoo name_search) ----
+
+export interface SearchEntitiesResult {
+  success: boolean;
+  results?: EntitySearchResult[];
+  error?: string;
+}
+
+export async function searchEntities(
+  chatId: string,
+  model: string,
+  query: string,
+  odooConfig: OdooConfig
+): Promise<SearchEntitiesResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/search`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model,
+        query,
+        odoo_config: toBackendConfig(odooConfig),
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, results: data.results ?? data };
+    }
+    return { success: false, error: data.detail || "Search failed" };
+  } catch {
+    return { success: false, error: NETWORK_ERROR };
   }
 }
