@@ -36,6 +36,8 @@
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",
     "configNotSet": "Conexão do Odoo não configurada. Vá para Configurações para configurar sua conexão.",
+    "processing": "Processando no Odoo...",
+    "completed": "Concluído",
     "success": {
       "title": "Ação concluída com sucesso",
       "recordId": "ID: {id}",

@@ -23,7 +23,11 @@ export function SuccessCard({ metadata }: SuccessCardProps) {
           <CheckCircle2 size={18} className="text-success" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-success">{t("title")}</p>
+          <p className="text-sm font-medium text-success">
+            {metadata.actionType === "method_call" && metadata.actionMessage
+              ? metadata.actionMessage
+              : t("title")}
+          </p>
           {metadata.recordName && (
             <p className="mt-1 text-sm text-foreground">{metadata.recordName}</p>
           )}

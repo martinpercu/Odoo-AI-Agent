@@ -6,6 +6,8 @@ export interface ActionSuccessMetadata {
   recordName?: string;
   model?: string;
   odooUrl?: string;
+  actionType?: "method_call" | "crud";
+  actionMessage?: string;
 }
 
 export interface ValidationErrorMetadata {
@@ -19,6 +21,7 @@ export interface ActionPromptMetadata {
   type: "action_prompt";
   action: string;
   actionLabel: string;
+  action_btn?: string;
   recordId?: string | number;
   context?: Record<string, any>;
 }
