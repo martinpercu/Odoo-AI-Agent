@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Settings, Shield } from "lucide-react";
 import { ConnectionForm } from "@/components/odoo/connection-form";
+import { InstanceInspector } from "@/components/odoo/instance-inspector";
 
 export default function SettingsPage() {
   const t = useTranslations("Settings");
@@ -34,6 +35,16 @@ export default function SettingsPage() {
           className="rounded-2xl border border-border bg-card p-6 shadow-sm"
         >
           <ConnectionForm />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm"
+        >
+          <h2 className="mb-4 text-lg font-semibold">{t("inspector.heading")}</h2>
+          <InstanceInspector />
         </motion.div>
 
         <motion.div

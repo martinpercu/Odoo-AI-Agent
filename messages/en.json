@@ -35,7 +35,16 @@
   },
   "ChatMessages": {
     "typingIndicator": "Querying Odoo",
-    "configNotSet": "Odoo connection not configured. Go to Settings to set up your connection."
+    "configNotSet": "Odoo connection not configured. Go to Settings to set up your connection.",
+    "success": {
+      "title": "Action completed successfully",
+      "recordId": "ID: {id}",
+      "viewInOdoo": "View in Odoo"
+    },
+    "validation": {
+      "title": "Missing information",
+      "description": "Please provide the following fields:"
+    }
   },
   "Pricing": {
     "heading": "Plans & Pricing",
@@ -97,6 +106,12 @@
     "security": {
       "title": "Security",
       "description": "Your API Key is stored securely and encrypted. It is only used to perform authorized queries to your Odoo instance. We never share your credentials with third parties."
+    },
+    "inspector": {
+      "heading": "Instance Inspector",
+      "buttonLabel": "Inspect Instance",
+      "modulesFound": "{count} modules found",
+      "errorGeneric": "Failed to inspect instance"
     },
     "form": {
       "urlLabel": "Odoo URL",

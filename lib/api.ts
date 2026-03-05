@@ -53,3 +53,99 @@ export async function testOdooConnection(
     };
   }
 }
+
+export interface OdooModule {
+  name: string;
+  state: string;
+  installed_version?: string;
+  display_name?: string;
+}
+
+export interface InspectInstanceResult {
+  success: boolean;
+  modules?: OdooModule[];
+  error?: string;
+}
+
+export async function inspectInstance(
+  config: OdooConfig
+): Promise<InspectInstanceResult> {
+  try {
+    const res = await fetch(`${API_BASE}/inspect-instance`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ odoo_config: toBackendConfig(config) }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.modules) {
+      return {
+        success: true,
+        modules: data.modules,
+      };
+    }
+
+    return {
+      success: false,
+      error: data.detail || data.error || "Failed to inspect instance",
+    };
+  } catch {
+    return {
+      success: false,
+      error: "No se pudo conectar con el servidor backend.",
+    };
+  }
+}
+
+export interface ExecuteActionResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+export async function executeAction(
+  chatId: string,
+  action: string,
+  context?: Record<string, any>,
+  odooConfig?: OdooConfig,
+  locale?: string
+): Promise<ExecuteActionResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/action`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action,
+        context,
+        odoo_config: odooConfig ? toBackendConfig(odooConfig) : undefined,
+        language: locale,
+      }),
+    });
+
+    const data = await res.json();
+
+    // Success: 200 (update) or 201 (create)
+    if (res.ok) {
+      return { success: true, message: data.message };
+    }
+
+    // Error handling based on HTTP status codes
+    let errorMessage = data.detail || data.message || "Action failed";
+
+    if (res.status === 400) {
+      // Validation error
+      errorMessage = `Validation error: ${errorMessage}`;
+    } else if (res.status === 401) {
+      // Odoo authentication failed
+      errorMessage = `Authentication failed: ${errorMessage}`;
+    } else if (res.status === 500) {
+      // Server/Odoo execution error
+      errorMessage = `Execution error: ${errorMessage}`;
+    }
+
+    return { success: false, error: errorMessage };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
