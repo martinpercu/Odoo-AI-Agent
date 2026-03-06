@@ -46,6 +46,16 @@
     "validation": {
       "title": "Missing information",
       "description": "Please provide the following fields:"
+    },
+    "selection": {
+      "selected": "Selected: {name}"
+    },
+    "fileCard": {
+      "downloadPdf": "Download PDF",
+      "fileExpired": "File no longer available. Generate the report again."
+    },
+    "sequence": {
+      "autoSending": "Processing next step..."
     }
   },
   "Pricing": {

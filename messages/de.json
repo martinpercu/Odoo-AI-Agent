@@ -46,6 +46,16 @@
     "validation": {
       "title": "Fehlende Informationen",
       "description": "Bitte geben Sie die folgenden Felder an:"
+    },
+    "selection": {
+      "selected": "Ausgewählt: {name}"
+    },
+    "fileCard": {
+      "downloadPdf": "PDF herunterladen",
+      "fileExpired": "Datei nicht mehr verfügbar. Erstellen Sie den Bericht erneut."
+    },
+    "sequence": {
+      "autoSending": "Nächster Schritt wird verarbeitet..."
     }
   },
   "Pricing": {
