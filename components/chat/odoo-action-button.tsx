@@ -4,11 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { ActionPromptMetadata } from "@/lib/types";
+import type { ActionPromptMetadata, ActionContext } from "@/lib/types";
 
 interface OdooActionButtonProps {
   metadata: ActionPromptMetadata;
-  onAction: (action: string, context?: Record<string, any>) => Promise<void>;
+  onAction: (actionContext: ActionContext) => Promise<void>;
 }
 
 export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) {
@@ -21,7 +21,18 @@ export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) 
   async function handleClick() {
     setLoading(true);
     try {
-      await onAction(metadata.action, metadata.context);
+      // Build ActionContext from the legacy action_prompt metadata
+      const ctx = metadata.context ?? {};
+      const actionContext: ActionContext = {
+        action: "method_call",
+        model: (ctx.model as string) ?? "",
+        vals: (ctx.vals as Record<string, unknown>) ?? {},
+        target_ids: (ctx.target_ids as number[] | null) ?? (metadata.recordId ? [Number(metadata.recordId)] : null),
+        method: (ctx.method as string) ?? metadata.action,
+        canonical_verb: (ctx.canonical_verb as string | null) ?? null,
+        status: "pending_confirmation",
+      };
+      await onAction(actionContext);
       setCompleted(true);
     } catch (error) {
       console.error("Action failed:", error);

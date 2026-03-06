@@ -46,6 +46,16 @@
     "validation": {
       "title": "Informação faltando",
       "description": "Por favor, forneça os seguintes campos:"
+    },
+    "selection": {
+      "selected": "Selecionado: {name}"
+    },
+    "fileCard": {
+      "downloadPdf": "Baixar PDF",
+      "fileExpired": "Arquivo não mais disponível. Gere o relatório novamente."
+    },
+    "sequence": {
+      "autoSending": "Processando próximo passo..."
     }
   },
   "Pricing": {
