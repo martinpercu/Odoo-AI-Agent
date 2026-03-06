@@ -66,6 +66,33 @@
       "groupedBy": "Groupé par",
       "downloadExcel": "Télécharger Excel",
       "exportReady": "Votre fichier Excel est prêt"
+    },
+    "actionProposal": {
+      "editField": "Modifier",
+      "noResults": "Aucun résultat",
+      "searching": "Rechercher...",
+      "fieldEdited": "Modifié",
+      "originalValue": "Suggestion originale",
+      "validationError": "Veuillez corriger les champs signalés et réessayer."
+    },
+    "audit": {
+      "title": "Historique des Actions",
+      "subtitle": "Actions exécutées dans cette conversation",
+      "empty": "Aucune action exécutée",
+      "userEdited": "Champs modifiés"
+    }
+  },
+  "ChatHistory": {
+    "loading": "Chargement de la conversation..."
+  },
+  "WelcomeDashboard": {
+    "heading": "Que souhaitez-vous faire ?",
+    "comingSoon": "Bientôt disponible",
+    "suggestions": {
+      "sales": "Analyser les ventes par période",
+      "invoice": "Télécharger une image de facture",
+      "inventory": "Vérifier l'inventaire des produits",
+      "report": "Générer un rapport PDF"
     }
   },
   "Pricing": {
@@ -133,7 +160,8 @@
       "heading": "Inspecteur d'instance",
       "buttonLabel": "Inspecter l'instance",
       "modulesFound": "{count} modules trouvés",
-      "errorGeneric": "Échec de l'inspection de l'instance"
+      "errorGeneric": "Échec de l'inspection de l'instance",
+      "networkError": "Impossible de se connecter au serveur backend."
     },
     "form": {
       "urlLabel": "URL d'Odoo",
@@ -150,7 +178,8 @@
       "statusTesting": "Test de connexion à Odoo...",
       "statusSuccess": "Connexion réussie.",
       "statusSuccessCompany": "Connecté à {company}",
-      "statusError": "Impossible de se connecter. Vérifiez vos identifiants et réessayez."
+      "statusError": "Impossible de se connecter. Vérifiez vos identifiants et réessayez.",
+      "networkError": "Impossible de se connecter au serveur backend."
     }
   },
   "PinnedInsights": {
