@@ -13,6 +13,7 @@ import { OdooActionButton } from "./odoo-action-button";
 import { ActionProposalButton } from "./action-proposal-button";
 import { SelectionCard } from "./selection-card";
 import { OdooFileCard } from "./odoo-file-card";
+import { OdooChartCard } from "./odoo-chart-card";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -129,6 +130,13 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       {message.metadata.type === "file_attachment" && (
                         <OdooFileCard metadata={message.metadata} />
                       )}
+                    </>
+                  )}
+                  {message.charts && message.charts.length > 0 && (
+                    <>
+                      {message.charts.map((chart, ci) => (
+                        <OdooChartCard key={`chart-${ci}`} chart={chart} />
+                      ))}
                     </>
                   )}
                 </>
