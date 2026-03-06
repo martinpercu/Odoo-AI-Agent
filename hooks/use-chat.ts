@@ -12,7 +12,7 @@ import type {
   ChartSSEEvent,
   ExcelExportMetadata,
 } from "@/lib/types";
-import { API_BASE, toBackendConfig, executeAction as executeActionAPI } from "@/lib/api";
+import { API_BASE, toBackendConfig, executeAction as executeActionAPI, uploadImage as uploadImageAPI } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -87,10 +87,20 @@ export function useChat(chatId?: string) {
   );
 
   const sendMessage = useCallback(
-    async (content: string, explicitChatId?: string) => {
+    async (content: string, explicitChatIdOrImage?: string | File, maybeImage?: File) => {
+      // Resolve overloaded args: sendMessage(content, chatId?, image?)
+      let explicitChatId: string | undefined;
+      let image: File | undefined;
+      if (typeof explicitChatIdOrImage === "string") {
+        explicitChatId = explicitChatIdOrImage;
+        image = maybeImage;
+      } else if (explicitChatIdOrImage instanceof File) {
+        image = explicitChatIdOrImage;
+      }
+
       let targetId = explicitChatId ?? currentChatId;
       if (!targetId) {
-        targetId = createChat(content);
+        targetId = createChat(content || "Image upload");
       }
 
       const userMessage: Message = {
@@ -98,6 +108,7 @@ export function useChat(chatId?: string) {
         role: "user",
         content,
         timestamp: new Date(),
+        ...(image && { imageUrl: URL.createObjectURL(image) }),
       };
 
       const assistantId = `msg-${Date.now() + 1}`;
@@ -138,6 +149,61 @@ export function useChat(chatId?: string) {
           )
         );
         setIsStreaming(false);
+        return;
+      }
+
+      // Image upload flow: POST to /upload (not SSE)
+      if (image) {
+        try {
+          const result = await uploadImageAPI(targetId, image, odooConfig, locale);
+
+          if (!result.success) {
+            setChats((prev) =>
+              prev.map((c) =>
+                c.id === targetId
+                  ? {
+                      ...c,
+                      messages: c.messages.map((m) =>
+                        m.id === assistantId
+                          ? { ...m, content: `⚠️ ${result.error || "Upload failed"}` }
+                          : m
+                      ),
+                    }
+                  : c
+              )
+            );
+            return;
+          }
+
+          // Parse upload response — may contain text + action_proposal
+          const data = result.data!;
+          let metadata: MessageMetadata | undefined;
+          const responseContent = (data.message as string) || (data.content as string) || "";
+
+          if (data.type === "action_proposal" || data.action_proposal) {
+            const proposal = data.type === "action_proposal" ? data : data.action_proposal;
+            metadata = proposal as MessageMetadata;
+          } else if (data.metadata) {
+            metadata = data.metadata as MessageMetadata;
+          }
+
+          setChats((prev) =>
+            prev.map((c) =>
+              c.id === targetId
+                ? {
+                    ...c,
+                    messages: c.messages.map((m) =>
+                      m.id === assistantId
+                        ? { ...m, content: responseContent, ...(metadata && { metadata }) }
+                        : m
+                    ),
+                  }
+                : c
+            )
+          );
+        } finally {
+          setIsStreaming(false);
+        }
         return;
       }
 

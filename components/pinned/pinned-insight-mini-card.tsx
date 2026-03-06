@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BarChart3, PieChart, TrendingUp, FileText, FileSpreadsheet, X, Download } from "lucide-react";
+import { useState } from "react";
+import { BarChart3, PieChart, TrendingUp, FileText, FileSpreadsheet, X, Download, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
@@ -29,11 +30,21 @@ function formatTotal(total: number, format: string, symbol: string): string {
 
 export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   const t = useTranslations("PinnedInsights");
-  const { unpin } = usePinnedInsights();
+  const { unpin, refreshPin } = usePinnedInsights();
+  const [refreshing, setRefreshing] = useState(false);
 
   if (pin.kind === "chart") {
     const Icon = chartIcons[pin.chart.chart_type] ?? BarChart3;
     const total = formatTotal(pin.chart.meta.total, pin.chart.meta.value_format, pin.chart.meta.currency_symbol);
+
+    async function handleRefresh() {
+      setRefreshing(true);
+      try {
+        await refreshPin(pin.id, pin.chatId);
+      } finally {
+        setRefreshing(false);
+      }
+    }
 
     return (
       <motion.div
@@ -43,13 +54,23 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
         exit={{ opacity: 0, x: 20 }}
         className="group relative rounded-lg border border-border bg-card p-3 transition-colors hover:bg-muted/50"
       >
-        <button
-          onClick={() => unpin(pin.id)}
-          className="absolute right-1.5 top-1.5 rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-          title={t("unpinTooltip")}
-        >
-          <X size={12} />
-        </button>
+        <div className="absolute right-1.5 top-1.5 flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-50"
+            title="Refresh"
+          >
+            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+          </button>
+          <button
+            onClick={() => unpin(pin.id)}
+            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+            title={t("unpinTooltip")}
+          >
+            <X size={12} />
+          </button>
+        </div>
         <div className="flex items-start gap-2.5">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-odoo-purple/10 text-odoo-purple">
             <Icon size={14} />

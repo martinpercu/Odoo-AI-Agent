@@ -9,7 +9,8 @@
     "plans": "Tarifs",
     "settings": "Paramètres",
     "lightMode": "Mode Clair",
-    "darkMode": "Mode Sombre"
+    "darkMode": "Mode Sombre",
+    "alerts": "Alertes"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -31,7 +32,9 @@
   },
   "ChatInput": {
     "placeholder": "Posez une question sur vos données Odoo...",
-    "disclaimer": "L'agent interroge votre instance Odoo en temps réel. Vos données sont privées et sécurisées."
+    "disclaimer": "L'agent interroge votre instance Odoo en temps réel. Vos données sont privées et sécurisées.",
+    "attachImage": "Joindre une image",
+    "removeImage": "Supprimer l'image"
   },
   "ChatMessages": {
     "typingIndicator": "Interrogation d'Odoo",
@@ -165,6 +168,24 @@
     "errorPin": "Impossible d'épingler cet élément. Veuillez réessayer.",
     "errorUnpin": "Impossible de détacher cet élément. Veuillez réessayer.",
     "errorClear": "Impossible d'effacer les épingles. Veuillez réessayer."
+  },
+  "Notifications": {
+    "title": "Alertes",
+    "empty": "Aucune alerte",
+    "emptyHint": "Les alertes proactives apparaîtront ici lorsque des anomalies seront détectées.",
+    "markAllRead": "Tout marquer comme lu",
+    "settingsTitle": "Paramètres des Alertes",
+    "salesAlerts": "Alertes de Ventes",
+    "salesAlertsDesc": "Notifier lorsque les ventes chutent de plus de 30%",
+    "stockAlerts": "Alertes de Stock Bas",
+    "stockAlertsDesc": "Notifier lorsque le stock descend sous le minimum",
+    "invoiceAlerts": "Alertes de Factures",
+    "invoiceAlertsDesc": "Notifier les factures en retard ou inhabituelles",
+    "dailySummary": "Résumé Quotidien",
+    "dailySummaryDesc": "Recevoir un résumé quotidien à 9h00",
+    "save": "Enregistrer",
+    "close": "Fermer",
+    "timeAgo": "il y a"
   },
   "LocaleSwitcher": {
     "es": "Español",

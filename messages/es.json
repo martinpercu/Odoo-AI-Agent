@@ -9,7 +9,8 @@
     "plans": "Planes",
     "settings": "Configuración",
     "lightMode": "Modo Claro",
-    "darkMode": "Modo Oscuro"
+    "darkMode": "Modo Oscuro",
+    "alerts": "Alertas"
   },
   "ChatGroups": {
     "today": "Hoy",
@@ -31,7 +32,9 @@
   },
   "ChatInput": {
     "placeholder": "Pregunta sobre tus datos de Odoo...",
-    "disclaimer": "El agente consulta tu instancia de Odoo en tiempo real. Los datos son privados y seguros."
+    "disclaimer": "El agente consulta tu instancia de Odoo en tiempo real. Los datos son privados y seguros.",
+    "attachImage": "Adjuntar imagen",
+    "removeImage": "Quitar imagen"
   },
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",
@@ -165,6 +168,24 @@
     "errorPin": "No se pudo fijar este elemento. Inténtalo de nuevo.",
     "errorUnpin": "No se pudo desfijar este elemento. Inténtalo de nuevo.",
     "errorClear": "No se pudieron limpiar los pins. Inténtalo de nuevo."
+  },
+  "Notifications": {
+    "title": "Alertas",
+    "empty": "Sin alertas aún",
+    "emptyHint": "Las alertas proactivas aparecerán aquí cuando se detecten anomalías.",
+    "markAllRead": "Marcar todo como leído",
+    "settingsTitle": "Configuración de Alertas",
+    "salesAlerts": "Alertas de Ventas",
+    "salesAlertsDesc": "Notificar cuando las ventas caigan más del 30%",
+    "stockAlerts": "Alertas de Stock Bajo",
+    "stockAlertsDesc": "Notificar cuando el stock caiga por debajo del mínimo",
+    "invoiceAlerts": "Alertas de Facturas",
+    "invoiceAlertsDesc": "Notificar sobre facturas vencidas o inusuales",
+    "dailySummary": "Resumen Diario",
+    "dailySummaryDesc": "Recibir un resumen diario a las 9:00 AM",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "timeAgo": "atrás"
   },
   "LocaleSwitcher": {
     "es": "Español",

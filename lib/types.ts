@@ -100,6 +100,7 @@ export interface Message {
   timestamp: Date;
   metadata?: MessageMetadata;
   charts?: ChartSSEEvent[];
+  imageUrl?: string;
 }
 
 export interface Chat {
@@ -197,3 +198,26 @@ export interface PinnedExcel {
 }
 
 export type PinnedInsight = PinnedChart | PinnedFile | PinnedExcel;
+
+// ---- Notifications ----
+
+export type NotificationSeverity = "critical" | "warning" | "info" | "success";
+export type NotificationCategory = "sales" | "stock" | "invoices" | "general";
+
+export interface AppNotification {
+  id: string;
+  title: string;
+  body: string;
+  severity: NotificationSeverity;
+  category: NotificationCategory;
+  read: boolean;
+  createdAt: string;
+  chatPrompt: string;
+}
+
+export interface NotificationSettings {
+  salesAlerts: boolean;
+  stockAlerts: boolean;
+  invoiceAlerts: boolean;
+  dailySummary: boolean;
+}
