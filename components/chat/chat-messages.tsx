@@ -14,6 +14,7 @@ import { ActionProposalButton } from "./action-proposal-button";
 import { SelectionCard } from "./selection-card";
 import { OdooFileCard } from "./odoo-file-card";
 import { OdooChartCard } from "./odoo-chart-card";
+import { ExcelExportCard } from "./excel-export-card";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -129,6 +130,9 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       )}
                       {message.metadata.type === "file_attachment" && (
                         <OdooFileCard metadata={message.metadata} />
+                      )}
+                      {message.metadata.type === "excel_export" && (
+                        <ExcelExportCard metadata={message.metadata} />
                       )}
                     </>
                   )}

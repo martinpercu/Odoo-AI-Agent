@@ -78,13 +78,20 @@ export type ActionResult =
   | { action: "method_call"; model: string; method: string; ids: number[]; method_result: unknown }
   | { action: "report"; model: string; ids: number[]; file_url: string; filename: string };
 
+export interface ExcelExportMetadata {
+  type: "excel_export";
+  export_url: string;
+  filename: string;
+}
+
 export type MessageMetadata =
   | ActionSuccessMetadata
   | ValidationErrorMetadata
   | ActionPromptMetadata
   | ActionProposalMetadata
   | SelectionPromptMetadata
-  | FileAttachmentMetadata;
+  | FileAttachmentMetadata
+  | ExcelExportMetadata;
 
 export interface Message {
   id: string;
@@ -148,6 +155,13 @@ export interface ChartSSEEvent {
   title: string;
   data: ChartDataPoint[];
   meta: ChartMeta;
+  export_url?: string;
+}
+
+export interface ExportSSEEvent {
+  type: "export";
+  export_url: string;
+  filename: string;
 }
 
 export type ConnectionStatus = "idle" | "loading" | "success" | "error";
