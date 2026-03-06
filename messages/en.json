@@ -9,7 +9,8 @@
     "plans": "Plans",
     "settings": "Settings",
     "lightMode": "Light Mode",
-    "darkMode": "Dark Mode"
+    "darkMode": "Dark Mode",
+    "alerts": "Alerts"
   },
   "ChatGroups": {
     "today": "Today",
@@ -31,7 +32,9 @@
   },
   "ChatInput": {
     "placeholder": "Ask about your Odoo data...",
-    "disclaimer": "The agent queries your Odoo instance in real time. Your data is private and secure."
+    "disclaimer": "The agent queries your Odoo instance in real time. Your data is private and secure.",
+    "attachImage": "Attach image",
+    "removeImage": "Remove image"
   },
   "ChatMessages": {
     "typingIndicator": "Querying Odoo",
@@ -165,6 +168,24 @@
     "errorPin": "Could not pin this item. Please try again.",
     "errorUnpin": "Could not unpin this item. Please try again.",
     "errorClear": "Could not clear pins. Please try again."
+  },
+  "Notifications": {
+    "title": "Alerts",
+    "empty": "No alerts yet",
+    "emptyHint": "Proactive insights will appear here when anomalies are detected.",
+    "markAllRead": "Mark all read",
+    "settingsTitle": "Alert Settings",
+    "salesAlerts": "Sales Alerts",
+    "salesAlertsDesc": "Notify when sales drop more than 30%",
+    "stockAlerts": "Low Stock Alerts",
+    "stockAlertsDesc": "Notify when product stock falls below minimum",
+    "invoiceAlerts": "Invoice Alerts",
+    "invoiceAlertsDesc": "Notify about overdue or unusual invoices",
+    "dailySummary": "Daily Summary",
+    "dailySummaryDesc": "Receive a daily summary at 9:00 AM",
+    "save": "Save",
+    "close": "Close",
+    "timeAgo": "ago"
   },
   "LocaleSwitcher": {
     "es": "Español",

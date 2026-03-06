@@ -15,11 +15,12 @@ A modern, responsive interface that allows users to query and manage data from t
 **Core Chat:**
 - Real-time chat with SSE streaming
 - Rich Markdown-formatted responses
+- Image upload with inline preview (vision-based AI interactions)
 - Predefined suggestions to quickly start querying
 - Conversation history grouped by date (today, yesterday, last 7 days)
 
 **Action Management:**
-- AI-proposed CRUD actions with confirm/cancel flow
+- AI-proposed CRUD actions with confirm/cancel flow (from text and vision sources)
 - Visual feedback for write operations (create, update, method calls)
 - Success cards with record links to Odoo
 - Validation error prompts with missing field indicators
@@ -30,6 +31,12 @@ A modern, responsive interface that allows users to query and manage data from t
 - Automatic Excel export button on chart cards
 - Standalone Excel download cards for explicit export requests
 - PDF report download cards
+
+**Pinned Insights Dashboard:**
+- Pin charts, files, and exports to a collapsible right sidebar
+- Refresh pinned charts to get updated data from Odoo
+- Flying pin animation with spring physics
+- Max 20 pins per chat with optimistic UI updates
 
 **Configuration:**
 - Odoo connection configuration and validation
@@ -81,8 +88,8 @@ components/
   locale-switcher.tsx           # Language selector dropdown
   chat/
     sidebar.tsx                 # Collapsible sidebar + history + theme toggle
-    chat-messages.tsx           # Message bubbles with metadata handling
-    chat-input.tsx              # Auto-resizing input with send/stop
+    chat-messages.tsx           # Message bubbles with metadata + image handling
+    chat-input.tsx              # Auto-resizing input with image upload + send/stop
     success-card.tsx            # Green card for successful actions
     validation-prompt.tsx       # Orange card for missing fields
     odoo-action-button.tsx      # Purple action confirmation button
@@ -91,16 +98,23 @@ components/
     odoo-file-card.tsx          # PDF report download card
     odoo-chart-card.tsx         # Interactive charts (bar/line/pie) + Excel export
     excel-export-card.tsx       # Standalone Excel download card
+  pinned/
+    pinned-sidebar.tsx          # Collapsible right sidebar for pinned insights
+    pinned-insight-mini-card.tsx # Compact card with refresh (charts) + unpin
+    pin-toggle-button.tsx       # Reusable pin/unpin toggle on chart/file cards
+    flying-pin-animation.tsx    # Spring-animated flying pin portal
   pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
   odoo/
     connection-form.tsx         # Odoo credentials form
     instance-inspector.tsx      # View installed Odoo modules
 hooks/
-  use-chat.ts                   # Chat state + SSE + metadata/chart/export parsing
+  use-chat.ts                   # Chat state + SSE + image upload + metadata parsing
   use-odoo-config.tsx           # Odoo config context (localStorage)
+  use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear)
 lib/
-  api.ts                        # Backend integration (chat, actions, inspect)
+  api.ts                        # Backend integration (chat, actions, upload, pins)
   types.ts                      # TypeScript interfaces + metadata types
+  pin-animation-events.ts       # Pub-sub system for flying pin animations
 i18n/                           # Routing, request config, navigation
 messages/                       # Translations (es, en, fr, de, pt)
 proxy.ts                        # Locale detection middleware
@@ -162,6 +176,21 @@ Standalone Excel download card for explicit export requests:
 - Shows filename and "export ready" message
 - Download button with `download` attribute to force browser download
 
+### PinnedInsightMiniCard
+Compact card displayed in the pinned insights sidebar:
+- **Chart cards:** Icon by chart type (bar/pie/line), title, formatted total, refresh + unpin buttons
+- **File cards:** Red PDF icon, filename, download link, unpin button
+- **Excel cards:** Green Excel icon, filename, download link, unpin button
+- Refresh button (charts only) with spinning animation during API call
+- Buttons revealed on hover with smooth opacity transition
+
+### ChatInput
+Auto-resizing textarea with image upload support:
+- Paperclip button opens native file picker (`accept="image/*"`)
+- Selected image shows as 64px thumbnail preview with X to remove
+- Supports sending text only, image only, or both together
+- Enter to send, Shift+Enter for newline
+
 ## Communication Flow
 
 ```
@@ -172,6 +201,13 @@ Standalone Excel download card for explicit export requests:
 │             │  ◄──────────────────────────────  │                 │
 └─────────────┘     text/event-stream (SSE)       └─────────────────┘
                     chunks with optional metadata
+
+┌─────────────┐     POST /chat/{id}/upload      ┌─────────────────┐
+│             │  ──────────────────────────────►  │                 │
+│   Frontend  │     multipart/form-data (image)   │     Backend     │
+│  (Next.js)  │                                   │  (FastAPI/OCR)  │
+│             │  ◄──────────────────────────────  │                 │
+└─────────────┘     JSON (action_proposal)        └─────────────────┘
 ```
 
 **Consumed endpoints:**
@@ -179,7 +215,13 @@ Standalone Excel download card for explicit export requests:
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/chat/{id}/stream` | Send message + receive SSE response with metadata |
+| `POST` | `/chat/{id}/upload` | Upload image (multipart) + receive JSON with action proposal |
 | `POST` | `/chat/{id}/action` | Execute confirmable action (e.g., confirm quotation) |
+| `GET` | `/chat/{id}/pins` | Fetch all pinned insights for a chat |
+| `POST` | `/chat/{id}/pin` | Create a new pin (chart, file, or excel) |
+| `DELETE` | `/chat/{id}/pin/{pinId}` | Delete a specific pin |
+| `POST` | `/chat/{id}/pin/{pinId}/refresh` | Refresh a pinned chart with updated data |
+| `DELETE` | `/chat/{id}/pins` | Clear all pins for a chat |
 | `POST` | `/test-connection` | Validate Odoo credentials |
 | `POST` | `/inspect-instance` | Fetch installed Odoo modules |
 
@@ -261,6 +303,50 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
 ```
 
 The `labels` field in action proposals contains translated UI text based on the `language` sent in the request. The frontend uses these labels directly for button text and cancellation messages.
+
+### Image Upload Response
+
+The `/chat/{id}/upload` endpoint accepts `multipart/form-data` with `file`, `odoo_config` (JSON string), and `language` fields. It returns a regular JSON response (not SSE):
+
+```json
+{
+  "message": "I found an invoice in the image. Here's what I extracted:",
+  "type": "action_proposal",
+  "action": {
+    "action": "create",
+    "model": "account.move",
+    "vals": { "partner_id": 42, "amount_total": 1500.00 },
+    "target_ids": [],
+    "status": "pending_confirmation"
+  },
+  "labels": {
+    "action_btn": "Create Invoice",
+    "confirm_btn": "Confirm",
+    "cancel_btn": "Cancel",
+    "cancelled_msg": "Action cancelled."
+  }
+}
+```
+
+The frontend renders the uploaded image in the user's message bubble and displays the action proposal below the assistant's response using the same `ActionProposalButton` component used for SSE-based proposals.
+
+### Pin Refresh Response
+
+The `POST /chat/{id}/pin/{pinId}/refresh` endpoint re-queries Odoo and returns the updated chart data:
+
+```json
+{
+  "status": "ok",
+  "new_payload": {
+    "type": "chart",
+    "chart_type": "bar",
+    "title": "Sales by Product",
+    "data": [{ "label": "Product A", "value": 16200 }],
+    "meta": { "value_label": "Revenue", "value_format": "currency", "currency_symbol": "$", "group_by": "product", "model": "sale.order", "period": "2026-02", "total": 16200 }
+  },
+  "refreshed_at": "2026-02-24T15:30:00Z"
+}
+```
 
 ### Action Confirmation Responses
 
@@ -367,7 +453,7 @@ The color system supports **light and dark mode** with CSS variables:
 | `de` | German |
 | `pt` | Portuguese |
 
-Translations are located in `messages/[locale].json` with **132 keys** per language.
+Translations are located in `messages/[locale].json` with **122 keys** per language.
 
 ### Translation Key Namespaces
 
@@ -377,8 +463,9 @@ Translations are located in `messages/[locale].json` with **132 keys** per langu
 | `Sidebar` | 6 | Navigation and theme toggle |
 | `ChatGroups` | 4 | Date-based grouping labels |
 | `NewChat` | 8 | Welcome screen and suggestions |
-| `ChatInput` | 2 | Input placeholder and disclaimer |
-| `ChatMessages` | 26 | All chat UI: typing, success, validation, selection, file, chart, export |
-| `Pricing` | 46 | Plans, features, and CTAs |
-| `Settings` | 24 | Connection form, inspector, security |
+| `ChatInput` | 4 | Input placeholder, disclaimer, image attach/remove |
+| `ChatMessages` | 18 | All chat UI: typing, success, validation, selection, file, chart, export |
+| `Pricing` | 38 | Plans, features, and CTAs |
+| `Settings` | 23 | Connection form, inspector, security |
+| `PinnedInsights` | 14 | Pin/unpin tooltips, empty state, error messages |
 | `LocaleSwitcher` | 5 | Language names |
