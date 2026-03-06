@@ -1,4 +1,4 @@
-import type { OdooConfig, ActionContext, ActionResult } from "@/lib/types";
+import type { OdooConfig, ActionContext, ActionResult, PinnedInsight } from "@/lib/types";
 
 export const API_BASE = "http://localhost:8000";
 
@@ -149,6 +149,88 @@ export async function executeAction(
     }
 
     return { success: false, error: errorMessage };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+// ---- Pinned Insights API ----
+
+export interface FetchPinsResult {
+  success: boolean;
+  pins?: PinnedInsight[];
+  error?: string;
+}
+
+export async function fetchPins(chatId: string): Promise<FetchPinsResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/pins`);
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, pins: data.pins ?? data };
+    }
+    return { success: false, error: data.detail || "Failed to fetch pins" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export interface CreatePinResult {
+  success: boolean;
+  pin?: PinnedInsight;
+  error?: string;
+}
+
+export async function createPin(
+  chatId: string,
+  payload: Record<string, unknown>
+): Promise<CreatePinResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/pin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, pin: data.pin ?? data };
+    }
+    return { success: false, error: data.detail || "Failed to create pin" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export interface DeletePinResult {
+  success: boolean;
+  error?: string;
+}
+
+export async function deletePin(chatId: string, pinId: string): Promise<DeletePinResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/pin/${pinId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      return { success: true };
+    }
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to delete pin" };
+  } catch {
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export async function deleteAllPins(chatId: string): Promise<DeletePinResult> {
+  try {
+    const res = await fetch(`${API_BASE}/chat/${chatId}/pins`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      return { success: true };
+    }
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to clear pins" };
   } catch {
     return { success: false, error: "Network error: Could not connect to backend" };
   }
