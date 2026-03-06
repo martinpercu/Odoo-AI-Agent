@@ -2,6 +2,8 @@
 
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { Sidebar } from "@/components/chat/sidebar";
+import { PinnedSidebar } from "@/components/pinned/pinned-sidebar";
+import { FlyingPinPortal } from "@/components/pinned/flying-pin-animation";
 import { useChat } from "@/hooks/use-chat";
 import { createContext, useContext } from "react";
 
@@ -45,6 +47,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           onSelectChat={handleSelectChat}
         />
         <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
+        <PinnedSidebar />
+        <FlyingPinPortal />
       </div>
     </ChatContext.Provider>
   );

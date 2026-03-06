@@ -150,6 +150,22 @@
       "statusError": "No se pudo conectar. Verifica tus credenciales e intenta de nuevo."
     }
   },
+  "PinnedInsights": {
+    "title": "Insights Fijados",
+    "empty": "Sin insights fijados",
+    "emptyHint": "Fija gráficos y archivos de tus conversaciones para tenerlos a mano.",
+    "pinTooltip": "Fijar al dashboard",
+    "unpinTooltip": "Desfijar del dashboard",
+    "clearAll": "Limpiar todo",
+    "chartPin": "Gráfico fijado",
+    "filePin": "Archivo fijado",
+    "excelPin": "Exportación fijada",
+    "viewInChat": "Ver en chat",
+    "pinnedCount": "{count} fijados",
+    "errorPin": "No se pudo fijar este elemento. Inténtalo de nuevo.",
+    "errorUnpin": "No se pudo desfijar este elemento. Inténtalo de nuevo.",
+    "errorClear": "No se pudieron limpiar los pins. Inténtalo de nuevo."
+  },
   "LocaleSwitcher": {
     "es": "Español",
     "en": "English",

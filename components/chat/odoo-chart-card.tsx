@@ -20,6 +20,9 @@ import {
 } from "recharts";
 import type { ChartSSEEvent } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
+import { usePinnedInsights } from "@/hooks/use-pinned-insights";
+import { useChatContext } from "@/components/app-shell";
+import { PinToggleButton } from "@/components/pinned/pin-toggle-button";
 
 // Purple palette for pie charts
 const PIE_COLORS = ["#714B67", "#8d6584", "#a87fa1", "#c49bbe", "#deb8db"];
@@ -66,11 +69,18 @@ function truncateLabel(label: string, maxLen: number = 14): string {
 
 interface OdooChartCardProps {
   chart: ChartSSEEvent;
+  messageId: string;
+  chartIndex: number;
 }
 
-export function OdooChartCard({ chart }: OdooChartCardProps) {
+export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardProps) {
   const t = useTranslations("ChatMessages.chart");
   const { chart_type, title, data, meta } = chart;
+  const { currentChatId } = useChatContext();
+  const { isPinned, togglePinChart } = usePinnedInsights();
+  const chatId = currentChatId ?? "";
+  const pinIdentifier = `${chatId}:${messageId}:${chartIndex}`;
+  const chartPinned = isPinned("chart", pinIdentifier);
 
   // Detect narrow container via ResizeObserver for container-query-like behavior
   const [isNarrow, setIsNarrow] = useState(false);
@@ -109,6 +119,10 @@ export function OdooChartCard({ chart }: OdooChartCardProps) {
         <h3 className="text-sm font-semibold text-foreground leading-tight flex-1">
           {title}
         </h3>
+        <PinToggleButton
+          pinned={chartPinned}
+          onToggle={() => togglePinChart(chatId, messageId, chartIndex, chart)}
+        />
         {chart.export_url && (
           <a
             href={`${API_BASE}${chart.export_url}`}

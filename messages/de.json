@@ -150,6 +150,22 @@
       "statusError": "Verbindung fehlgeschlagen. Überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut."
     }
   },
+  "PinnedInsights": {
+    "title": "Angepinnte Insights",
+    "empty": "Keine angepinnten Insights",
+    "emptyHint": "Pinnen Sie Diagramme und Dateien aus Ihren Gesprächen an, um sie griffbereit zu haben.",
+    "pinTooltip": "An Dashboard anheften",
+    "unpinTooltip": "Vom Dashboard lösen",
+    "clearAll": "Alle löschen",
+    "chartPin": "Angepinntes Diagramm",
+    "filePin": "Angepinnte Datei",
+    "excelPin": "Angepinnter Export",
+    "viewInChat": "Im Chat anzeigen",
+    "pinnedCount": "{count} angepinnt",
+    "errorPin": "Element konnte nicht angepinnt werden. Bitte versuchen Sie es erneut.",
+    "errorUnpin": "Element konnte nicht gelöst werden. Bitte versuchen Sie es erneut.",
+    "errorClear": "Pins konnten nicht gelöscht werden. Bitte versuchen Sie es erneut."
+  },
   "LocaleSwitcher": {
     "es": "Español",
     "en": "English",

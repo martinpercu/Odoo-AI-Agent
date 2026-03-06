@@ -150,6 +150,22 @@
       "statusError": "Could not connect. Check your credentials and try again."
     }
   },
+  "PinnedInsights": {
+    "title": "Pinned Insights",
+    "empty": "No pinned insights yet",
+    "emptyHint": "Pin charts and files from your conversations to keep them handy.",
+    "pinTooltip": "Pin to dashboard",
+    "unpinTooltip": "Unpin from dashboard",
+    "clearAll": "Clear all",
+    "chartPin": "Pinned chart",
+    "filePin": "Pinned file",
+    "excelPin": "Pinned export",
+    "viewInChat": "View in chat",
+    "pinnedCount": "{count} pinned",
+    "errorPin": "Could not pin this item. Please try again.",
+    "errorUnpin": "Could not unpin this item. Please try again.",
+    "errorClear": "Could not clear pins. Please try again."
+  },
   "LocaleSwitcher": {
     "es": "Español",
     "en": "English",

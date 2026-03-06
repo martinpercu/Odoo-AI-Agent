@@ -165,3 +165,35 @@ export interface ExportSSEEvent {
 }
 
 export type ConnectionStatus = "idle" | "loading" | "success" | "error";
+
+// ---- Pinned Insights ----
+
+export interface PinnedChart {
+  kind: "chart";
+  id: string;
+  pinnedAt: string;
+  chatId: string;
+  messageId: string;
+  chartIndex: number;
+  chart: ChartSSEEvent;
+}
+
+export interface PinnedFile {
+  kind: "file";
+  id: string;
+  pinnedAt: string;
+  chatId: string;
+  messageId: string;
+  metadata: FileAttachmentMetadata;
+}
+
+export interface PinnedExcel {
+  kind: "excel";
+  id: string;
+  pinnedAt: string;
+  chatId: string;
+  messageId: string;
+  metadata: ExcelExportMetadata;
+}
+
+export type PinnedInsight = PinnedChart | PinnedFile | PinnedExcel;

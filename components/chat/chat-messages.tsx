@@ -129,17 +129,17 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                         />
                       )}
                       {message.metadata.type === "file_attachment" && (
-                        <OdooFileCard metadata={message.metadata} />
+                        <OdooFileCard metadata={message.metadata} messageId={message.id} />
                       )}
                       {message.metadata.type === "excel_export" && (
-                        <ExcelExportCard metadata={message.metadata} />
+                        <ExcelExportCard metadata={message.metadata} messageId={message.id} />
                       )}
                     </>
                   )}
                   {message.charts && message.charts.length > 0 && (
                     <>
                       {message.charts.map((chart, ci) => (
-                        <OdooChartCard key={`chart-${ci}`} chart={chart} />
+                        <OdooChartCard key={`chart-${ci}`} chart={chart} messageId={message.id} chartIndex={ci} />
                       ))}
                     </>
                   )}
