@@ -56,6 +56,11 @@
     },
     "sequence": {
       "autoSending": "Processando próximo passo..."
+    },
+    "chart": {
+      "globalTotal": "Total global",
+      "noData": "Sem dados para exibir",
+      "groupedBy": "Agrupado por"
     }
   },
   "Pricing": {

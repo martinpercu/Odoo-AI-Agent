@@ -92,6 +92,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   metadata?: MessageMetadata;
+  charts?: ChartSSEEvent[];
 }
 
 export interface Chat {
@@ -123,6 +124,30 @@ export interface OdooConfig {
   db: string;
   login: string;
   apiKey: string;
+}
+
+// Chart types for analytics visualization (from SSE)
+export interface ChartDataPoint {
+  label: string;
+  value: number;
+}
+
+export interface ChartMeta {
+  value_label: string;
+  value_format: "currency" | "number" | "integer" | "decimal";
+  currency_symbol: string;
+  group_by: string;
+  model: string;
+  period: string | null;
+  total: number;
+}
+
+export interface ChartSSEEvent {
+  type: "chart";
+  chart_type: "bar" | "pie" | "line";
+  title: string;
+  data: ChartDataPoint[];
+  meta: ChartMeta;
 }
 
 export type ConnectionStatus = "idle" | "loading" | "success" | "error";
