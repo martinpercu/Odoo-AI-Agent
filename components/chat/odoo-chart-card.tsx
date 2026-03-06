@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BarChart3, TrendingUp, PieChart as PieIcon } from "lucide-react";
+import { BarChart3, TrendingUp, PieChart as PieIcon, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   ResponsiveContainer,
@@ -19,6 +19,7 @@ import {
   Cell,
 } from "recharts";
 import type { ChartSSEEvent } from "@/lib/types";
+import { API_BASE } from "@/lib/api";
 
 // Purple palette for pie charts
 const PIE_COLORS = ["#714B67", "#8d6584", "#a87fa1", "#c49bbe", "#deb8db"];
@@ -105,9 +106,19 @@ export function OdooChartCard({ chart }: OdooChartCardProps) {
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-odoo-purple/10 text-odoo-purple">
           {chartIcon}
         </div>
-        <h3 className="text-sm font-semibold text-foreground leading-tight">
+        <h3 className="text-sm font-semibold text-foreground leading-tight flex-1">
           {title}
         </h3>
+        {chart.export_url && (
+          <a
+            href={`${API_BASE}${chart.export_url}`}
+            download
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-odoo-purple transition-colors hover:bg-odoo-purple/10"
+          >
+            <Download size={14} />
+            <span>{t("downloadExcel")}</span>
+          </a>
+        )}
       </div>
 
       {/* Chart area */}
