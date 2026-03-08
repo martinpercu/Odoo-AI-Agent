@@ -66,6 +66,33 @@
       "groupedBy": "Grouped by",
       "downloadExcel": "Download Excel",
       "exportReady": "Your Excel file is ready"
+    },
+    "actionProposal": {
+      "editField": "Edit",
+      "noResults": "No results found",
+      "searching": "Search...",
+      "fieldEdited": "Modified",
+      "originalValue": "Original suggestion",
+      "validationError": "Please fix the highlighted fields and try again."
+    },
+    "audit": {
+      "title": "Action History",
+      "subtitle": "Actions executed in this conversation",
+      "empty": "No actions executed yet",
+      "userEdited": "Edited fields"
+    }
+  },
+  "ChatHistory": {
+    "loading": "Loading conversation..."
+  },
+  "WelcomeDashboard": {
+    "heading": "What would you like to do?",
+    "comingSoon": "Coming soon",
+    "suggestions": {
+      "sales": "Analyze sales by period",
+      "invoice": "Upload an invoice image",
+      "inventory": "Check product inventory",
+      "report": "Generate a PDF report"
     }
   },
   "Pricing": {
@@ -133,7 +160,8 @@
       "heading": "Instance Inspector",
       "buttonLabel": "Inspect Instance",
       "modulesFound": "{count} modules found",
-      "errorGeneric": "Failed to inspect instance"
+      "errorGeneric": "Failed to inspect instance",
+      "networkError": "Could not connect to the backend server."
     },
     "form": {
       "urlLabel": "Odoo URL",
@@ -150,7 +178,8 @@
       "statusTesting": "Testing connection to Odoo...",
       "statusSuccess": "Connection successful.",
       "statusSuccessCompany": "Connected to {company}",
-      "statusError": "Could not connect. Check your credentials and try again."
+      "statusError": "Could not connect. Check your credentials and try again.",
+      "networkError": "Could not connect to the backend server."
     }
   },
   "PinnedInsights": {
