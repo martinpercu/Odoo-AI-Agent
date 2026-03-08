@@ -12,7 +12,7 @@ import type {
   ChartSSEEvent,
   ExcelExportMetadata,
 } from "@/lib/types";
-import { API_BASE, toBackendConfig, executeAction as executeActionAPI, uploadImage as uploadImageAPI } from "@/lib/api";
+import { API_BASE, toBackendConfig, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -60,7 +60,9 @@ export function useChat(chatId?: string) {
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(chatId);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const loadedChatIdsRef = useRef<Set<string>>(new Set());
   const { config: odooConfig } = useOdooConfig();
   const locale = useLocale();
   const t = useTranslations("ChatMessages");
@@ -363,6 +365,14 @@ export function useChat(chatId?: string) {
       const result = await executeActionAPI(currentChatId, actionContext, odooConfig, locale);
 
       if (!result.success) {
+        // If we have per-field validation errors (422), throw them back to the
+        // ActionProposalButton so it can display inline error indicators.
+        if (result.fieldErrors) {
+          const err = new Error(result.error || "Validation failed");
+          (err as Error & { fieldErrors: Record<string, string> }).fieldErrors = result.fieldErrors;
+          throw err;
+        }
+
         const errorMessage: Message = {
           id: `msg-${Date.now()}`,
           role: "assistant",
@@ -427,6 +437,56 @@ export function useChat(chatId?: string) {
     [currentChatId, odooConfig, locale, sendMessage]
   );
 
+  const loadChatHistory = useCallback(
+    async (targetChatId: string) => {
+      // Skip if already loaded or currently loading
+      if (loadedChatIdsRef.current.has(targetChatId)) return;
+      // Skip if chat already exists in state with messages
+      const existing = chats.find((c) => c.id === targetChatId);
+      if (existing && existing.messages.length > 0) {
+        loadedChatIdsRef.current.add(targetChatId);
+        return;
+      }
+      if (!odooConfig) return;
+
+      loadedChatIdsRef.current.add(targetChatId);
+      setIsLoadingHistory(true);
+
+      try {
+        const result = await fetchChatHistory(targetChatId, odooConfig);
+        if (!result.success || !result.messages) {
+          return;
+        }
+        const messages = result.messages;
+        if (messages.length === 0) return; // Empty = new chat, WelcomeDashboard will show
+
+        setChats((prev) => {
+          const existingChat = prev.find((c) => c.id === targetChatId);
+          if (existingChat) {
+            // Hydrate existing chat
+            return prev.map((c) =>
+              c.id === targetChatId ? { ...c, messages } : c
+            );
+          }
+          // Create new chat entry from history
+          const title =
+            messages.find((m) => m.role === "user")?.content.slice(0, 47) || "Chat";
+          const newChat: Chat = {
+            id: targetChatId,
+            title: title.length >= 47 ? title + "..." : title,
+            messages,
+            createdAt: messages[0]?.timestamp ?? new Date(),
+            updatedAt: messages[messages.length - 1]?.timestamp ?? new Date(),
+          };
+          return [newChat, ...prev];
+        });
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    },
+    [chats, odooConfig]
+  );
+
   return {
     chats,
     chatGroups,
@@ -435,8 +495,10 @@ export function useChat(chatId?: string) {
     setCurrentChatId,
     sendMessage,
     isStreaming,
+    isLoadingHistory,
     stopStreaming,
     createChat,
     executeAction,
+    loadChatHistory,
   };
 }

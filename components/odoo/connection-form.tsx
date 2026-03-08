@@ -15,7 +15,7 @@ import {
   Plug,
 } from "lucide-react";
 import type { OdooConfig, ConnectionStatus } from "@/lib/types";
-import { testOdooConnection } from "@/lib/api";
+import { testOdooConnection, NETWORK_ERROR } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
 export function ConnectionForm() {
@@ -59,7 +59,11 @@ export function ConnectionForm() {
       setCompanyName(result.company ?? null);
     } else {
       setStatus("error");
-      setErrorMessage(result.error ?? t("statusError"));
+      setErrorMessage(
+        result.error === NETWORK_ERROR
+          ? t("networkError")
+          : result.error ?? t("statusError")
+      );
     }
   }
 

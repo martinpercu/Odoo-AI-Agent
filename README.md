@@ -25,6 +25,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Success cards with record links to Odoo
 - Validation error prompts with missing field indicators
 - Ambiguity resolution with interactive selection cards
+- Auto-sequencing: `queue_next` triggers follow-up actions automatically
 
 **Analytics & Export:**
 - Interactive charts (bar, line, pie) powered by Recharts
@@ -37,6 +38,14 @@ A modern, responsive interface that allows users to query and manage data from t
 - Refresh pinned charts to get updated data from Odoo
 - Flying pin animation with spring physics
 - Max 20 pins per chat with optimistic UI updates
+
+**Notification System:**
+- Proactive alerts from Odoo (sales, stock, invoices) with severity levels
+- Notification feed in right sidebar (Alerts tab) with unread badge
+- Mark as read (individual and bulk), dismiss
+- Deep link: click notification to inject prompt into chat
+- Configurable settings modal (toggle alerts by category, daily summary)
+- Auto-polling every 30 seconds
 
 **Configuration:**
 - Odoo connection configuration and validation
@@ -99,20 +108,27 @@ components/
     odoo-chart-card.tsx         # Interactive charts (bar/line/pie) + Excel export
     excel-export-card.tsx       # Standalone Excel download card
   pinned/
-    pinned-sidebar.tsx          # Collapsible right sidebar for pinned insights
+    pinned-sidebar.tsx          # Collapsible right sidebar (pins + alerts tabs)
     pinned-insight-mini-card.tsx # Compact card with refresh (charts) + unpin
     pin-toggle-button.tsx       # Reusable pin/unpin toggle on chart/file cards
     flying-pin-animation.tsx    # Spring-animated flying pin portal
+  notifications/
+    notification-feed.tsx       # Notification list with mark-all-read
+    notification-card.tsx       # Individual alert card with time-ago
+    notification-settings-modal.tsx # Toggle alerts by category
   pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
   odoo/
     connection-form.tsx         # Odoo credentials form
     instance-inspector.tsx      # View installed Odoo modules
+  ui/
+    error-toast.tsx             # Toast notification provider + display
 hooks/
   use-chat.ts                   # Chat state + SSE + image upload + metadata parsing
   use-odoo-config.tsx           # Odoo config context (localStorage)
   use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear)
+  use-notifications.tsx         # Notification context (polling/read/dismiss/settings)
 lib/
-  api.ts                        # Backend integration (chat, actions, upload, pins)
+  api.ts                        # Backend integration (chat, actions, upload, pins, notifications)
   types.ts                      # TypeScript interfaces + metadata types
   pin-animation-events.ts       # Pub-sub system for flying pin animations
 i18n/                           # Routing, request config, navigation
@@ -169,6 +185,7 @@ Interactive analytics visualization:
 - Purple color palette matching Odoo branding
 - Footer with global total and group-by info
 - **Excel export button** appears when `export_url` is present (ghost style, top-right)
+- **Pin button** to save chart to pinned insights sidebar
 
 ### ExcelExportCard
 Standalone Excel download card for explicit export requests:
@@ -183,6 +200,13 @@ Compact card displayed in the pinned insights sidebar:
 - **Excel cards:** Green Excel icon, filename, download link, unpin button
 - Refresh button (charts only) with spinning animation during API call
 - Buttons revealed on hover with smooth opacity transition
+
+### NotificationCard
+Individual alert displayed in the notification feed:
+- Severity-based color coding (critical, warning, info, success)
+- Title, body, and relative timestamp ("5 min ago")
+- Read/unread visual state
+- Click to dismiss or deep-link into chat with prompt injection
 
 ### ChatInput
 Auto-resizing textarea with image upload support:
@@ -224,6 +248,10 @@ Auto-resizing textarea with image upload support:
 | `DELETE` | `/chat/{id}/pins` | Clear all pins for a chat |
 | `POST` | `/test-connection` | Validate Odoo credentials |
 | `POST` | `/inspect-instance` | Fetch installed Odoo modules |
+| `POST` | `/notifications` | Fetch notification list |
+| `PATCH` | `/notifications/{id}/read` | Mark notification as read |
+| `POST` | `/notification-settings` | Fetch notification settings |
+| `PUT` | `/notification-settings` | Update notification settings |
 
 ### SSE Event Types
 
@@ -244,7 +272,7 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
   "action": {
     "action": "create",
     "model": "res.partner",
-    "vals": { "name": "Juan Pérez", "email": "juan@example.com" },
+    "vals": { "name": "Juan Perez", "email": "juan@example.com" },
     "target_ids": [],
     "status": "pending_confirmation"
   },
@@ -264,8 +292,8 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
   "field": "partner_id",
   "searchValue": "Juan",
   "options": [
-    { "index": 0, "id": 42, "name": "Juan Pérez" },
-    { "index": 1, "id": 43, "name": "Juan García" }
+    { "index": 0, "id": 42, "name": "Juan Perez" },
+    { "index": 1, "id": 43, "name": "Juan Garcia" }
   ]
 }
 ```
@@ -442,6 +470,7 @@ The color system supports **light and dark mode** with CSS variables:
 - PDF file cards use red accent
 - Excel export cards use `#1D6F42` (Excel green)
 - Charts use Odoo purple palette
+- Notification severity: critical (red), warning (orange), info (blue), success (green)
 
 ## Supported Languages
 
@@ -453,7 +482,7 @@ The color system supports **light and dark mode** with CSS variables:
 | `de` | German |
 | `pt` | Portuguese |
 
-Translations are located in `messages/[locale].json` with **122 keys** per language.
+Translations are located in `messages/[locale].json` with **~126 keys** per language.
 
 ### Translation Key Namespaces
 
@@ -468,4 +497,5 @@ Translations are located in `messages/[locale].json` with **122 keys** per langu
 | `Pricing` | 38 | Plans, features, and CTAs |
 | `Settings` | 23 | Connection form, inspector, security |
 | `PinnedInsights` | 14 | Pin/unpin tooltips, empty state, error messages |
+| `Notifications` | ~10 | Alert feed, settings, time labels |
 | `LocaleSwitcher` | 5 | Language names |
