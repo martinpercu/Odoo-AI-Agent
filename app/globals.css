@@ -25,6 +25,7 @@
   --success: #22c55e;
   --warning: #f59e0b;
   --odoo-purple: #714B67;
+  --odoo-orange: #a68215;
 }
 
 .dark {
@@ -52,6 +53,7 @@
   --success: #22c55e;
   --warning: #f59e0b;
   --odoo-purple: #8d6584;
+  --odoo-orange: #a68215;
 }
 
 @theme inline {
