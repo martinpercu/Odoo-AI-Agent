@@ -1,71 +1,67 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useSession } from "@/hooks/use-session";
-import { createOrg, createOdooConfig, testOdooConnection } from "@/lib/api";
+import { submitOnboarding, testOdooConnection } from "@/lib/api";
 import type { OdooConfig } from "@/lib/types";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { CheckCircle, Loader2 } from "lucide-react";
 
-/** Auto-generates a unique slug: lowercase-hyphenated + 4-char random suffix. */
 function generateSlug(name: string): string {
-  const base = name
+  return name
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 40);
-  const suffix = Math.random().toString(36).slice(2, 6);
-  return `${base}-${suffix}`;
+    .slice(0, 50);
 }
+
+function randomSuffix(): string {
+  return Math.random().toString(36).slice(2, 6);
+}
+
+const inputCls =
+  "rounded-lg border border-(--color-border) bg-(--color-bg) px-3 py-2 text-sm text-(--color-text) placeholder-(--color-muted) focus:outline-none focus:ring-2 focus:ring-(--color-primary)";
 
 function OnboardingContent() {
   const t = useTranslations("Onboarding");
   const router = useRouter();
   const pathname = usePathname();
-  const { meData, reload } = useSession();
+  const { reload } = useSession();
   const locale = pathname?.split("/")[1] || "en";
 
   const [step, setStep] = useState<1 | 2>(1);
 
   // Step 1 state
   const [orgName, setOrgName] = useState("");
-  const [step1Loading, setStep1Loading] = useState(false);
-  const [step1Error, setStep1Error] = useState<string | null>(null);
+  const [orgSlug, setOrgSlug] = useState("");
+  const [slugEdited, setSlugEdited] = useState(false);
 
   // Step 2 state
   const [label, setLabel] = useState("Producción");
   const [url, setUrl] = useState("");
   const [dbName, setDbName] = useState("");
+  const [login, setLogin] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [testStatus, setTestStatus] = useState<"idle" | "testing" | "ok" | "error">("idle");
   const [testError, setTestError] = useState<string | null>(null);
-  const [step2Loading, setStep2Loading] = useState(false);
-  const [step2Error, setStep2Error] = useState<string | null>(null);
 
-  async function handleCreateOrg(e: FormEvent) {
-    e.preventDefault();
-    setStep1Error(null);
-    setStep1Loading(true);
-    try {
-      const slug = generateSlug(orgName);
-      const result = await createOrg(orgName, slug, "SOLITARY");
-      if (!result.success) {
-        setStep1Error(result.error || t("orgCreateError"));
-        return;
-      }
-      await reload();
-      setStep(2);
-    } finally {
-      setStep1Loading(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  function handleOrgNameChange(value: string) {
+    setOrgName(value);
+    if (!slugEdited) {
+      setOrgSlug(generateSlug(value));
     }
   }
 
   async function handleTestConnection() {
     setTestStatus("testing");
     setTestError(null);
-    const testConfig: OdooConfig = { url, db: dbName, login: "", apiKey };
+    const testConfig: OdooConfig = { url, db: dbName, login, apiKey };
     const result = await testOdooConnection(testConfig);
     if (result.success) {
       setTestStatus("ok");
@@ -75,32 +71,49 @@ function OnboardingContent() {
     }
   }
 
-  async function handleSaveConfig(e: FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStep2Error(null);
-    const orgId = meData?.org?.id;
-    if (!orgId) return;
+    setSubmitError(null);
+    setIsSubmitting(true);
 
-    setStep2Loading(true);
+    const slug = orgSlug || generateSlug(orgName);
+
     try {
-      const result = await createOdooConfig(orgId, {
-        label,
-        url,
-        db_name: dbName,
-        api_key: apiKey,
+      let result = await submitOnboarding({
+        org_name: orgName,
+        org_slug: slug,
+        odoo_url: url,
+        odoo_db: dbName,
+        odoo_api_key: apiKey,
+        odoo_label: label || "Producción",
       });
+
+      // Slug conflict → retry with random suffix
+      if (!result.success && result.slugConflict) {
+        result = await submitOnboarding({
+          org_name: orgName,
+          org_slug: `${slug}-${randomSuffix()}`,
+          odoo_url: url,
+          odoo_db: dbName,
+          odoo_api_key: apiKey,
+          odoo_label: label || "Producción",
+        });
+      }
+
       if (!result.success) {
-        setStep2Error(result.error || t("configSaveError"));
+        setSubmitError(result.error || t("configSaveError"));
         return;
       }
+
+      await reload();
       router.push(`/${locale}/chat`);
     } finally {
-      setStep2Loading(false);
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-(--color-bg) px-4">
       <div className="w-full max-w-md">
         {/* Progress indicator */}
         <div className="mb-8 flex items-center gap-3">
@@ -111,135 +124,132 @@ function OnboardingContent() {
                   s < step
                     ? "bg-green-500 text-white"
                     : s === step
-                    ? "bg-[var(--color-primary)] text-white"
-                    : "bg-[var(--color-border)] text-[var(--color-muted)]"
+                    ? "bg-(--color-primary) text-white"
+                    : "bg-(--color-border) text-(--color-muted)"
                 }`}
               >
                 {s < step ? <CheckCircle size={14} /> : s}
               </div>
               <span
                 className={`text-sm ${
-                  s === step
-                    ? "font-medium text-[var(--color-text)]"
-                    : "text-[var(--color-muted)]"
+                  s === step ? "font-medium text-(--color-text)" : "text-(--color-muted)"
                 }`}
               >
                 {s === 1 ? t("step1Label") : t("step2Label")}
               </span>
-              {s < 2 && (
-                <div className="ml-2 h-px w-8 bg-[var(--color-border)]" />
-              )}
+              {s < 2 && <div className="ml-2 h-px w-8 bg-(--color-border)" />}
             </div>
           ))}
         </div>
 
-        {/* Step 1 — Create Organization */}
+        {/* Step 1 — Organization */}
         {step === 1 && (
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-lg">
-            <h1 className="mb-1 text-xl font-semibold text-[var(--color-text)]">
-              {t("step1Title")}
-            </h1>
-            <p className="mb-6 text-sm text-[var(--color-muted)]">
-              {t("step1Desc")}
-            </p>
+          <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-8 shadow-lg">
+            <h1 className="mb-1 text-xl font-semibold text-(--color-text)">{t("step1Title")}</h1>
+            <p className="mb-6 text-sm text-(--color-muted)">{t("step1Desc")}</p>
 
-            <form onSubmit={handleCreateOrg} className="flex flex-col gap-4">
+            <form onSubmit={(e) => { e.preventDefault(); setStep(2); }} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-[var(--color-text)]">
-                  {t("orgName")}
-                </label>
+                <label className="text-sm font-medium text-(--color-text)">{t("orgName")}</label>
                 <input
                   type="text"
                   required
                   value={orgName}
-                  onChange={(e) => setOrgName(e.target.value)}
+                  onChange={(e) => handleOrgNameChange(e.target.value)}
                   placeholder={t("orgNamePlaceholder")}
-                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                  className={inputCls}
                 />
               </div>
 
-              {step1Error && (
-                <p className="rounded-lg bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400">
-                  {step1Error}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-(--color-text)">Slug</label>
+                <input
+                  type="text"
+                  required
+                  value={orgSlug}
+                  onChange={(e) => { setOrgSlug(e.target.value); setSlugEdited(true); }}
+                  placeholder="mi-empresa"
+                  className={`${inputCls} font-mono`}
+                />
+                <p className="text-xs text-(--color-muted)">
+                  Identificador único, solo letras minúsculas, números y guiones.
                 </p>
-              )}
+              </div>
 
               <button
                 type="submit"
-                disabled={step1Loading}
-                className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                disabled={!orgName || !orgSlug}
+                className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                {step1Loading && <Loader2 size={14} className="animate-spin" />}
                 {t("step1Cta")}
               </button>
             </form>
           </div>
         )}
 
-        {/* Step 2 — Add Odoo Connection */}
+        {/* Step 2 — Odoo Connection */}
         {step === 2 && (
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-lg">
-            <h1 className="mb-1 text-xl font-semibold text-[var(--color-text)]">
-              {t("step2Title")}
-            </h1>
-            <p className="mb-6 text-sm text-[var(--color-muted)]">
-              {t("step2Desc")}
-            </p>
+          <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-8 shadow-lg">
+            <h1 className="mb-1 text-xl font-semibold text-(--color-text)">{t("step2Title")}</h1>
+            <p className="mb-6 text-sm text-(--color-muted)">{t("step2Desc")}</p>
 
-            <form onSubmit={handleSaveConfig} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-[var(--color-text)]">
-                  {t("configLabel")}
-                </label>
+                <label className="text-sm font-medium text-(--color-text)">{t("configLabel")}</label>
                 <input
                   type="text"
-                  required
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
                   placeholder={t("configLabelPlaceholder")}
-                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                  className={inputCls}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-[var(--color-text)]">
-                  {t("configUrl")}
-                </label>
+                <label className="text-sm font-medium text-(--color-text)">{t("configUrl")}</label>
                 <input
                   type="url"
                   required
                   value={url}
                   onChange={(e) => { setUrl(e.target.value); setTestStatus("idle"); }}
                   placeholder="https://mi-odoo.com"
-                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                  className={inputCls}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-[var(--color-text)]">
-                  {t("configDb")}
-                </label>
+                <label className="text-sm font-medium text-(--color-text)">{t("configDb")}</label>
                 <input
                   type="text"
                   required
                   value={dbName}
                   onChange={(e) => { setDbName(e.target.value); setTestStatus("idle"); }}
-                  placeholder="mi_db"
-                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                  placeholder="mi_base"
+                  className={inputCls}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-[var(--color-text)]">
-                  {t("configApiKey")}
-                </label>
+                <label className="text-sm font-medium text-(--color-text)">{t("configLogin")}</label>
+                <input
+                  type="text"
+                  required
+                  value={login}
+                  onChange={(e) => { setLogin(e.target.value); setTestStatus("idle"); }}
+                  placeholder="admin"
+                  className={inputCls}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-(--color-text)">{t("configApiKey")}</label>
                 <input
                   type="password"
                   required
                   value={apiKey}
                   onChange={(e) => { setApiKey(e.target.value); setTestStatus("idle"); }}
                   placeholder="••••••••"
-                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                  className={inputCls}
                 />
               </div>
 
@@ -247,8 +257,8 @@ function OnboardingContent() {
               <button
                 type="button"
                 onClick={handleTestConnection}
-                disabled={testStatus === "testing" || !url || !dbName || !apiKey}
-                className="flex items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-hover)] transition-colors disabled:opacity-50"
+                disabled={testStatus === "testing" || !url || !dbName || !login || !apiKey}
+                className="flex items-center justify-center gap-2 rounded-lg border border-(--color-border) px-4 py-2 text-sm font-medium text-(--color-text) hover:bg-(--color-hover) transition-colors disabled:opacity-50"
               >
                 {testStatus === "testing" && <Loader2 size={14} className="animate-spin" />}
                 {testStatus === "ok" && <CheckCircle size={14} className="text-green-500" />}
@@ -262,20 +272,29 @@ function OnboardingContent() {
                 <p className="text-sm text-red-600 dark:text-red-400">{testError}</p>
               )}
 
-              {step2Error && (
+              {submitError && (
                 <p className="rounded-lg bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400">
-                  {step2Error}
+                  {submitError}
                 </p>
               )}
 
-              <button
-                type="submit"
-                disabled={step2Loading}
-                className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {step2Loading && <Loader2 size={14} className="animate-spin" />}
-                {t("step2Cta")}
-              </button>
+              <div className="flex gap-3 mt-1">
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="flex-1 rounded-lg border border-(--color-border) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-hover) transition-colors"
+                >
+                  {t("back")}
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {isSubmitting && <Loader2 size={14} className="animate-spin" />}
+                  {t("step2Cta")}
+                </button>
+              </div>
             </form>
           </div>
         )}

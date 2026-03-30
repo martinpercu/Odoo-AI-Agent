@@ -253,7 +253,9 @@
     "connectionOk": "Verbindung erfolgreich",
     "connectionError": "Verbindung fehlgeschlagen.",
     "step2Cta": "Speichern und loslegen",
-    "configSaveError": "Verbindung konnte nicht gespeichert werden."
+    "configLogin": "Odoo-Benutzername",
+    "configSaveError": "Verbindung konnte nicht gespeichert werden.",
+    "back": "Zurück"
   },
   "LimitReachedModal": {
     "title": "Benutzerlimit erreicht",

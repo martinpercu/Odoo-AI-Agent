@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Bell, Settings } from "lucide-react";
+import { Bell } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useNotifications } from "@/hooks/use-notifications";
 import { NotificationCard } from "./notification-card";
-import { NotificationSettingsModal } from "./notification-settings-modal";
 import type { AppNotification } from "@/lib/types";
 
 interface NotificationFeedProps {
@@ -16,7 +14,6 @@ interface NotificationFeedProps {
 export function NotificationFeed({ onNotificationClick }: NotificationFeedProps) {
   const t = useTranslations("Notifications");
   const { notifications, unreadCount, markAllAsRead } = useNotifications();
-  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -30,14 +27,6 @@ export function NotificationFeed({ onNotificationClick }: NotificationFeedProps)
             {t("markAllRead")}
           </button>
         )}
-        <div className="flex-1" />
-        <button
-          onClick={() => setShowSettings(true)}
-          className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-sidebar-active hover:text-foreground"
-          title={t("settingsTitle")}
-        >
-          <Settings size={14} />
-        </button>
       </div>
 
       {/* List */}
@@ -63,10 +52,6 @@ export function NotificationFeed({ onNotificationClick }: NotificationFeedProps)
         )}
       </div>
 
-      {/* Settings Modal */}
-      {showSettings && (
-        <NotificationSettingsModal onClose={() => setShowSettings(false)} />
-      )}
-    </div>
+</div>
   );
 }

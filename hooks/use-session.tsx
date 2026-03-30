@@ -17,7 +17,7 @@ interface SessionContextValue {
   meData: MeResponse | null;
   isLoading: boolean;
   isError: boolean;
-  reload(): Promise<void>;
+  reload(): Promise<MeResponse | null>;
 }
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -35,8 +35,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return pathname?.split("/")[1] || "en";
   }, [pathname]);
 
-  const load = useCallback(async () => {
-    if (!user) return;
+  const load = useCallback(async (): Promise<MeResponse | null> => {
+    // Don't guard on `user` state here — authFetch reads the token fresh from
+    // Supabase storage, so this works even if the React state hasn't updated yet
+    // (e.g. called immediately after signInWithPassword before onAuthStateChange fires)
     setIsLoading(true);
     setIsError(false);
     try {
@@ -54,11 +56,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           const locale = getLocale();
           router.push(`/${locale}/onboarding`);
         }
+        return result.data;
       } else {
         setIsError(true);
+        return null;
       }
     } catch {
       setIsError(true);
+      return null;
     } finally {
       setIsLoading(false);
     }

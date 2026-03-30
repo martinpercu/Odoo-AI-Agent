@@ -255,7 +255,9 @@
     "connectionOk": "Conexão bem-sucedida",
     "connectionError": "Não foi possível conectar.",
     "step2Cta": "Salvar e começar",
-    "configSaveError": "Não foi possível salvar a conexão."
+    "configLogin": "Usuário do Odoo",
+    "configSaveError": "Não foi possível salvar a conexão.",
+    "back": "Voltar"
   },
   "LimitReachedModal": {
     "title": "Limite de usuários atingido",

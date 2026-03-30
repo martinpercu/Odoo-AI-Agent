@@ -286,11 +286,13 @@
     "configUrl": "Odoo URL",
     "configDb": "Database name",
     "configApiKey": "API Key",
+    "configLogin": "Odoo username",
     "testConnection": "Test connection",
     "connectionOk": "Connection successful",
     "connectionError": "Could not connect. Check your credentials.",
     "step2Cta": "Save and start chatting",
-    "configSaveError": "Could not save connection. Please try again."
+    "configSaveError": "Could not save connection. Please try again.",
+    "back": "Back"
   },
   "LimitReachedModal": {
     "title": "User limit reached",

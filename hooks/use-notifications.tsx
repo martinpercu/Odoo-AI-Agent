@@ -1,13 +1,12 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
-import type { AppNotification, NotificationSettings } from "@/lib/types";
-import { useOdooConfig } from "@/hooks/use-odoo-config";
+import type { AppNotification } from "@/lib/types";
+import { useAuth } from "@/hooks/use-auth";
 import {
   fetchNotifications as apiFetchNotifications,
   markNotificationRead as apiMarkRead,
-  fetchNotificationSettings as apiFetchSettings,
-  updateNotificationSettings as apiUpdateSettings,
+  markAllNotificationsRead as apiMarkAllRead,
 } from "@/lib/api";
 import { useToast } from "@/components/ui/error-toast";
 
@@ -15,21 +14,13 @@ const POLL_INTERVAL = 30_000;
 
 interface NotificationsContextType {
   notifications: AppNotification[];
-  settings: NotificationSettings;
   unreadCount: number;
+  activeChatId: string | null;
+  setActiveChatId: (id: string | null) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
   dismiss: (id: string) => void;
-  updateSettings: (settings: NotificationSettings) => Promise<boolean>;
-  loadSettings: () => Promise<void>;
 }
-
-const defaultSettings: NotificationSettings = {
-  salesAlerts: true,
-  stockAlerts: true,
-  invoiceAlerts: true,
-  dailySummary: false,
-};
 
 const NotificationsContext = createContext<NotificationsContextType | null>(null);
 
@@ -41,42 +32,44 @@ export function useNotifications() {
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
-  const [settings, setSettings] = useState<NotificationSettings>(defaultSettings);
-  const { config } = useOdooConfig();
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const { user } = useAuth();
   const { showError } = useToast();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  // ---- Polling ----
+  // ---- Polling — scoped to the active chat ----
   const poll = useCallback(async () => {
-    if (!config) return;
-    const result = await apiFetchNotifications(config);
+    if (!user || !activeChatId) return;
+    const result = await apiFetchNotifications(activeChatId, { unreadOnly: false, limit: 50 });
     if (result.success && result.notifications) {
       setNotifications(result.notifications);
     }
-  }, [config]);
+  }, [user, activeChatId]);
 
   useEffect(() => {
-    if (!config) return;
-    // Initial fetch
+    if (!user || !activeChatId) {
+      setNotifications([]);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
     poll();
-    // Set up polling
     intervalRef.current = setInterval(poll, POLL_INTERVAL);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [config, poll]);
+  }, [user, activeChatId, poll]);
 
   // ---- Mark as read (optimistic) ----
   const markAsRead = useCallback(
     (id: string) => {
+      if (!activeChatId) return;
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, read: true } : n))
       );
-      apiMarkRead(id).then((result) => {
+      apiMarkRead(activeChatId, id).then((result) => {
         if (!result.success) {
-          // Rollback
           setNotifications((prev) =>
             prev.map((n) => (n.id === id ? { ...n, read: false } : n))
           );
@@ -84,60 +77,36 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         }
       });
     },
-    [showError]
+    [activeChatId, showError]
   );
 
   // ---- Mark all as read ----
   const markAllAsRead = useCallback(() => {
-    const unread = notifications.filter((n) => !n.read);
+    if (!activeChatId) return;
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    // Fire individual PATCH calls
-    unread.forEach((n) => {
-      apiMarkRead(n.id);
+    apiMarkAllRead(activeChatId).then((result) => {
+      if (!result.success) {
+        showError(result.error || "Failed to mark all as read");
+        poll(); // re-fetch to restore real state
+      }
     });
-  }, [notifications]);
+  }, [activeChatId, showError, poll]);
 
   // ---- Dismiss (local only) ----
   const dismiss = useCallback((id: string) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
-  // ---- Settings ----
-  const loadSettings = useCallback(async () => {
-    if (!config) return;
-    const result = await apiFetchSettings(config);
-    if (result.success && result.settings) {
-      setSettings(result.settings);
-    }
-  }, [config]);
-
-  const updateSettingsFn = useCallback(
-    async (newSettings: NotificationSettings): Promise<boolean> => {
-      if (!config) return false;
-      const snapshot = settings;
-      setSettings(newSettings);
-      const result = await apiUpdateSettings(config, newSettings);
-      if (!result.success) {
-        setSettings(snapshot);
-        showError(result.error || "Failed to update settings");
-        return false;
-      }
-      return true;
-    },
-    [config, settings, showError]
-  );
-
   return (
     <NotificationsContext.Provider
       value={{
         notifications,
-        settings,
         unreadCount,
+        activeChatId,
+        setActiveChatId,
         markAsRead,
         markAllAsRead,
         dismiss,
-        updateSettings: updateSettingsFn,
-        loadSettings,
       }}
     >
       {children}
