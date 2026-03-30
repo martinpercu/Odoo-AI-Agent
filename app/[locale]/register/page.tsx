@@ -50,8 +50,12 @@ export default function RegisterPage() {
         setError(result.error);
         return;
       }
-      await reload();
-      router.push(`/${locale}/onboarding`);
+      const me = await reload();
+      if (me?.org) {
+        router.push(`/${locale}/chat`);
+      } else {
+        router.push(`/${locale}/onboarding`);
+      }
     } finally {
       setIsSubmitting(false);
     }

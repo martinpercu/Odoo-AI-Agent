@@ -35,8 +35,12 @@ function LoginContent() {
         setError(result.error);
         return;
       }
-      await reload();
-      router.push(nextPath);
+      const me = await reload();
+      if (!me || me.org === null) {
+        router.push(`/${locale}/onboarding`);
+      } else {
+        router.push(nextPath);
+      }
     } finally {
       setIsSubmitting(false);
     }

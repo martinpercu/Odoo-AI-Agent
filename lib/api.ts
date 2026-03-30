@@ -159,6 +159,46 @@ export async function createOrg(
   }
 }
 
+export interface OnboardingPayload {
+  org_name: string;
+  org_slug: string;
+  odoo_url: string;
+  odoo_db: string;
+  odoo_api_key: string;
+  odoo_label?: string;
+}
+
+export interface OnboardingResult {
+  success: boolean;
+  error?: string;
+  slugConflict?: boolean;
+}
+
+export async function submitOnboarding(
+  payload: OnboardingPayload
+): Promise<OnboardingResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/onboarding`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true };
+    if (res.status === 409) {
+      return {
+        success: false,
+        error: data.detail || "Conflict",
+        slugConflict: typeof data.detail === "string" && data.detail.toLowerCase().includes("slug"),
+      };
+    }
+    return { success: false, error: data.detail || "Failed to complete onboarding" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export async function updateOrg(
   orgId: string,
   payload: { name?: string; slug?: string; type?: OrgType }
@@ -721,14 +761,16 @@ export interface FetchNotificationsResult {
 }
 
 export async function fetchNotifications(
-  odooConfig: OdooConfig
+  chatId: string,
+  params?: { unreadOnly?: boolean; since?: string; limit?: number }
 ): Promise<FetchNotificationsResult> {
   try {
-    const res = await authFetch(`${API_BASE}/notifications`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ odoo_config: toBackendConfig(odooConfig) }),
-    });
+    const query = new URLSearchParams();
+    if (params?.unreadOnly) query.set("unread_only", "true");
+    if (params?.since) query.set("since", params.since);
+    if (params?.limit) query.set("limit", String(params.limit));
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    const res = await authFetch(`${API_BASE}/chat/${chatId}/notifications${qs}`);
     const data = await res.json();
     if (res.ok) return { success: true, notifications: data.notifications ?? data };
     return { success: false, error: data.detail || "Failed to fetch notifications" };
@@ -743,11 +785,15 @@ export interface MarkReadResult {
   error?: string;
 }
 
-export async function markNotificationRead(notificationId: string): Promise<MarkReadResult> {
+export async function markNotificationRead(
+  chatId: string,
+  notificationId: string
+): Promise<MarkReadResult> {
   try {
-    const res = await authFetch(`${API_BASE}/notifications/${notificationId}/read`, {
-      method: "PATCH",
-    });
+    const res = await authFetch(
+      `${API_BASE}/chat/${chatId}/notifications/${notificationId}/read`,
+      { method: "PATCH" }
+    );
     if (res.ok) return { success: true };
     const data = await res.json();
     return { success: false, error: data.detail || "Failed to mark as read" };
@@ -757,43 +803,15 @@ export async function markNotificationRead(notificationId: string): Promise<Mark
   }
 }
 
-export interface FetchNotificationSettingsResult {
-  success: boolean;
-  settings?: NotificationSettings;
-  error?: string;
-}
-
-export async function fetchNotificationSettings(
-  odooConfig: OdooConfig
-): Promise<FetchNotificationSettingsResult> {
+export async function markAllNotificationsRead(chatId: string): Promise<MarkReadResult> {
   try {
-    const res = await authFetch(`${API_BASE}/notification-settings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ odoo_config: toBackendConfig(odooConfig) }),
-    });
-    const data = await res.json();
-    if (res.ok) return { success: true, settings: data.settings ?? data };
-    return { success: false, error: data.detail || "Failed to fetch settings" };
-  } catch (err) {
-    if (err instanceof LimitReachedError) throw err;
-    return { success: false, error: "Network error: Could not connect to backend" };
-  }
-}
-
-export async function updateNotificationSettings(
-  odooConfig: OdooConfig,
-  settings: NotificationSettings
-): Promise<MarkReadResult> {
-  try {
-    const res = await authFetch(`${API_BASE}/notification-settings`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ odoo_config: toBackendConfig(odooConfig), settings }),
-    });
+    const res = await authFetch(
+      `${API_BASE}/chat/${chatId}/notifications/read-all`,
+      { method: "PATCH" }
+    );
     if (res.ok) return { success: true };
     const data = await res.json();
-    return { success: false, error: data.detail || "Failed to update settings" };
+    return { success: false, error: data.detail || "Failed to mark all as read" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };

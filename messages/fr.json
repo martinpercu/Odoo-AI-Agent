@@ -253,7 +253,9 @@
     "connectionOk": "Connexion réussie",
     "connectionError": "Impossible de se connecter.",
     "step2Cta": "Enregistrer et commencer",
-    "configSaveError": "Impossible d'enregistrer la connexion."
+    "configLogin": "Utilisateur Odoo",
+    "configSaveError": "Impossible d'enregistrer la connexion.",
+    "back": "Retour"
   },
   "LimitReachedModal": {
     "title": "Limite d'utilisateurs atteinte",
