@@ -10,7 +10,9 @@
     "settings": "Configurações",
     "lightMode": "Modo Claro",
     "darkMode": "Modo Escuro",
-    "alerts": "Alertas"
+    "alerts": "Alertas",
+    "logout": "Log out",
+    "loadMore": "Load more"
   },
   "ChatGroups": {
     "today": "Hoje",
@@ -215,6 +217,66 @@
     "save": "Salvar",
     "close": "Fechar",
     "timeAgo": "atrás"
+  },
+  "Auth": {
+    "loginTitle": "Entrar no Odoo Agent",
+    "registerTitle": "Criar sua conta",
+    "email": "Email",
+    "password": "Senha",
+    "loginCta": "Entrar",
+    "loggingIn": "Entrando...",
+    "registerCta": "Criar conta",
+    "registering": "Criando conta...",
+    "noAccount": "Não tem conta?",
+    "registerLink": "Cadastre-se",
+    "hasAccount": "Já tem conta?",
+    "loginLink": "Entrar",
+    "devMode": "Modo Desenvolvimento",
+    "devModeDesc": "Supabase não está configurado. A autenticação está desativada.",
+    "devModeContinue": "Continuar sem login"
+  },
+  "Onboarding": {
+    "step1Label": "Organização",
+    "step2Label": "Conexão Odoo",
+    "step1Title": "Crie sua organização",
+    "step1Desc": "Dê um nome à sua organização.",
+    "step2Title": "Conecte seu Odoo",
+    "step2Desc": "Adicione suas credenciais Odoo para começar.",
+    "orgName": "Nome da organização",
+    "orgNamePlaceholder": "Acme Corp",
+    "step1Cta": "Criar organização",
+    "orgCreateError": "Não foi possível criar a organização.",
+    "configLabel": "Rótulo",
+    "configLabelPlaceholder": "Produção",
+    "configUrl": "URL do Odoo",
+    "configDb": "Nome do banco de dados",
+    "configApiKey": "Chave API",
+    "testConnection": "Testar conexão",
+    "connectionOk": "Conexão bem-sucedida",
+    "connectionError": "Não foi possível conectar.",
+    "step2Cta": "Salvar e começar",
+    "configSaveError": "Não foi possível salvar a conexão."
+  },
+  "LimitReachedModal": {
+    "title": "Limite de usuários atingido",
+    "description": "Sua organização atingiu o número máximo de usuários. Contate o administrador.",
+    "cta": "Entendido",
+    "close": "Fechar"
+  },
+  "Invite": {
+    "loading": "Aceitando convite...",
+    "loadingDesc": "Por favor aguarde.",
+    "success": "Convite aceito!",
+    "successDesc": "Você agora faz parte da organização.",
+    "notFound": "Convite não encontrado",
+    "notFoundDesc": "Este link de convite é inválido.",
+    "alreadyUsed": "Convite já usado",
+    "alreadyUsedDesc": "Este convite já foi aceito.",
+    "expired": "Convite expirado",
+    "expiredDesc": "Este convite expirou. Peça ao administrador que envie um novo.",
+    "error": "Algo deu errado",
+    "errorDesc": "Não foi possível aceitar o convite.",
+    "goHome": "Ir para o app"
   },
   "LocaleSwitcher": {
     "es": "Español",
