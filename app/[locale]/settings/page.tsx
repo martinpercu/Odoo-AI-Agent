@@ -252,6 +252,7 @@ function UsersSection() {
   const t = useTranslations("Settings");
   const { meData } = useSession();
   const orgId = meData?.org?.id;
+  const myUserId = meData?.user?.id;
 
   const [users, setUsers] = useState<OrgUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -311,11 +312,12 @@ function UsersSection() {
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                {/* Role selector */}
+                {/* Role selector — disabled for own account */}
                 <select
                   value={user.role}
                   onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
-                  className="rounded border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                  disabled={user.id === myUserId}
+                  className="rounded border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {ROLE_OPTIONS.map((r) => (
                     <option key={r} value={r}>{r}</option>
@@ -335,8 +337,8 @@ function UsersSection() {
                   {user.is_free_license ? t("admin.free") : t("admin.paid")}
                 </button>
 
-                {/* Remove */}
-                {confirmRemoveId === user.id ? (
+                {/* Remove — hidden for own account */}
+                {user.id !== myUserId && confirmRemoveId === user.id ? (
                   <div className="flex items-center gap-1.5">
                     <AlertTriangle size={13} className="text-red-500" />
                     <button
@@ -352,14 +354,14 @@ function UsersSection() {
                       {t("admin.no")}
                     </button>
                   </div>
-                ) : (
+                ) : user.id !== myUserId ? (
                   <button
                     onClick={() => setConfirmRemoveId(user.id)}
                     className="rounded p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   >
                     <UserCog size={14} />
                   </button>
-                )}
+                ) : null}
               </div>
             </div>
           ))}
