@@ -266,6 +266,9 @@
     "registerLink": "Sign up",
     "hasAccount": "Already have an account?",
     "loginLink": "Sign in",
+    "tryDemo": "Try without signing up",
+    "demoBanner": "Demo Mode — you're chatting with fictional data from a sample distribution company.",
+    "demoSignUp": "Sign up to connect your Odoo",
     "devMode": "Development Mode",
     "devModeDesc": "Supabase is not configured. Auth is disabled — all requests run without a token.",
     "devModeContinue": "Continue without login"

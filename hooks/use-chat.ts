@@ -12,7 +12,7 @@ import type {
   ChartSSEEvent,
   ExcelExportMetadata,
 } from "@/lib/types";
-import { API_BASE, toBackendConfig, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, LimitReachedError } from "@/lib/api";
+import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, LimitReachedError } from "@/lib/api";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
@@ -64,7 +64,7 @@ export function useChat(chatId?: string) {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const loadedChatIdsRef = useRef<Set<string>>(new Set());
-  const { config: odooConfig } = useOdooConfig();
+  const { activeConfigId, isConfigured } = useOdooConfig();
   const locale = useLocale();
   const t = useTranslations("ChatMessages");
 
@@ -136,7 +136,7 @@ export function useChat(chatId?: string) {
       setIsStreaming(true);
 
       // Guard: require Odoo config before calling backend
-      if (!odooConfig) {
+      if (!isConfigured || !activeConfigId) {
         setChats((prev) =>
           prev.map((c) =>
             c.id === targetId
@@ -158,7 +158,7 @@ export function useChat(chatId?: string) {
       // Image upload flow: POST to /upload (not SSE)
       if (image) {
         try {
-          const result = await uploadImageAPI(targetId, image, odooConfig, locale);
+          const result = await uploadImageAPI(targetId, image, activeConfigId!, locale);
 
           if (!result.success) {
             setChats((prev) =>
@@ -221,7 +221,7 @@ export function useChat(chatId?: string) {
         const res = await fetch(`${API_BASE}/chat/${targetId}/stream`, {
           method: "POST",
           headers: sseHeaders,
-          body: JSON.stringify({ message: content, odoo_config: toBackendConfig(odooConfig), language: locale }),
+          body: JSON.stringify({ message: content, config_id: activeConfigId, language: locale }),
           signal: controller.signal,
         });
 
@@ -382,7 +382,7 @@ export function useChat(chatId?: string) {
         setIsStreaming(false);
       }
     },
-    [currentChatId, createChat, odooConfig, locale, t]
+    [currentChatId, createChat, activeConfigId, isConfigured, locale, t]
   );
 
   const stopStreaming = useCallback(() => {
@@ -392,9 +392,9 @@ export function useChat(chatId?: string) {
 
   const executeAction = useCallback(
     async (actionContext: ActionContext) => {
-      if (!currentChatId || !odooConfig) return;
+      if (!currentChatId || !activeConfigId) return;
 
-      const result = await executeActionAPI(currentChatId, actionContext, odooConfig, locale);
+      const result = await executeActionAPI(currentChatId, actionContext, activeConfigId, locale);
 
       if (!result.success) {
         // If we have per-field validation errors (422), throw them back to the
@@ -466,7 +466,7 @@ export function useChat(chatId?: string) {
         sendMessage(result.queue_next.text, currentChatId);
       }
     },
-    [currentChatId, odooConfig, locale, sendMessage]
+    [currentChatId, activeConfigId, locale, sendMessage]
   );
 
   const loadChatHistory = useCallback(
@@ -479,13 +479,13 @@ export function useChat(chatId?: string) {
         loadedChatIdsRef.current.add(targetChatId);
         return;
       }
-      if (!odooConfig) return;
+      if (!activeConfigId) return;
 
       loadedChatIdsRef.current.add(targetChatId);
       setIsLoadingHistory(true);
 
       try {
-        const result = await fetchChatHistory(targetChatId, odooConfig);
+        const result = await fetchChatHistory(targetChatId, activeConfigId);
         if (!result.success || !result.messages) {
           return;
         }
@@ -516,7 +516,7 @@ export function useChat(chatId?: string) {
         setIsLoadingHistory(false);
       }
     },
-    [chats, odooConfig]
+    [chats, activeConfigId]
   );
 
   return {

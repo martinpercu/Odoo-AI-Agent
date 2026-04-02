@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,15 +15,14 @@ import {
   Plug,
 } from "lucide-react";
 import type { OdooConfig, ConnectionStatus } from "@/lib/types";
-import { testOdooConnection, NETWORK_ERROR } from "@/lib/api";
-import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { testOdooConnection, createOdooConfig, NETWORK_ERROR } from "@/lib/api";
+import { useSession } from "@/hooks/use-session";
 
 export function ConnectionForm() {
   const t = useTranslations("Settings.form");
   const router = useRouter();
   const pathname = usePathname();
-  const { config: savedConfig, saveConfig } = useOdooConfig();
-  const initialized = useRef(false);
+  const { meData, reload } = useSession();
 
   const [config, setConfig] = useState<OdooConfig>({
     url: "",
@@ -35,15 +34,7 @@ export function ConnectionForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-
-  // Pre-fill form with saved config on mount
-  useEffect(() => {
-    if (!initialized.current && savedConfig) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setConfig(savedConfig);
-      initialized.current = true;
-    }
-  }, [savedConfig]);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   async function handleTest(e: FormEvent) {
     e.preventDefault();
@@ -67,10 +58,23 @@ export function ConnectionForm() {
     }
   }
 
-  function handleSave() {
-    saveConfig(config);
+  async function handleSave() {
+    const orgId = meData?.org?.id;
+    if (!orgId) return;
+    setSaveError(null);
+    const result = await createOdooConfig(orgId, {
+      label: companyName || "Producción",
+      url: config.url,
+      db_name: config.db,
+      api_key: config.apiKey,
+    });
+    if (!result.success) {
+      setSaveError(result.error || "No se pudo guardar la conexión");
+      return;
+    }
+    await reload();
     setSaved(true);
-    const locale = pathname.split('/')[1] || 'en';
+    const locale = pathname.split("/")[1] || "en";
     setTimeout(() => router.push(`/${locale}/chat`), 500);
   }
 
@@ -146,6 +150,10 @@ export function ConnectionForm() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {saveError && (
+        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{saveError}</p>
+      )}
 
       {/* Actions */}
       <div className="flex gap-3">
