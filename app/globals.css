@@ -1,62 +1,126 @@
 @import "tailwindcss";
 
+/* ============================================================
+   DESIGN TOKENS — TheOdooAgent v1.0
+   "Robustez visible. Precisión técnica. Confianza sin ornamentos."
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --primary: #6d28d9;
+  /* === Accent / Brand (Indigo 500) === */
+  --accent-brand: #6366F1;
+  --accent-brand-hover: #4F46E5;
+  --accent-brand-subtle: #EEF2FF;
+
+  /* === Light Mode — Surfaces === */
+  --bg-base: #F8FAFC;       /* Slate 50  — app background */
+  --bg-surface: #FFFFFF;    /* White     — cards, panels, modals */
+  --bg-raised: #F1F5F9;     /* Slate 100 — dropdowns, tooltips, hover */
+
+  /* === Light Mode — Borders === */
+  --border-default: #E2E8F0; /* Slate 200 */
+  --border-subtle: #F1F5F9;  /* Slate 100 — internal dividers */
+
+  /* === Light Mode — Text === */
+  --text-primary: #0F172A;   /* Slate 900 */
+  --text-secondary: #64748B; /* Slate 500 */
+  --text-muted: #94A3B8;     /* Slate 400 — timestamps, secondary IDs */
+
+  /* === Semantic State === */
+  --state-success: #10B981;  /* Emerald 500 */
+  --state-success-subtle: #D1FAE5;
+  --state-error: #F43F5E;    /* Rose 500 */
+  --state-error-subtle: #FFE4E6;
+  --state-warning: #F59E0B;  /* Amber 500 */
+  --state-warning-subtle: #FEF3C7;
+  --state-info: #38BDF8;     /* Sky 400 — LangGraph executing */
+  --state-info-subtle: #E0F2FE;
+
+  /* === Legacy compatibility (existing components keep working) === */
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --muted: var(--bg-raised);
+  --muted-foreground: var(--text-secondary);
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --primary: var(--accent-brand);
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --accent: #8b5cf6;
+  --secondary: var(--bg-raised);
+  --secondary-foreground: var(--text-primary);
+  --accent: var(--accent-brand);
   --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --ring: #6d28d9;
-  --sidebar: #f8fafc;
-  --sidebar-foreground: #334155;
-  --sidebar-border: #e2e8f0;
-  --sidebar-hover: #f1f5f9;
-  --sidebar-active: #ede9fe;
-  --success: #22c55e;
-  --warning: #f59e0b;
+  --destructive: var(--state-error);
+  --ring: var(--accent-brand);
+  --sidebar: var(--bg-base);
+  --sidebar-foreground: var(--text-secondary);
+  --sidebar-border: var(--border-default);
+  --sidebar-hover: var(--bg-raised);
+  --sidebar-active: var(--accent-brand-subtle);
+  --success: var(--state-success);
+  --warning: var(--state-warning);
   --odoo-purple: #714B67;
   --odoo-orange: #a68215;
 }
 
 .dark {
-  --background: #0c0a14;
-  --foreground: #f1f5f9;
-  --card: #1a1625;
-  --card-foreground: #f1f5f9;
-  --muted: #1e1a2e;
-  --muted-foreground: #94a3b8;
-  --border: #2d2640;
-  --input: #2d2640;
-  --primary: #8b5cf6;
+  /* === Accent subtle — dark variant === */
+  --accent-brand-subtle: #1E1B4B; /* Indigo 950 */
+
+  /* === Dark Mode — Surfaces === */
+  --bg-base: #0F172A;    /* Slate 900 — app background */
+  --bg-surface: #1E293B; /* Slate 800 — cards, panels, modals */
+  --bg-raised: #334155;  /* Slate 700 — dropdowns, tooltips */
+
+  /* === Dark Mode — Borders === */
+  --border-default: #334155; /* Slate 700 */
+  --border-subtle: #1E293B;  /* Slate 800 */
+
+  /* === Dark Mode — Text === */
+  --text-primary: #F1F5F9;   /* Slate 100 */
+  --text-secondary: #94A3B8; /* Slate 400 */
+  --text-muted: #475569;     /* Slate 600 */
+
+  /* === Semantic State — dark backgrounds === */
+  --state-success: #10B981;
+  --state-success-subtle: #064E3B;  /* Emerald 950 */
+  --state-error: #F43F5E;
+  --state-error-subtle: #4C0519;    /* Rose 950 */
+  --state-warning: #F59E0B;
+  --state-warning-subtle: #451A03;  /* Amber 950 */
+  --state-info: #38BDF8;
+  --state-info-subtle: #0C4A6E;     /* Sky 950 */
+
+  /* === Legacy compatibility === */
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --muted: var(--bg-surface);
+  --muted-foreground: var(--text-secondary);
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --primary: var(--accent-brand);
   --primary-foreground: #ffffff;
-  --secondary: #1e1a2e;
-  --secondary-foreground: #f1f5f9;
-  --accent: #a78bfa;
+  --secondary: var(--bg-surface);
+  --secondary-foreground: var(--text-primary);
+  --accent: var(--accent-brand);
   --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --ring: #8b5cf6;
-  --sidebar: #110e1c;
-  --sidebar-foreground: #cbd5e1;
-  --sidebar-border: #2d2640;
-  --sidebar-hover: #1e1a2e;
-  --sidebar-active: #2d2155;
-  --success: #22c55e;
-  --warning: #f59e0b;
+  --destructive: var(--state-error);
+  --ring: var(--accent-brand);
+  --sidebar: var(--bg-base);
+  --sidebar-foreground: var(--text-secondary);
+  --sidebar-border: var(--border-default);
+  --sidebar-hover: var(--bg-surface);
+  --sidebar-active: var(--accent-brand-subtle);
+  --success: var(--state-success);
+  --warning: var(--state-warning);
   --odoo-purple: #8d6584;
   --odoo-orange: #a68215;
 }
 
 @theme inline {
+  /* --- Legacy Tailwind tokens (backward compat) --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -81,21 +145,112 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-odoo-purple: var(--odoo-purple);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* --- New design system tokens → Tailwind utilities --- */
+  /* Surfaces: bg-surface, bg-raised, bg-base */
+  --color-surface: var(--bg-surface);
+  --color-raised: var(--bg-raised);
+  --color-base: var(--bg-base);
+
+  /* Borders: border-subtle */
+  --color-border-subtle: var(--border-subtle);
+
+  /* Text: text-secondary-brand, text-muted-brand */
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  /* Accent hover */
+  --color-accent-hover: var(--accent-brand-hover);
+  --color-accent-subtle: var(--accent-brand-subtle);
+
+  /* Semantic state: text-success / bg-success / bg-success-subtle */
+  --color-success-solid: var(--state-success);
+  --color-success-subtle: var(--state-success-subtle);
+  --color-error: var(--state-error);
+  --color-error-subtle: var(--state-error-subtle);
+  --color-warning-solid: var(--state-warning);
+  --color-warning-subtle: var(--state-warning-subtle);
+  --color-info: var(--state-info);
+  --color-info-subtle: var(--state-info-subtle);
+
+  /* Fonts */
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-roboto-mono);
 }
 
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
 * {
-  border-color: var(--border);
+  border-color: var(--border-default);
 }
 
-/* Scrollbar styling */
+/* ============================================================
+   TYPOGRAPHY SCALE — §3.2
+   ============================================================ */
+
+@layer utilities {
+  .text-display {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .text-heading {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .text-subheading {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .text-body {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .text-small {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .text-micro {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  /* Roboto Mono — uso obligatorio para datos técnicos (§3.3) */
+  .font-technical {
+    font-family: var(--font-roboto-mono), ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .font-technical-sm {
+    font-family: var(--font-roboto-mono), ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -105,15 +260,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--muted-foreground);
+  background: var(--text-muted);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground);
+  background: var(--text-secondary);
 }
 
-/* Markdown content styles */
+/* ============================================================
+   MARKDOWN CONTENT
+   ============================================================ */
+
 .markdown-content h1,
 .markdown-content h2,
 .markdown-content h3 {
@@ -145,15 +303,16 @@ body {
 }
 
 .markdown-content code {
-  background: var(--muted);
+  background: var(--bg-raised);
   padding: 0.15em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-roboto-mono), ui-monospace, monospace;
+  color: var(--state-info);
 }
 
 .markdown-content pre {
-  background: var(--muted);
+  background: var(--bg-raised);
   padding: 1em;
   border-radius: 8px;
   overflow-x: auto;
@@ -163,6 +322,7 @@ body {
 .markdown-content pre code {
   background: none;
   padding: 0;
+  color: var(--text-primary);
 }
 
 .markdown-content table {
@@ -173,19 +333,23 @@ body {
 
 .markdown-content th,
 .markdown-content td {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-default);
   padding: 0.5em 0.75em;
   text-align: left;
 }
 
 .markdown-content th {
-  background: var(--muted);
+  background: var(--bg-raised);
   font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
 }
 
 .markdown-content blockquote {
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--accent-brand);
   padding-left: 1em;
   margin-bottom: 0.75em;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
 }
