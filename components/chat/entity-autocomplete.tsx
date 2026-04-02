@@ -26,20 +26,20 @@ export function EntityAutocomplete({
   const [results, setResults] = useState<EntitySearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { config: odooConfig } = useOdooConfig();
+  const { activeConfigId } = useOdooConfig();
   const t = useTranslations("ChatMessages");
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const doSearch = useCallback(
     async (searchQuery: string) => {
-      if (!odooConfig || searchQuery.length < 2) {
+      if (!activeConfigId || searchQuery.length < 2) {
         setResults([]);
         return;
       }
       setIsSearching(true);
       try {
-        const res = await searchEntities(chatId, model, searchQuery, odooConfig);
+        const res = await searchEntities(chatId, model, searchQuery, activeConfigId);
         if (res.success && res.results) {
           setResults(res.results);
         } else {
@@ -49,7 +49,7 @@ export function EntityAutocomplete({
         setIsSearching(false);
       }
     },
-    [chatId, model, odooConfig]
+    [chatId, model, activeConfigId]
   );
 
   useEffect(() => {

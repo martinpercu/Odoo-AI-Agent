@@ -11,8 +11,8 @@
     "lightMode": "Modo Claro",
     "darkMode": "Modo Escuro",
     "alerts": "Alertas",
-    "logout": "Log out",
-    "loadMore": "Load more"
+    "logout": "Sair",
+    "loadMore": "Carregar mais"
   },
   "ChatGroups": {
     "today": "Hoje",
@@ -231,6 +231,9 @@
     "registerLink": "Cadastre-se",
     "hasAccount": "Já tem conta?",
     "loginLink": "Entrar",
+    "tryDemo": "Experimentar sem cadastro",
+    "demoBanner": "Modo Demo — você está conversando com dados fictícios de uma empresa distribuidora.",
+    "demoSignUp": "Cadastre-se para conectar seu Odoo",
     "devMode": "Modo Desenvolvimento",
     "devModeDesc": "Supabase não está configurado. A autenticação está desativada.",
     "devModeContinue": "Continuar sem login"

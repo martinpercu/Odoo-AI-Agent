@@ -266,6 +266,9 @@
     "registerLink": "Registrate",
     "hasAccount": "¿Ya tenés cuenta?",
     "loginLink": "Iniciá sesión",
+    "tryDemo": "Probar sin registrarse",
+    "demoBanner": "Modo Demo — estás chateando con datos ficticios de una empresa distribuidora.",
+    "demoSignUp": "Registrate para conectar tu Odoo",
     "devMode": "Modo Desarrollo",
     "devModeDesc": "Supabase no está configurado. La autenticación está desactivada — las requests se envían sin token.",
     "devModeContinue": "Continuar sin login"
