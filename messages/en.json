@@ -202,7 +202,9 @@
       "pendingInvitations": "Sent invitations",
       "accepted": "Accepted",
       "expired": "Expired",
-      "pending": "Pending"
+      "pending": "Pending",
+      "copy": "Copy",
+      "copied": "Copied"
     },
     "form": {
       "urlLabel": "Odoo URL",
@@ -320,7 +322,13 @@
     "expiredDesc": "This invitation has expired. Ask your administrator to send you a new one.",
     "error": "Something went wrong",
     "errorDesc": "Could not accept the invitation. Please try again.",
-    "goHome": "Go to app"
+    "goHome": "Go to app",
+    "registerTitle": "Complete your registration",
+    "registerDesc": "You've been invited to join {org}. Create your password to activate your account.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "registering": "Creating account...",
+    "registerCta": "Create account & accept invitation"
   },
   "LocaleSwitcher": {
     "es": "Español",

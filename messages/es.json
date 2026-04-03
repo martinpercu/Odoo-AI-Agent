@@ -195,7 +195,9 @@
       "pendingInvitations": "Invitaciones enviadas",
       "accepted": "Aceptada",
       "expired": "Expirada",
-      "pending": "Pendiente"
+      "pending": "Pendiente",
+      "copy": "Copiar",
+      "copied": "Copiado"
     },
     "inspector": {
       "heading": "Inspeccionar Instancia",
@@ -320,7 +322,13 @@
     "expiredDesc": "Esta invitación expiró. Pedile al administrador que te reenvíe una nueva.",
     "error": "Algo salió mal",
     "errorDesc": "No se pudo aceptar la invitación. Intentá de nuevo.",
-    "goHome": "Ir a la app"
+    "goHome": "Ir a la app",
+    "registerTitle": "Completá tu registro",
+    "registerDesc": "Fuiste invitado a unirte a {org}. Creá tu contraseña para activar tu cuenta.",
+    "emailLabel": "Email",
+    "passwordLabel": "Contraseña",
+    "registering": "Creando cuenta...",
+    "registerCta": "Crear cuenta y aceptar invitación"
   },
   "LocaleSwitcher": {
     "es": "Español",

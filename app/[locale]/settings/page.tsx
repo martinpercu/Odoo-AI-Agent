@@ -492,7 +492,7 @@ function InvitationsSection() {
             const expired = new Date(inv.expires_at) < new Date();
             return (
               <div
-                key={inv.id}
+                key={inv.id ?? inv.token}
                 className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-body"
               >
                 <div>
@@ -524,8 +524,9 @@ export default function SettingsPage() {
   const { meData } = useSession();
   const role = meData?.user?.role;
 
-  const isAdmin = role === "ADMIN";
-  const isAdminOrImplementer = role === "ADMIN" || role === "IMPLEMENTER";
+  const roleUpper = role?.toUpperCase();
+  const isAdmin = roleUpper === "ADMIN";
+  const isAdminOrImplementer = roleUpper === "ADMIN" || roleUpper === "IMPLEMENTER";
   const hasOrg = !!meData?.org;
 
   return (
