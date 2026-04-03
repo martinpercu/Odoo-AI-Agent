@@ -202,7 +202,9 @@
       "pendingInvitations": "Convites pendentes",
       "accepted": "Aceito",
       "expired": "Expirado",
-      "pending": "Pendente"
+      "pending": "Pendente",
+      "copy": "Copiar",
+      "copied": "Copiado"
     },
     "form": {
       "urlLabel": "URL do Odoo",
@@ -320,7 +322,13 @@
     "expiredDesc": "Este convite expirou.",
     "error": "Algo deu errado",
     "errorDesc": "Não foi possível aceitar o convite.",
-    "goHome": "Ir para o app"
+    "goHome": "Ir para o app",
+    "registerTitle": "Complete seu cadastro",
+    "registerDesc": "Você foi convidado para entrar em {org}. Crie sua senha para ativar sua conta.",
+    "emailLabel": "Email",
+    "passwordLabel": "Senha",
+    "registering": "Criando conta...",
+    "registerCta": "Criar conta e aceitar convite"
   },
   "LocaleSwitcher": {
     "es": "Español",

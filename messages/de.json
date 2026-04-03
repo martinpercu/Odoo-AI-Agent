@@ -202,7 +202,9 @@
       "pendingInvitations": "Ausstehende Einladungen",
       "accepted": "Akzeptiert",
       "expired": "Abgelaufen",
-      "pending": "Ausstehend"
+      "pending": "Ausstehend",
+      "copy": "Kopieren",
+      "copied": "Kopiert"
     },
     "form": {
       "urlLabel": "Odoo URL",
@@ -320,7 +322,13 @@
     "expiredDesc": "Die Einladung ist abgelaufen.",
     "error": "Fehler",
     "errorDesc": "Einladung konnte nicht akzeptiert werden.",
-    "goHome": "Zur App"
+    "goHome": "Zur App",
+    "registerTitle": "Registrierung abschließen",
+    "registerDesc": "Sie wurden eingeladen, {org} beizutreten. Erstellen Sie Ihr Passwort, um Ihr Konto zu aktivieren.",
+    "emailLabel": "E-Mail",
+    "passwordLabel": "Passwort",
+    "registering": "Konto wird erstellt...",
+    "registerCta": "Konto erstellen und Einladung annehmen"
   },
   "LocaleSwitcher": {
     "es": "Español",

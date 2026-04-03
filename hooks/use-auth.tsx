@@ -26,7 +26,7 @@ interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
   login(email: string, password: string): Promise<{ error?: string }>;
-  register(email: string, password: string): Promise<{ error?: string }>;
+  register(email: string, password: string): Promise<{ error?: string; accessToken?: string }>;
   logout(): void;
 }
 
@@ -94,9 +94,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const register = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase!.auth.signUp({ email, password });
+    const { data, error } = await supabase!.auth.signUp({ email, password });
     if (error) return { error: error.message };
-    return {};
+    return { accessToken: data.session?.access_token };
   }, []);
 
   const logout = useCallback(() => {

@@ -4,13 +4,15 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Loader2, Package, CheckCircle2, AlertTriangle } from "lucide-react";
-import { inspectInstance, NETWORK_ERROR, type OdooModule } from "@/lib/api";
+import { inspectInstance, inspectSavedOdooConfig, NETWORK_ERROR, type OdooModule } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useSession } from "@/hooks/use-session";
 import type { ConnectionStatus } from "@/lib/types";
 
 export function InstanceInspector() {
   const t = useTranslations("Settings.inspector");
-  const { config } = useOdooConfig();
+  const { config, activeConfig } = useOdooConfig();
+  const { meData } = useSession();
   const [status, setStatus] = useState<ConnectionStatus>("idle");
   const [modules, setModules] = useState<OdooModule[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +25,11 @@ export function InstanceInspector() {
     setModules([]);
 
     try {
-      const result = await inspectInstance(config);
+      const orgId = meData?.org?.id;
+      const result =
+        orgId && activeConfig
+          ? await inspectSavedOdooConfig(orgId, activeConfig.id)
+          : await inspectInstance(config);
 
       if (result.success && result.modules) {
         setStatus("success");

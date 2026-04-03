@@ -279,24 +279,86 @@ Odoo model search with autocomplete:
 - Dropdown with matching records (id + name)
 - Used within ActionProposalButton field editor
 
-## Authentication Flow
+## Authentication & User Flows
+
+### Unauthenticated User
+
+```
+App loads → GET /me (no auth token)
+         → demo_available: false → /login
+         → demo_available: true  → /chat (Demo Mode)
+                                    activeConfigId = "demo"
+                                    banner shown in chat
+                                    "Try Demo" button on login page
+```
+
+> Demo Mode lets visitors interact with the AI using a read-only Odoo demo instance — no account required.
+
+### Authenticated User (any role)
 
 ```
 App loads → AuthProvider restores Supabase session
          → SessionProvider calls GET /me
-         → Routing:
-            No user        → /login
-            User, no org   → /onboarding (2-step wizard)
-            User + org     → /chat
-         → 401 from backend → clear session → /login
-         → 402 from backend → show LimitReachedModal (no crash)
+         → No org yet   → /onboarding (2-step wizard: org name + Odoo connection)
+         → Org exists   → /chat
+         → 401 from any API call → clear session → /login
+         → 402 from any API call → show LimitReachedModal (no crash)
 ```
 
-**DEV MODE:** When `NEXT_PUBLIC_SUPABASE_URL` is unset:
+### Admin User
+
+Admins have access to `/settings` (tab-based panel) with full control over:
+
+```
+Settings
+├── Organization  → edit name, slug, org type
+├── Connections   → CRUD for Odoo configs (multiple per org)
+│                   test connection, inspect installed modules
+├── Users         → list members, change role, toggle free/paid slot, remove
+└── Invitations   → send invite by email, view status (pending / accepted / expired)
+```
+
+Role comparison:
+
+| Capability | CLIENT_USER | IMPLEMENTER | ADMIN |
+|------------|:-----------:|:-----------:|:-----:|
+| Chat & query Odoo | ✓ | ✓ | ✓ |
+| View settings | — | ✓ | ✓ |
+| Manage Odoo connections | — | ✓ | ✓ |
+| Manage users & invitations | — | — | ✓ |
+| Edit organization | — | — | ✓ |
+
+### Invitation Flow
+
+```
+Admin sends invite (email) → POST /admin/orgs/{id}/invitations
+                           → backend emails token link: /invite?token=...
+
+Invitee opens link → GET /admin/invitations/{token}/preview  (no auth)
+                   → shows registration form
+                      email  (pre-filled, read-only)
+                      org name + role badge
+                      password field
+                   → submit:
+                      1. POST Supabase signUp  → gets accessToken
+                      2. POST /admin/invitations/accept  (Bearer accessToken)
+                      3. reload /me → redirect /chat
+
+Error states:
+  token missing / invalid → "Invitation not found"
+  token expired (410)     → "Invitation expired"
+  already accepted (409)  → "Already used" + go to chat button
+```
+
+> The invitation page handles registration inline — the invitee never needs to visit `/login` or `/register` separately.
+
+### DEV MODE
+
+When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 - `IS_AUTH_ENABLED = false`
 - `useAuth()` returns stub user `dev@localhost`
 - Login page shows "Continue without login" bypass button
-- No token sent to backend (backend also in DEV MODE)
+- No token sent to backend (backend must also be in DEV MODE)
 
 ## Multi-Tenancy Model
 
