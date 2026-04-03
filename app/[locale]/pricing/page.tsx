@@ -12,17 +12,18 @@ export default function PricingPage() {
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:py-20">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
           className="mb-12 text-center"
         >
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
-            <Sparkles size={24} className="text-primary" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-accent-subtle">
+            <Sparkles size={24} strokeWidth={1.5} className="text-accent" />
           </div>
-          <h1 className="mb-3 text-4xl font-extrabold tracking-tight">
+          <h1 className="mb-3 text-display">
             {t("heading")}
           </h1>
-          <p className="mx-auto max-w-xl text-lg text-muted-foreground">
+          <p className="mx-auto max-w-xl text-body text-text-secondary">
             {t("subheading")}
           </p>
         </motion.div>
@@ -32,14 +33,14 @@ export default function PricingPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.2, duration: 0.15, ease: "easeOut" }}
           className="mt-16 text-center"
         >
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body text-text-secondary">
             {t("footer")}
             <br />
             {t("needSpecial")}{" "}
-            <button className="font-medium text-primary hover:underline">
+            <button className="font-medium text-accent hover:underline">
               {t("contactUs")}
             </button>
           </p>

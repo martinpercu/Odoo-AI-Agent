@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Bot, Database, FileText, Users, BarChart3, Package, XCircle, Zap } from "lucide-react";
+import { Bot, Database, FileText, Users, BarChart3, Package, AlertTriangle, Zap } from "lucide-react";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -11,7 +11,7 @@ import { useTranslations as useT } from "next-intl";
 
 const SUGGESTION_KEYS = ["inventory", "invoices", "sales", "employees"] as const;
 const SUGGESTION_ICONS = [Package, FileText, BarChart3, Users];
-const SUGGESTION_COLORS = ["text-blue-500", "text-amber-500", "text-emerald-500", "text-purple-500"];
+const SUGGESTION_COLORS = ["text-info", "text-warning-solid", "text-success-solid", "text-accent"];
 
 export default function NewChatPage() {
   const router = useRouter();
@@ -33,9 +33,9 @@ export default function NewChatPage() {
   return (
     <div className="flex flex-1 flex-col">
       {isDemoMode && (
-        <div className="flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
+        <div className="flex items-center justify-between gap-3 border-b border-border bg-warning-subtle px-4 py-2 text-small text-warning-solid">
           <div className="flex items-center gap-2">
-            <Zap size={13} className="shrink-0" />
+            <Zap size={16} strokeWidth={1.5} className="shrink-0" />
             <span>{tAuth("demoBanner")}</span>
           </div>
           <button
@@ -49,22 +49,22 @@ export default function NewChatPage() {
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-2xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="mb-10 text-center"
           >
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-              <Bot size={32} className="text-primary" />
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-md bg-accent-subtle">
+              <Bot size={32} strokeWidth={1.5} className="text-accent" />
             </div>
-            <h2 className="mb-3 text-3xl font-bold">{t("heading")}</h2>
-            <p className="text-muted-foreground">{t("subheading")}</p>
+            <h2 className="mb-3 text-display">{t("heading")}</h2>
+            <p className="text-body text-text-secondary">{t("subheading")}</p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15, delay: 0.1, ease: "easeOut" }}
             className="grid grid-cols-1 gap-3 sm:grid-cols-2"
           >
             {SUGGESTION_KEYS.map((key, i) => {
@@ -74,9 +74,9 @@ export default function NewChatPage() {
                 <button
                   key={key}
                   onClick={() => handleSuggestion(text)}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-left text-sm transition-all hover:border-primary/30 hover:bg-muted hover:shadow-sm"
+                  className="flex items-center gap-3 rounded-md border border-border bg-surface p-4 text-left text-body transition-all hover:border-accent/30 hover:bg-raised hover:shadow-sm"
                 >
-                  <Icon size={18} className={SUGGESTION_COLORS[i]} />
+                  <Icon size={20} strokeWidth={1.5} className={SUGGESTION_COLORS[i]} />
                   <span>{text}</span>
                 </button>
               );
@@ -86,18 +86,18 @@ export default function NewChatPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground"
+            transition={{ delay: 0.2, duration: 0.15, ease: "easeOut" }}
+            className="mt-6 flex items-center justify-center gap-2 text-small text-text-muted"
           >
             {isConfigured ? (
               <>
-                <Database size={12} />
+                <Database size={16} strokeWidth={1.5} />
                 <span>{t("connectedMessage")}</span>
               </>
             ) : (
               <>
-                <XCircle size={12} className="text-destructive" />
-                <span className="text-destructive">{t("notConnected")}</span>
+                <AlertTriangle size={16} strokeWidth={1.5} className="text-error" />
+                <span className="text-error">{t("notConnected")}</span>
               </>
             )}
           </motion.div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Clock, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { Clock, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { fetchAuditHistory } from "@/lib/api";
 import type { AuditEntry } from "@/lib/api";
 
@@ -49,38 +49,38 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-1.5 text-small font-medium text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
         title={t("audit.title")}
       >
-        <Clock size={14} />
+        <Clock size={16} strokeWidth={1.5} />
         <span>{t("audit.title")}</span>
       </button>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 4, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className="absolute bottom-full right-0 z-50 mb-2 w-80 rounded-xl border border-border bg-card shadow-xl"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute bottom-full right-0 z-50 mb-2 w-80 rounded-lg border border-border bg-surface shadow-lg"
           >
             {/* Header */}
             <div className="border-b border-border px-4 py-3">
-              <h4 className="text-sm font-semibold">{t("audit.title")}</h4>
-              <p className="text-xs text-muted-foreground">{t("audit.subtitle")}</p>
+              <h4 className="text-body font-semibold">{t("audit.title")}</h4>
+              <p className="text-small text-text-secondary">{t("audit.subtitle")}</p>
             </div>
 
             {/* Content */}
             <div className="max-h-64 overflow-y-auto p-2">
               {loading && (
                 <div className="flex items-center justify-center py-6">
-                  <Loader2 size={18} className="animate-spin text-muted-foreground" />
+                  <Loader2 size={16} strokeWidth={1.5} className="animate-spin text-text-secondary" />
                 </div>
               )}
 
               {!loading && entries.length === 0 && (
-                <p className="py-6 text-center text-xs text-muted-foreground">
+                <p className="py-6 text-center text-small text-text-secondary">
                   {t("audit.empty")}
                 </p>
               )}
@@ -89,33 +89,33 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
                 entries.map((entry) => (
                   <div
                     key={entry.id}
-                    className="mb-1 rounded-lg px-3 py-2 text-xs transition-colors hover:bg-muted"
+                    className="mb-1 rounded-md px-3 py-2 text-small transition-colors hover:bg-raised"
                   >
                     <div className="flex items-center gap-2">
                       {entry.status === "success" ? (
-                        <CheckCircle2 size={14} className="shrink-0 text-emerald-500" />
+                        <CheckCircle2 size={14} strokeWidth={1.5} className="shrink-0 text-success-solid" />
                       ) : (
-                        <XCircle size={14} className="shrink-0 text-red-500" />
+                        <AlertTriangle size={14} strokeWidth={1.5} className="shrink-0 text-error" />
                       )}
-                      <span className="font-medium">
+                      <span className="font-medium font-technical">
                         {entry.action} &middot; {entry.model}
                       </span>
                     </div>
                     {entry.record_id && (
-                      <span className="ml-6 text-muted-foreground">
+                      <span className="ml-6 font-technical text-text-muted">
                         ID: {entry.record_id}
                       </span>
                     )}
                     {entry.user_edits && Object.keys(entry.user_edits).length > 0 && (
-                      <div className="ml-6 mt-1 text-muted-foreground">
+                      <div className="ml-6 mt-1 font-technical text-text-secondary">
                         {t("audit.userEdited")}:{" "}
                         {Object.keys(entry.user_edits).join(", ")}
                       </div>
                     )}
                     {entry.error_message && (
-                      <div className="ml-6 mt-1 text-red-500">{entry.error_message}</div>
+                      <div className="ml-6 mt-1 font-technical text-error">{entry.error_message}</div>
                     )}
-                    <div className="ml-6 mt-0.5 text-muted-foreground/60">
+                    <div className="ml-6 mt-0.5 text-text-muted">
                       {new Date(entry.created_at).toLocaleString()}
                     </div>
                   </div>

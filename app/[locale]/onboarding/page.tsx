@@ -23,7 +23,7 @@ function randomSuffix(): string {
 }
 
 const inputCls =
-  "rounded-lg border border-(--color-border) bg-(--color-bg) px-3 py-2 text-sm text-(--color-text) placeholder-(--color-muted) focus:outline-none focus:ring-2 focus:ring-(--color-primary)";
+  "rounded-md border border-border bg-base px-3 py-2 text-body text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/30";
 
 function OnboardingContent() {
   const t = useTranslations("Onboarding");
@@ -113,44 +113,44 @@ function OnboardingContent() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--color-bg) px-4">
+    <div className="flex min-h-screen items-center justify-center bg-base px-4">
       <div className="w-full max-w-md">
         {/* Progress indicator */}
         <div className="mb-8 flex items-center gap-3">
           {[1, 2].map((s) => (
             <div key={s} className="flex items-center gap-2">
               <div
-                className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+                className={`flex h-7 w-7 items-center justify-center rounded-md text-micro font-semibold ${
                   s < step
-                    ? "bg-green-500 text-white"
+                    ? "bg-success-solid text-white"
                     : s === step
-                    ? "bg-(--color-primary) text-white"
-                    : "bg-(--color-border) text-(--color-muted)"
+                    ? "bg-accent text-white"
+                    : "bg-raised text-text-muted"
                 }`}
               >
-                {s < step ? <CheckCircle size={14} /> : s}
+                {s < step ? <CheckCircle size={14} strokeWidth={1.5} /> : s}
               </div>
               <span
-                className={`text-sm ${
-                  s === step ? "font-medium text-(--color-text)" : "text-(--color-muted)"
+                className={`text-body ${
+                  s === step ? "font-medium text-foreground" : "text-text-muted"
                 }`}
               >
                 {s === 1 ? t("step1Label") : t("step2Label")}
               </span>
-              {s < 2 && <div className="ml-2 h-px w-8 bg-(--color-border)" />}
+              {s < 2 && <div className="ml-2 h-px w-8 bg-border" />}
             </div>
           ))}
         </div>
 
         {/* Step 1 — Organization */}
         {step === 1 && (
-          <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-8 shadow-lg">
-            <h1 className="mb-1 text-xl font-semibold text-(--color-text)">{t("step1Title")}</h1>
-            <p className="mb-6 text-sm text-(--color-muted)">{t("step1Desc")}</p>
+          <div className="rounded-lg border border-border bg-surface p-8 shadow-lg">
+            <h1 className="mb-1 text-heading">{t("step1Title")}</h1>
+            <p className="mb-6 text-body text-text-secondary">{t("step1Desc")}</p>
 
             <form onSubmit={(e) => { e.preventDefault(); setStep(2); }} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">{t("orgName")}</label>
+                <label className="text-small font-medium text-text-secondary">{t("orgName")}</label>
                 <input
                   type="text"
                   required
@@ -162,16 +162,16 @@ function OnboardingContent() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">Slug</label>
+                <label className="text-small font-medium text-text-secondary">Slug</label>
                 <input
                   type="text"
                   required
                   value={orgSlug}
                   onChange={(e) => { setOrgSlug(e.target.value); setSlugEdited(true); }}
                   placeholder="mi-empresa"
-                  className={`${inputCls} font-mono`}
+                  className={`${inputCls} font-technical`}
                 />
-                <p className="text-xs text-(--color-muted)">
+                <p className="text-small text-text-muted">
                   Identificador único, solo letras minúsculas, números y guiones.
                 </p>
               </div>
@@ -179,7 +179,7 @@ function OnboardingContent() {
               <button
                 type="submit"
                 disabled={!orgName || !orgSlug}
-                className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="mt-1 h-9 w-full rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
               >
                 {t("step1Cta")}
               </button>
@@ -189,13 +189,13 @@ function OnboardingContent() {
 
         {/* Step 2 — Odoo Connection */}
         {step === 2 && (
-          <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-8 shadow-lg">
-            <h1 className="mb-1 text-xl font-semibold text-(--color-text)">{t("step2Title")}</h1>
-            <p className="mb-6 text-sm text-(--color-muted)">{t("step2Desc")}</p>
+          <div className="rounded-lg border border-border bg-surface p-8 shadow-lg">
+            <h1 className="mb-1 text-heading">{t("step2Title")}</h1>
+            <p className="mb-6 text-body text-text-secondary">{t("step2Desc")}</p>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">{t("configLabel")}</label>
+                <label className="text-small font-medium text-text-secondary">{t("configLabel")}</label>
                 <input
                   type="text"
                   value={label}
@@ -206,31 +206,31 @@ function OnboardingContent() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">{t("configUrl")}</label>
+                <label className="text-small font-medium text-text-secondary">{t("configUrl")}</label>
                 <input
                   type="url"
                   required
                   value={url}
                   onChange={(e) => { setUrl(e.target.value); setTestStatus("idle"); }}
                   placeholder="https://mi-odoo.com"
-                  className={inputCls}
+                  className={`${inputCls} font-technical`}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">{t("configDb")}</label>
+                <label className="text-small font-medium text-text-secondary">{t("configDb")}</label>
                 <input
                   type="text"
                   required
                   value={dbName}
                   onChange={(e) => { setDbName(e.target.value); setTestStatus("idle"); }}
                   placeholder="mi_base"
-                  className={inputCls}
+                  className={`${inputCls} font-technical`}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">{t("configLogin")}</label>
+                <label className="text-small font-medium text-text-secondary">{t("configLogin")}</label>
                 <input
                   type="text"
                   required
@@ -242,14 +242,14 @@ function OnboardingContent() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-(--color-text)">{t("configApiKey")}</label>
+                <label className="text-small font-medium text-text-secondary">{t("configApiKey")}</label>
                 <input
                   type="password"
                   required
                   value={apiKey}
                   onChange={(e) => { setApiKey(e.target.value); setTestStatus("idle"); }}
                   placeholder="••••••••"
-                  className={inputCls}
+                  className={`${inputCls} font-technical`}
                 />
               </div>
 
@@ -258,22 +258,22 @@ function OnboardingContent() {
                 type="button"
                 onClick={handleTestConnection}
                 disabled={testStatus === "testing" || !url || !dbName || !login || !apiKey}
-                className="flex items-center justify-center gap-2 rounded-lg border border-(--color-border) px-4 py-2 text-sm font-medium text-(--color-text) hover:bg-(--color-hover) transition-colors disabled:opacity-50"
+                className="flex h-9 items-center justify-center gap-2 rounded-md border border-border px-4 py-2 text-body font-medium text-foreground hover:bg-raised transition-colors disabled:opacity-50"
               >
-                {testStatus === "testing" && <Loader2 size={14} className="animate-spin" />}
-                {testStatus === "ok" && <CheckCircle size={14} className="text-green-500" />}
+                {testStatus === "testing" && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
+                {testStatus === "ok" && <CheckCircle size={16} strokeWidth={1.5} className="text-success-solid" />}
                 {t("testConnection")}
               </button>
 
               {testStatus === "ok" && (
-                <p className="text-sm text-green-600 dark:text-green-400">{t("connectionOk")}</p>
+                <p className="text-body text-success-solid">{t("connectionOk")}</p>
               )}
               {testStatus === "error" && (
-                <p className="text-sm text-red-600 dark:text-red-400">{testError}</p>
+                <p className="text-body text-error">{testError}</p>
               )}
 
               {submitError && (
-                <p className="rounded-lg bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400">
+                <p className="rounded-md bg-error-subtle px-3 py-2 text-body text-error">
                   {submitError}
                 </p>
               )}
@@ -282,16 +282,16 @@ function OnboardingContent() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex-1 rounded-lg border border-(--color-border) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-hover) transition-colors"
+                  className="flex-1 h-9 rounded-md border border-border px-4 py-2 text-body font-medium text-foreground hover:bg-raised transition-colors"
                 >
                   {t("back")}
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                  className="flex-1 flex h-9 items-center justify-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
                 >
-                  {isSubmitting && <Loader2 size={14} className="animate-spin" />}
+                  {isSubmitting && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
                   {t("step2Cta")}
                 </button>
               </div>

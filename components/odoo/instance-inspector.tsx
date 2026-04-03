@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Loader2, Package, CheckCircle2, XCircle } from "lucide-react";
+import { Search, Loader2, Package, CheckCircle2, AlertTriangle } from "lucide-react";
 import { inspectInstance, NETWORK_ERROR, type OdooModule } from "@/lib/api";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import type { ConnectionStatus } from "@/lib/types";
@@ -47,12 +47,12 @@ export function InstanceInspector() {
       <button
         onClick={handleInspect}
         disabled={status === "loading" || !config}
-        className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-5 py-3 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
+        className="flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
       >
         {status === "loading" ? (
-          <Loader2 size={16} className="animate-spin" />
+          <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
         ) : (
-          <Search size={16} />
+          <Search size={16} strokeWidth={1.5} />
         )}
         {t("buttonLabel")}
       </button>
@@ -63,29 +63,30 @@ export function InstanceInspector() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="rounded-xl border border-border bg-card p-4">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <Package size={16} className="text-primary" />
+            <div className="rounded-lg border border-border bg-surface p-4">
+              <h3 className="mb-3 flex items-center gap-2 text-body font-semibold">
+                <Package size={16} strokeWidth={1.5} className="text-accent" />
                 {t("modulesFound", { count: modules.length })}
               </h3>
               <div className="max-h-64 space-y-2 overflow-y-auto">
                 {modules.map((mod) => (
                   <div
                     key={mod.name}
-                    className="flex items-start justify-between rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs"
+                    className="flex items-start justify-between rounded-md border border-border bg-raised/50 px-3 py-2 text-small"
                   >
                     <div className="flex-1">
-                      <p className="font-medium text-foreground">
+                      <p className="font-technical font-medium text-foreground">
                         {mod.display_name || mod.name}
                       </p>
                       {mod.installed_version && (
-                        <p className="text-muted-foreground">v{mod.installed_version}</p>
+                        <p className="font-technical text-text-muted">v{mod.installed_version}</p>
                       )}
                     </div>
                     {mod.state === "installed" && (
-                      <CheckCircle2 size={14} className="text-success" />
+                      <CheckCircle2 size={14} strokeWidth={1.5} className="text-success-solid" />
                     )}
                   </div>
                 ))}
@@ -99,11 +100,12 @@ export function InstanceInspector() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="flex items-center gap-3 rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              <XCircle size={18} />
-              <span>{error}</span>
+            <div className="flex items-center gap-3 rounded-md bg-error-subtle px-4 py-3 text-body text-error">
+              <AlertTriangle size={16} strokeWidth={1.5} />
+              <span className="font-technical">{error}</span>
             </div>
           </motion.div>
         )}

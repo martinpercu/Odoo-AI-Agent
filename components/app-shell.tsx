@@ -60,7 +60,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <ChatContext.Provider value={chat}>
       <RightPanelContext.Provider value={{ activeTab, setActiveTab }}>
-        <div className="flex h-screen overflow-hidden bg-background">
+        <div className="flex h-screen overflow-hidden bg-base">
           <Sidebar
             chatGroups={chat.chatGroups}
             currentChatId={chat.currentChatId}

@@ -67,6 +67,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Multi-language support (Spanish, English, French, German, Portuguese)
 - Light / dark mode
 - Collapsible and responsive sidebar (mobile-friendly)
+- Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
 **Other:**
 - Plans and pricing page (Free, Pro, Enterprise)
@@ -588,26 +589,55 @@ Open `http://localhost:3000` — it automatically redirects based on auth state.
 
 ## Themes and Design
 
-The color system supports **light and dark mode** with CSS variables:
+The color system supports **light and dark mode** with CSS variables defined in `app/globals.css` under `@theme`. Components use semantic utility tokens — never raw hex values.
 
-| Token | Light | Dark |
-|-------|-------|------|
-| Primary | `#6d28d9` (violet) | `#8b5cf6` (light violet) |
-| Odoo Purple | `#714B67` | `#8d6584` |
-| Success | `#22c55e` (green) | `#22c55e` |
-| Warning | `#f59e0b` (orange) | `#f59e0b` |
-| Background | `#ffffff` | `#0c0a14` |
-| Card | `#ffffff` | `#1a1625` |
-| Sidebar | `#f8fafc` | `#110e1c` |
+### Design Token System
 
-**Component Color Coding:**
-- Success cards use `--color-success` (green)
-- Validation prompts use `--color-warning` (orange)
-- Action buttons use `--color-odoo-purple` (Odoo brand color)
-- PDF file cards use red accent
+| Token | Role | Example usage |
+|-------|------|---------------|
+| `bg-base` | Page background | `<div className="bg-base">` |
+| `bg-surface` | Card/panel background | `<div className="bg-surface">` |
+| `bg-raised` | Elevated element (hover, input bg) | `hover:bg-raised` |
+| `text-foreground` | Primary text | `<p className="text-foreground">` |
+| `text-text-secondary` | Secondary/label text | `<label className="text-text-secondary">` |
+| `text-text-muted` | Placeholder / de-emphasized text | `placeholder:text-text-muted` |
+| `bg-accent` / `text-accent` | Interactive primary (replaces `primary`) | buttons, active states |
+| `bg-accent-hover` | Hover state for accent buttons | `hover:bg-accent-hover` |
+| `bg-accent-subtle` / `text-accent` | Accent tint (icon backgrounds) | icon wrappers |
+| `bg-error` / `text-error` | Destructive actions | delete buttons, error messages |
+| `bg-error-subtle` | Error tint | hover on delete, inline errors |
+| `text-success-solid` | Success color | success icons |
+| `text-warning-solid` | Warning color | warning icons, badges |
+| `text-info` | Info color | info icons |
+| `border-border` | Default border | all card/input borders |
+
+### Typography Tokens
+
+| Token | Usage |
+|-------|-------|
+| `text-heading` | Section headings (`h1`/`h2`) |
+| `text-subheading` | Sub-section headings |
+| `text-body` | Default body text (replaces `text-sm`) |
+| `text-small` | Secondary labels (replaces `text-xs`) |
+| `text-micro` | Captions, badges, timestamps |
+| `font-technical` | Monospaced/code values (slugs, URLs, IDs) |
+
+### Component Color Coding
+
+- Success cards use `text-success-solid` / `bg-success-subtle`
+- Validation prompts use `text-warning-solid` / `bg-warning-subtle`
+- Action buttons use `--color-odoo-purple` (`#714B67`) — Odoo brand color
+- PDF file cards use `text-error` red accent
 - Excel export cards use `#1D6F42` (Excel green)
 - Charts use Odoo purple palette
-- Notification severity: critical (red), warning (orange), info (blue), success (green)
+- Notification severity: critical (`text-error`), warning (`text-warning-solid`), info (`text-info`), success (`text-success-solid`)
+
+### Shape & Animation Conventions
+
+- Cards / modals: `rounded-lg` (was `rounded-2xl`)
+- Buttons / inputs / small elements: `rounded-md` (was `rounded-xl`/`rounded-lg`)
+- Icons: 20px size, `strokeWidth={1.5}` throughout
+- Animations: `duration-0.15` + `ease: "easeOut"` (replaced spring physics)
 
 ## Supported Languages
 
@@ -626,10 +656,10 @@ Translations are located in `messages/[locale].json`.
 | Namespace | Description |
 |-----------|-------------|
 | `Metadata` | Page title and description |
-| `Sidebar` | Navigation, theme toggle, logout |
+| `Sidebar` | Navigation, theme toggle, logout, collapse/expand labels |
 | `ChatGroups` | Date-based grouping labels |
 | `NewChat` | Welcome screen and suggestions |
-| `ChatInput` | Input placeholder, disclaimer, image attach/remove |
+| `ChatInput` | Input placeholder, disclaimer, image attach/remove, send/stop aria labels |
 | `ChatMessages` | Chat UI: typing, success, validation, selection, file, chart, export, action proposal, audit |
 | `ChatHistory` | Loading states |
 | `WelcomeDashboard` | Suggestion cards for first-chat landing |

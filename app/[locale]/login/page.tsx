@@ -49,17 +49,17 @@ function LoginContent() {
 
   if (!IS_AUTH_ENABLED) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-(--color-bg)">
-        <div className="w-full max-w-sm rounded-xl border border-(--color-border) bg-(--color-surface) p-8 text-center shadow-lg">
-          <p className="mb-2 text-sm font-medium text-amber-600 dark:text-amber-400">
+      <div className="flex min-h-screen items-center justify-center bg-base">
+        <div className="w-full max-w-sm rounded-lg border border-border bg-surface p-8 text-center shadow-lg">
+          <p className="mb-2 text-body font-medium text-warning-solid">
             {t("devMode")}
           </p>
-          <p className="mb-6 text-xs text-(--color-muted)">
+          <p className="mb-6 text-small text-text-muted">
             {t("devModeDesc")}
           </p>
           <button
             onClick={() => router.push(nextPath)}
-            className="w-full rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+            className="h-9 w-full rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
           >
             {t("devModeContinue")}
           </button>
@@ -69,15 +69,15 @@ function LoginContent() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--color-bg)">
-      <div className="w-full max-w-sm rounded-xl border border-(--color-border) bg-(--color-surface) p-8 shadow-lg">
-        <h1 className="mb-6 text-xl font-semibold text-(--color-text)">
+    <div className="flex min-h-screen items-center justify-center bg-base">
+      <div className="w-full max-w-sm rounded-lg border border-border bg-surface p-8 shadow-lg">
+        <h1 className="mb-6 text-heading">
           {t("loginTitle")}
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-(--color-text)">
+            <label className="text-small font-medium text-text-secondary">
               {t("email")}
             </label>
             <input
@@ -86,12 +86,12 @@ function LoginContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="rounded-lg border border-(--color-border) bg-(--color-bg) px-3 py-2 text-sm text-(--color-text) placeholder-text-(--color-muted) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+              className="rounded-md border border-border bg-base px-3 py-2 text-body text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-(--color-text)">
+            <label className="text-small font-medium text-text-secondary">
               {t("password")}
             </label>
             <input
@@ -100,12 +100,12 @@ function LoginContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="rounded-lg border border-(--color-border) bg-(--color-bg) px-3 py-2 text-sm text-(--color-text) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+              className="rounded-md border border-border bg-base px-3 py-2 text-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400">
+            <p className="rounded-md bg-error-subtle px-3 py-2 text-body text-error">
               {error}
             </p>
           )}
@@ -113,31 +113,31 @@ function LoginContent() {
           <button
             type="submit"
             disabled={isSubmitting || authLoading}
-            className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="mt-1 flex h-9 items-center justify-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
           >
-            {isSubmitting && <Loader2 size={14} className="animate-spin" />}
+            {isSubmitting && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
             {isSubmitting ? t("loggingIn") : t("loginCta")}
           </button>
         </form>
 
-        <p className="mt-5 text-center text-sm text-(--color-muted)">
+        <p className="mt-5 text-center text-body text-text-muted">
           {t("noAccount")}{" "}
           <Link
             href={`/${locale}/register`}
-            className="font-medium text-(--color-primary) hover:underline"
+            className="font-medium text-accent hover:underline"
           >
             {t("registerLink")}
           </Link>
         </p>
 
         {demoAvailable && (
-          <div className="mt-4 border-t border-(--color-border) pt-4">
+          <div className="mt-4 border-t border-border pt-4">
             <button
               type="button"
               onClick={() => router.push(`/${locale}/chat`)}
-              className="w-full flex items-center justify-center gap-2 rounded-lg border border-(--color-border) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-hover) transition-colors"
+              className="flex h-9 w-full items-center justify-center gap-2 rounded-md border border-border px-4 py-2 text-body font-medium text-foreground hover:bg-raised transition-colors"
             >
-              <Zap size={14} className="text-amber-500" />
+              <Zap size={16} strokeWidth={1.5} className="text-warning-solid" />
               {t("tryDemo")}
             </button>
           </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 size={28} className="animate-spin text-primary" />
+        <Loader2 size={28} strokeWidth={1.5} className="animate-spin text-accent" />
       </div>
     }>
       <LoginContent />

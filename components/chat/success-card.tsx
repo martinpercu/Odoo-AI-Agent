@@ -14,34 +14,35 @@ export function SuccessCard({ metadata }: SuccessCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="mt-2 rounded-xl border border-success/20 bg-success/5 p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="mt-2 rounded-lg border border-border bg-success-subtle p-4"
     >
       <div className="flex items-start gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10">
-          <CheckCircle2 size={18} className="text-success" />
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success-subtle">
+          <CheckCircle2 size={16} strokeWidth={1.5} className="text-success-solid" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-success">
+          <p className="text-body font-medium text-success-solid">
             {metadata.actionType === "method_call" && metadata.actionMessage
               ? metadata.actionMessage
               : t("title")}
           </p>
           {metadata.recordName && (
-            <p className="mt-1 text-sm text-foreground">{metadata.recordName}</p>
+            <p className="mt-1 text-body font-technical text-foreground">{metadata.recordName}</p>
           )}
-          <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-            <span>{t("recordId", { id: metadata.recordId })}</span>
+          <div className="mt-2 flex items-center gap-4 text-small text-text-muted">
+            <span className="font-technical">{t("recordId", { id: metadata.recordId })}</span>
             {metadata.odooUrl && (
               <a
                 href={metadata.odooUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-primary hover:underline"
+                className="flex items-center gap-1 text-accent hover:underline"
               >
                 <span>{t("viewInOdoo")}</span>
-                <ExternalLink size={12} />
+                <ExternalLink size={12} strokeWidth={1.5} />
               </a>
             )}
           </div>

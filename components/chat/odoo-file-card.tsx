@@ -24,17 +24,18 @@ export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mt-3 rounded-xl border border-border bg-card p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="mt-3 rounded-lg border border-border bg-surface p-4"
     >
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-500/10 text-red-600">
-          <FileText size={20} />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-error-subtle text-error">
+          <FileText size={20} strokeWidth={1.5} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium">{metadata.filename}</p>
-          <p className="text-xs text-muted-foreground">PDF</p>
+          <p className="truncate text-body font-medium">{metadata.filename}</p>
+          <p className="text-small text-text-muted font-technical">PDF</p>
         </div>
         <PinToggleButton
           pinned={filePinned}
@@ -44,10 +45,9 @@ export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
           href={fullUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
-          style={{ backgroundColor: "var(--odoo-purple)" }}
+          className="inline-flex h-9 items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
         >
-          <Download size={16} />
+          <Download size={16} strokeWidth={1.5} />
           <span>{t("fileCard.downloadPdf")}</span>
         </a>
       </div>
