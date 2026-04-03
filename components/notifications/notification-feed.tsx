@@ -22,7 +22,7 @@ export function NotificationFeed({ onNotificationClick }: NotificationFeedProps)
         {unreadCount > 0 && (
           <button
             onClick={markAllAsRead}
-            className="text-[11px] text-primary hover:underline"
+            className="text-micro text-accent hover:underline"
           >
             {t("markAllRead")}
           </button>
@@ -33,9 +33,9 @@ export function NotificationFeed({ onNotificationClick }: NotificationFeedProps)
       <div className="flex-1 overflow-y-auto px-2 pb-2">
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-            <Bell size={32} className="mb-3 text-muted-foreground/40" />
-            <p className="text-sm font-medium text-muted-foreground">{t("empty")}</p>
-            <p className="mt-1 text-xs text-muted-foreground/70">{t("emptyHint")}</p>
+            <Bell size={32} strokeWidth={1.5} className="mb-3 text-text-muted" />
+            <p className="text-body font-medium text-text-secondary">{t("empty")}</p>
+            <p className="mt-1 text-small text-text-muted">{t("emptyHint")}</p>
           </div>
         ) : (
           <div className="flex flex-col gap-2">

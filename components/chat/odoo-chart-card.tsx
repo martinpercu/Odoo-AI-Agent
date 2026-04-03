@@ -54,9 +54,9 @@ function ChartTooltip(props: Record<string, unknown> & { meta: ChartSSEEvent["me
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-lg border border-border bg-card px-3 py-2 shadow-lg">
-      <p className="text-xs font-medium text-foreground">{label ?? payload[0].name}</p>
-      <p className="text-sm font-semibold text-odoo-purple">
+    <div className="rounded-md border border-border bg-surface px-3 py-2 shadow-lg">
+      <p className="text-small font-medium text-foreground">{label ?? payload[0].name}</p>
+      <p className="text-body font-semibold font-technical text-odoo-purple">
         {formatValue(payload[0].value as number, meta.value_format, meta.currency_symbol)}
       </p>
     </div>
@@ -98,25 +98,25 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
   }, [containerRef]);
 
   const chartIcon =
-    chart_type === "bar" ? <BarChart3 size={16} /> :
-    chart_type === "line" ? <TrendingUp size={16} /> :
-    <PieIcon size={16} />;
+    chart_type === "bar" ? <BarChart3 size={16} strokeWidth={1.5} /> :
+    chart_type === "line" ? <TrendingUp size={16} strokeWidth={1.5} /> :
+    <PieIcon size={16} strokeWidth={1.5} />;
 
   const isHorizontalBar = chart_type === "bar" && isNarrow;
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="mt-3 rounded-xl border border-border bg-card p-4 shadow-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="mt-3 rounded-lg border border-border bg-surface p-4 shadow-sm"
     >
       {/* Header */}
       <div className="mb-3 flex items-center gap-2">
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-odoo-purple/10 text-odoo-purple">
           {chartIcon}
         </div>
-        <h3 className="text-sm font-semibold text-foreground leading-tight flex-1">
+        <h3 className="text-body font-semibold text-foreground leading-tight flex-1">
           {title}
         </h3>
         <PinToggleButton
@@ -127,9 +127,9 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
           <a
             href={`${API_BASE}${chart.export_url}`}
             download
-            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-odoo-purple transition-colors hover:bg-odoo-purple/10"
+            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-small font-medium text-odoo-purple transition-colors hover:bg-odoo-purple/10"
           >
-            <Download size={14} />
+            <Download size={14} strokeWidth={1.5} />
             <span>{t("downloadExcel")}</span>
           </a>
         )}
@@ -138,7 +138,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
       {/* Chart area */}
       <div ref={setContainerRef} className="w-full">
         {data.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
+          <p className="py-8 text-center text-body text-text-secondary">
             {t("noData")}
           </p>
         ) : (
@@ -237,10 +237,10 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
       {/* Footer: total */}
       {meta.total != null && (
         <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-small text-text-secondary">
             {t("globalTotal")}
           </span>
-          <span className="text-sm font-semibold text-odoo-purple">
+          <span className="text-body font-semibold font-technical text-odoo-purple">
             {formatValue(meta.total, meta.value_format, meta.currency_symbol)}
           </span>
         </div>
@@ -248,8 +248,8 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
 
       {/* Grouped by info */}
       {meta.group_by && (
-        <div className="mt-1 text-xs text-muted-foreground">
-          {t("groupedBy")}: <span className="font-medium">{meta.group_by}</span>
+        <div className="mt-1 text-small text-text-secondary">
+          {t("groupedBy")}: <span className="font-technical font-medium">{meta.group_by}</span>
         </div>
       )}
     </motion.div>

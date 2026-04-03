@@ -131,27 +131,29 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-sidebar-border p-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <Bot size={20} />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-white">
+          <Bot size={20} strokeWidth={1.5} />
         </div>
         {!collapsed && (
           <motion.div
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <h1 className="whitespace-nowrap text-lg font-semibold">{t("appName")}</h1>
+            <h1 className="whitespace-nowrap text-subheading">{t("appName")}</h1>
           </motion.div>
         )}
         <button
           onClick={onBellClick}
           className="ml-auto relative rounded-md p-1.5 hover:bg-sidebar-hover"
           title={t("alerts")}
+          aria-label={t("alerts")}
         >
-          <Bell size={18} />
+          <Bell size={20} strokeWidth={1.5} />
           {unreadCount > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[9px] font-bold text-white">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -159,9 +161,11 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="hidden rounded-md p-1.5 hover:bg-sidebar-hover lg:flex"
+          aria-label={collapsed ? t("expand") : t("collapse")}
         >
           <ChevronLeft
-            size={18}
+            size={20}
+            strokeWidth={1.5}
             className={`transition-transform ${collapsed ? "rotate-180" : ""}`}
           />
         </button>
@@ -174,9 +178,9 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             onNewChat();
             setMobileOpen(false);
           }}
-          className="flex w-full items-center gap-3 rounded-lg border border-sidebar-border px-3 py-2.5 text-sm font-medium transition-colors hover:bg-sidebar-hover"
+          className="flex w-full items-center gap-3 rounded-md border border-sidebar-border px-3 py-2 text-body font-medium transition-colors hover:bg-sidebar-hover"
         >
-          <MessageSquarePlus size={18} />
+          <MessageSquarePlus size={20} strokeWidth={1.5} />
           {!collapsed && <span>{t("newChat")}</span>}
         </button>
       </div>
@@ -186,7 +190,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
         {!collapsed &&
           displayGroups.map((group) => (
             <div key={group.label} className="mb-4">
-              <p className="mb-1.5 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="mb-1.5 px-2 text-micro uppercase tracking-wide text-text-secondary">
                 {tGroups(group.label)}
               </p>
               {group.chats.map((chat) => (
@@ -196,13 +200,13 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                     onSelectChat(chat.id);
                     setMobileOpen(false);
                   }}
-                  className={`mb-0.5 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${
+                  className={`mb-0.5 flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-body transition-colors ${
                     currentChatId === chat.id
-                      ? "bg-sidebar-active font-medium text-primary"
+                      ? "bg-sidebar-active font-medium text-accent"
                       : "hover:bg-sidebar-hover"
                   }`}
                 >
-                  <MessageSquare size={15} className="shrink-0 opacity-60" />
+                  <MessageSquare size={16} strokeWidth={1.5} className="shrink-0 opacity-60" />
                   <span className="truncate">{chat.title}</span>
                 </button>
               ))}
@@ -213,7 +217,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
         {!collapsed && hasMore && (
           <button
             onClick={loadMore}
-            className="w-full rounded-lg px-2.5 py-2 text-center text-xs text-muted-foreground hover:bg-sidebar-hover transition-colors"
+            className="w-full rounded-md px-2.5 py-2 text-center text-small text-text-secondary hover:bg-sidebar-hover transition-colors"
           >
             {t("loadMore")}
           </button>
@@ -227,13 +231,14 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                   key={chat.id}
                   onClick={() => onSelectChat(chat.id)}
                   title={chat.title}
-                  className={`rounded-lg p-2 transition-colors ${
+                  aria-label={chat.title}
+                  className={`rounded-md p-2 transition-colors ${
                     currentChatId === chat.id
-                      ? "bg-sidebar-active text-primary"
+                      ? "bg-sidebar-active text-accent"
                       : "hover:bg-sidebar-hover"
                   }`}
                 >
-                  <MessageSquare size={16} />
+                  <MessageSquare size={16} strokeWidth={1.5} />
                 </button>
               ))
             )}
@@ -247,32 +252,33 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           <Link
             href="/pricing"
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors ${
+            className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
               pathname === "/pricing"
-                ? "bg-sidebar-active font-medium text-primary"
+                ? "bg-sidebar-active font-medium text-accent"
                 : "hover:bg-sidebar-hover"
             }`}
           >
-            <CreditCard size={18} />
+            <CreditCard size={20} strokeWidth={1.5} />
             {!collapsed && <span>{t("plans")}</span>}
           </Link>
           <Link
             href="/settings"
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors ${
+            className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
               pathname === "/settings"
-                ? "bg-sidebar-active font-medium text-primary"
+                ? "bg-sidebar-active font-medium text-accent"
                 : "hover:bg-sidebar-hover"
             }`}
           >
-            <Settings size={18} />
+            <Settings size={20} strokeWidth={1.5} />
             {!collapsed && <span>{t("settings")}</span>}
           </Link>
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-sidebar-hover"
+            className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover"
+            aria-label={isDark ? t("lightMode") : t("darkMode")}
           >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            {isDark ? <Sun size={20} strokeWidth={1.5} /> : <Moon size={20} strokeWidth={1.5} />}
             {!collapsed && <span>{isDark ? t("lightMode") : t("darkMode")}</span>}
           </button>
           <LocaleSwitcher collapsed={collapsed} />
@@ -280,10 +286,11 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           {IS_AUTH_ENABLED && (
             <button
               onClick={logout}
-              className="flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-sidebar-hover text-muted-foreground"
+              className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover text-text-secondary"
               title={t("logout")}
+              aria-label={t("logout")}
             >
-              <LogOut size={18} />
+              <LogOut size={20} strokeWidth={1.5} />
               {!collapsed && <span>{t("logout")}</span>}
             </button>
           )}
@@ -297,7 +304,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 rounded-lg bg-card p-2 shadow-lg lg:hidden"
+        className="fixed left-4 top-4 z-50 rounded-md bg-surface p-2 shadow-sm lg:hidden"
       >
         <Menu size={20} />
       </button>
@@ -322,7 +329,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             initial={{ x: -280 }}
             animate={{ x: 0 }}
             exit={{ x: -280 }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed inset-y-0 left-0 z-50 w-[280px] lg:hidden"
           >
             {sidebarContent}
@@ -333,7 +340,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       {/* Desktop sidebar */}
       <motion.aside
         animate={{ width: collapsed ? 68 : 280 }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
         className="hidden h-screen shrink-0 border-r border-sidebar-border lg:block"
       >
         {sidebarContent}

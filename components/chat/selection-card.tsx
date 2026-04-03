@@ -23,9 +23,10 @@ export function SelectionCard({ metadata, onSelect }: SelectionCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mt-3 rounded-xl border border-border bg-card p-3"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="mt-3 rounded-lg border border-border bg-surface p-3"
     >
       <div className="flex flex-col gap-1.5">
         {metadata.options.map((option) => {
@@ -37,25 +38,25 @@ export function SelectionCard({ metadata, onSelect }: SelectionCardProps) {
               key={option.index}
               onClick={() => handleSelect(option.index)}
               disabled={selected !== null}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-left text-body transition-colors ${
                 isSelected
-                  ? "border border-primary/30 bg-primary/10 text-primary"
+                  ? "border border-accent/30 bg-accent-subtle text-accent"
                   : isDisabled
                     ? "opacity-40"
-                    : "hover:bg-muted"
+                    : "hover:bg-raised"
               }`}
             >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-xs font-medium">
-                {isSelected ? <Check size={14} /> : option.index}
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border text-small font-medium">
+                {isSelected ? <Check size={14} strokeWidth={1.5} /> : option.index}
               </span>
               <span className="flex-1">{option.name}</span>
-              <span className="text-xs text-muted-foreground">ID: {option.id}</span>
+              <span className="text-small font-technical text-text-muted">ID: {option.id}</span>
             </button>
           );
         })}
       </div>
       {selected !== null && (
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 text-small text-text-secondary">
           {t("selection.selected", { name: metadata.options.find((o) => o.index === selected)?.name ?? "" })}
         </p>
       )}

@@ -49,35 +49,38 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
     return (
       <motion.div
         layout
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         exit={{ opacity: 0, x: 20 }}
-        className="group relative rounded-lg border border-border bg-card p-3 transition-colors hover:bg-muted/50"
+        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="group relative rounded-md border border-border bg-surface p-3 transition-colors hover:bg-raised/50"
       >
         <div className="absolute right-1.5 top-1.5 flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-50"
+            className="rounded-md p-1 text-text-secondary transition-colors hover:bg-accent-subtle hover:text-accent disabled:opacity-50"
             title="Refresh"
+            aria-label="Refresh"
           >
-            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+            <RefreshCw size={12} strokeWidth={1.5} className={refreshing ? "animate-spin" : ""} />
           </button>
           <button
             onClick={() => unpin(pin.id)}
-            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+            className="rounded-md p-1 text-text-secondary transition-colors hover:bg-error-subtle hover:text-error"
             title={t("unpinTooltip")}
+            aria-label={t("unpinTooltip")}
           >
-            <X size={12} />
+            <X size={12} strokeWidth={1.5} />
           </button>
         </div>
         <div className="flex items-start gap-2.5">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-odoo-purple/10 text-odoo-purple">
-            <Icon size={14} />
+            <Icon size={14} strokeWidth={1.5} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-medium leading-tight">{pin.chart.title}</p>
-            <p className="mt-0.5 text-[11px] text-muted-foreground">{total}</p>
+            <p className="truncate text-small font-medium leading-tight">{pin.chart.title}</p>
+            <p className="mt-0.5 text-micro font-technical text-text-secondary">{total}</p>
           </div>
         </div>
       </motion.div>
@@ -92,30 +95,33 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
     return (
       <motion.div
         layout
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         exit={{ opacity: 0, x: 20 }}
-        className="group relative rounded-lg border border-border bg-card p-3 transition-colors hover:bg-muted/50"
+        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="group relative rounded-md border border-border bg-surface p-3 transition-colors hover:bg-raised/50"
       >
         <button
           onClick={() => unpin(pin.id)}
-          className="absolute right-1.5 top-1.5 rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+          className="absolute right-1.5 top-1.5 rounded-md p-1 text-text-secondary opacity-0 transition-opacity hover:bg-error-subtle hover:text-error group-hover:opacity-100"
           title={t("unpinTooltip")}
+          aria-label={t("unpinTooltip")}
         >
-          <X size={12} />
+          <X size={12} strokeWidth={1.5} />
         </button>
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-red-500/10 text-red-600">
-            <FileText size={14} />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-error-subtle text-error">
+            <FileText size={14} strokeWidth={1.5} />
           </div>
-          <p className="min-w-0 flex-1 truncate text-xs font-medium">{pin.metadata.filename}</p>
+          <p className="min-w-0 flex-1 truncate text-small font-medium">{pin.metadata.filename}</p>
           <a
             href={fullUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-odoo-purple"
+            className="shrink-0 rounded-md p-1 text-text-secondary transition-colors hover:text-accent"
+            aria-label="Download file"
           >
-            <Download size={12} />
+            <Download size={12} strokeWidth={1.5} />
           </a>
         </div>
       </motion.div>
@@ -130,29 +136,32 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: 20 }}
-      className="group relative rounded-lg border border-border bg-card p-3 transition-colors hover:bg-muted/50"
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="group relative rounded-md border border-border bg-surface p-3 transition-colors hover:bg-raised/50"
     >
       <button
         onClick={() => unpin(pin.id)}
-        className="absolute right-1.5 top-1.5 rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+        className="absolute right-1.5 top-1.5 rounded-md p-1 text-text-secondary opacity-0 transition-opacity hover:bg-error-subtle hover:text-error group-hover:opacity-100"
         title={t("unpinTooltip")}
+        aria-label={t("unpinTooltip")}
       >
-        <X size={12} />
+        <X size={12} strokeWidth={1.5} />
       </button>
       <div className="flex items-center gap-2.5">
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-white" style={{ backgroundColor: "#1D6F42", opacity: 0.8 }}>
-          <FileSpreadsheet size={14} />
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-success-subtle text-success-solid">
+          <FileSpreadsheet size={14} strokeWidth={1.5} />
         </div>
-        <p className="min-w-0 flex-1 truncate text-xs font-medium">{pin.metadata.filename}</p>
+        <p className="min-w-0 flex-1 truncate text-small font-medium">{pin.metadata.filename}</p>
         <a
           href={excelUrl}
           download
-          className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-odoo-purple"
+          className="shrink-0 rounded-md p-1 text-text-secondary transition-colors hover:text-accent"
+          aria-label="Download Excel"
         >
-          <Download size={12} />
+          <Download size={12} strokeWidth={1.5} />
         </a>
       </div>
     </motion.div>

@@ -42,8 +42,8 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
               animate={{ opacity: 1 }}
               className="flex flex-col items-center justify-center gap-3 py-20"
             >
-              <Loader2 size={24} className="animate-spin text-primary" />
-              <span className="text-sm text-muted-foreground">{t("loading")}</span>
+              <Loader2 size={24} strokeWidth={1.5} className="animate-spin text-accent" />
+              <span className="text-body text-text-secondary">{t("loading")}</span>
             </motion.div>
           )}
           {!isLoadingHistory && !hasMessages && (
