@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Bot, User, Database } from "lucide-react";
+import { Bot, User, Database, KeyRound, ArrowRight } from "lucide-react";
 import type { Message } from "@/lib/types";
 import { useChatContext } from "@/components/app-shell";
+import { Link } from "@/i18n/navigation";
 import { SuccessCard } from "./success-card";
 import { ValidationPrompt } from "./validation-prompt";
 import { OdooActionButton } from "./odoo-action-button";
@@ -19,6 +20,26 @@ import { ExcelExportCard } from "./excel-export-card";
 interface ChatMessagesProps {
   messages: Message[];
   isStreaming: boolean;
+}
+
+function NoCredentialsCard() {
+  const t = useTranslations("ChatMessages");
+  return (
+    <div className="mt-3 flex items-start gap-3 rounded-lg border border-warning-solid/30 bg-warning-subtle px-4 py-3">
+      <KeyRound size={16} strokeWidth={1.5} className="mt-0.5 shrink-0 text-warning-solid" />
+      <div className="min-w-0">
+        <p className="text-small font-medium text-warning-solid">{t("noCredentials.title")}</p>
+        <p className="mt-0.5 text-small text-text-secondary">{t("noCredentials.desc")}</p>
+        <Link
+          href="/settings"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-small font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
+        >
+          {t("noCredentials.cta")}
+          <ArrowRight size={13} strokeWidth={1.5} />
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function TypingIndicator() {
@@ -145,6 +166,9 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       )}
                       {message.metadata.type === "excel_export" && (
                         <ExcelExportCard metadata={message.metadata} messageId={message.id} />
+                      )}
+                      {message.metadata.type === "no_credentials" && (
+                        <NoCredentialsCard />
                       )}
                     </>
                   )}

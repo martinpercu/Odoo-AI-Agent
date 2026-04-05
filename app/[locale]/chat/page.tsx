@@ -2,12 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Bot, Database, FileText, Users, BarChart3, Package, AlertTriangle, Zap } from "lucide-react";
+import { Bot, Database, FileText, Users, BarChart3, Package, AlertTriangle } from "lucide-react";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useRouter } from "@/i18n/navigation";
-import { useTranslations as useT } from "next-intl";
+import { DemoBanner } from "@/components/chat/demo-banner";
 
 const SUGGESTION_KEYS = ["inventory", "invoices", "sales", "employees"] as const;
 const SUGGESTION_ICONS = [Package, FileText, BarChart3, Users];
@@ -18,7 +18,6 @@ export default function NewChatPage() {
   const t = useTranslations("NewChat");
   const { sendMessage, isStreaming, stopStreaming, createChat } = useChatContext();
   const { isConfigured, isDemoMode } = useOdooConfig();
-  const tAuth = useT("Auth");
 
   async function handleSend(content: string, image?: File) {
     const id = createChat(content || "Image upload");
@@ -32,20 +31,7 @@ export default function NewChatPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      {isDemoMode && (
-        <div className="flex items-center justify-between gap-3 border-b border-border bg-warning-subtle px-4 py-2 text-small text-warning-solid">
-          <div className="flex items-center gap-2">
-            <Zap size={16} strokeWidth={1.5} className="shrink-0" />
-            <span>{tAuth("demoBanner")}</span>
-          </div>
-          <button
-            onClick={() => router.push("/login")}
-            className="shrink-0 font-medium underline underline-offset-2 hover:no-underline"
-          >
-            {tAuth("demoSignUp")}
-          </button>
-        </div>
-      )}
+      {isDemoMode && <DemoBanner />}
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-2xl">
           <motion.div
