@@ -11,6 +11,7 @@ import type {
   FileAttachmentMetadata,
   ChartSSEEvent,
   ExcelExportMetadata,
+  NoCredentialsMetadata,
 } from "@/lib/types";
 import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, LimitReachedError } from "@/lib/api";
 import { getAccessToken } from "@/lib/supabase";
@@ -245,6 +246,32 @@ export function useChat(chatId?: string) {
         }
 
         if (!res.ok) {
+          // Try to read the error body for NO_CREDENTIALS detection
+          try {
+            const errData = await res.json();
+            const detail: string = typeof errData.detail === "string" ? errData.detail : "";
+            if (detail.startsWith("NO_CREDENTIALS:")) {
+              const noCredsMetadata: NoCredentialsMetadata = {
+                type: "no_credentials",
+                config_id: activeConfigId!,
+              };
+              setChats((prev) =>
+                prev.map((c) =>
+                  c.id === targetId
+                    ? {
+                        ...c,
+                        messages: c.messages.map((m) =>
+                          m.id === assistantId
+                            ? { ...m, content: "", metadata: noCredsMetadata }
+                            : m
+                        ),
+                      }
+                    : c
+                )
+              );
+              return;
+            }
+          } catch { /* ignore parse errors */ }
           throw new Error(`API error: ${res.status}`);
         }
 
@@ -331,6 +358,30 @@ export function useChat(chatId?: string) {
               }
 
               accumulated += text;
+
+              // Detect NO_CREDENTIALS: prefix in streamed text
+              if (accumulated.startsWith("NO_CREDENTIALS:")) {
+                const noCredsMetadata: NoCredentialsMetadata = {
+                  type: "no_credentials",
+                  config_id: activeConfigId!,
+                };
+                setChats((prev) =>
+                  prev.map((c) =>
+                    c.id === targetId
+                      ? {
+                          ...c,
+                          messages: c.messages.map((m) =>
+                            m.id === assistantId
+                              ? { ...m, content: "", metadata: noCredsMetadata }
+                              : m
+                          ),
+                        }
+                      : c
+                  )
+                );
+                reader.cancel();
+                return;
+              }
 
               setChats((prev) =>
                 prev.map((c) =>

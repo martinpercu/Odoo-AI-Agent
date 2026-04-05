@@ -7,8 +7,10 @@ import { Loader2 } from "lucide-react";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { ChatInput } from "@/components/chat/chat-input";
 import { WelcomeDashboard } from "@/components/chat/welcome-dashboard";
+import { DemoBanner } from "@/components/chat/demo-banner";
 import { useChatContext } from "@/components/app-shell";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
 
 export default function ChatPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { id } = use(params);
@@ -23,6 +25,7 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
   } = useChatContext();
   const { loadPins } = usePinnedInsights();
   const t = useTranslations("ChatHistory");
+  const { isDemoMode } = useOdooConfig();
 
   useEffect(() => {
     setCurrentChatId(id);
@@ -34,6 +37,7 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
+      {isDemoMode && <DemoBanner />}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl">
           {isLoadingHistory && !hasMessages && (

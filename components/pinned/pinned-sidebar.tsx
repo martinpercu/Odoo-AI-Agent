@@ -8,6 +8,9 @@ import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useRightPanel } from "@/components/app-shell";
 import { useChatContext } from "@/components/app-shell";
+import { useAuth } from "@/hooks/use-auth";
+import { useSession } from "@/hooks/use-session";
+import { usePathname } from "@/i18n/navigation";
 import { PinnedInsightMiniCard } from "@/components/pinned/pinned-insight-mini-card";
 import { NotificationFeed } from "@/components/notifications/notification-feed";
 import { useRouter } from "@/i18n/navigation";
@@ -21,6 +24,9 @@ export function PinnedSidebar() {
   const { unreadCount, markAsRead } = useNotifications();
   const { activeTab, setActiveTab } = useRightPanel();
   const { sendMessage, createChat, currentChatId } = useChatContext();
+  const { user } = useAuth();
+  const { meData } = useSession();
+  const pathname = usePathname();
   const router = useRouter();
   const headerRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +48,10 @@ export function PinnedSidebar() {
       sendMessage(notification.chatPrompt, id);
     }
   }
+
+  // Only show on chat pages, for logged-in users who completed onboarding (have an org)
+  const isOnChat = pathname.startsWith("/chat");
+  if (!user || !meData?.org || !isOnChat) return null;
 
   // Collapsed state
   if (collapsed) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -11,8 +11,8 @@ import { Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
-  const { register, isLoading: authLoading } = useAuth();
-  const { reload } = useSession();
+  const { register, isLoading: authLoading, user } = useAuth();
+  const { reload, meData } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -22,6 +22,13 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const locale = pathname?.split("/")[1] || "en";
+
+  // Redirect already-logged-in users
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace(meData?.org ? `/${locale}/chat` : `/${locale}/onboarding`);
+    }
+  }, [authLoading, user, meData?.org, locale, router]);
 
   // Redirect in DEV MODE — register is not meaningful without Supabase
   if (!IS_AUTH_ENABLED) {
