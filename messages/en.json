@@ -110,9 +110,13 @@
     "heading": "Plans & Pricing",
     "subheading": "Choose the plan that best fits your business. Scale when you need to.",
     "mostPopular": "Most Popular",
+    "currentPlan": "Current plan",
     "perMonth": "/mo",
     "free": "Free",
-    "custom": "Custom",
+    "loading": "Loading...",
+    "subscribe": "Subscribe",
+    "manageSubscription": "Manage subscription",
+    "viewRates": "View rates",
     "footer": "All plans include data encryption and secure connection to your Odoo.",
     "needSpecial": "Need something special?",
     "contactUs": "Contact Us",
@@ -120,44 +124,46 @@
       "free": {
         "name": "Free",
         "description": "Explore the AI agent's capabilities with Odoo.",
-        "cta": "Start Free",
+        "cta": "Start for free",
         "features": {
-          "agents": "1 AI Agent",
-          "queries": "50 queries per month",
-          "instances": "1 Odoo instance",
-          "history": "7-day history",
-          "support": "Community support"
+          "seat": "1 seat",
+          "dailyLimit": "Daily chat limit",
+          "watermark": "Watermark on responses",
+          "forever": "Free forever"
         }
       },
-      "pro": {
-        "name": "Pro",
-        "description": "For professionals who need full access to their Odoo.",
-        "cta": "Choose Pro",
+      "starter": {
+        "name": "Starter",
+        "description": "For individual users who want full unrestricted access.",
+        "cta": "Subscribe",
         "features": {
-          "agents": "Unlimited agents",
-          "queries": "Unlimited queries",
-          "instances": "1 Odoo instance",
-          "history": "Full history",
-          "support": "Priority email support",
-          "export": "Report export",
-          "markdown": "Advanced Markdown responses"
+          "seat": "1 full seat",
+          "noLimit": "No chat limit",
+          "noWatermark": "No watermark"
         }
       },
       "enterprise": {
         "name": "Enterprise",
-        "description": "For companies with multiple instances and advanced needs.",
-        "cta": "Contact Sales",
+        "fromPrice": "From $8",
+        "description": "For Odoo implementors managing multiple clients.",
         "features": {
-          "includesPro": "Everything in Pro",
-          "instances": "Multiple Odoo instances",
-          "agents": "Custom agents",
-          "api": "Dedicated API",
-          "sso": "SSO / SAML",
-          "support": "24/7 priority support",
-          "sla": "Guaranteed SLA",
-          "onboarding": "Dedicated onboarding"
+          "seatsFrom": "From 10 seats (5 free + 5 paid)",
+          "seatsTo": "Up to 105 seats (5 free + 100 paid)",
+          "freeSeats": "Free seats with watermark included",
+          "idealFor": "Ideal for Odoo implementors"
         }
       }
+    },
+    "implementor": {
+      "modalTitle": "Implementor plans",
+      "modalDesc": "Choose the number of seats you need for your team and clients.",
+      "close": "Close",
+      "starterUpsell": "Need to give access to your team or clients? Upgrade to an implementor plan.",
+      "plan": "Plan",
+      "paidSlots": "Paid seats",
+      "freeSlots": "Free seats",
+      "price": "Price",
+      "freeSlotNote": "Free seats always show a watermark and have usage limits. Paid seats have full unrestricted access."
     }
   },
   "Settings": {

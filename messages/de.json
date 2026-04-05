@@ -108,56 +108,62 @@
   },
   "Pricing": {
     "heading": "Tarife & Preise",
-    "subheading": "Wählen Sie den passenden Tarif für Ihr Unternehmen.",
+    "subheading": "Wählen Sie den passenden Tarif für Ihr Unternehmen. Skalieren Sie bei Bedarf.",
     "mostPopular": "Beliebtestes",
+    "currentPlan": "Aktueller Tarif",
     "perMonth": "/Monat",
     "free": "Kostenlos",
-    "custom": "Individuell",
-    "footer": "Alle Tarife beinhalten Datenverschlüsselung.",
+    "loading": "Laden...",
+    "subscribe": "Abonnieren",
+    "manageSubscription": "Abonnement verwalten",
+    "viewRates": "Tarife ansehen",
+    "footer": "Alle Tarife beinhalten Datenverschlüsselung und sichere Verbindung zu Ihrem Odoo.",
     "needSpecial": "Benötigen Sie etwas Spezielles?",
     "contactUs": "Kontaktieren Sie uns",
     "plans": {
       "free": {
         "name": "Kostenlos",
-        "description": "Erkunden Sie die Funktionen des KI-Agenten.",
+        "description": "Erkunden Sie die Funktionen des KI-Agenten mit Odoo.",
         "cta": "Kostenlos starten",
         "features": {
-          "agents": "1 KI-Agent",
-          "queries": "50 Abfragen pro Monat",
-          "instances": "1 Odoo-Instanz",
-          "history": "7 Tage Verlauf",
-          "support": "Community-Support"
+          "seat": "1 Platz",
+          "dailyLimit": "Tägliches Chat-Limit",
+          "watermark": "Wasserzeichen auf Antworten",
+          "forever": "Für immer kostenlos"
         }
       },
-      "pro": {
-        "name": "Pro",
-        "description": "Für Profis mit vollem Zugriff auf Odoo.",
-        "cta": "Pro wählen",
+      "starter": {
+        "name": "Starter",
+        "description": "Für einzelne Nutzer mit vollem, uneingeschränktem Zugriff.",
+        "cta": "Abonnieren",
         "features": {
-          "agents": "Unbegrenzte Agenten",
-          "queries": "Unbegrenzte Abfragen",
-          "instances": "1 Odoo-Instanz",
-          "history": "Vollständiger Verlauf",
-          "support": "Prioritärer E-Mail-Support",
-          "export": "Berichtsexport",
-          "markdown": "Erweiterte Markdown-Antworten"
+          "seat": "1 vollständiger Platz",
+          "noLimit": "Kein Chat-Limit",
+          "noWatermark": "Kein Wasserzeichen"
         }
       },
       "enterprise": {
         "name": "Enterprise",
-        "description": "Für Unternehmen mit mehreren Instanzen.",
-        "cta": "Vertrieb kontaktieren",
+        "fromPrice": "Ab $8",
+        "description": "Für Odoo-Implementierer, die mehrere Kunden verwalten.",
         "features": {
-          "includesPro": "Alles in Pro",
-          "instances": "Mehrere Odoo-Instanzen",
-          "agents": "Eigene Agenten",
-          "api": "Dedizierte API",
-          "sso": "SSO / SAML",
-          "support": "24/7 Support",
-          "sla": "Garantierte SLA",
-          "onboarding": "Dediziertes Onboarding"
+          "seatsFrom": "Ab 10 Plätze (5 kostenlos + 5 kostenpflichtig)",
+          "seatsTo": "Bis zu 105 Plätze (5 kostenlos + 100 kostenpflichtig)",
+          "freeSeats": "Kostenlose Plätze mit Wasserzeichen inklusive",
+          "idealFor": "Ideal für Odoo-Implementierer"
         }
       }
+    },
+    "implementor": {
+      "modalTitle": "Implementierer-Tarife",
+      "modalDesc": "Wählen Sie die Anzahl der Plätze für Ihr Team und Ihre Kunden.",
+      "close": "Schließen",
+      "starterUpsell": "Möchten Sie Ihrem Team oder Kunden Zugang geben? Wechseln Sie zu einem Implementierer-Tarif.",
+      "plan": "Tarif",
+      "paidSlots": "Kostenpflichtige Plätze",
+      "freeSlots": "Kostenlose Plätze",
+      "price": "Preis",
+      "freeSlotNote": "Kostenlose Plätze zeigen immer ein Wasserzeichen und haben Nutzungslimits. Kostenpflichtige Plätze haben vollen, uneingeschränkten Zugriff."
     }
   },
   "Settings": {

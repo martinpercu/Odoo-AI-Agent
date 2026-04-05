@@ -17,6 +17,7 @@ import type {
   OrgType,
   UserOdooCredential,
   OdooCredentialSummary,
+  SubscriptionTier,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -1109,6 +1110,50 @@ export async function searchEntities(
     const data = await res.json();
     if (res.ok) return { success: true, results: data.results ?? data };
     return { success: false, error: data.detail || "Search failed" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Billing API ----
+
+export interface BillingCheckoutResult {
+  success: boolean;
+  checkout_url?: string;
+  error?: string;
+}
+
+export async function createBillingCheckout(
+  tier: Exclude<SubscriptionTier, "FREE">
+): Promise<BillingCheckoutResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/billing/checkout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tier }),
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true, checkout_url: data.checkout_url ?? data.url };
+    return { success: false, error: extractError(data.detail, "Failed to create checkout session") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface BillingPortalResult {
+  success: boolean;
+  portal_url?: string;
+  error?: string;
+}
+
+export async function createBillingPortalSession(): Promise<BillingPortalResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/billing/portal`, { method: "POST" });
+    const data = await res.json();
+    if (res.ok) return { success: true, portal_url: data.portal_url ?? data.url };
+    return { success: false, error: extractError(data.detail, "Failed to open billing portal") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
