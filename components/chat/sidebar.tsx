@@ -17,6 +17,7 @@ import {
   Moon,
   Bell,
   LogOut,
+  Shield,
 } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
@@ -277,6 +278,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             >
               <Settings size={20} strokeWidth={1.5} />
               {!collapsed && <span>{t("settings")}</span>}
+            </Link>
+          )}
+          {meData?.user?.role === "SUPERADMIN" && (
+            <Link
+              href="/superadmin"
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
+                pathname === "/superadmin"
+                  ? "bg-sidebar-active font-medium text-accent"
+                  : "hover:bg-sidebar-hover"
+              }`}
+            >
+              <Shield size={20} strokeWidth={1.5} />
+              {!collapsed && <span>{t("superAdmin")}</span>}
             </Link>
           )}
           <button
