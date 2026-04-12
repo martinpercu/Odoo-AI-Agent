@@ -65,7 +65,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations
 - Odoo connection configuration, validation, and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese)
-- Light / dark mode
+- Light / dark mode with preference persisted in `localStorage` (no flash on reload)
 - Collapsible and responsive sidebar (mobile-friendly)
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
@@ -120,7 +120,7 @@ components/
   auth/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle + logout
+    sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle (persisted in localStorage) + logout
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
     welcome-dashboard.tsx       # First-chat landing with suggestion cards
@@ -665,6 +665,8 @@ Open `http://localhost:3000` — it automatically redirects based on auth state.
 ## Themes and Design
 
 The color system supports **light and dark mode** with CSS variables defined in `app/globals.css` under `@theme`. Components use semantic utility tokens — never raw hex values.
+
+Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` | `"light"`). An inline script in `<head>` (in `app/[locale]/layout.tsx`) applies the `.dark` class before hydration to prevent flash of incorrect theme (FOUC).
 
 ### Design Token System
 
