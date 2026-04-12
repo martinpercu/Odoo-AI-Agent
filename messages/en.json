@@ -281,7 +281,10 @@
       "statusSuccess": "Connection successful.",
       "statusSuccessCompany": "Connected to {company}",
       "statusError": "Could not connect. Check your credentials and try again.",
-      "networkError": "Could not connect to the backend server."
+      "networkError": "Could not connect to the backend server.",
+      "labelLabel": "Label",
+      "labelPlaceholder": "E.g.: Production, Staging...",
+      "optional": "optional"
     }
   },
   "PinnedInsights": {

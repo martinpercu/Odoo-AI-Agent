@@ -180,6 +180,7 @@ export interface OnboardingPayload {
   org_slug: string;
   odoo_url: string;
   odoo_db: string;
+  odoo_username: string;
   odoo_api_key: string;
   odoo_label?: string;
 }

@@ -281,7 +281,10 @@
       "statusSuccess": "Conexión exitosa.",
       "statusSuccessCompany": "Conectado a {company}",
       "statusError": "No se pudo conectar. Verifica tus credenciales e intenta de nuevo.",
-      "networkError": "No se pudo conectar con el servidor backend."
+      "networkError": "No se pudo conectar con el servidor backend.",
+      "labelLabel": "Etiqueta",
+      "labelPlaceholder": "Ej: Producción, Pruebas...",
+      "optional": "opcional"
     }
   },
   "PinnedInsights": {
