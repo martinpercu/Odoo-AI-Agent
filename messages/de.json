@@ -281,7 +281,10 @@
       "statusSuccess": "Verbindung erfolgreich.",
       "statusSuccessCompany": "Verbunden mit {company}",
       "statusError": "Verbindung fehlgeschlagen.",
-      "networkError": "Serverfehler."
+      "networkError": "Serverfehler.",
+      "labelLabel": "Bezeichnung",
+      "labelPlaceholder": "Z.B.: Produktion, Tests...",
+      "optional": "optional"
     }
   },
   "PinnedInsights": {

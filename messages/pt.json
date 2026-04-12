@@ -281,7 +281,10 @@
       "statusSuccess": "Conexão bem-sucedida.",
       "statusSuccessCompany": "Conectado a {company}",
       "statusError": "Falha na conexão. Verifique suas credenciais.",
-      "networkError": "Erro de rede com o servidor."
+      "networkError": "Erro de rede com o servidor.",
+      "labelLabel": "Rótulo",
+      "labelPlaceholder": "Ex: Produção, Testes...",
+      "optional": "opcional"
     }
   },
   "PinnedInsights": {

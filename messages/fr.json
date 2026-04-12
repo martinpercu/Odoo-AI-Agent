@@ -281,7 +281,10 @@
       "statusSuccess": "Connexion réussie.",
       "statusSuccessCompany": "Connecté à {company}",
       "statusError": "Échec de connexion. Vérifiez vos identifiants.",
-      "networkError": "Erreur serveur."
+      "networkError": "Erreur serveur.",
+      "labelLabel": "Étiquette",
+      "labelPlaceholder": "Ex : Production, Tests...",
+      "optional": "optionnel"
     }
   },
   "PinnedInsights": {
