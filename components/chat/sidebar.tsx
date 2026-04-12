@@ -73,12 +73,12 @@ function groupServerConversations(conversations: ServerConversation[]): ChatGrou
 export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === "undefined") return true;
-    const stored = localStorage.getItem("theme");
-    return stored !== "light";
-  });
+  const [isDark, setIsDark] = useState(true);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, [pathname]);
   const t = useTranslations("Sidebar");
   const tGroups = useTranslations("ChatGroups");
   const { unreadCount } = useNotifications();

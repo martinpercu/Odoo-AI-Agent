@@ -211,7 +211,8 @@
       "copy": "Copiar",
       "copied": "Copiado",
       "credentials": "Credenciales",
-      "manageCredentials": "Gestionar credenciales de Odoo"
+      "manageCredentials": "Gestionar credenciales de Odoo",
+      "removeUser": "Eliminar usuario"
     },
     "credentials": {
       "sectionTitle": "Mis Credenciales Odoo",
@@ -284,7 +285,9 @@
       "networkError": "No se pudo conectar con el servidor backend.",
       "labelLabel": "Etiqueta",
       "labelPlaceholder": "Ej: Producción, Pruebas...",
-      "optional": "opcional"
+      "optional": "opcional",
+      "statusSaving": "Guardando...",
+      "statusSaved": "Guardado"
     }
   },
   "PinnedInsights": {

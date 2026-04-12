@@ -218,7 +218,8 @@
       "copy": "Copier",
       "copied": "Copié",
       "credentials": "Identifiants",
-      "manageCredentials": "Gérer les identifiants Odoo"
+      "manageCredentials": "Gérer les identifiants Odoo",
+      "removeUser": "Supprimer l'utilisateur"
     },
     "credentials": {
       "sectionTitle": "Mes identifiants Odoo",
@@ -284,7 +285,9 @@
       "networkError": "Erreur serveur.",
       "labelLabel": "Étiquette",
       "labelPlaceholder": "Ex : Production, Tests...",
-      "optional": "optionnel"
+      "optional": "optionnel",
+      "statusSaving": "Enregistrement...",
+      "statusSaved": "Enregistré"
     }
   },
   "PinnedInsights": {
