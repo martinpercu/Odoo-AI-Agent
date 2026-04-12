@@ -13,6 +13,7 @@ import { ToastProvider } from "@/components/ui/error-toast";
 import { LimitReachedModalProvider } from "@/hooks/use-limit-reached-modal";
 import { LimitReachedModal } from "@/components/ui/limit-reached-modal";
 import { AppShell } from "@/components/app-shell";
+import { ThemeInitializer } from "@/components/theme-initializer";
 import "../globals.css";
 
 const inter = Inter({
@@ -64,6 +65,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased`}
       >
+        <ThemeInitializer />
         <NextIntlClientProvider>
           <AuthProvider>
             <SessionProvider>

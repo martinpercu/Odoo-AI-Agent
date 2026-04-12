@@ -218,7 +218,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "credentials": "Credentials",
-      "manageCredentials": "Manage Odoo credentials"
+      "manageCredentials": "Manage Odoo credentials",
+      "removeUser": "Remove user"
     },
     "credentials": {
       "sectionTitle": "My Odoo Credentials",
@@ -284,7 +285,9 @@
       "networkError": "Could not connect to the backend server.",
       "labelLabel": "Label",
       "labelPlaceholder": "E.g.: Production, Staging...",
-      "optional": "optional"
+      "optional": "optional",
+      "statusSaving": "Saving...",
+      "statusSaved": "Saved"
     }
   },
   "PinnedInsights": {

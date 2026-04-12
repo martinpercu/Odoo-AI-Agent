@@ -117,6 +117,7 @@ app/
 components/
   app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext
   locale-switcher.tsx           # Language selector dropdown
+  theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
   auth/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
   chat/
@@ -666,7 +667,7 @@ Open `http://localhost:3000` — it automatically redirects based on auth state.
 
 The color system supports **light and dark mode** with CSS variables defined in `app/globals.css` under `@theme`. Components use semantic utility tokens — never raw hex values.
 
-Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` | `"light"`). An inline script in `<head>` (in `app/[locale]/layout.tsx`) applies the `.dark` class before hydration to prevent flash of incorrect theme (FOUC).
+Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` | `"light"`). The `ThemeInitializer` component (mounted in `<body>` in `app/[locale]/layout.tsx`) applies the `.dark` class on every route change via `usePathname`, ensuring the correct theme is always active across navigations.
 
 ### Design Token System
 

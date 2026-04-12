@@ -218,7 +218,8 @@
       "copy": "Kopieren",
       "copied": "Kopiert",
       "credentials": "Anmeldedaten",
-      "manageCredentials": "Odoo-Anmeldedaten verwalten"
+      "manageCredentials": "Odoo-Anmeldedaten verwalten",
+      "removeUser": "Benutzer entfernen"
     },
     "credentials": {
       "sectionTitle": "Meine Odoo-Anmeldedaten",
@@ -284,7 +285,9 @@
       "networkError": "Serverfehler.",
       "labelLabel": "Bezeichnung",
       "labelPlaceholder": "Z.B.: Produktion, Tests...",
-      "optional": "optional"
+      "optional": "optional",
+      "statusSaving": "Speichern...",
+      "statusSaved": "Gespeichert"
     }
   },
   "PinnedInsights": {
