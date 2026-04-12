@@ -73,7 +73,11 @@ function groupServerConversations(conversations: ServerConversation[]): ChatGrou
 export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const stored = localStorage.getItem("theme");
+    return stored !== "light";
+  });
   const pathname = usePathname();
   const t = useTranslations("Sidebar");
   const tGroups = useTranslations("ChatGroups");
@@ -128,6 +132,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
     setIsDark((prev) => {
       const next = !prev;
       document.documentElement.classList.toggle("dark", next);
+      localStorage.setItem("theme", next ? "dark" : "light");
       return next;
     });
   }
