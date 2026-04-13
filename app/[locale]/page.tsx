@@ -1,23 +1,38 @@
-'use client'
+"use client";
 
-import { useRouter, usePathname } from 'next/navigation'
-import { useEffect } from 'react'
-import { useOdooConfig } from '@/hooks/use-odoo-config'
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useSession } from "@/hooks/use-session";
 
 export default function RootPage() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const { isConfigured } = useOdooConfig()
+  const router = useRouter();
+  const pathname = usePathname();
+  const { user, isLoading: authLoading } = useAuth();
+  const { meData, isLoading: sessionLoading } = useSession();
+
+  const locale = pathname?.split("/")[1] || "en";
 
   useEffect(() => {
-    const locale = pathname.split('/')[1] || 'en'
+    if (authLoading || sessionLoading) return;
 
-    if (isConfigured) {
-      router.push(`/${locale}/chat`)
-    } else {
-      router.push(`/${locale}/settings`)
+    if (!user) {
+      router.push(`/${locale}/login`);
+      return;
     }
-  }, [isConfigured, pathname, router])
 
-  return null // No muestra nada mientras redirige
+    if (!meData) {
+      // Session not yet loaded — wait for next tick
+      return;
+    }
+
+    if (meData.org === null) {
+      router.push(`/${locale}/onboarding`);
+      return;
+    }
+
+    router.push(`/${locale}/chat`);
+  }, [authLoading, sessionLoading, user, meData, locale, router]);
+
+  return null;
 }

@@ -4,10 +4,14 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { AuthProvider } from "@/hooks/use-auth";
+import { SessionProvider } from "@/hooks/use-session";
 import { OdooConfigProvider } from "@/hooks/use-odoo-config";
 import { PinnedInsightsProvider } from "@/hooks/use-pinned-insights";
 import { NotificationProvider } from "@/hooks/use-notifications";
 import { ToastProvider } from "@/components/ui/error-toast";
+import { LimitReachedModalProvider } from "@/hooks/use-limit-reached-modal";
+import { LimitReachedModal } from "@/components/ui/limit-reached-modal";
 import { AppShell } from "@/components/app-shell";
 import "../globals.css";
 
@@ -52,15 +56,22 @@ export default async function LocaleLayout({ children, params }: Props) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider>
-          <OdooConfigProvider>
-            <ToastProvider>
-              <NotificationProvider>
-                <PinnedInsightsProvider>
-                  <AppShell>{children}</AppShell>
-                </PinnedInsightsProvider>
-              </NotificationProvider>
-            </ToastProvider>
-          </OdooConfigProvider>
+          <AuthProvider>
+            <SessionProvider>
+              <OdooConfigProvider>
+                <ToastProvider>
+                  <LimitReachedModalProvider>
+                    <NotificationProvider>
+                      <PinnedInsightsProvider>
+                        <AppShell>{children}</AppShell>
+                        <LimitReachedModal />
+                      </PinnedInsightsProvider>
+                    </NotificationProvider>
+                  </LimitReachedModalProvider>
+                </ToastProvider>
+              </OdooConfigProvider>
+            </SessionProvider>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
