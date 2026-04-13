@@ -115,7 +115,7 @@ app/
     pricing/page.tsx            # Subscription plans
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
-  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext
+  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; renders shellless (no sidebar) for /invite
   locale-switcher.tsx           # Language selector dropdown
   theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
   auth/
@@ -156,6 +156,7 @@ components/
   ui/
     error-toast.tsx             # Toast notification provider + display
     limit-reached-modal.tsx     # 402 payment limit upgrade modal
+    password-input.tsx          # Password field with show/hide toggle (Eye/EyeOff)
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
@@ -322,6 +323,7 @@ Settings
 │                   test connection, inspect installed modules
 ├── Users         → list members, change role, toggle free/paid slot, remove
 └── Invitations   → send invite by email, view status (pending / accepted / expired)
+                    pending invitations show "Show link" button to reveal and copy the invite URL
 ```
 
 Role comparison:
@@ -342,10 +344,11 @@ Admin sends invite (email) → POST /admin/orgs/{id}/invitations
                            → backend emails token link: /invite?token=...
 
 Invitee opens link → GET /admin/invitations/{token}/preview  (no auth)
+                   → renders without app shell (no sidebar, no chat context)
                    → shows registration form
                       email  (pre-filled, read-only)
                       org name + role badge
-                      password field
+                      password field (with show/hide toggle)
                    → submit:
                       1. POST Supabase signUp  → gets accessToken
                       2. POST /admin/invitations/accept  (Bearer accessToken)
