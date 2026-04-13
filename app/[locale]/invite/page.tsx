@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { fetchInvitationInfo, acceptInvitation } from "@/lib/api";
 import { Loader2, CheckCircle, AlertTriangle, UserPlus } from "lucide-react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 type PageStatus = "loading" | "register" | "submitting" | "success" | "no_token" | "expired" | "already_used" | "error";
 
@@ -166,14 +167,11 @@ function InviteContent() {
 
         <div className="flex flex-col gap-1.5">
           <label className="text-small font-medium text-text-secondary">{t("passwordLabel")}</label>
-          <input
-            type="password"
+          <PasswordInput
+            value={password}
+            onChange={setPassword}
             required
             minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="rounded-md border border-border bg-base px-3 py-2 text-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </div>
 

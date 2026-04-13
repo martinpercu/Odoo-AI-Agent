@@ -215,6 +215,7 @@
       "accepted": "Accepted",
       "expired": "Expired",
       "pending": "Pending",
+      "showLink": "Show link",
       "copy": "Copy",
       "copied": "Copied",
       "credentials": "Credentials",
