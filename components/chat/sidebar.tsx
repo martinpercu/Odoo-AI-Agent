@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,10 +15,14 @@ import {
   Sun,
   Moon,
   Bell,
+  LogOut,
 } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
+import { useAuth } from "@/hooks/use-auth";
 import { LocaleSwitcher } from "@/components/locale-switcher";
-import type { ChatGroup } from "@/lib/types";
+import { fetchMyConversations } from "@/lib/api";
+import { IS_AUTH_ENABLED } from "@/lib/supabase";
+import type { ChatGroup, ServerConversation } from "@/lib/types";
 
 interface SidebarProps {
   chatGroups: ChatGroup[];
@@ -26,6 +30,41 @@ interface SidebarProps {
   onNewChat: () => void;
   onSelectChat: (id: string) => void;
   onBellClick: () => void;
+}
+
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const yesterday = new Date(today.getTime() - 86400000);
+
+function groupServerConversations(conversations: ServerConversation[]): ChatGroup[] {
+  const groups: Record<string, ServerConversation[]> = {
+    today: [],
+    yesterday: [],
+    last7Days: [],
+    older: [],
+  };
+
+  for (const conv of conversations) {
+    const d = new Date(conv.last_message_at);
+    const day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    if (day.getTime() === today.getTime()) groups.today.push(conv);
+    else if (day.getTime() === yesterday.getTime()) groups.yesterday.push(conv);
+    else if (day.getTime() > today.getTime() - 86400000 * 7) groups.last7Days.push(conv);
+    else groups.older.push(conv);
+  }
+
+  return (["today", "yesterday", "last7Days", "older"] as const)
+    .filter((k) => groups[k].length > 0)
+    .map((k) => ({
+      label: k,
+      chats: groups[k].map((c) => ({
+        id: c.thread_id,
+        title: c.title ?? "Nueva conversación",
+        messages: [],
+        createdAt: new Date(c.last_message_at),
+        updatedAt: new Date(c.last_message_at),
+      })),
+    }));
 }
 
 export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick }: SidebarProps) {
@@ -36,6 +75,49 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const t = useTranslations("Sidebar");
   const tGroups = useTranslations("ChatGroups");
   const { unreadCount } = useNotifications();
+  const { user, logout } = useAuth();
+
+  // Server-side conversation list (when auth is enabled)
+  const [serverGroups, setServerGroups] = useState<ChatGroup[] | null>(null);
+  const [serverOffset, setServerOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+
+  const loadConversations = useCallback(async (offset: number) => {
+    if (!IS_AUTH_ENABLED || !user) return;
+    const result = await fetchMyConversations(50, offset);
+    if (result.success && result.conversations) {
+      const newGroups = groupServerConversations(result.conversations);
+      setServerGroups((prev) => {
+        if (offset === 0 || !prev) return newGroups;
+        // Merge: append to existing groups
+        const merged = [...prev];
+        for (const ng of newGroups) {
+          const existing = merged.find((g) => g.label === ng.label);
+          if (existing) {
+            existing.chats = [...existing.chats, ...ng.chats];
+          } else {
+            merged.push(ng);
+          }
+        }
+        return merged;
+      });
+      setHasMore((result.count ?? 0) > offset + 50);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadConversations(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  const loadMore = useCallback(() => {
+    const nextOffset = serverOffset + 50;
+    setServerOffset(nextOffset);
+    loadConversations(nextOffset);
+  }, [serverOffset, loadConversations]);
+
+  // Use server groups when available, otherwise fall back to local groups
+  const displayGroups = serverGroups ?? chatGroups;
 
   function toggleTheme() {
     setIsDark((prev) => {
@@ -102,7 +184,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       {/* Chat History */}
       <div className="flex-1 overflow-y-auto px-3 pb-3">
         {!collapsed &&
-          chatGroups.map((group) => (
+          displayGroups.map((group) => (
             <div key={group.label} className="mb-4">
               <p className="mb-1.5 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {tGroups(group.label)}
@@ -126,9 +208,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
               ))}
             </div>
           ))}
+
+        {/* Load more button */}
+        {!collapsed && hasMore && (
+          <button
+            onClick={loadMore}
+            className="w-full rounded-lg px-2.5 py-2 text-center text-xs text-muted-foreground hover:bg-sidebar-hover transition-colors"
+          >
+            {t("loadMore")}
+          </button>
+        )}
+
         {collapsed && (
           <div className="flex flex-col items-center gap-2 pt-1">
-            {chatGroups.flatMap((g) =>
+            {displayGroups.flatMap((g) =>
               g.chats.map((chat) => (
                 <button
                   key={chat.id}
@@ -183,6 +276,17 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             {!collapsed && <span>{isDark ? t("lightMode") : t("darkMode")}</span>}
           </button>
           <LocaleSwitcher collapsed={collapsed} />
+          {/* Logout — only shown when auth is enabled */}
+          {IS_AUTH_ENABLED && (
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-sidebar-hover text-muted-foreground"
+              title={t("logout")}
+            >
+              <LogOut size={18} />
+              {!collapsed && <span>{t("logout")}</span>}
+            </button>
+          )}
         </nav>
       </div>
     </div>

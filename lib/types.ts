@@ -101,6 +101,8 @@ export interface Message {
   metadata?: MessageMetadata;
   charts?: ChartSSEEvent[];
   imageUrl?: string;
+  /** Whether to show "Powered by The Odoo Agent" watermark. Undefined = show (safe default). */
+  watermark?: boolean;
 }
 
 export interface Chat {
@@ -226,4 +228,76 @@ export interface NotificationSettings {
   stockAlerts: boolean;
   invoiceAlerts: boolean;
   dailySummary: boolean;
+}
+
+// ---- Multi-Tenancy & Auth ----
+
+export type UserRole = "ADMIN" | "IMPLEMENTER" | "CLIENT_USER";
+export type OrgType = "PARTNER" | "SOLITARY";
+export type SubscriptionTier = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
+
+export interface MeUser {
+  id: string;
+  email: string;
+  role: UserRole;
+  is_free_license: boolean;
+}
+
+export interface MeOrg {
+  id: string;
+  name: string;
+  slug: string;
+  type: OrgType;
+}
+
+export interface MeSubscription {
+  tier: SubscriptionTier;
+  show_watermark: boolean;
+  paid_slots_limit: number;
+  free_slots_limit: number;
+  is_active: boolean;
+}
+
+export interface SlotsUsed {
+  paid: number;
+  free: number;
+}
+
+export interface MeResponse {
+  user: MeUser;
+  org: MeOrg | null;
+  subscription: MeSubscription | null;
+  slots_used: SlotsUsed;
+}
+
+export interface ServerConversation {
+  id: string;
+  thread_id: string;
+  title: string | null;
+  last_message_at: string;
+}
+
+export interface OdooConfigItem {
+  id: string;
+  label: string;
+  url: string;
+  db_name: string;
+  is_active: boolean;
+}
+
+export interface OrgUser {
+  id: string;
+  email: string;
+  role: UserRole;
+  is_free_license: boolean;
+  joined_at: string;
+}
+
+export interface Invitation {
+  id: string;
+  email: string;
+  role: UserRole;
+  token: string;
+  accepted_at: string | null;
+  expires_at: string;
 }

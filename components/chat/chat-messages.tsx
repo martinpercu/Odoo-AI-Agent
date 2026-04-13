@@ -154,6 +154,12 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       ))}
                     </>
                   )}
+                  {/* Watermark: show unless explicitly set to false (safe default = show) */}
+                  {message.watermark !== false && message.content && (
+                    <p className="mt-2 text-[10px] text-muted-foreground/50 select-none">
+                      Powered by The Odoo Agent
+                    </p>
+                  )}
                 </>
               )}
             </div>

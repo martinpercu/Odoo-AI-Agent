@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(grep -r \"auth\\\\|Auth\\\\|login\\\\|Login\" /Users/macbook/apps/agents/odoo/odoo-agent-front/app /Users/macbook/apps/agents/odoo/odoo-agent-front/lib /Users/macbook/apps/agents/odoo/odoo-agent-front/components --include=*.tsx --include=*.ts -l)",
+      "Bash(npm install:*)"
     ]
   }
 }

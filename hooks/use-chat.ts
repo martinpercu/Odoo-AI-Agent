@@ -12,7 +12,8 @@ import type {
   ChartSSEEvent,
   ExcelExportMetadata,
 } from "@/lib/types";
-import { API_BASE, toBackendConfig, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory } from "@/lib/api";
+import { API_BASE, toBackendConfig, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, LimitReachedError } from "@/lib/api";
+import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -213,12 +214,35 @@ export function useChat(chatId?: string) {
       abortControllerRef.current = controller;
 
       try {
+        const token = await getAccessToken();
+        const sseHeaders: Record<string, string> = { "Content-Type": "application/json" };
+        if (token) sseHeaders["Authorization"] = `Bearer ${token}`;
+
         const res = await fetch(`${API_BASE}/chat/${targetId}/stream`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: sseHeaders,
           body: JSON.stringify({ message: content, odoo_config: toBackendConfig(odooConfig), language: locale }),
           signal: controller.signal,
         });
+
+        if (res.status === 401) {
+          if (typeof window !== "undefined")
+            window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+          return;
+        }
+
+        if (res.status === 402) {
+          if (typeof window !== "undefined")
+            window.dispatchEvent(new CustomEvent("auth:limit_reached"));
+          setChats((prev) =>
+            prev.map((c) =>
+              c.id === targetId
+                ? { ...c, messages: c.messages.filter((m) => m.id !== assistantId) }
+                : c
+            )
+          );
+          return;
+        }
 
         if (!res.ok) {
           throw new Error(`API error: ${res.status}`);
@@ -231,6 +255,8 @@ export function useChat(chatId?: string) {
         let accumulated = "";
         let buffer = "";
         let charts: ChartSSEEvent[] = [];
+        // Watermark: safe default = show (true). Updated by "watermark" SSE event.
+        let showWatermark: boolean | undefined = undefined;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -282,6 +308,10 @@ export function useChat(chatId?: string) {
                         filename: parsed.filename,
                       } satisfies ExcelExportMetadata;
                       text = "";
+                    } else if (parsed.type === "watermark") {
+                      // Watermark event comes at the start. show: false = paid client.
+                      showWatermark = typeof parsed.show === "boolean" ? parsed.show : true;
+                      continue;
                     } else {
                       continue;
                     }
@@ -314,6 +344,8 @@ export function useChat(chatId?: string) {
                                 content: accumulated,
                                 ...(metadata && { metadata }),
                                 ...(charts.length > 0 && { charts }),
+                                // watermark: undefined = safe default (show). false = paid client.
+                                watermark: showWatermark,
                               }
                             : m
                         ),
