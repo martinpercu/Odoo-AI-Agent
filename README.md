@@ -104,15 +104,18 @@ A modern, responsive interface that allows users to query and manage data from t
 app/
   [locale]/
     layout.tsx                  # Root layout with provider stack (9 nested contexts)
-    page.tsx                    # Auth-based redirector (no user→login, no org→onboarding, else→chat)
+    page.tsx                    # Auth-based redirector (no user→login, no org→onboarding, SUPERADMIN→/superadmin, else→chat)
     login/page.tsx              # Supabase email/password login (+ DEV MODE bypass)
     register/page.tsx           # Account signup → onboarding flow
     onboarding/page.tsx         # 2-step wizard: org name/slug + Odoo connection
-    chat/page.tsx               # New query (suggestions + input)
-    chat/[id]/page.tsx          # Conversation with SSE streaming
-    settings/page.tsx           # Admin panel: org, Odoo configs, users, invitations
     invite/page.tsx             # Accept team invitation by token
-    pricing/page.tsx            # Subscription plans
+    superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
+    (app)/
+      layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
+      chat/page.tsx             # New query (suggestions + input)
+      chat/[id]/page.tsx        # Conversation with SSE streaming
+      settings/page.tsx         # Admin panel: org, Odoo configs, users, invitations
+      pricing/page.tsx          # Subscription plans
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
   app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; renders shellless (no sidebar) for /invite
@@ -188,7 +191,8 @@ NextIntlClientProvider
           → LimitReachedModalProvider (402 modal)
             → NotificationProvider (30s polling)
               → PinnedInsightsProvider (pin state)
-                → AppShell (ChatContext + RightPanelContext)
+                → [root layout ends here]
+                  → AppShell (ChatContext + RightPanelContext)  ← only inside (app)/ route group
 ```
 
 ## UI Components
@@ -306,8 +310,9 @@ App loads → GET /me (no auth token)
 ```
 App loads → AuthProvider restores Supabase session
          → SessionProvider calls GET /me
-         → No org yet   → /onboarding (2-step wizard: org name + Odoo connection)
-         → Org exists   → /chat
+         → SUPERADMIN      → /superadmin (standalone panel, no app shell)
+         → No org yet      → /onboarding (2-step wizard: org name + Odoo connection)
+         → Org exists      → /chat
          → 401 from any API call → clear session → /login
          → 402 from any API call → show LimitReachedModal (no crash)
 ```
@@ -331,6 +336,7 @@ Role comparison:
 | Capability | CLIENT_USER | ADMIN | SUPERADMIN |
 |------------|:-----------:|:-----:|:----------:|
 | Chat & query Odoo | ✓ | ✓ | ✓ |
+| View plans/pricing link | — | ✓ | ✓ |
 | View settings | — | ✓ | ✓ |
 | Manage Odoo connections | — | ✓ | ✓ |
 | Manage users & invitations | — | ✓ | ✓ |
@@ -380,6 +386,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
 | **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
+| **allow_feedback** | `boolean` (per user) | Flag on `OrgUser` and `SuperAdminUser` indicating whether the user has feedback enabled; visible in the superadmin users table |
 
 **Settings page** (`/settings`) provides admin controls for:
 - Organization name/slug/type editing
@@ -436,7 +443,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `PATCH` | `/admin/orgs/{id}/configs/{id}` | Update Odoo connection |
 | `DELETE` | `/admin/orgs/{id}/configs/{id}` | Delete Odoo connection |
 | `GET` | `/admin/orgs/{id}/users` | List organization users |
-| `PATCH` | `/admin/orgs/{id}/users/{id}` | Update user (role, is_free_license) |
+| `PATCH` | `/admin/orgs/{id}/users/{id}` | Update user (role, is_free_license, allow_feedback) |
 | `DELETE` | `/admin/orgs/{id}/users/{id}` | Remove user from organization |
 | `POST` | `/admin/orgs/{id}/invitations` | Send invitation by email |
 | `GET` | `/admin/orgs/{id}/invitations` | List invitations |

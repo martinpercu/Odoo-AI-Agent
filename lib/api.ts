@@ -349,7 +349,7 @@ export async function listOrgUsers(orgId: string): Promise<OrgUsersResult> {
 export async function updateOrgUser(
   orgId: string,
   userId: string,
-  payload: { role?: UserRole; is_free_license?: boolean }
+  payload: { role?: UserRole; is_free_license?: boolean; allow_feedback?: boolean }
 ): Promise<BasicResult> {
   try {
     const res = await authFetch(
@@ -1318,7 +1318,7 @@ export async function superadminActivateUser(userId: string): Promise<BasicResul
 
 export async function superadminUpdateUser(
   userId: string,
-  payload: { role?: UserRole; is_free_license?: boolean }
+  payload: { role?: UserRole; is_free_license?: boolean; allow_feedback?: boolean }
 ): Promise<BasicResult> {
   try {
     const res = await authFetch(
