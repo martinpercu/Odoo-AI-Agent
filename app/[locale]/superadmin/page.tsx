@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { useSession } from "@/hooks/use-session";
+import { useAuth } from "@/hooks/use-auth";
+import { routing } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import {
   Building2,
@@ -16,6 +18,10 @@ import {
   ChevronDown,
   Eye,
   X,
+  Sun,
+  Moon,
+  Globe,
+  LogOut,
 } from "lucide-react";
 import {
   superadminListOrgs,
@@ -47,7 +53,7 @@ const TIER_OPTIONS = [
   "CUSTOM",
 ];
 
-const ROLE_OPTIONS: UserRole[] = ["CLIENT_USER", "ADMIN", "SUPERADMIN"];
+const ROLE_OPTIONS: UserRole[] = ["CLIENT_USER", "ADMIN"];
 
 // ---- Shared helpers ----
 
@@ -504,8 +510,8 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
           <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
             <p className="mb-4 text-body text-foreground">
               {confirmAction.action === "suspend"
-                ? t("orgs.confirmSuspend").replace("{name}", confirmAction.orgName)
-                : t("orgs.confirmActivate").replace("{name}", confirmAction.orgName)}
+                ? t("orgs.confirmSuspend", { name: confirmAction.orgName })
+                : t("orgs.confirmActivate", { name: confirmAction.orgName })}
             </p>
             <div className="flex justify-end gap-2">
               <button
@@ -656,17 +662,13 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
     action: "suspend" | "activate";
   } | null>(null);
   const [roleDropdown, setRoleDropdown] = useState<string | null>(null);
-  const [roleWarning, setRoleWarning] = useState<{
-    userId: string;
-    role: UserRole;
-  } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     const res = await superadminListUsers();
     if (res.success && res.data) {
-      setUsers(res.data.users);
+      setUsers(res.data.users.filter((u) => u.role !== "SUPERADMIN"));
       setCount(res.data.count);
     } else {
       setError(res.error ?? t("errorLoad"));
@@ -708,15 +710,7 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
   }
 
   async function handleRoleChange(userId: string, role: UserRole) {
-    if (role === "SUPERADMIN") {
-      setRoleWarning({ userId, role });
-      setRoleDropdown(null);
-      return;
-    }
-    await applyRoleChange(userId, role);
-  }
-
-  async function applyRoleChange(userId: string, role: UserRole) {
+    setRoleDropdown(null);
     const res = await superadminUpdateUser(userId, { role });
     if (res.success) {
       setToast({ msg: t("users.updateSuccess"), type: "success" });
@@ -724,7 +718,6 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
     } else {
       setToast({ msg: res.error ?? t("users.actionError"), type: "error" });
     }
-    setRoleWarning(null);
   }
 
   async function handleToggleFree(user: SuperAdminUser) {
@@ -776,8 +769,8 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
           <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
             <p className="mb-4 text-body text-foreground">
               {confirmAction.action === "suspend"
-                ? t("users.confirmSuspend").replace("{email}", confirmAction.userEmail)
-                : t("users.confirmActivate").replace("{email}", confirmAction.userEmail)}
+                ? t("users.confirmSuspend", { email: confirmAction.userEmail })
+                : t("users.confirmActivate", { email: confirmAction.userEmail })}
             </p>
             <div className="flex justify-end gap-2">
               <button
@@ -801,27 +794,6 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
         </div>
       )}
 
-      {roleWarning && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
-            <p className="mb-4 text-body text-foreground">{t("users.roleWarning")}</p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setRoleWarning(null)}
-                className="rounded-md px-4 py-2 text-body text-text-secondary hover:bg-raised"
-              >
-                No
-              </button>
-              <button
-                onClick={() => applyRoleChange(roleWarning.userId, roleWarning.role)}
-                className="rounded-md bg-error px-4 py-2 text-body font-medium text-white"
-              >
-                Sí
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Stats */}
       <div className="mb-4 flex flex-wrap gap-4 text-small text-text-secondary">
@@ -844,8 +816,9 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
               <th className="px-3 py-2 text-left">{t("users.colStatus")}</th>
               <th className="px-3 py-2 text-left">{t("users.colEmail")}</th>
               <th className="px-3 py-2 text-left">{t("users.colRole")}</th>
-              <th className="px-3 py-2 text-left">{t("users.colOrg")}</th>
+              <th className="px-3 py-2 text-center">{t("users.colFeedback")}</th>
               <th className="px-3 py-2 text-center">{t("users.colFree")}</th>
+              <th className="px-3 py-2 text-left">{t("users.colOrg")}</th>
               <th className="px-3 py-2 text-left">{t("users.colCreated")}</th>
               <th className="px-3 py-2 text-left">{t("users.colActions")}</th>
             </tr>
@@ -895,9 +868,11 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                     )}
                   </div>
                 </td>
-                <td className="px-3 py-2 text-text-secondary">
-                  {user.org ? user.org.name : (
-                    <span className="text-text-muted italic">{t("users.noOrg")}</span>
+                <td className="px-3 py-2 text-center">
+                  {user.allow_feedback ? (
+                    <CheckCircle2 size={16} strokeWidth={1.5} className="text-success-solid" />
+                  ) : (
+                    <span className="text-text-muted">—</span>
                   )}
                 </td>
                 <td className="px-3 py-2 text-center">
@@ -913,6 +888,11 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                       <span className="text-text-muted">—</span>
                     )}
                   </button>
+                </td>
+                <td className="px-3 py-2 text-text-secondary">
+                  {user.org ? user.org.name : (
+                    <span className="text-text-muted italic">{t("users.noOrg")}</span>
+                  )}
                 </td>
                 <td className="px-3 py-2 text-small text-text-secondary">
                   {new Date(user.created_at).toLocaleDateString()}
@@ -1006,6 +986,95 @@ function ActivityTab({ t }: { t: ReturnType<typeof useTranslations> }) {
   );
 }
 
+// ---- Header Actions (theme / locale / logout) ----
+
+function HeaderActions() {
+  const tLocale = useTranslations("LocaleSwitcher");
+  const { logout } = useAuth();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isDark, setIsDark] = useState(false);
+  const [localeOpen, setLocaleOpen] = useState(false);
+  const localeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (localeRef.current && !localeRef.current.contains(e.target as Node)) {
+        setLocaleOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function toggleTheme() {
+    setIsDark((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle("dark", next);
+      return next;
+    });
+  }
+
+  function switchLocale(next: string) {
+    router.replace(pathname, { locale: next });
+    setLocaleOpen(false);
+  }
+
+  return (
+    <div className="flex items-center gap-1">
+      {/* Theme */}
+      <button
+        onClick={toggleTheme}
+        className="rounded-md p-2 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
+        aria-label={isDark ? "Modo claro" : "Modo oscuro"}
+      >
+        {isDark ? <Sun size={18} strokeWidth={1.5} /> : <Moon size={18} strokeWidth={1.5} />}
+      </button>
+
+      {/* Locale */}
+      <div ref={localeRef} className="relative">
+        <button
+          onClick={() => setLocaleOpen((o) => !o)}
+          className="flex items-center gap-1 rounded-md p-2 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
+          aria-label="Cambiar idioma"
+        >
+          <Globe size={18} strokeWidth={1.5} />
+          <span className="text-small font-medium uppercase">{locale}</span>
+        </button>
+        {localeOpen && (
+          <div className="absolute right-0 top-full z-20 mt-1 w-36 rounded-lg border border-sidebar-border bg-surface py-1 shadow-lg">
+            {routing.locales.map((loc) => (
+              <button
+                key={loc}
+                onClick={() => switchLocale(loc)}
+                className={`flex w-full items-center px-3 py-2 text-left text-body transition-colors hover:bg-raised ${
+                  loc === locale ? "font-medium text-accent" : "text-foreground"
+                }`}
+              >
+                {tLocale(loc)}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Logout */}
+      <button
+        onClick={logout}
+        className="rounded-md p-2 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
+        aria-label="Cerrar sesión"
+      >
+        <LogOut size={18} strokeWidth={1.5} />
+      </button>
+    </div>
+  );
+}
+
 // ---- Main Page ----
 
 export default function SuperAdminPage() {
@@ -1043,8 +1112,9 @@ export default function SuperAdminPage() {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-base">
       {/* Header */}
-      <div className="border-b border-sidebar-border bg-surface px-6 py-4">
+      <div className="flex items-center justify-between border-b border-sidebar-border bg-surface px-6 py-3">
         <h1 className="text-heading font-semibold text-foreground">{t("title")}</h1>
+        <HeaderActions />
       </div>
 
       {/* Tabs */}

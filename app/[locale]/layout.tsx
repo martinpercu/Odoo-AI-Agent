@@ -12,7 +12,6 @@ import { NotificationProvider } from "@/hooks/use-notifications";
 import { ToastProvider } from "@/components/ui/error-toast";
 import { LimitReachedModalProvider } from "@/hooks/use-limit-reached-modal";
 import { LimitReachedModal } from "@/components/ui/limit-reached-modal";
-import { AppShell } from "@/components/app-shell";
 import { ThemeInitializer } from "@/components/theme-initializer";
 import "../globals.css";
 
@@ -74,7 +73,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                   <LimitReachedModalProvider>
                     <NotificationProvider>
                       <PinnedInsightsProvider>
-                        <AppShell>{children}</AppShell>
+                        {children}
                         <LimitReachedModal />
                       </PinnedInsightsProvider>
                     </NotificationProvider>
