@@ -6,6 +6,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquarePlus,
+  SquarePen,
   Settings,
   CreditCard,
   ChevronLeft,
@@ -180,7 +181,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           }}
           className="flex w-full items-center gap-3 rounded-md border border-sidebar-border px-3 py-2 text-body font-medium transition-colors hover:bg-sidebar-hover"
         >
-          <MessageSquarePlus size={20} strokeWidth={1.5} />
+          <SquarePen size={20} strokeWidth={1.5} />
           {!collapsed && <span>{t("newChat")}</span>}
         </button>
       </div>

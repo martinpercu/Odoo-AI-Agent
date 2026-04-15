@@ -409,7 +409,7 @@ export async function createInvitation(
       }
     );
     const data = await res.json();
-    if (res.ok) return { success: true, invitation: data };
+    if (res.ok) return { success: true, invitation: data.invitation ?? data };
     return { success: false, error: extractError(data.detail, "Failed to create invitation") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
@@ -431,6 +431,27 @@ export async function listInvitations(orgId: string): Promise<InvitationsResult>
   }
 }
 
+export interface InvitationInfoResult {
+  success: boolean;
+  email?: string;
+  org_name?: string;
+  role?: string;
+  expires_at?: string;
+  status?: number;
+  error?: string;
+}
+
+export async function fetchInvitationInfo(token: string): Promise<InvitationInfoResult> {
+  try {
+    const res = await fetch(`${API_BASE}/admin/invitations/${token}/preview`);
+    const data = await res.json();
+    if (res.ok) return { success: true, ...data };
+    return { success: false, status: res.status };
+  } catch {
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export interface AcceptInvitationResult {
   success: boolean;
   status?: number;
@@ -438,10 +459,11 @@ export interface AcceptInvitationResult {
 }
 
 export async function acceptInvitation(
-  token: string
+  token: string,
+  accessToken?: string
 ): Promise<AcceptInvitationResult> {
   try {
-    const authToken = await getAccessToken();
+    const authToken = accessToken ?? await getAccessToken();
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
@@ -535,6 +557,46 @@ export async function inspectInstance(
       success: false,
       error: data.detail || data.error || undefined,
     };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function testSavedOdooConfig(
+  orgId: string,
+  configId: string
+): Promise<TestConnectionResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/configs/${configId}/test-connection`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }
+    );
+    const data = await res.json();
+    if (res.ok && data.status === "ok") {
+      return { success: true, company: data.company, version: data.version, uid: data.uid };
+    }
+    return { success: false, error: data.detail || data.error || undefined };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function inspectSavedOdooConfig(
+  orgId: string,
+  configId: string
+): Promise<InspectInstanceResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/configs/${configId}/inspect`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }
+    );
+    const data = await res.json();
+    if (res.ok && data.modules) {
+      return { success: true, modules: data.modules };
+    }
+    return { success: false, error: data.detail || data.error || undefined };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };

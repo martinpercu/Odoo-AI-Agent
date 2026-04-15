@@ -67,6 +67,7 @@ export function ConnectionForm() {
       url: config.url,
       db_name: config.db,
       api_key: config.apiKey,
+      username: config.login,
     });
     if (!result.success) {
       setSaveError(result.error || "No se pudo guardar la conexión");

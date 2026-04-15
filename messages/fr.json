@@ -202,7 +202,9 @@
       "pendingInvitations": "Invitations en attente",
       "accepted": "Acceptée",
       "expired": "Expirée",
-      "pending": "En attente"
+      "pending": "En attente",
+      "copy": "Copier",
+      "copied": "Copié"
     },
     "form": {
       "urlLabel": "URL Odoo",
@@ -320,7 +322,13 @@
     "expiredDesc": "L'invitation a expiré.",
     "error": "Une erreur est survenue",
     "errorDesc": "Échec de l'acceptation.",
-    "goHome": "Aller à l'application"
+    "goHome": "Aller à l'application",
+    "registerTitle": "Complétez votre inscription",
+    "registerDesc": "Vous avez été invité à rejoindre {org}. Créez votre mot de passe pour activer votre compte.",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "registering": "Création du compte...",
+    "registerCta": "Créer un compte et accepter l'invitation"
   },
   "LocaleSwitcher": {
     "es": "Español",
