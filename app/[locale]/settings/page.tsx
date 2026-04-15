@@ -12,13 +12,15 @@ import {
   Mail,
   Loader2,
   Trash2,
-  UserCog,
   Copy,
   Check,
   AlertTriangle,
+  KeyRound,
 } from "lucide-react";
 import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
+import { UserCredentialsSection } from "@/components/settings/user-credentials-section";
+import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
 import { useSession } from "@/hooks/use-session";
 import {
   listOdooConfigs,
@@ -30,7 +32,7 @@ import {
   createInvitation,
   listInvitations,
 } from "@/lib/api";
-import type { OdooConfigItem, OrgUser, Invitation, UserRole } from "@/lib/types";
+import type { OdooConfigItem, OdooConfigSummary, OrgUser, Invitation, UserRole } from "@/lib/types";
 
 // ---- Org Section ----
 
@@ -156,12 +158,13 @@ function OdooConfigsSection() {
   const orgId = meData?.org?.id;
 
   const [configs, setConfigs] = useState<OdooConfigItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!orgId) return;
+    setLoading(true);
     listOdooConfigs(orgId).then((r) => {
       if (r.success) setConfigs(r.configs ?? []);
       setLoading(false);
@@ -184,7 +187,7 @@ function OdooConfigsSection() {
         <h2 className="text-subheading">{t("admin.odooConfigsTitle")}</h2>
       </div>
 
-      {/* Existing connection form for adding a new config */}
+      {/* Form to add a new config — no credential fields */}
       <div className="mb-4">
         <ConnectionForm />
       </div>
@@ -245,22 +248,26 @@ function OdooConfigsSection() {
   );
 }
 
-// ---- Users Section ----
+// ---- Users Section (ADMIN) ----
 
-const ROLE_OPTIONS: UserRole[] = ["ADMIN", "IMPLEMENTER", "CLIENT_USER"];
+const ROLE_OPTIONS: UserRole[] = ["ADMIN", "CLIENT_USER"];
 
 function UsersSection() {
   const t = useTranslations("Settings");
   const { meData } = useSession();
   const orgId = meData?.org?.id;
   const myUserId = meData?.user?.id;
+  // Cast to OdooConfigSummary[] — the shapes are compatible (id, label, url, db_name, is_active)
+  const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
 
   const [users, setUsers] = useState<OrgUser[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
+  const [credentialsUser, setCredentialsUser] = useState<OrgUser | null>(null);
 
   useEffect(() => {
     if (!orgId) return;
+    setLoading(true);
     listOrgUsers(orgId).then((r) => {
       if (r.success) setUsers(r.users ?? []);
       setLoading(false);
@@ -287,89 +294,113 @@ function UsersSection() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-2">
-        <Users size={20} strokeWidth={1.5} className="text-accent" />
-        <h2 className="text-subheading">{t("admin.usersTitle")}</h2>
+    <>
+      <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <Users size={20} strokeWidth={1.5} className="text-accent" />
+          <h2 className="text-subheading">{t("admin.usersTitle")}</h2>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center py-4">
+            <Loader2 size={18} strokeWidth={1.5} className="animate-spin text-text-secondary" />
+          </div>
+        ) : users.length === 0 ? (
+          <p className="text-body text-text-secondary">{t("admin.noUsers")}</p>
+        ) : (
+          <div className="space-y-3">
+            {users.map((user) => (
+              <div
+                key={user.id}
+                className="flex flex-col gap-2 rounded-md border border-border p-3 text-body sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{user.email}</p>
+                  <p className="text-small text-text-muted">
+                    {t("admin.joined")}: {new Date(user.joined_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap shrink-0">
+                  {/* Role selector — disabled for own account */}
+                  <select
+                    value={user.role}
+                    onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
+                    disabled={user.id === myUserId}
+                    className="rounded-md border border-border bg-surface px-2 py-1 text-small font-technical focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {ROLE_OPTIONS.map((r) => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
+                  </select>
+
+                  {/* Free/Paid toggle */}
+                  <button
+                    onClick={() => handleFreeToggle(user.id, !user.is_free_license)}
+                    className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                      user.is_free_license
+                        ? "bg-raised text-text-secondary"
+                        : "bg-accent-subtle text-accent"
+                    }`}
+                    title={t("admin.toggleFree")}
+                  >
+                    {user.is_free_license ? t("admin.free") : t("admin.paid")}
+                  </button>
+
+                  {/* Credentials button */}
+                  {orgId && (
+                    <button
+                      onClick={() => setCredentialsUser(user)}
+                      className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-micro text-text-secondary hover:text-accent hover:border-accent/40 hover:bg-accent-subtle transition-colors"
+                      title={t("admin.manageCredentials")}
+                    >
+                      <KeyRound size={13} strokeWidth={1.5} />
+                      {t("admin.credentials")}
+                    </button>
+                  )}
+
+                  {/* Remove */}
+                  {user.id !== myUserId && confirmRemoveId === user.id ? (
+                    <div className="flex items-center gap-1.5">
+                      <AlertTriangle size={14} strokeWidth={1.5} className="text-error" />
+                      <button
+                        onClick={() => handleRemove(user.id)}
+                        className="rounded-md px-2 py-1 text-small bg-error text-white hover:opacity-90"
+                      >
+                        {t("admin.yes")}
+                      </button>
+                      <button
+                        onClick={() => setConfirmRemoveId(null)}
+                        className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
+                      >
+                        {t("admin.no")}
+                      </button>
+                    </div>
+                  ) : user.id !== myUserId ? (
+                    <button
+                      onClick={() => setConfirmRemoveId(user.id)}
+                      className="rounded-md p-1.5 text-text-secondary hover:text-error hover:bg-error-subtle transition-colors"
+                      aria-label={t("admin.removeUser")}
+                    >
+                      <Trash2 size={14} strokeWidth={1.5} />
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {loading ? (
-        <div className="flex justify-center py-4">
-          <Loader2 size={18} strokeWidth={1.5} className="animate-spin text-text-secondary" />
-        </div>
-      ) : users.length === 0 ? (
-        <p className="text-body text-text-secondary">{t("admin.noUsers")}</p>
-      ) : (
-        <div className="space-y-3">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              className="flex flex-col gap-2 rounded-md border border-border p-3 text-body sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <p className="font-medium">{user.email}</p>
-                <p className="text-small text-text-muted">
-                  {t("admin.joined")}: {new Date(user.joined_at).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                {/* Role selector — disabled for own account */}
-                <select
-                  value={user.role}
-                  onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
-                  disabled={user.id === myUserId}
-                  className="rounded-md border border-border bg-surface px-2 py-1 text-small font-technical focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {ROLE_OPTIONS.map((r) => (
-                    <option key={r} value={r}>{r}</option>
-                  ))}
-                </select>
-
-                {/* Free/Paid toggle */}
-                <button
-                  onClick={() => handleFreeToggle(user.id, !user.is_free_license)}
-                  className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
-                    user.is_free_license
-                      ? "bg-raised text-text-secondary"
-                      : "bg-accent-subtle text-accent"
-                  }`}
-                  title={t("admin.toggleFree")}
-                >
-                  {user.is_free_license ? t("admin.free") : t("admin.paid")}
-                </button>
-
-                {/* Remove — hidden for own account */}
-                {user.id !== myUserId && confirmRemoveId === user.id ? (
-                  <div className="flex items-center gap-1.5">
-                    <AlertTriangle size={14} strokeWidth={1.5} className="text-error" />
-                    <button
-                      onClick={() => handleRemove(user.id)}
-                      className="rounded-md px-2 py-1 text-small bg-error text-white hover:opacity-90"
-                    >
-                      {t("admin.yes")}
-                    </button>
-                    <button
-                      onClick={() => setConfirmRemoveId(null)}
-                      className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
-                    >
-                      {t("admin.no")}
-                    </button>
-                  </div>
-                ) : user.id !== myUserId ? (
-                  <button
-                    onClick={() => setConfirmRemoveId(user.id)}
-                    className="rounded-md p-1.5 text-text-secondary hover:text-error hover:bg-error-subtle transition-colors"
-                    aria-label={t("admin.removeUser")}
-                  >
-                    <UserCog size={16} strokeWidth={1.5} />
-                  </button>
-                ) : null}
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Credentials modal */}
+      {credentialsUser && orgId && (
+        <AdminUserCredentialsModal
+          user={credentialsUser}
+          orgId={orgId}
+          configs={configs}
+          onClose={() => setCredentialsUser(null)}
+        />
       )}
-    </div>
+    </>
   );
 }
 
@@ -388,10 +419,11 @@ function InvitationsSection() {
   const [inviteError, setInviteError] = useState<string | null>(null);
 
   const [invitations, setInvitations] = useState<Invitation[]>([]);
-  const [loadingList, setLoadingList] = useState(true);
+  const [loadingList, setLoadingList] = useState(false);
 
   useEffect(() => {
     if (!orgId) return;
+    setLoadingList(true);
     listInvitations(orgId).then((r) => {
       if (r.success) setInvitations(r.invitations ?? []);
       setLoadingList(false);
@@ -446,7 +478,7 @@ function InvitationsSection() {
             onChange={(e) => setRole(e.target.value as UserRole)}
             className="rounded-md border border-border bg-surface px-2 py-2 text-body font-technical focus:outline-none focus:ring-1 focus:ring-accent/30"
           >
-            {(["ADMIN", "IMPLEMENTER", "CLIENT_USER"] as UserRole[]).map((r) => (
+            {(["ADMIN", "CLIENT_USER"] as UserRole[]).map((r) => (
               <option key={r} value={r}>{r}</option>
             ))}
           </select>
@@ -526,7 +558,7 @@ export default function SettingsPage() {
 
   const roleUpper = role?.toUpperCase();
   const isAdmin = roleUpper === "ADMIN";
-  const isAdminOrImplementer = roleUpper === "ADMIN" || roleUpper === "IMPLEMENTER";
+  const isClientUser = roleUpper === "CLIENT_USER";
   const hasOrg = !!meData?.org;
 
   return (
@@ -548,34 +580,36 @@ export default function SettingsPage() {
         </motion.div>
 
         <div className="flex flex-col gap-6">
-          {/* Org info — ADMIN | IMPLEMENTER */}
-          {hasOrg && isAdminOrImplementer && (
+          {/* Org info — ADMIN only */}
+          {hasOrg && isAdmin && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.05 }}>
               <OrgSection />
             </motion.div>
           )}
 
-          {/* Odoo Connections — ADMIN | IMPLEMENTER */}
-          {isAdminOrImplementer ? (
+          {/* Odoo Connections — ADMIN only */}
+          {isAdmin && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.1 }}>
               <OdooConfigsSection />
             </motion.div>
-          ) : (
-            /* Standard connection form for non-admin users */
+          )}
+
+          {/* My Odoo Credentials — CLIENT_USER */}
+          {isClientUser && hasOrg && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.1 }}>
-              <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-                <ConnectionForm />
-              </div>
+              <UserCredentialsSection />
             </motion.div>
           )}
 
-          {/* Instance Inspector */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.15 }}>
-            <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-              <h2 className="mb-4 text-subheading">{t("inspector.heading")}</h2>
-              <InstanceInspector />
-            </div>
-          </motion.div>
+          {/* Instance Inspector — ADMIN only */}
+          {isAdmin && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.15 }}>
+              <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
+                <h2 className="mb-4 text-subheading">{t("inspector.heading")}</h2>
+                <InstanceInspector />
+              </div>
+            </motion.div>
+          )}
 
           {/* Users — ADMIN only */}
           {hasOrg && isAdmin && (
@@ -584,8 +618,8 @@ export default function SettingsPage() {
             </motion.div>
           )}
 
-          {/* Invitations — ADMIN | IMPLEMENTER */}
-          {hasOrg && isAdminOrImplementer && (
+          {/* Invitations — ADMIN only */}
+          {hasOrg && isAdmin && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.25 }}>
               <InvitationsSection />
             </motion.div>

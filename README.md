@@ -55,7 +55,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Supabase email/password authentication (DEV MODE bypass when unset)
 - Demo mode: unauthenticated access when backend sets `demo_available` (banner in chat + "Try Demo" button on login)
 - Organization management (name, slug, type)
-- Role-based access control (Admin, Implementer, Client User)
+- Role-based access control (SuperAdmin, Admin, Client User)
 - Subscription tiers (Free, Starter, Pro, Enterprise) with slot limits
 - Team management: invite users by email, toggle free/paid slots
 - 2-step onboarding wizard (org creation + Odoo connection)
@@ -124,6 +124,8 @@ components/
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
     welcome-dashboard.tsx       # First-chat landing with suggestion cards
+    demo-banner.tsx             # Banner shown in demo mode (unauthenticated or no org)
+    odoo-config-selector.tsx    # Dropdown to switch active Odoo config + credential status indicator
     success-card.tsx            # Green card for successful actions
     validation-prompt.tsx       # Orange card for missing fields
     odoo-action-button.tsx      # Purple action confirmation button
@@ -143,8 +145,11 @@ components/
     notification-feed.tsx       # Notification list with mark-all-read
     notification-card.tsx       # Individual alert card with time-ago
     notification-settings-modal.tsx # Toggle alerts by category
+  settings/
+    user-credentials-section.tsx      # Section for users to save their own Odoo credentials (username + API key)
+    admin-user-credentials-modal.tsx  # Admin modal to manage credentials for any org user
   odoo/
-    connection-form.tsx         # Odoo credentials form (saves via POST /admin/orgs/{id}/configs, not localStorage)
+    connection-form.tsx         # Odoo connection form (saves via POST /admin/orgs/{id}/configs, not localStorage)
     instance-inspector.tsx      # View installed Odoo modules
   pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
   ui/
@@ -320,13 +325,14 @@ Settings
 
 Role comparison:
 
-| Capability | CLIENT_USER | IMPLEMENTER | ADMIN |
-|------------|:-----------:|:-----------:|:-----:|
+| Capability | CLIENT_USER | ADMIN | SUPERADMIN |
+|------------|:-----------:|:-----:|:----------:|
 | Chat & query Odoo | ✓ | ✓ | ✓ |
 | View settings | — | ✓ | ✓ |
 | Manage Odoo connections | — | ✓ | ✓ |
-| Manage users & invitations | — | — | ✓ |
-| Edit organization | — | — | ✓ |
+| Manage users & invitations | — | ✓ | ✓ |
+| Edit organization | — | ✓ | ✓ |
+| Cross-org administration | — | — | ✓ |
 
 ### Invitation Flow
 
@@ -364,11 +370,11 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 
 | Concept | Values | Description |
 |---------|--------|-------------|
-| **Roles** | `ADMIN`, `IMPLEMENTER`, `CLIENT_USER` | Per-user permission level |
+| **Roles** | `SUPERADMIN`, `ADMIN`, `CLIENT_USER` | Per-user permission level |
 | **Org Types** | `PARTNER`, `SOLITARY` | Multi-client vs single company |
 | **Subscriptions** | `FREE`, `STARTER`, `PRO`, `ENTERPRISE` | Tier with slot limits |
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
-| **Odoo Configs** | `OdooConfigSummary[]` | Multiple Odoo connections per org; active one selected via `activeConfigId` |
+| **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
 
 **Settings page** (`/settings`) provides admin controls for:
@@ -431,6 +437,11 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `POST` | `/admin/orgs/{id}/invitations` | Send invitation by email |
 | `GET` | `/admin/orgs/{id}/invitations` | List invitations |
 | `POST` | `/admin/invitations/accept` | Accept invitation by token |
+| `GET` | `/me/odoo-credentials` | List current user's saved credentials (one per config) |
+| `PUT` | `/me/odoo-credentials/{configId}` | Save/update current user's credentials for a config |
+| `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: get a user's credentials for a config |
+| `PUT` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: save/update a user's credentials for a config |
+| `DELETE` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: delete a user's credentials for a config |
 
 ### SSE Event Types
 

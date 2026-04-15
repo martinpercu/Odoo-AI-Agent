@@ -15,6 +15,8 @@ import type {
   Invitation,
   UserRole,
   OrgType,
+  UserOdooCredential,
+  OdooCredentialSummary,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -256,7 +258,7 @@ export async function listOdooConfigs(orgId: string): Promise<OdooConfigsResult>
 
 export async function createOdooConfig(
   orgId: string,
-  payload: { label: string; url: string; db_name: string; api_key: string }
+  payload: { label?: string; url: string; db_name: string }
 ): Promise<OdooConfigResult> {
   try {
     const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/configs`, {
@@ -276,7 +278,7 @@ export async function createOdooConfig(
 export async function updateOdooConfig(
   orgId: string,
   configId: string,
-  payload: Partial<{ label: string; url: string; db_name: string; api_key: string }>
+  payload: Partial<{ label: string; url: string; db_name: string; is_active: boolean }>
 ): Promise<OdooConfigResult> {
   try {
     const res = await authFetch(
@@ -374,6 +376,129 @@ export async function removeOrgUser(
     if (res.ok) return { success: true };
     const data = await res.json();
     return { success: false, error: data.detail || "Failed to remove user" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Credentials: User manages own ----
+
+export interface CredentialResult {
+  success: boolean;
+  credential?: UserOdooCredential;
+  error?: string;
+  notFound?: boolean;
+}
+
+export interface AllCredentialsResult {
+  success: boolean;
+  credentials?: OdooCredentialSummary[];
+  error?: string;
+}
+
+export async function fetchAllMyCredentials(): Promise<AllCredentialsResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/odoo-credentials`);
+    const data = await res.json();
+    if (res.ok) return { success: true, credentials: data };
+    return { success: false, error: data.detail || "Failed to fetch credentials" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function fetchMyCredential(configId: string): Promise<CredentialResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/odoo-credentials/${configId}`);
+    if (res.status === 404) return { success: false, notFound: true };
+    const data = await res.json();
+    if (res.ok) return { success: true, credential: data };
+    return { success: false, error: data.detail || "Failed to fetch credential" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function saveMyCredential(
+  configId: string,
+  payload: { odoo_username: string; odoo_api_key: string }
+): Promise<CredentialResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/odoo-credentials/${configId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true, credential: data.credential ?? data };
+    return { success: false, error: extractError(data.detail, "Failed to save credential") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Credentials: Admin manages any user ----
+
+export async function fetchUserCredential(
+  orgId: string,
+  userId: string,
+  configId: string
+): Promise<CredentialResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/users/${userId}/odoo-credentials/${configId}`
+    );
+    if (res.status === 404) return { success: false, notFound: true };
+    const data = await res.json();
+    if (res.ok) return { success: true, credential: data };
+    return { success: false, error: data.detail || "Failed to fetch credential" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function saveUserCredential(
+  orgId: string,
+  userId: string,
+  configId: string,
+  payload: { odoo_username: string; odoo_api_key: string }
+): Promise<CredentialResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/users/${userId}/odoo-credentials/${configId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, credential: data.credential ?? data };
+    return { success: false, error: extractError(data.detail, "Failed to save credential") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function deleteUserCredential(
+  orgId: string,
+  userId: string,
+  configId: string
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/users/${userId}/odoo-credentials/${configId}`,
+      { method: "DELETE" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to delete credential" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };

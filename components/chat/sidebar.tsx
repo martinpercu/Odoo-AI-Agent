@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
+import { useSession } from "@/hooks/use-session";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { fetchMyConversations } from "@/lib/api";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
@@ -77,6 +78,8 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const tGroups = useTranslations("ChatGroups");
   const { unreadCount } = useNotifications();
   const { user, logout } = useAuth();
+  const { meData } = useSession();
+  const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
 
   // Server-side conversation list (when auth is enabled)
   const [serverGroups, setServerGroups] = useState<ChatGroup[] | null>(null);
@@ -262,18 +265,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             <CreditCard size={20} strokeWidth={1.5} />
             {!collapsed && <span>{t("plans")}</span>}
           </Link>
-          <Link
-            href="/settings"
-            onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
-              pathname === "/settings"
-                ? "bg-sidebar-active font-medium text-accent"
-                : "hover:bg-sidebar-hover"
-            }`}
-          >
-            <Settings size={20} strokeWidth={1.5} />
-            {!collapsed && <span>{t("settings")}</span>}
-          </Link>
+          {user && (
+            <Link
+              href={settingsHref}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
+                pathname === "/settings" || pathname === "/onboarding"
+                  ? "bg-sidebar-active font-medium text-accent"
+                  : "hover:bg-sidebar-hover"
+              }`}
+            >
+              <Settings size={20} strokeWidth={1.5} />
+              {!collapsed && <span>{t("settings")}</span>}
+            </Link>
+          )}
           <button
             onClick={toggleTheme}
             className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover"
@@ -283,8 +288,8 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             {!collapsed && <span>{isDark ? t("lightMode") : t("darkMode")}</span>}
           </button>
           <LocaleSwitcher collapsed={collapsed} />
-          {/* Logout — only shown when auth is enabled */}
-          {IS_AUTH_ENABLED && (
+          {/* Logout — only shown when auth is enabled and user is logged in */}
+          {IS_AUTH_ENABLED && user && (
             <button
               onClick={logout}
               className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover text-text-secondary"

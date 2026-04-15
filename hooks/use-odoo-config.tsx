@@ -1,12 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import type { OdooConfigSummary } from "@/lib/types";
+import type { OdooConfigSummary, OdooConfigSummaryWithCreds, OdooCredentialSummary } from "@/lib/types";
 import { useSession } from "@/hooks/use-session";
+import { fetchAllMyCredentials } from "@/lib/api";
 
 interface OdooConfigContextType {
-  configs: OdooConfigSummary[];
-  activeConfig: OdooConfigSummary | null;
+  configs: OdooConfigSummaryWithCreds[];
+  activeConfig: OdooConfigSummaryWithCreds | null;
   activeConfigId: string | null;
   setActiveConfigId: (id: string) => void;
   isConfigured: boolean;
@@ -24,17 +25,36 @@ export function useOdooConfig() {
   return ctx;
 }
 
+function enrichConfigs(
+  configs: OdooConfigSummary[],
+  credentials: OdooCredentialSummary[]
+): OdooConfigSummaryWithCreds[] {
+  return configs.map((c) => {
+    const cred = credentials.find((cr) => cr.config_id === c.id);
+    return { ...c, hasCredentials: !!cred, odoo_username: cred?.odoo_username };
+  });
+}
+
 export function OdooConfigProvider({ children }: { children: React.ReactNode }) {
   const { meData } = useSession();
-  const configs = meData?.odoo_configs ?? [];
+  const rawConfigs = meData?.odoo_configs ?? [];
 
-  // Persist the selected config_id in localStorage so it survives page refresh
+  const [credentials, setCredentials] = useState<OdooCredentialSummary[]>([]);
   const [activeConfigId, setActiveConfigIdState] = useState<string | null>(null);
+
+  // Load credentials once when the user session is available
+  useEffect(() => {
+    if (!meData?.user) return;
+    fetchAllMyCredentials().then((result) => {
+      if (result.success && result.credentials) {
+        setCredentials(result.credentials);
+      }
+    });
+  }, [meData?.user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // On mount / when configs load, restore or default to first active (or "demo" if none)
   useEffect(() => {
-    if (configs.length === 0) {
-      // No real configs — use demo mode
+    if (rawConfigs.length === 0) {
       setActiveConfigIdState("demo");
       return;
     }
@@ -43,26 +63,26 @@ export function OdooConfigProvider({ children }: { children: React.ReactNode }) 
       ? localStorage.getItem("odoo_active_config_id")
       : null;
 
-    if (stored && (stored === "demo" || configs.find((c) => c.id === stored))) {
+    if (stored && (stored === "demo" || rawConfigs.find((c) => c.id === stored))) {
       setActiveConfigIdState(stored);
     } else {
-      const first = configs.find((c) => c.is_active) ?? configs[0];
+      const first = rawConfigs.find((c) => c.is_active) ?? rawConfigs[0];
       setActiveConfigIdState(first.id);
     }
-  }, [configs.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [rawConfigs.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setActiveConfigId = useCallback((id: string) => {
     setActiveConfigIdState(id);
     try { localStorage.setItem("odoo_active_config_id", id); } catch { /* ignore */ }
   }, []);
 
+  const configs = enrichConfigs(rawConfigs, credentials);
   const activeConfig = configs.find((c) => c.id === activeConfigId) ?? null;
   const isDemoMode = activeConfigId === "demo";
   const isConfigured = isDemoMode || activeConfig !== null;
 
-  // Legacy compat shape (no apiKey — it lives only in the backend now)
   const config = activeConfig
-    ? { url: activeConfig.url, db: activeConfig.db_name, login: activeConfig.username, apiKey: "" }
+    ? { url: activeConfig.url, db: activeConfig.db_name, login: activeConfig.odoo_username ?? "", apiKey: "" }
     : null;
 
   return (

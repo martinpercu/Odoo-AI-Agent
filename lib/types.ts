@@ -84,6 +84,11 @@ export interface ExcelExportMetadata {
   filename: string;
 }
 
+export interface NoCredentialsMetadata {
+  type: "no_credentials";
+  config_id: string;
+}
+
 export type MessageMetadata =
   | ActionSuccessMetadata
   | ValidationErrorMetadata
@@ -91,7 +96,8 @@ export type MessageMetadata =
   | ActionProposalMetadata
   | SelectionPromptMetadata
   | FileAttachmentMetadata
-  | ExcelExportMetadata;
+  | ExcelExportMetadata
+  | NoCredentialsMetadata;
 
 export interface Message {
   id: string;
@@ -232,7 +238,7 @@ export interface NotificationSettings {
 
 // ---- Multi-Tenancy & Auth ----
 
-export type UserRole = "ADMIN" | "IMPLEMENTER" | "CLIENT_USER";
+export type UserRole = "ADMIN" | "CLIENT_USER" | "SUPERADMIN";
 export type OrgType = "PARTNER" | "SOLITARY";
 export type SubscriptionTier = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
 
@@ -268,8 +274,27 @@ export interface OdooConfigSummary {
   label: string;
   url: string;
   db_name: string;
-  username: string;
   is_active: boolean;
+}
+
+export interface UserOdooCredential {
+  id: string;
+  user_id: string;
+  odoo_config_id: string;
+  odoo_username: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Returned by GET /me/odoo-credentials — one entry per config that has credentials */
+export interface OdooCredentialSummary {
+  config_id: string;
+  odoo_username: string;
+}
+
+export interface OdooConfigSummaryWithCreds extends OdooConfigSummary {
+  hasCredentials: boolean;
+  odoo_username?: string;
 }
 
 export interface MeResponse {
