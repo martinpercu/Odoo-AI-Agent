@@ -108,56 +108,62 @@
   },
   "Pricing": {
     "heading": "Planes y Precios",
-    "subheading": "Elige el plan que mejor se adapte a tu negocio. Escala cuando lo necesites.",
+    "subheading": "Elegí el plan que mejor se adapte a tu negocio. Escalá cuando lo necesites.",
     "mostPopular": "Más Popular",
+    "currentPlan": "Plan actual",
     "perMonth": "/mes",
     "free": "Gratis",
-    "custom": "A medida",
+    "loading": "Cargando...",
+    "subscribe": "Suscribirse",
+    "manageSubscription": "Gestionar suscripción",
+    "viewRates": "Ver tarifas",
     "footer": "Todos los planes incluyen cifrado de datos y conexión segura con tu Odoo.",
-    "needSpecial": "¿Necesitas algo especial?",
+    "needSpecial": "¿Necesitás algo especial?",
     "contactUs": "Contáctanos",
     "plans": {
       "free": {
-        "name": "Free",
+        "name": "Gratis",
         "description": "Para explorar las capacidades del agente de IA con Odoo.",
-        "cta": "Comenzar Gratis",
+        "cta": "Empezar gratis",
         "features": {
-          "agents": "1 Agente de IA",
-          "queries": "50 consultas por mes",
-          "instances": "1 instancia de Odoo",
-          "history": "Historial de 7 días",
-          "support": "Soporte comunitario"
+          "seat": "1 asiento",
+          "dailyLimit": "Límite de chats diarios",
+          "watermark": "Marca de agua en respuestas",
+          "forever": "Gratis para siempre"
         }
       },
-      "pro": {
-        "name": "Pro",
-        "description": "Para profesionales que necesitan acceso completo a su Odoo.",
-        "cta": "Elegir Pro",
+      "starter": {
+        "name": "Starter",
+        "description": "Para usuarios individuales que quieren acceso completo sin restricciones.",
+        "cta": "Suscribirse",
         "features": {
-          "agents": "Agentes ilimitados",
-          "queries": "Consultas ilimitadas",
-          "instances": "1 instancia de Odoo",
-          "history": "Historial completo",
-          "support": "Soporte por email prioritario",
-          "export": "Exportación de reportes",
-          "markdown": "Respuestas con Markdown avanzado"
+          "seat": "1 asiento completo",
+          "noLimit": "Sin límite de chats",
+          "noWatermark": "Sin marca de agua"
         }
       },
       "enterprise": {
         "name": "Enterprise",
-        "description": "Para empresas con múltiples instancias y necesidades avanzadas.",
-        "cta": "Contactar Ventas",
+        "fromPrice": "Desde $8",
+        "description": "Para implementadores Odoo que gestionan múltiples clientes.",
         "features": {
-          "includesPro": "Todo lo de Pro",
-          "instances": "Múltiples instancias de Odoo",
-          "agents": "Agentes personalizados",
-          "api": "API dedicada",
-          "sso": "SSO / SAML",
-          "support": "Soporte prioritario 24/7",
-          "sla": "SLA garantizado",
-          "onboarding": "Onboarding dedicado"
+          "seatsFrom": "Desde 10 asientos (5 gratis + 5 pagos)",
+          "seatsTo": "Hasta 105 asientos (5 gratis + 100 pagos)",
+          "freeSeats": "Asientos gratuitos con marca de agua incluidos",
+          "idealFor": "Ideal para implementadores Odoo"
         }
       }
+    },
+    "implementor": {
+      "modalTitle": "Planes para implementadores",
+      "modalDesc": "Elegí la cantidad de asientos que necesitás para tu equipo y clientes.",
+      "close": "Cerrar",
+      "starterUpsell": "¿Necesitás dar acceso a tu equipo o clientes? Pasate a un plan implementador.",
+      "plan": "Plan",
+      "paidSlots": "Asientos pagos",
+      "freeSlots": "Asientos gratuitos",
+      "price": "Precio",
+      "freeSlotNote": "Los asientos gratuitos siempre muestran marca de agua y tienen límite de uso. Los asientos pagos tienen acceso completo sin restricciones."
     }
   },
   "Settings": {

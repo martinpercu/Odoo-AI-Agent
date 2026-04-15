@@ -240,7 +240,14 @@ export interface NotificationSettings {
 
 export type UserRole = "ADMIN" | "CLIENT_USER" | "SUPERADMIN";
 export type OrgType = "PARTNER" | "SOLITARY";
-export type SubscriptionTier = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
+export type SubscriptionTier =
+  | "FREE"
+  | "STARTER"
+  | "IMPLEMENTOR_S"
+  | "IMPLEMENTOR_M"
+  | "IMPLEMENTOR_L"
+  | "IMPLEMENTOR_XL"
+  | "IMPLEMENTOR_XXL";
 
 export interface MeUser {
   id: string;

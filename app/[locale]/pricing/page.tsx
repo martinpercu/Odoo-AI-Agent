@@ -4,9 +4,12 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { PricingCards } from "@/components/pricing/pricing-cards";
+import { useSession } from "@/hooks/use-session";
 
 export default function PricingPage() {
   const t = useTranslations("Pricing");
+  const { meData } = useSession();
+  const currentTier = meData?.subscription?.tier ?? null;
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -28,7 +31,7 @@ export default function PricingPage() {
           </p>
         </motion.div>
 
-        <PricingCards />
+        <PricingCards currentTier={currentTier} />
 
         <motion.div
           initial={{ opacity: 0 }}
