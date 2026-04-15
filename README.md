@@ -53,6 +53,7 @@ A modern, responsive interface that allows users to query and manage data from t
 
 **Authentication & Multi-Tenancy:**
 - Supabase email/password authentication (DEV MODE bypass when unset)
+- Demo mode: unauthenticated access when backend sets `demo_available` (banner in chat + "Try Demo" button on login)
 - Organization management (name, slug, type)
 - Role-based access control (Admin, Implementer, Client User)
 - Subscription tiers (Free, Starter, Pro, Enterprise) with slot limits
@@ -142,7 +143,7 @@ components/
     notification-card.tsx       # Individual alert card with time-ago
     notification-settings-modal.tsx # Toggle alerts by category
   odoo/
-    connection-form.tsx         # Odoo credentials form
+    connection-form.tsx         # Odoo credentials form (saves via POST /admin/orgs/{id}/configs, not localStorage)
     instance-inspector.tsx      # View installed Odoo modules
   pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
   ui/
@@ -150,9 +151,9 @@ components/
     limit-reached-modal.tsx     # 402 payment limit upgrade modal
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub)
-  use-session.tsx               # /me endpoint context (user/org/subscription bootstrap)
+  use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
   use-chat.ts                   # Chat state + SSE + image upload + action execution
-  use-odoo-config.tsx           # Odoo config context (localStorage)
+  use-odoo-config.tsx           # Odoo config context (configs from backend; activeConfigId persisted in localStorage; isDemoMode flag)
   use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear)
   use-notifications.tsx         # Notification context (polling/read/dismiss/settings)
   use-limit-reached-modal.tsx   # 402 limit modal context (listens to auth:limit_reached event)
@@ -304,6 +305,8 @@ App loads → AuthProvider restores Supabase session
 | **Org Types** | `PARTNER`, `SOLITARY` | Multi-client vs single company |
 | **Subscriptions** | `FREE`, `STARTER`, `PRO`, `ENTERPRISE` | Tier with slot limits |
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
+| **Odoo Configs** | `OdooConfigSummary[]` | Multiple Odoo connections per org; active one selected via `activeConfigId` |
+| **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
 
 **Settings page** (`/settings`) provides admin controls for:
 - Organization name/slug/type editing
@@ -337,12 +340,12 @@ App loads → AuthProvider restores Supabase session
 | `GET` | `/me` | Current user + org + subscription |
 | `POST` | `/me/onboarding` | Setup org + Odoo connection (409 on slug conflict) |
 | `GET` | `/me/conversations` | Chat history (paginated with limit/offset) |
-| `POST` | `/chat/{id}/stream` | Send message + receive SSE response with metadata |
-| `POST` | `/chat/{id}/upload` | Upload image (multipart) + receive JSON with action proposal |
-| `POST` | `/chat/{id}/action` | Execute confirmable action (create/update/method_call/report) |
-| `GET` | `/chat/{id}/history` | Load full message history for a conversation |
+| `POST` | `/chat/{id}/stream` | Send message + receive SSE response with metadata (body: `{ message, config_id, language }`) |
+| `POST` | `/chat/{id}/upload` | Upload image (multipart) + receive JSON with action proposal (field: `config_id`) |
+| `POST` | `/chat/{id}/action` | Execute confirmable action (body: `{ config_id, action, context, language }`) |
+| `GET` | `/chat/{id}/history` | Load full message history for a conversation (query param: `config_id`) |
 | `GET` | `/chat/{id}/audit` | Action execution history (audit trail) |
-| `POST` | `/chat/{id}/search` | Odoo entity name_search (autocomplete) |
+| `POST` | `/chat/{id}/search` | Odoo entity name_search (body: `{ model, query, config_id }`) |
 | `GET` | `/chat/{id}/pins` | Fetch all pinned insights for a chat |
 | `POST` | `/chat/{id}/pin` | Create a new pin (chart, file, or excel) |
 | `DELETE` | `/chat/{id}/pin/{pinId}` | Delete a specific pin |

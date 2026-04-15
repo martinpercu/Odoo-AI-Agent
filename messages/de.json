@@ -10,7 +10,9 @@
     "settings": "Einstellungen",
     "lightMode": "Heller Modus",
     "darkMode": "Dunkler Modus",
-    "alerts": "Warnungen"
+    "alerts": "Warnungen",
+    "logout": "Abmelden",
+    "loadMore": "Mehr laden"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -229,6 +231,9 @@
     "registerLink": "Registrieren",
     "hasAccount": "Bereits ein Konto?",
     "loginLink": "Anmelden",
+    "tryDemo": "Ohne Registrierung ausprobieren",
+    "demoBanner": "Demo-Modus — Sie chatten mit fiktiven Daten eines Beispiel-Unternehmens.",
+    "demoSignUp": "Registrieren Sie sich, um Ihr Odoo zu verbinden",
     "devMode": "Entwicklungsmodus",
     "devModeDesc": "Supabase ist nicht konfiguriert. Authentifizierung ist deaktiviert.",
     "devModeContinue": "Ohne Login fortfahren"

@@ -72,6 +72,16 @@ export async function authFetch(
   return res;
 }
 
+/** Normalizes FastAPI `detail` which can be a string or a 422 array of validation objects. */
+function extractError(detail: unknown, fallback: string): string {
+  if (!detail) return fallback;
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    return detail.map((e) => (typeof e === "object" && e !== null && "msg" in e ? String((e as Record<string, unknown>).msg) : String(e))).join(", ");
+  }
+  return fallback;
+}
+
 /** Maps frontend OdooConfig fields to the backend's expected format. */
 export function toBackendConfig(config: OdooConfig) {
   return {
@@ -152,7 +162,7 @@ export async function createOrg(
     });
     const data = await res.json();
     if (res.ok) return { success: true, org: data };
-    return { success: false, error: data.detail || "Failed to create org" };
+    return { success: false, error: extractError(data.detail, "Failed to create org") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -192,7 +202,7 @@ export async function submitOnboarding(
         slugConflict: typeof data.detail === "string" && data.detail.toLowerCase().includes("slug"),
       };
     }
-    return { success: false, error: data.detail || "Failed to complete onboarding" };
+    return { success: false, error: extractError(data.detail, "Failed to complete onboarding") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -256,7 +266,7 @@ export async function createOdooConfig(
     });
     const data = await res.json();
     if (res.ok) return { success: true, config: data };
-    return { success: false, error: data.detail || "Failed to create config" };
+    return { success: false, error: extractError(data.detail, "Failed to create config") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -279,7 +289,7 @@ export async function updateOdooConfig(
     );
     const data = await res.json();
     if (res.ok) return { success: true, config: data };
-    return { success: false, error: data.detail || "Failed to update config" };
+    return { success: false, error: extractError(data.detail, "Failed to update config") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -345,7 +355,7 @@ export async function updateOrgUser(
     );
     if (res.ok) return { success: true };
     const data = await res.json();
-    return { success: false, error: data.detail || "Failed to update user" };
+    return { success: false, error: extractError(data.detail, "Failed to update user") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -400,7 +410,7 @@ export async function createInvitation(
     );
     const data = await res.json();
     if (res.ok) return { success: true, invitation: data };
-    return { success: false, error: data.detail || "Failed to create invitation" };
+    return { success: false, error: extractError(data.detail, "Failed to create invitation") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -467,7 +477,7 @@ export async function testOdooConnection(
     const res = await authFetch(`${API_BASE}/test-connection`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ odoo_config: toBackendConfig(config) }),
+      body: JSON.stringify(toBackendConfig(config)),
     });
 
     const data = await res.json();
@@ -512,7 +522,7 @@ export async function inspectInstance(
     const res = await authFetch(`${API_BASE}/inspect-instance`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ odoo_config: toBackendConfig(config) }),
+      body: JSON.stringify(toBackendConfig(config)),
     });
 
     const data = await res.json();
@@ -543,7 +553,7 @@ export interface ExecuteActionResult {
 export async function executeAction(
   chatId: string,
   actionContext: ActionContext,
-  odooConfig: OdooConfig,
+  configId: string,
   locale: string
 ): Promise<ExecuteActionResult> {
   try {
@@ -551,7 +561,7 @@ export async function executeAction(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        odoo_config: toBackendConfig(odooConfig),
+        config_id: configId,
         action: "confirm_action",
         context: actionContext,
         language: locale,
@@ -677,13 +687,13 @@ export interface UploadImageResult {
 export async function uploadImage(
   chatId: string,
   file: File,
-  odooConfig: OdooConfig,
+  configId: string,
   locale: string
 ): Promise<UploadImageResult> {
   try {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("odoo_config", JSON.stringify(toBackendConfig(odooConfig)));
+    formData.append("config_id", configId);
     formData.append("language", locale);
 
     // Use authFetch but let it build headers naturally (no Content-Type for FormData)
@@ -828,15 +838,10 @@ export interface FetchChatHistoryResult {
 
 export async function fetchChatHistory(
   chatId: string,
-  odooConfig: OdooConfig
+  configId: string
 ): Promise<FetchChatHistoryResult> {
   try {
-    const params = new URLSearchParams({
-      odoo_url: odooConfig.url,
-      odoo_db: odooConfig.db,
-      odoo_username: odooConfig.login,
-      odoo_api_key: odooConfig.apiKey,
-    });
+    const params = new URLSearchParams({ config_id: configId });
     const res = await authFetch(`${API_BASE}/chat/${chatId}/history?${params}`);
     const data = await res.json();
     if (res.ok) {
@@ -902,7 +907,7 @@ export async function searchEntities(
   chatId: string,
   model: string,
   query: string,
-  odooConfig: OdooConfig
+  configId: string
 ): Promise<SearchEntitiesResult> {
   try {
     const res = await authFetch(`${API_BASE}/chat/${chatId}/search`, {
@@ -911,7 +916,7 @@ export async function searchEntities(
       body: JSON.stringify({
         model,
         query,
-        odoo_config: toBackendConfig(odooConfig),
+        config_id: configId,
       }),
     });
     const data = await res.json();

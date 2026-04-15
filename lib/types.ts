@@ -263,11 +263,22 @@ export interface SlotsUsed {
   free: number;
 }
 
+export interface OdooConfigSummary {
+  id: string;
+  label: string;
+  url: string;
+  db_name: string;
+  username: string;
+  is_active: boolean;
+}
+
 export interface MeResponse {
   user: MeUser;
   org: MeOrg | null;
   subscription: MeSubscription | null;
   slots_used: SlotsUsed;
+  odoo_configs: OdooConfigSummary[];
+  demo_available?: boolean;
 }
 
 export interface ServerConversation {

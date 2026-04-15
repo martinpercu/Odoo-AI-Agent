@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm run build:*)",
       "Bash(grep -r \"auth\\\\|Auth\\\\|login\\\\|Login\" /Users/macbook/apps/agents/odoo/odoo-agent-front/app /Users/macbook/apps/agents/odoo/odoo-agent-front/lib /Users/macbook/apps/agents/odoo/odoo-agent-front/components --include=*.tsx --include=*.ts -l)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(mkdir -p /Users/macbook/apps/agents/odoo/odoo-agent-front/.claude/skills/design-refactor)",
+      "Bash(mv /Users/macbook/.claude/skills/design-refactor/SKILL.md /Users/macbook/apps/agents/odoo/odoo-agent-front/.claude/skills/design-refactor/)",
+      "Bash(rmdir /Users/macbook/.claude/skills/design-refactor)"
     ]
   }
 }
