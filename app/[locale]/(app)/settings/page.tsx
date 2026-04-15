@@ -18,6 +18,9 @@ import {
   KeyRound,
   Eye,
   EyeOff,
+  Flag,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
@@ -33,8 +36,9 @@ import {
   removeOrgUser,
   createInvitation,
   listInvitations,
+  fetchAdminFeedback,
 } from "@/lib/api";
-import type { OdooConfigItem, OdooConfigSummary, OrgUser, Invitation, UserRole } from "@/lib/types";
+import type { OdooConfigItem, OdooConfigSummary, OrgUser, Invitation, UserRole, FeedbackReport } from "@/lib/types";
 
 // ---- Org Section ----
 
@@ -613,6 +617,122 @@ function InvitationsSection() {
   );
 }
 
+// ---- Feedback Section (ADMIN) ----
+
+const CATEGORY_LABELS: Record<string, string> = {
+  wrong_answer: "Respuesta incorrecta",
+  crash: "Fallo del agente",
+  misunderstood: "No entendió",
+  other: "Otro",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: "Pendiente",
+  reviewed: "Revisado",
+  test_alpha: "Alpha",
+  test_beta: "Beta",
+  resolved: "Resuelto",
+};
+
+function FeedbackSection() {
+  const t = useTranslations("Settings");
+  const { meData } = useSession();
+  const orgId = meData?.org?.id;
+
+  const [reports, setReports] = useState<FeedbackReport[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!orgId) return;
+    setLoading(true);
+    fetchAdminFeedback({ limit: 50 }).then((r) => {
+      if (r.success && r.data) setReports(r.data.reports);
+      setLoading(false);
+    });
+  }, [orgId]);
+
+  return (
+    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
+      <div className="mb-4 flex items-center gap-2">
+        <Flag size={20} strokeWidth={1.5} className="text-accent" />
+        <h2 className="text-subheading">{t("feedback.title")}</h2>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center gap-2 text-body text-text-secondary">
+          <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
+          {t("feedback.loading")}
+        </div>
+      ) : reports.length === 0 ? (
+        <p className="text-body text-text-muted">{t("feedback.empty")}</p>
+      ) : (
+        <div className="space-y-2">
+          {reports.map((r) => (
+            <div key={r.id} className="rounded-md border border-border bg-raised overflow-hidden">
+              <button
+                onClick={() => setExpanded(expanded === r.id ? null : r.id)}
+                className="flex w-full items-center justify-between px-4 py-3 text-left"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-small font-medium ${
+                    r.status === "resolved" ? "bg-success-subtle text-success-solid" : "bg-accent-subtle text-accent"
+                  }`}>
+                    {STATUS_LABELS[r.status] ?? r.status}
+                  </span>
+                  {r.category && (
+                    <span className="rounded-md bg-surface px-2 py-0.5 text-small text-text-secondary border border-border">
+                      {CATEGORY_LABELS[r.category] ?? r.category}
+                    </span>
+                  )}
+                  <span className="truncate text-small text-text-secondary">
+                    {r.user_query ?? r.user_comment ?? "—"}
+                  </span>
+                </div>
+                <div className="shrink-0 ml-2 text-text-muted">
+                  {expanded === r.id ? <ChevronUp size={14} strokeWidth={1.5} /> : <ChevronDown size={14} strokeWidth={1.5} />}
+                </div>
+              </button>
+
+              {expanded === r.id && (
+                <div className="border-t border-border px-4 py-3 space-y-2">
+                  {r.user_query && (
+                    <div>
+                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.userQuery")}</p>
+                      <p className="text-small text-foreground">{r.user_query}</p>
+                    </div>
+                  )}
+                  {r.agent_response && (
+                    <div>
+                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.agentResponse")}</p>
+                      <p className="text-small text-foreground">{r.agent_response}</p>
+                    </div>
+                  )}
+                  {r.user_comment && (
+                    <div>
+                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.comment")}</p>
+                      <p className="text-small text-foreground">{r.user_comment}</p>
+                    </div>
+                  )}
+                  {r.admin_notes && (
+                    <div>
+                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.adminNotes")}</p>
+                      <p className="text-small text-foreground">{r.admin_notes}</p>
+                    </div>
+                  )}
+                  <p className="text-micro text-text-muted">
+                    {new Date(r.reported_at).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ---- Main Settings Page ----
 
 export default function SettingsPage() {
@@ -689,8 +809,15 @@ export default function SettingsPage() {
             </motion.div>
           )}
 
+          {/* Feedback reports — ADMIN only */}
+          {hasOrg && isAdmin && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.3 }}>
+              <FeedbackSection />
+            </motion.div>
+          )}
+
           {/* Security notice */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.3 }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.35 }}>
             <div className="flex items-start gap-3 rounded-md bg-raised p-4">
               <Shield size={20} strokeWidth={1.5} className="mt-0.5 shrink-0 text-accent" />
               <div className="text-body text-text-secondary">

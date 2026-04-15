@@ -21,6 +21,11 @@ import type {
   SuperAdminOrgsResponse,
   SuperAdminUsersResponse,
   SuperAdminOrgDetail,
+  FeedbackReport,
+  FeedbackListResponse,
+  FeedbackStats,
+  FeedbackCategory,
+  FeedbackStatus,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -1332,6 +1337,161 @@ export async function superadminUpdateUser(
     if (res.ok) return { success: true };
     const data = await res.json();
     return { success: false, error: extractError(data.detail, "Failed to update user") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Feedback API ----
+
+export interface SubmitFeedbackPayload {
+  config_id: string;
+  message_id?: string;
+  user_comment?: string;
+  category?: FeedbackCategory;
+}
+
+export interface SubmitFeedbackResult {
+  success: boolean;
+  id?: string;
+  error?: string;
+}
+
+export async function submitFeedback(
+  chatId: string,
+  payload: SubmitFeedbackPayload
+): Promise<SubmitFeedbackResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/chat/${chatId}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true, id: data.id };
+    return { success: false, error: data.detail || "Failed to submit feedback" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface FetchFeedbackParams {
+  status?: FeedbackStatus;
+  category?: FeedbackCategory;
+  org_id?: string;
+  include_hidden?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export interface FetchFeedbackResult {
+  success: boolean;
+  data?: FeedbackListResponse;
+  error?: string;
+}
+
+export async function fetchAdminFeedback(
+  params?: FetchFeedbackParams
+): Promise<FetchFeedbackResult> {
+  try {
+    const query = new URLSearchParams();
+    if (params?.status) query.set("status", params.status);
+    if (params?.category) query.set("category", params.category);
+    if (params?.org_id) query.set("org_id", params.org_id);
+    if (params?.include_hidden) query.set("include_hidden", "true");
+    if (params?.limit != null) query.set("limit", String(params.limit));
+    if (params?.offset != null) query.set("offset", String(params.offset));
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    const res = await authFetch(`${API_BASE}/admin/feedback${qs}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: data.detail || "Failed to fetch feedback" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface UpdateFeedbackPayload {
+  status?: FeedbackStatus;
+  admin_notes?: string;
+  is_hidden?: boolean;
+}
+
+export interface UpdateFeedbackResult {
+  success: boolean;
+  report?: FeedbackReport;
+  error?: string;
+}
+
+export async function updateFeedbackReport(
+  reportId: string,
+  payload: UpdateFeedbackPayload
+): Promise<UpdateFeedbackResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/feedback/${reportId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true, report: data.report };
+    return { success: false, error: data.detail || "Failed to update report" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function deleteFeedbackReport(reportId: string): Promise<BasicResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/feedback/${reportId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to delete report" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface FetchFeedbackStatsResult {
+  success: boolean;
+  data?: FeedbackStats;
+  error?: string;
+}
+
+export async function fetchFeedbackStats(orgId?: string): Promise<FetchFeedbackStatsResult> {
+  try {
+    const query = new URLSearchParams();
+    if (orgId) query.set("org_id", orgId);
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    const res = await authFetch(`${API_BASE}/admin/feedback/stats${qs}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: data.detail || "Failed to fetch stats" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface FetchFeedbackReportResult {
+  success: boolean;
+  report?: FeedbackReport;
+  error?: string;
+}
+
+export async function fetchFeedbackReport(reportId: string): Promise<FetchFeedbackReportResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/feedback/${reportId}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, report: data.report };
+    return { success: false, error: data.detail || "Failed to fetch report" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };

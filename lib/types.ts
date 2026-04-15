@@ -254,6 +254,7 @@ export interface MeUser {
   email: string;
   role: UserRole;
   is_free_license: boolean;
+  allow_feedback: boolean;
 }
 
 export interface MeOrg {
@@ -398,4 +399,84 @@ export interface SuperAdminUser {
 export interface SuperAdminUsersResponse {
   users: SuperAdminUser[];
   count: number;
+}
+
+// ---- Feedback ----
+
+export type FeedbackCategory = "wrong_answer" | "crash" | "misunderstood" | "other";
+export type FeedbackStatus = "pending" | "reviewed" | "test_alpha" | "test_beta" | "resolved";
+
+export interface FeedbackReport {
+  // Identity
+  id: string;
+  thread_id: string;
+  org_id: string | null;
+  supabase_user_id: string | null;
+  reported_at: string;
+  resolved_at: string | null;
+
+  // User input
+  message_id: string | null;
+  user_comment: string | null;
+  category: FeedbackCategory | null;
+
+  // Admin workflow
+  status: FeedbackStatus;
+  is_hidden: boolean;
+  admin_notes: string | null;
+
+  // Conversation snapshot
+  last_messages: Array<{ role: "human" | "ai"; content: string; id: string | null }>;
+  user_query: string | null;
+  agent_response: string | null;
+
+  // Classification snapshot
+  language: string | null;
+  primary_model: string | null;
+  classified_areas: string[] | null;
+  query_type: string | null;
+  keyword_classification_done: boolean | null;
+  needs_llm_classification: boolean | null;
+  keyword_hints: string[] | null;
+
+  // Domain snapshot
+  dynamic_domain: unknown[] | null;
+  date_filter: Record<string, unknown> | null;
+  entity_filter: Record<string, unknown> | null;
+
+  // Execution context
+  odoo_total_count: number | null;
+  odoo_was_truncated: boolean | null;
+  is_followup_query: boolean | null;
+  formatted_for_llm: string | null;
+
+  // Errors
+  odoo_error: string | null;
+  write_error: string | null;
+
+  // Write operation snapshot
+  is_write_operation: boolean | null;
+  write_vals: Record<string, unknown> | null;
+  pending_action: Record<string, unknown> | null;
+
+  // Clarification snapshot
+  needs_clarification: boolean | null;
+  clarification_question: string | null;
+
+  // Raw data
+  odoo_raw_data: unknown[] | null;
+}
+
+export interface FeedbackListResponse {
+  reports: FeedbackReport[];
+  total: number;
+}
+
+export interface FeedbackStats {
+  total: number;
+  last_24h: number;
+  last_7d: number;
+  by_status: Record<FeedbackStatus, number>;
+  by_category: Record<string, number>;
+  top_orgs: Array<{ org_id: string; count: number }>;
 }
