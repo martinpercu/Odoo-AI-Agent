@@ -56,7 +56,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Demo mode: unauthenticated access when backend sets `demo_available` (banner in chat + "Try Demo" button on login)
 - Organization management (name, slug, type)
 - Role-based access control (SuperAdmin, Admin, Client User)
-- Subscription tiers (Free, Starter, Pro, Enterprise) with slot limits
+- Subscription tiers (Free, Starter, Implementor S/M/L/XL/XXL) with slot limits
 - Team management: invite users by email, toggle free/paid slots
 - 2-step onboarding wizard (org creation + Odoo connection)
 - 402 payment limit modal (graceful degradation, no crash)
@@ -70,7 +70,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
 **Other:**
-- Plans and pricing page (Free, Pro, Enterprise)
+- Plans and pricing page (Free, Starter, Implementor) with Stripe checkout and billing portal integration; current plan highlighted; Implementor detail modal with tier comparison table
 
 ## Architecture
 
@@ -151,7 +151,7 @@ components/
   odoo/
     connection-form.tsx         # Odoo connection form (saves via POST /admin/orgs/{id}/configs, not localStorage)
     instance-inspector.tsx      # View installed Odoo modules
-  pricing/pricing-cards.tsx     # Plan cards (Free, Pro, Enterprise)
+  pricing/pricing-cards.tsx     # Plan cards (Free, Starter, Implementor); accepts currentTier prop; Stripe checkout/portal CTAs; Implementor detail modal
   ui/
     error-toast.tsx             # Toast notification provider + display
     limit-reached-modal.tsx     # 402 payment limit upgrade modal
@@ -372,7 +372,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 |---------|--------|-------------|
 | **Roles** | `SUPERADMIN`, `ADMIN`, `CLIENT_USER` | Per-user permission level |
 | **Org Types** | `PARTNER`, `SOLITARY` | Multi-client vs single company |
-| **Subscriptions** | `FREE`, `STARTER`, `PRO`, `ENTERPRISE` | Tier with slot limits |
+| **Subscriptions** | `FREE`, `STARTER`, `IMPLEMENTOR_S`, `IMPLEMENTOR_M`, `IMPLEMENTOR_L`, `IMPLEMENTOR_XL`, `IMPLEMENTOR_XXL` | Tier with slot limits |
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
 | **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
@@ -442,6 +442,8 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: get a user's credentials for a config |
 | `PUT` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: save/update a user's credentials for a config |
 | `DELETE` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: delete a user's credentials for a config |
+| `POST` | `/billing/checkout` | Create Stripe checkout session for a given tier |
+| `POST` | `/billing/portal` | Create Stripe billing portal session |
 
 ### SSE Event Types
 
