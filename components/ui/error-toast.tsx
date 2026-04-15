@@ -54,19 +54,20 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               {toasts.map((toast) => (
                 <motion.div
                   key={toast.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="pointer-events-auto flex items-center gap-2.5 rounded-lg border border-destructive/20 bg-card px-4 py-3 shadow-lg"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="pointer-events-auto flex items-center gap-2.5 rounded-md border border-error-subtle bg-surface px-4 py-3 shadow-lg"
                 >
-                  <AlertTriangle size={16} className="shrink-0 text-destructive" />
-                  <p className="text-sm text-foreground">{toast.message}</p>
+                  <AlertTriangle size={16} strokeWidth={1.5} className="shrink-0 text-error" />
+                  <p className="text-body font-technical text-foreground">{toast.message}</p>
                   <button
                     onClick={() => dismiss(toast.id)}
-                    className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
+                    className="shrink-0 rounded-md p-1 text-text-secondary transition-colors hover:text-foreground"
+                    aria-label="Dismiss"
                   >
-                    <X size={14} />
+                    <X size={14} strokeWidth={1.5} />
                   </button>
                 </motion.div>
               ))}

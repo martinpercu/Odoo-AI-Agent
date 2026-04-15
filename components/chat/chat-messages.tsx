@@ -25,20 +25,21 @@ function TypingIndicator() {
   const t = useTranslations("ChatMessages");
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       className="flex items-start gap-4"
     >
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-        <Database size={16} />
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-subtle text-accent">
+        <Database size={16} strokeWidth={1.5} />
       </div>
-      <div className="rounded-2xl rounded-tl-sm bg-muted px-4 py-3">
+      <div className="rounded-lg rounded-tl-sm bg-raised px-4 py-3">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm text-muted-foreground">{t("typingIndicator")}</span>
+          <span className="text-body text-text-secondary">{t("typingIndicator")}</span>
           <motion.span
             animate={{ opacity: [0, 1, 0] }}
             transition={{ repeat: Infinity, duration: 1.4, times: [0, 0.5, 1] }}
-            className="text-primary"
+            className="text-accent"
           >
             ...
           </motion.span>
@@ -74,25 +75,25 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
         return (
           <motion.div
             key={message.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className={`flex items-start gap-4 ${isUser ? "flex-row-reverse" : ""}`}
           >
             <div
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
                 isUser
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-primary/10 text-primary"
+                  ? "bg-accent text-white"
+                  : "bg-accent-subtle text-accent"
               }`}
             >
-              {isUser ? <User size={16} /> : <Bot size={16} />}
+              {isUser ? <User size={16} strokeWidth={1.5} /> : <Bot size={16} strokeWidth={1.5} />}
             </div>
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+              className={`max-w-[85%] rounded-lg px-4 py-3 ${
                 isUser
-                  ? "rounded-tr-sm bg-primary text-primary-foreground"
-                  : "rounded-tl-sm bg-muted"
+                  ? "rounded-tr-sm bg-accent text-white"
+                  : "rounded-tl-sm bg-raised"
               }`}
             >
               {isUser ? (
@@ -101,16 +102,16 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                     <img
                       src={message.imageUrl}
                       alt="Uploaded"
-                      className="mb-2 max-w-48 rounded-lg"
+                      className="mb-2 max-w-48 rounded-md"
                     />
                   )}
                   {message.content && (
-                    <p className="text-sm leading-relaxed">{message.content}</p>
+                    <p className="text-body leading-relaxed">{message.content}</p>
                   )}
                 </div>
               ) : (
                 <>
-                  <div className="markdown-content text-sm">
+                  <div className="markdown-content text-body">
                     <ReactMarkdown>{message.content}</ReactMarkdown>
                   </div>
                   {message.metadata && (
@@ -156,7 +157,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                   )}
                   {/* Watermark: show unless explicitly set to false (safe default = show) */}
                   {message.watermark !== false && message.content && (
-                    <p className="mt-2 text-[10px] text-muted-foreground/50 select-none">
+                    <p className="mt-2 text-micro text-text-muted select-none">
                       Powered by The Odoo Agent
                     </p>
                   )}

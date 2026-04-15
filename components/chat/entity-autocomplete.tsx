@@ -90,14 +90,15 @@ export function EntityAutocomplete({
 
   if (value) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm">
+      <div className="flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-body">
         <span className="flex-1 truncate">{value.name}</span>
         <button
           type="button"
           onClick={handleClear}
-          className="shrink-0 text-muted-foreground hover:text-foreground"
+          className="shrink-0 text-text-secondary hover:text-foreground"
+          aria-label={t("actionProposal.clearSelection")}
         >
-          <X size={14} />
+          <X size={14} strokeWidth={1.5} />
         </button>
       </div>
     );
@@ -105,8 +106,8 @@ export function EntityAutocomplete({
 
   return (
     <div ref={containerRef} className="relative">
-      <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm">
-        <Search size={14} className="shrink-0 text-muted-foreground" />
+      <div className="flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-body">
+        <Search size={14} strokeWidth={1.5} className="shrink-0 text-text-secondary" />
         <input
           type="text"
           value={query}
@@ -118,13 +119,13 @@ export function EntityAutocomplete({
             if (results.length > 0) setIsOpen(true);
           }}
           placeholder={placeholder || t("actionProposal.searching")}
-          className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
+          className="flex-1 bg-transparent outline-none placeholder:text-text-muted"
         />
-        {isSearching && <Loader2 size={14} className="shrink-0 animate-spin text-muted-foreground" />}
+        {isSearching && <Loader2 size={14} strokeWidth={1.5} className="shrink-0 animate-spin text-text-secondary" />}
       </div>
 
       {isOpen && (results.length > 0 || (query.length >= 2 && !isSearching)) && (
-        <div className="absolute top-full z-50 mt-1 w-full rounded-lg border border-border bg-card shadow-lg">
+        <div className="absolute top-full z-50 mt-1 w-full rounded-md border border-border bg-surface shadow-lg">
           {results.length > 0 ? (
             <ul className="max-h-48 overflow-y-auto py-1">
               {results.map((entity) => (
@@ -132,16 +133,16 @@ export function EntityAutocomplete({
                   <button
                     type="button"
                     onClick={() => handleSelect(entity)}
-                    className="w-full px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
+                    className="w-full px-3 py-2 text-left text-body transition-colors hover:bg-raised"
                   >
                     <span className="font-medium">{entity.name}</span>
-                    <span className="ml-2 text-xs text-muted-foreground">#{entity.id}</span>
+                    <span className="ml-2 text-small font-technical text-text-muted">#{entity.id}</span>
                   </button>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="px-3 py-2 text-sm text-muted-foreground">
+            <div className="px-3 py-2 text-body text-text-secondary">
               {t("actionProposal.noResults")}
             </div>
           )}

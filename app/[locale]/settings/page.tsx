@@ -64,36 +64,36 @@ function OrgSection() {
   if (!org) return null;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        <Building2 size={18} className="text-primary" />
-        <h2 className="text-lg font-semibold">{t("admin.orgTitle")}</h2>
+        <Building2 size={20} strokeWidth={1.5} className="text-accent" />
+        <h2 className="text-subheading">{t("admin.orgTitle")}</h2>
       </div>
 
       {!editing ? (
         <div className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{t("admin.orgName")}</span>
+          <div className="flex justify-between text-body">
+            <span className="text-text-secondary">{t("admin.orgName")}</span>
             <span className="font-medium">{org.name}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{t("admin.orgSlug")}</span>
-            <span className="font-mono text-xs">{org.slug}</span>
+          <div className="flex justify-between text-body">
+            <span className="text-text-secondary">{t("admin.orgSlug")}</span>
+            <span className="font-technical text-text-muted">{org.slug}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{t("admin.orgType")}</span>
+          <div className="flex justify-between text-body">
+            <span className="text-text-secondary">{t("admin.orgType")}</span>
             <span>{org.type}</span>
           </div>
           {subscription && (
             <>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{t("admin.tier")}</span>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              <div className="flex justify-between text-body">
+                <span className="text-text-secondary">{t("admin.tier")}</span>
+                <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
                   {subscription.tier}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{t("admin.slots")}</span>
+              <div className="flex justify-between text-body">
+                <span className="text-text-secondary">{t("admin.slots")}</span>
                 <span>
                   {t("admin.slotsValue", {
                     paid: slots?.paid ?? 0,
@@ -107,7 +107,7 @@ function OrgSection() {
           )}
           <button
             onClick={() => { setEditing(true); setName(org.name); }}
-            className="mt-2 rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+            className="mt-2 rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
           >
             {t("admin.edit")}
           </button>
@@ -115,29 +115,29 @@ function OrgSection() {
       ) : (
         <form onSubmit={handleSave} className="space-y-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium">{t("admin.orgName")}</label>
+            <label className="text-small font-medium text-text-secondary">{t("admin.orgName")}</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </div>
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-small text-error">{error}</p>}
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={saving}
-              className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm text-white hover:opacity-90 disabled:opacity-50"
+              className="flex h-9 items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
             >
-              {saving && <Loader2 size={13} className="animate-spin" />}
+              {saving && <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />}
               {t("admin.save")}
             </button>
             <button
               type="button"
               onClick={() => setEditing(false)}
-              className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+              className="rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
             >
               {t("admin.cancel")}
             </button>
@@ -178,10 +178,10 @@ function OdooConfigsSection() {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        <Plug size={18} className="text-primary" />
-        <h2 className="text-lg font-semibold">{t("admin.odooConfigsTitle")}</h2>
+        <Plug size={20} strokeWidth={1.5} className="text-accent" />
+        <h2 className="text-subheading">{t("admin.odooConfigsTitle")}</h2>
       </div>
 
       {/* Existing connection form for adding a new config */}
@@ -192,37 +192,37 @@ function OdooConfigsSection() {
       {/* List of existing configs */}
       {loading ? (
         <div className="flex justify-center py-4">
-          <Loader2 size={18} className="animate-spin text-muted-foreground" />
+          <Loader2 size={18} strokeWidth={1.5} className="animate-spin text-text-secondary" />
         </div>
       ) : configs.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("admin.noConfigs")}</p>
+        <p className="text-body text-text-secondary">{t("admin.noConfigs")}</p>
       ) : (
         <div className="space-y-2 mt-4 border-t border-border pt-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          <p className="text-micro uppercase tracking-wide text-text-secondary mb-2">
             {t("admin.savedConfigs")}
           </p>
           {configs.map((cfg) => (
             <div
               key={cfg.id}
-              className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5 text-sm"
+              className="flex items-center justify-between rounded-md border border-border px-3 py-2.5 text-body"
             >
               <div>
                 <p className="font-medium">{cfg.label}</p>
-                <p className="text-xs text-muted-foreground">{cfg.url} · {cfg.db_name}</p>
+                <p className="text-small text-text-muted font-technical">{cfg.url} · {cfg.db_name}</p>
               </div>
               {confirmDeleteId === cfg.id ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-red-500">{t("admin.confirmDelete")}</span>
+                  <span className="text-small text-error">{t("admin.confirmDelete")}</span>
                   <button
                     onClick={() => handleDelete(cfg.id)}
                     disabled={deletingId === cfg.id}
-                    className="rounded px-2 py-1 text-xs bg-red-500 text-white hover:bg-red-600"
+                    className="rounded-md px-2 py-1 text-small bg-error text-white hover:opacity-90"
                   >
-                    {deletingId === cfg.id ? <Loader2 size={12} className="animate-spin" /> : t("admin.yes")}
+                    {deletingId === cfg.id ? <Loader2 size={12} strokeWidth={1.5} className="animate-spin" /> : t("admin.yes")}
                   </button>
                   <button
                     onClick={() => setConfirmDeleteId(null)}
-                    className="rounded px-2 py-1 text-xs border border-border hover:bg-muted"
+                    className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
                   >
                     {t("admin.no")}
                   </button>
@@ -230,10 +230,11 @@ function OdooConfigsSection() {
               ) : (
                 <button
                   onClick={() => setConfirmDeleteId(cfg.id)}
-                  className="rounded p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  className="rounded-md p-1.5 text-text-secondary hover:text-error hover:bg-error-subtle transition-colors"
                   title={t("admin.delete")}
+                  aria-label={t("admin.delete")}
                 >
-                  <Trash2 size={15} />
+                  <Trash2 size={16} strokeWidth={1.5} />
                 </button>
               )}
             </div>
@@ -286,28 +287,28 @@ function UsersSection() {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        <Users size={18} className="text-primary" />
-        <h2 className="text-lg font-semibold">{t("admin.usersTitle")}</h2>
+        <Users size={20} strokeWidth={1.5} className="text-accent" />
+        <h2 className="text-subheading">{t("admin.usersTitle")}</h2>
       </div>
 
       {loading ? (
         <div className="flex justify-center py-4">
-          <Loader2 size={18} className="animate-spin text-muted-foreground" />
+          <Loader2 size={18} strokeWidth={1.5} className="animate-spin text-text-secondary" />
         </div>
       ) : users.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("admin.noUsers")}</p>
+        <p className="text-body text-text-secondary">{t("admin.noUsers")}</p>
       ) : (
         <div className="space-y-3">
           {users.map((user) => (
             <div
               key={user.id}
-              className="flex flex-col gap-2 rounded-lg border border-border p-3 text-sm sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-2 rounded-md border border-border p-3 text-body sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <p className="font-medium">{user.email}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-small text-text-muted">
                   {t("admin.joined")}: {new Date(user.joined_at).toLocaleDateString()}
                 </p>
               </div>
@@ -317,7 +318,7 @@ function UsersSection() {
                   value={user.role}
                   onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
                   disabled={user.id === myUserId}
-                  className="rounded border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-md border border-border bg-surface px-2 py-1 text-small font-technical focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {ROLE_OPTIONS.map((r) => (
                     <option key={r} value={r}>{r}</option>
@@ -327,10 +328,10 @@ function UsersSection() {
                 {/* Free/Paid toggle */}
                 <button
                   onClick={() => handleFreeToggle(user.id, !user.is_free_license)}
-                  className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
                     user.is_free_license
-                      ? "bg-muted text-muted-foreground"
-                      : "bg-primary/10 text-primary"
+                      ? "bg-raised text-text-secondary"
+                      : "bg-accent-subtle text-accent"
                   }`}
                   title={t("admin.toggleFree")}
                 >
@@ -340,16 +341,16 @@ function UsersSection() {
                 {/* Remove — hidden for own account */}
                 {user.id !== myUserId && confirmRemoveId === user.id ? (
                   <div className="flex items-center gap-1.5">
-                    <AlertTriangle size={13} className="text-red-500" />
+                    <AlertTriangle size={14} strokeWidth={1.5} className="text-error" />
                     <button
                       onClick={() => handleRemove(user.id)}
-                      className="rounded px-2 py-1 text-xs bg-red-500 text-white"
+                      className="rounded-md px-2 py-1 text-small bg-error text-white hover:opacity-90"
                     >
                       {t("admin.yes")}
                     </button>
                     <button
                       onClick={() => setConfirmRemoveId(null)}
-                      className="rounded px-2 py-1 text-xs border border-border"
+                      className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
                     >
                       {t("admin.no")}
                     </button>
@@ -357,9 +358,10 @@ function UsersSection() {
                 ) : user.id !== myUserId ? (
                   <button
                     onClick={() => setConfirmRemoveId(user.id)}
-                    className="rounded p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    className="rounded-md p-1.5 text-text-secondary hover:text-error hover:bg-error-subtle transition-colors"
+                    aria-label={t("admin.removeUser")}
                   >
-                    <UserCog size={14} />
+                    <UserCog size={16} strokeWidth={1.5} />
                   </button>
                 ) : null}
               </div>
@@ -422,10 +424,10 @@ function InvitationsSection() {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        <Mail size={18} className="text-primary" />
-        <h2 className="text-lg font-semibold">{t("admin.invitationsTitle")}</h2>
+        <Mail size={20} strokeWidth={1.5} className="text-accent" />
+        <h2 className="text-subheading">{t("admin.invitationsTitle")}</h2>
       </div>
 
       {/* Invite form */}
@@ -437,12 +439,12 @@ function InvitationsSection() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t("admin.inviteEmail")}
-            className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as UserRole)}
-            className="rounded-lg border border-border bg-background px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            className="rounded-md border border-border bg-surface px-2 py-2 text-body font-technical focus:outline-none focus:ring-1 focus:ring-accent/30"
           >
             {(["ADMIN", "IMPLEMENTER", "CLIENT_USER"] as UserRole[]).map((r) => (
               <option key={r} value={r}>{r}</option>
@@ -451,23 +453,24 @@ function InvitationsSection() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm text-white hover:opacity-90 disabled:opacity-50"
+            className="flex h-9 items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
           >
-            {submitting ? <Loader2 size={14} className="animate-spin" /> : t("admin.invite")}
+            {submitting ? <Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> : t("admin.invite")}
           </button>
         </div>
-        {inviteError && <p className="text-sm text-red-500">{inviteError}</p>}
+        {inviteError && <p className="text-small text-error">{inviteError}</p>}
 
         {/* Generated link */}
         {inviteLink && (
-          <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2">
-            <p className="flex-1 truncate text-xs font-mono text-muted-foreground">{inviteLink}</p>
+          <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
+            <p className="flex-1 truncate text-small font-technical text-text-muted">{inviteLink}</p>
             <button
               type="button"
               onClick={handleCopy}
-              className="shrink-0 rounded p-1 hover:bg-border transition-colors"
+              className="shrink-0 rounded-md p-1 hover:bg-border transition-colors"
+              aria-label={copied ? t("admin.copied") : t("admin.copy")}
             >
-              {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+              {copied ? <Check size={14} strokeWidth={1.5} className="text-success-solid" /> : <Copy size={14} strokeWidth={1.5} />}
             </button>
           </div>
         )}
@@ -476,13 +479,13 @@ function InvitationsSection() {
       {/* Pending invitations list */}
       {loadingList ? (
         <div className="flex justify-center py-2">
-          <Loader2 size={16} className="animate-spin text-muted-foreground" />
+          <Loader2 size={16} strokeWidth={1.5} className="animate-spin text-text-secondary" />
         </div>
       ) : invitations.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("admin.noInvitations")}</p>
+        <p className="text-body text-text-secondary">{t("admin.noInvitations")}</p>
       ) : (
         <div className="space-y-2 border-t border-border pt-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          <p className="text-micro uppercase tracking-wide text-text-secondary mb-2">
             {t("admin.pendingInvitations")}
           </p>
           {invitations.map((inv) => {
@@ -490,19 +493,19 @@ function InvitationsSection() {
             return (
               <div
                 key={inv.id}
-                className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm"
+                className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-body"
               >
                 <div>
                   <p className="font-medium">{inv.email}</p>
-                  <p className="text-xs text-muted-foreground">{inv.role}</p>
+                  <p className="text-small text-text-muted font-technical">{inv.role}</p>
                 </div>
                 <div className="text-right">
                   {inv.accepted_at ? (
-                    <span className="text-xs text-green-600">{t("admin.accepted")}</span>
+                    <span className="text-small text-success-solid">{t("admin.accepted")}</span>
                   ) : expired ? (
-                    <span className="text-xs text-red-500">{t("admin.expired")}</span>
+                    <span className="text-small text-error">{t("admin.expired")}</span>
                   ) : (
-                    <span className="text-xs text-muted-foreground">{t("admin.pending")}</span>
+                    <span className="text-small text-text-muted">{t("admin.pending")}</span>
                   )}
                 </div>
               </div>
@@ -529,68 +532,69 @@ export default function SettingsPage() {
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
           className="mb-10"
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
-            <Settings size={24} className="text-primary" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-subtle">
+            <Settings size={24} strokeWidth={1.5} className="text-accent" />
           </div>
-          <h1 className="mb-2 text-3xl font-extrabold tracking-tight">
+          <h1 className="mb-2 text-display">
             {t("heading")}
           </h1>
-          <p className="text-muted-foreground">{t("subheading")}</p>
+          <p className="text-text-secondary">{t("subheading")}</p>
         </motion.div>
 
         <div className="flex flex-col gap-6">
           {/* Org info — ADMIN | IMPLEMENTER */}
           {hasOrg && isAdminOrImplementer && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.05 }}>
               <OrgSection />
             </motion.div>
           )}
 
           {/* Odoo Connections — ADMIN | IMPLEMENTER */}
           {isAdminOrImplementer ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.1 }}>
               <OdooConfigsSection />
             </motion.div>
           ) : (
             /* Standard connection form for non-admin users */
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.1 }}>
+              <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
                 <ConnectionForm />
               </div>
             </motion.div>
           )}
 
           {/* Instance Inspector */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-semibold">{t("inspector.heading")}</h2>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.15 }}>
+            <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
+              <h2 className="mb-4 text-subheading">{t("inspector.heading")}</h2>
               <InstanceInspector />
             </div>
           </motion.div>
 
           {/* Users — ADMIN only */}
           {hasOrg && isAdmin && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.2 }}>
               <UsersSection />
             </motion.div>
           )}
 
           {/* Invitations — ADMIN | IMPLEMENTER */}
           {hasOrg && isAdminOrImplementer && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.25 }}>
               <InvitationsSection />
             </motion.div>
           )}
 
           {/* Security notice */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
-            <div className="flex items-start gap-3 rounded-xl bg-muted p-4">
-              <Shield size={20} className="mt-0.5 shrink-0 text-primary" />
-              <div className="text-sm text-muted-foreground">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.3 }}>
+            <div className="flex items-start gap-3 rounded-md bg-raised p-4">
+              <Shield size={20} strokeWidth={1.5} className="mt-0.5 shrink-0 text-accent" />
+              <div className="text-body text-text-secondary">
                 <p className="mb-1 font-medium text-foreground">{t("security.title")}</p>
                 <p>{t("security.description")}</p>
               </div>

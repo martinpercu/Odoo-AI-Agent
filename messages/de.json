@@ -1,18 +1,20 @@
 {
   "Metadata": {
     "title": "Odoo Agent - KI-Agenten-Plattform für Odoo",
-    "description": "Abfragen und Verwaltung Ihrer Odoo-Daten mit künstlicher Intelligenz. Inventar, Rechnungen, Verkäufe und mehr."
+    "description": "Abfragen und Verwalten Ihrer Odoo-Daten mit künstlicher Intelligenz. Inventar, Rechnungsstellung, Verkauf und mehr."
   },
   "Sidebar": {
     "appName": "Odoo Agent",
     "newChat": "Neue Abfrage",
-    "plans": "Pläne",
+    "plans": "Tarife",
     "settings": "Einstellungen",
     "lightMode": "Heller Modus",
     "darkMode": "Dunkler Modus",
-    "alerts": "Warnungen",
+    "alerts": "Benachrichtigungen",
     "logout": "Abmelden",
-    "loadMore": "Mehr laden"
+    "loadMore": "Mehr laden",
+    "collapse": "Seitenleiste einklappen",
+    "expand": "Seitenleiste ausklappen"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -22,12 +24,12 @@
   },
   "NewChat": {
     "heading": "Wie kann ich Ihnen helfen?",
-    "subheading": "Inventar, Rechnungen, Verkäufe, Personal und mehr direkt aus Ihrem Odoo abfragen.",
+    "subheading": "Fragen Sie Inventar, Rechnungen, Verkäufe, HR und mehr direkt aus Ihrem Odoo ab.",
     "connectedMessage": "Sicher mit Ihrer Odoo-Instanz verbunden",
-    "notConnected": "Odoo nicht konfiguriert. Gehen Sie zu Einstellungen, um die Verbindung herzustellen.",
+    "notConnected": "Odoo nicht konfiguriert. Gehen Sie zu den Einstellungen.",
     "suggestions": {
       "inventory": "Aktuellen Produktbestand anzeigen",
-      "invoices": "Offene Rechnungen anzeigen",
+      "invoices": "Ausstehende Rechnungen anzeigen",
       "sales": "Monatlichen Verkaufsbericht erstellen",
       "employees": "Mitarbeiter nach Abteilung auflisten"
     }
@@ -36,11 +38,13 @@
     "placeholder": "Fragen Sie nach Ihren Odoo-Daten...",
     "disclaimer": "Der Agent fragt Ihre Odoo-Instanz in Echtzeit ab. Ihre Daten sind privat und sicher.",
     "attachImage": "Bild anhängen",
-    "removeImage": "Bild entfernen"
+    "removeImage": "Bild entfernen",
+    "send": "Senden",
+    "stop": "Stopp"
   },
   "ChatMessages": {
-    "typingIndicator": "Odoo wird abgefragt",
-    "configNotSet": "Odoo-Verbindung nicht konfiguriert. Gehen Sie zu Einstellungen, um Ihre Verbindung einzurichten.",
+    "typingIndicator": "Frage Odoo ab",
+    "configNotSet": "Odoo-Verbindung nicht konfiguriert. Bitte in den Einstellungen einrichten.",
     "processing": "Verarbeitung in Odoo...",
     "completed": "Abgeschlossen",
     "success": {
@@ -57,29 +61,29 @@
     },
     "fileCard": {
       "downloadPdf": "PDF herunterladen",
-      "fileExpired": "Datei nicht mehr verfügbar. Erstellen Sie den Bericht erneut."
+      "fileExpired": "Datei nicht mehr verfügbar. Bericht erneut erstellen."
     },
     "sequence": {
       "autoSending": "Nächster Schritt wird verarbeitet..."
     },
     "chart": {
       "globalTotal": "Gesamtsumme",
-      "noData": "Keine Daten verfügbar",
+      "noData": "Keine Daten zum Anzeigen",
       "groupedBy": "Gruppiert nach",
       "downloadExcel": "Excel herunterladen",
-      "exportReady": "Ihre Excel-Datei ist bereit"
+      "exportReady": "Ihre Excel-Datei ist fertig"
     },
     "actionProposal": {
       "editField": "Bearbeiten",
-      "noResults": "Keine Ergebnisse",
-      "searching": "Suchen...",
+      "noResults": "Keine Ergebnisse gefunden",
+      "searching": "Suche...",
       "fieldEdited": "Geändert",
-      "originalValue": "Ursprünglicher Vorschlag",
-      "validationError": "Bitte korrigieren Sie die markierten Felder und versuchen Sie es erneut."
+      "originalValue": "Originalvorschlag",
+      "validationError": "Bitte korrigieren Sie die markierten Felder."
     },
     "audit": {
       "title": "Aktionsverlauf",
-      "subtitle": "In dieser Konversation ausgeführte Aktionen",
+      "subtitle": "Ausgeführte Aktionen in diesem Chat",
       "empty": "Noch keine Aktionen ausgeführt",
       "userEdited": "Bearbeitete Felder"
     }
@@ -89,7 +93,7 @@
   },
   "WelcomeDashboard": {
     "heading": "Was möchten Sie tun?",
-    "comingSoon": "Demnächst verfügbar",
+    "comingSoon": "Demnächst",
     "suggestions": {
       "sales": "Verkäufe nach Zeitraum analysieren",
       "invoice": "Rechnungsbild hochladen",
@@ -98,19 +102,19 @@
     }
   },
   "Pricing": {
-    "heading": "Pläne und Preise",
-    "subheading": "Wählen Sie den Plan, der am besten zu Ihrem Unternehmen passt. Skalieren Sie, wenn Sie es brauchen.",
-    "mostPopular": "Beliebteste",
+    "heading": "Tarife & Preise",
+    "subheading": "Wählen Sie den passenden Tarif für Ihr Unternehmen.",
+    "mostPopular": "Beliebtestes",
     "perMonth": "/Monat",
     "free": "Kostenlos",
     "custom": "Individuell",
-    "footer": "Alle Pläne beinhalten Datenverschlüsselung und sichere Verbindung zu Ihrem Odoo.",
-    "needSpecial": "Brauchen Sie etwas Besonderes?",
+    "footer": "Alle Tarife beinhalten Datenverschlüsselung.",
+    "needSpecial": "Benötigen Sie etwas Spezielles?",
     "contactUs": "Kontaktieren Sie uns",
     "plans": {
       "free": {
-        "name": "Free",
-        "description": "Um die Fähigkeiten des KI-Agenten mit Odoo zu erkunden.",
+        "name": "Kostenlos",
+        "description": "Erkunden Sie die Funktionen des KI-Agenten.",
         "cta": "Kostenlos starten",
         "features": {
           "agents": "1 KI-Agent",
@@ -122,7 +126,7 @@
       },
       "pro": {
         "name": "Pro",
-        "description": "Für Profis, die vollen Zugriff auf ihr Odoo benötigen.",
+        "description": "Für Profis mit vollem Zugriff auf Odoo.",
         "cta": "Pro wählen",
         "features": {
           "agents": "Unbegrenzte Agenten",
@@ -136,16 +140,16 @@
       },
       "enterprise": {
         "name": "Enterprise",
-        "description": "Für Unternehmen mit mehreren Instanzen und erweiterten Anforderungen.",
+        "description": "Für Unternehmen mit mehreren Instanzen.",
         "cta": "Vertrieb kontaktieren",
         "features": {
-          "includesPro": "Alles aus Pro",
+          "includesPro": "Alles in Pro",
           "instances": "Mehrere Odoo-Instanzen",
-          "agents": "Benutzerdefinierte Agenten",
+          "agents": "Eigene Agenten",
           "api": "Dedizierte API",
           "sso": "SSO / SAML",
-          "support": "24/7 Prioritäts-Support",
-          "sla": "Garantiertes SLA",
+          "support": "24/7 Support",
+          "sla": "Garantierte SLA",
           "onboarding": "Dediziertes Onboarding"
         }
       }
@@ -153,42 +157,77 @@
   },
   "Settings": {
     "heading": "Odoo-Einstellungen",
-    "subheading": "Verbinden Sie Ihre Odoo-Instanz, damit der Agent auf Ihre Daten zugreifen kann.",
+    "subheading": "Verbinden Sie Ihre Odoo-Instanz.",
     "security": {
       "title": "Sicherheit",
-      "description": "Ihr API-Schlüssel wird sicher und verschlüsselt gespeichert. Er wird nur verwendet, um autorisierte Abfragen an Ihre Odoo-Instanz durchzuführen. Wir teilen Ihre Anmeldedaten niemals mit Dritten."
+      "description": "Ihr API-Schlüssel wird sicher gespeichert. Wir teilen Ihre Daten niemals mit Dritten."
     },
     "inspector": {
       "heading": "Instanz-Inspektor",
-      "buttonLabel": "Instanz inspizieren",
+      "buttonLabel": "Instanz prüfen",
       "modulesFound": "{count} Module gefunden",
-      "errorGeneric": "Fehler beim Inspizieren der Instanz",
-      "networkError": "Verbindung zum Backend-Server konnte nicht hergestellt werden."
+      "errorGeneric": "Prüfung fehlgeschlagen",
+      "networkError": "Verbindung zum Server fehlgeschlagen."
+    },
+    "admin": {
+      "orgTitle": "Meine Organisation",
+      "orgName": "Name",
+      "orgSlug": "Slug",
+      "orgType": "Typ",
+      "tier": "Tarif",
+      "slots": "Genutzte Slots",
+      "slotsValue": "{paid} bezahlt / {paidLimit} · {free} frei / {freeLimit}",
+      "edit": "Bearbeiten",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "saveError": "Speichern fehlgeschlagen.",
+      "odooConfigsTitle": "Odoo-Verbindungen",
+      "noConfigs": "Noch keine Verbindungen gespeichert.",
+      "savedConfigs": "Gespeicherte Verbindungen",
+      "delete": "Löschen",
+      "confirmDelete": "Verbindung löschen?",
+      "yes": "Ja",
+      "no": "Nein",
+      "usersTitle": "Benutzer",
+      "noUsers": "Keine Benutzer in dieser Organisation.",
+      "joined": "Beigetreten",
+      "toggleFree": "Kostenlos/Bezahlt umschalten",
+      "free": "Kostenlos",
+      "paid": "Bezahlt",
+      "invitationsTitle": "Benutzer einladen",
+      "inviteEmail": "E-Mail-Adresse",
+      "invite": "Einladung senden",
+      "inviteError": "Senden fehlgeschlagen.",
+      "noInvitations": "Noch keine Einladungen gesendet.",
+      "pendingInvitations": "Ausstehende Einladungen",
+      "accepted": "Akzeptiert",
+      "expired": "Abgelaufen",
+      "pending": "Ausstehend"
     },
     "form": {
-      "urlLabel": "Odoo-URL",
-      "urlPlaceholder": "https://ihr-unternehmen.odoo.com",
+      "urlLabel": "Odoo URL",
+      "urlPlaceholder": "https://ihre-firma.odoo.com",
       "databaseLabel": "Datenbank",
-      "databasePlaceholder": "ihr-datenbankname",
+      "databasePlaceholder": "datenbank-name",
       "loginLabel": "Login / E-Mail",
-      "loginPlaceholder": "admin@ihr-unternehmen.com",
+      "loginPlaceholder": "admin@firma.com",
       "apiKeyLabel": "API-Schlüssel",
       "apiKeyPlaceholder": "Ihr Odoo API-Schlüssel",
       "testConnection": "Verbindung testen",
-      "saveConfig": "Speichern",
+      "saveConfig": "Einstellungen speichern",
       "saved": "Gespeichert",
-      "statusTesting": "Verbindung zu Odoo wird getestet...",
+      "statusTesting": "Verbindung wird getestet...",
       "statusSuccess": "Verbindung erfolgreich.",
       "statusSuccessCompany": "Verbunden mit {company}",
-      "statusError": "Verbindung fehlgeschlagen. Überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut.",
-      "networkError": "Verbindung zum Backend-Server konnte nicht hergestellt werden."
+      "statusError": "Verbindung fehlgeschlagen.",
+      "networkError": "Serverfehler."
     }
   },
   "PinnedInsights": {
     "title": "Angepinnte Insights",
-    "empty": "Keine angepinnten Insights",
-    "emptyHint": "Pinnen Sie Diagramme und Dateien aus Ihren Gesprächen an, um sie griffbereit zu haben.",
-    "pinTooltip": "An Dashboard anheften",
+    "empty": "Keine Insights angepinnt",
+    "emptyHint": "Pinnen Sie Diagramme an, um sie griffbereit zu haben.",
+    "pinTooltip": "An Dashboard pinnen",
     "unpinTooltip": "Vom Dashboard lösen",
     "clearAll": "Alle löschen",
     "chartPin": "Angepinntes Diagramm",
@@ -196,24 +235,24 @@
     "excelPin": "Angepinnter Export",
     "viewInChat": "Im Chat anzeigen",
     "pinnedCount": "{count} angepinnt",
-    "errorPin": "Element konnte nicht angepinnt werden. Bitte versuchen Sie es erneut.",
-    "errorUnpin": "Element konnte nicht gelöst werden. Bitte versuchen Sie es erneut.",
-    "errorClear": "Pins konnten nicht gelöscht werden. Bitte versuchen Sie es erneut."
+    "errorPin": "Fehler beim Pinnen.",
+    "errorUnpin": "Fehler beim Lösen.",
+    "errorClear": "Fehler beim Löschen."
   },
   "Notifications": {
-    "title": "Warnungen",
-    "empty": "Noch keine Warnungen",
-    "emptyHint": "Proaktive Einblicke erscheinen hier, wenn Anomalien erkannt werden.",
+    "title": "Benachrichtigungen",
+    "empty": "Noch keine Benachrichtigungen",
+    "emptyHint": "Proaktive Insights erscheinen hier.",
     "markAllRead": "Alle als gelesen markieren",
-    "settingsTitle": "Warnungseinstellungen",
-    "salesAlerts": "Verkaufswarnungen",
-    "salesAlertsDesc": "Benachrichtigen, wenn der Umsatz um mehr als 30% sinkt",
-    "stockAlerts": "Niedrige Bestandswarnungen",
-    "stockAlertsDesc": "Benachrichtigen, wenn der Bestand unter das Minimum fällt",
-    "invoiceAlerts": "Rechnungswarnungen",
-    "invoiceAlertsDesc": "Benachrichtigen bei überfälligen oder ungewöhnlichen Rechnungen",
+    "settingsTitle": "Alarmeinstellungen",
+    "salesAlerts": "Verkaufsalarme",
+    "salesAlertsDesc": "Benachrichtigen bei Umsatzabfall > 30%",
+    "stockAlerts": "Lagerbestandsalarme",
+    "stockAlertsDesc": "Benachrichtigen bei niedrigem Bestand",
+    "invoiceAlerts": "Rechnungsalarme",
+    "invoiceAlertsDesc": "Benachrichtigen bei überfälligen Rechnungen",
     "dailySummary": "Tägliche Zusammenfassung",
-    "dailySummaryDesc": "Tägliche Zusammenfassung um 9:00 Uhr erhalten",
+    "dailySummaryDesc": "Zusammenfassung täglich um 9:00 Uhr erhalten",
     "save": "Speichern",
     "close": "Schließen",
     "timeAgo": "vor"
@@ -224,18 +263,18 @@
     "email": "E-Mail",
     "password": "Passwort",
     "loginCta": "Anmelden",
-    "loggingIn": "Anmelden...",
+    "loggingIn": "Anmeldung...",
     "registerCta": "Konto erstellen",
-    "registering": "Erstellen...",
-    "noAccount": "Kein Konto?",
+    "registering": "Wird erstellt...",
+    "noAccount": "Noch kein Konto?",
     "registerLink": "Registrieren",
     "hasAccount": "Bereits ein Konto?",
     "loginLink": "Anmelden",
-    "tryDemo": "Ohne Registrierung ausprobieren",
-    "demoBanner": "Demo-Modus — Sie chatten mit fiktiven Daten eines Beispiel-Unternehmens.",
-    "demoSignUp": "Registrieren Sie sich, um Ihr Odoo zu verbinden",
-    "devMode": "Entwicklungsmodus",
-    "devModeDesc": "Supabase ist nicht konfiguriert. Authentifizierung ist deaktiviert.",
+    "tryDemo": "Ohne Anmeldung testen",
+    "demoBanner": "Demo-Modus — Testdaten.",
+    "demoSignUp": "Registrieren, um Odoo zu verbinden",
+    "devMode": "Entwicklermodus",
+    "devModeDesc": "Auth deaktiviert.",
     "devModeContinue": "Ohne Login fortfahren"
   },
   "Onboarding": {
@@ -244,43 +283,43 @@
     "step1Title": "Organisation erstellen",
     "step1Desc": "Geben Sie Ihrer Organisation einen Namen.",
     "step2Title": "Odoo verbinden",
-    "step2Desc": "Fügen Sie Ihre Odoo-Zugangsdaten hinzu.",
+    "step2Desc": "Geben Sie Ihre Odoo-Zugangsdaten ein.",
     "orgName": "Organisationsname",
     "orgNamePlaceholder": "Acme Corp",
     "step1Cta": "Organisation erstellen",
-    "orgCreateError": "Organisation konnte nicht erstellt werden.",
+    "orgCreateError": "Fehler beim Erstellen.",
     "configLabel": "Bezeichnung",
     "configLabelPlaceholder": "Produktion",
     "configUrl": "Odoo URL",
     "configDb": "Datenbankname",
     "configApiKey": "API-Schlüssel",
+    "configLogin": "Odoo Benutzername",
     "testConnection": "Verbindung testen",
     "connectionOk": "Verbindung erfolgreich",
-    "connectionError": "Verbindung fehlgeschlagen.",
-    "step2Cta": "Speichern und loslegen",
-    "configLogin": "Odoo-Benutzername",
-    "configSaveError": "Verbindung konnte nicht gespeichert werden.",
+    "connectionError": "Verbindungsfehler.",
+    "step2Cta": "Speichern & Starten",
+    "configSaveError": "Speichern fehlgeschlagen.",
     "back": "Zurück"
   },
   "LimitReachedModal": {
     "title": "Benutzerlimit erreicht",
-    "description": "Ihre Organisation hat die maximale Benutzeranzahl erreicht. Kontaktieren Sie Ihren Administrator.",
+    "description": "Maximale Benutzeranzahl für Ihren Tarif erreicht.",
     "cta": "Verstanden",
     "close": "Schließen"
   },
   "Invite": {
-    "loading": "Einladung wird angenommen...",
+    "loading": "Einladung wird akzeptiert...",
     "loadingDesc": "Bitte warten.",
-    "success": "Einladung angenommen!",
-    "successDesc": "Sie sind jetzt Mitglied der Organisation.",
+    "success": "Einladung akzeptiert!",
+    "successDesc": "Weiterleitung zur App...",
     "notFound": "Einladung nicht gefunden",
-    "notFoundDesc": "Dieser Einladungslink ist ungültig.",
-    "alreadyUsed": "Einladung bereits verwendet",
-    "alreadyUsedDesc": "Diese Einladung wurde bereits angenommen.",
+    "notFoundDesc": "Ungültiger Link.",
+    "alreadyUsed": "Einladung bereits genutzt",
+    "alreadyUsedDesc": "Diese Einladung wurde bereits eingelöst.",
     "expired": "Einladung abgelaufen",
-    "expiredDesc": "Diese Einladung ist abgelaufen. Bitten Sie Ihren Administrator, eine neue zu senden.",
-    "error": "Etwas ist schiefgelaufen",
-    "errorDesc": "Einladung konnte nicht angenommen werden.",
+    "expiredDesc": "Die Einladung ist abgelaufen.",
+    "error": "Fehler",
+    "errorDesc": "Einladung konnte nicht akzeptiert werden.",
     "goHome": "Zur App"
   },
   "LocaleSwitcher": {

@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { acceptInvitation } from "@/lib/api";
-import { Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Loader2, CheckCircle, AlertTriangle } from "lucide-react";
 
 type InviteStatus = "loading" | "success" | "not_found" | "already_used" | "expired" | "error";
 
@@ -55,32 +55,32 @@ function InviteContent() {
 
   const messages: Record<InviteStatus, { icon: React.ReactNode; title: string; desc: string }> = {
     loading: {
-      icon: <Loader2 size={32} className="animate-spin text-primary" />,
+      icon: <Loader2 size={32} strokeWidth={1.5} className="animate-spin text-accent" />,
       title: t("loading"),
       desc: t("loadingDesc"),
     },
     success: {
-      icon: <CheckCircle size={32} className="text-green-500" />,
+      icon: <CheckCircle size={32} strokeWidth={1.5} className="text-success-solid" />,
       title: t("success"),
       desc: t("successDesc"),
     },
     not_found: {
-      icon: <XCircle size={32} className="text-red-500" />,
+      icon: <AlertTriangle size={32} strokeWidth={1.5} className="text-error" />,
       title: t("notFound"),
       desc: t("notFoundDesc"),
     },
     already_used: {
-      icon: <XCircle size={32} className="text-amber-500" />,
+      icon: <AlertTriangle size={32} strokeWidth={1.5} className="text-warning-solid" />,
       title: t("alreadyUsed"),
       desc: t("alreadyUsedDesc"),
     },
     expired: {
-      icon: <XCircle size={32} className="text-red-500" />,
+      icon: <AlertTriangle size={32} strokeWidth={1.5} className="text-error" />,
       title: t("expired"),
       desc: t("expiredDesc"),
     },
     error: {
-      icon: <XCircle size={32} className="text-red-500" />,
+      icon: <AlertTriangle size={32} strokeWidth={1.5} className="text-error" />,
       title: t("error"),
       desc: t("errorDesc"),
     },
@@ -89,16 +89,16 @@ function InviteContent() {
   const msg = messages[status];
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--color-bg)">
-      <div className="w-full max-w-sm rounded-xl border border-(--color-border) bg-(--color-surface) p-10 text-center shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-base">
+      <div className="w-full max-w-sm rounded-lg border border-border bg-surface p-10 text-center shadow-lg">
         <div className="mb-4 flex justify-center">{msg.icon}</div>
-        <h1 className="mb-2 text-lg font-semibold text-(--color-text)">{msg.title}</h1>
-        <p className="text-sm text-(--color-muted)">{msg.desc}</p>
+        <h1 className="mb-2 text-heading">{msg.title}</h1>
+        <p className="text-body text-text-secondary">{msg.desc}</p>
 
         {status !== "loading" && status !== "success" && (
           <button
             onClick={() => router.push(`/${locale}/chat`)}
-            className="mt-6 rounded-lg bg-(--color-primary) px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+            className="mt-6 h-9 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
           >
             {t("goHome")}
           </button>
@@ -112,7 +112,7 @@ export default function InvitePage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 size={28} className="animate-spin text-primary" />
+        <Loader2 size={28} strokeWidth={1.5} className="animate-spin text-accent" />
       </div>
     }>
       <InviteContent />
