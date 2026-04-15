@@ -39,18 +39,18 @@ export function PricingCards() {
         return (
           <motion.div
             key={plan.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.4 }}
-            className={`relative flex flex-col rounded-2xl border p-6 transition-shadow hover:shadow-lg ${
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: index * 0.1, duration: 0.15, ease: "easeOut" }}
+            className={`relative flex flex-col rounded-lg border p-6 transition-shadow hover:shadow-lg ${
               plan.highlighted
-                ? "border-primary bg-card shadow-xl shadow-primary/10 ring-2 ring-primary/20"
-                : "border-border bg-card"
+                ? "border-accent bg-surface shadow-lg ring-2 ring-accent/20"
+                : "border-border bg-surface"
             }`}
           >
             {plan.highlighted && (
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                <span className="rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground">
+                <span className="rounded-md bg-accent px-4 py-1 text-micro font-semibold text-white">
                   {t("mostPopular")}
                 </span>
               </div>
@@ -58,15 +58,15 @@ export function PricingCards() {
 
             <div className="mb-4 flex items-center gap-3">
               <div
-                className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                className={`flex h-10 w-10 items-center justify-center rounded-md ${
                   plan.highlighted
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-foreground"
+                    ? "bg-accent text-white"
+                    : "bg-raised text-foreground"
                 }`}
               >
-                <Icon size={20} />
+                <Icon size={20} strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold">{plan.name}</h3>
+              <h3 className="text-subheading">{plan.name}</h3>
             </div>
 
             <div className="mb-2">
@@ -76,7 +76,7 @@ export function PricingCards() {
                     {plan.price === 0 ? t("free") : `$${plan.price}`}
                   </span>
                   {plan.price > 0 && (
-                    <span className="text-sm text-muted-foreground">{t("perMonth")}</span>
+                    <span className="text-body text-text-secondary">{t("perMonth")}</span>
                   )}
                 </div>
               ) : (
@@ -84,15 +84,16 @@ export function PricingCards() {
               )}
             </div>
 
-            <p className="mb-6 text-sm text-muted-foreground">{plan.description}</p>
+            <p className="mb-6 text-body text-text-secondary">{plan.description}</p>
 
             <ul className="mb-8 flex flex-1 flex-col gap-3">
               {plan.features.map((feature, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-sm">
+                <li key={i} className="flex items-start gap-2.5 text-body">
                   <Check
                     size={16}
+                    strokeWidth={1.5}
                     className={`mt-0.5 shrink-0 ${
-                      plan.highlighted ? "text-primary" : "text-success"
+                      plan.highlighted ? "text-accent" : "text-success-solid"
                     }`}
                   />
                   <span>{feature}</span>
@@ -101,10 +102,10 @@ export function PricingCards() {
             </ul>
 
             <button
-              className={`w-full rounded-xl py-3 text-sm font-semibold transition-colors ${
+              className={`h-9 w-full rounded-md px-4 py-2 text-body font-semibold transition-colors ${
                 plan.highlighted
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "border border-border bg-secondary text-secondary-foreground hover:bg-muted"
+                  ? "bg-accent text-white shadow-sm hover:bg-accent-hover"
+                  : "border border-border bg-surface text-foreground hover:bg-raised"
               }`}
             >
               {plan.cta}

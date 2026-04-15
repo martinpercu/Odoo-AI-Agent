@@ -31,12 +31,13 @@ export function PinToggleButton({ pinned, onToggle }: PinToggleButtonProps) {
       whileTap={{ scale: 0.85 }}
       className={`rounded-md p-1.5 transition-colors ${
         pinned
-          ? "text-odoo-purple hover:bg-odoo-purple/10"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          ? "text-accent hover:bg-accent-subtle"
+          : "text-text-secondary hover:bg-raised hover:text-foreground"
       }`}
       title={pinned ? t("unpinTooltip") : t("pinTooltip")}
+      aria-label={pinned ? t("unpinTooltip") : t("pinTooltip")}
     >
-      {pinned ? <PinOff size={14} /> : <Pin size={14} />}
+      {pinned ? <PinOff size={14} strokeWidth={1.5} /> : <Pin size={14} strokeWidth={1.5} />}
     </motion.button>
   );
 }

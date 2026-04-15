@@ -12,7 +12,9 @@
     "darkMode": "Dark Mode",
     "alerts": "Alerts",
     "logout": "Log out",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
   },
   "ChatGroups": {
     "today": "Today",
@@ -36,7 +38,9 @@
     "placeholder": "Ask about your Odoo data...",
     "disclaimer": "The agent queries your Odoo instance in real time. Your data is private and secure.",
     "attachImage": "Attach image",
-    "removeImage": "Remove image"
+    "removeImage": "Remove image",
+    "send": "Send",
+    "stop": "Stop"
   },
   "ChatMessages": {
     "typingIndicator": "Querying Odoo",

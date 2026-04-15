@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "Odoo Agent - Plataforma de Agentes IA para Odoo",
-    "description": "Consulte e gerencie seus dados do Odoo com inteligência artificial. Inventário, faturamento, vendas e mais."
+    "title": "Odoo Agent - Plataforma de Agentes de IA para Odoo",
+    "description": "Consulte e gerencie seus dados do Odoo com inteligência artificial. Inventário, faturamento, vendas e muito mais."
   },
   "Sidebar": {
     "appName": "Odoo Agent",
@@ -12,7 +12,9 @@
     "darkMode": "Modo Escuro",
     "alerts": "Alertas",
     "logout": "Sair",
-    "loadMore": "Carregar mais"
+    "loadMore": "Carregar mais",
+    "collapse": "Recolher barra lateral",
+    "expand": "Expandir barra lateral"
   },
   "ChatGroups": {
     "today": "Hoje",
@@ -23,8 +25,8 @@
   "NewChat": {
     "heading": "Como posso ajudar?",
     "subheading": "Consulte inventário, faturamento, vendas, RH e mais diretamente do seu Odoo.",
-    "connectedMessage": "Conectado à sua instância do Odoo com segurança",
-    "notConnected": "Odoo não configurado. Vá para Configurações para conectar.",
+    "connectedMessage": "Conectado com segurança à sua instância do Odoo",
+    "notConnected": "Odoo não configurado. Vá em Configurações para conectar.",
     "suggestions": {
       "inventory": "Ver o inventário atual de produtos",
       "invoices": "Mostrar faturas pendentes",
@@ -36,11 +38,13 @@
     "placeholder": "Pergunte sobre seus dados do Odoo...",
     "disclaimer": "O agente consulta sua instância do Odoo em tempo real. Seus dados são privados e seguros.",
     "attachImage": "Anexar imagem",
-    "removeImage": "Remover imagem"
+    "removeImage": "Remover imagem",
+    "send": "Enviar",
+    "stop": "Parar"
   },
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",
-    "configNotSet": "Conexão do Odoo não configurada. Vá para Configurações para configurar sua conexão.",
+    "configNotSet": "Conexão com Odoo não configurada. Vá em Configurações para configurar.",
     "processing": "Processando no Odoo...",
     "completed": "Concluído",
     "success": {
@@ -49,15 +53,15 @@
       "viewInOdoo": "Ver no Odoo"
     },
     "validation": {
-      "title": "Informação faltando",
-      "description": "Por favor, forneça os seguintes campos:"
+      "title": "Informação ausente",
+      "description": "Por favor, preencha os seguintes campos:"
     },
     "selection": {
       "selected": "Selecionado: {name}"
     },
     "fileCard": {
       "downloadPdf": "Baixar PDF",
-      "fileExpired": "Arquivo não mais disponível. Gere o relatório novamente."
+      "fileExpired": "Arquivo expirado. Gere o relatório novamente."
     },
     "sequence": {
       "autoSending": "Processando próximo passo..."
@@ -72,7 +76,7 @@
     "actionProposal": {
       "editField": "Editar",
       "noResults": "Nenhum resultado encontrado",
-      "searching": "Pesquisar...",
+      "searching": "Buscando...",
       "fieldEdited": "Modificado",
       "originalValue": "Sugestão original",
       "validationError": "Corrija os campos destacados e tente novamente."
@@ -93,45 +97,45 @@
     "suggestions": {
       "sales": "Analisar vendas por período",
       "invoice": "Enviar imagem de fatura",
-      "inventory": "Verificar inventário de produtos",
-      "report": "Gerar um relatório PDF"
+      "inventory": "Verificar estoque de produtos",
+      "report": "Gerar relatório em PDF"
     }
   },
   "Pricing": {
     "heading": "Planos e Preços",
-    "subheading": "Escolha o plano que melhor se adapta ao seu negócio. Escale quando precisar.",
+    "subheading": "Escolha o plano que melhor se adapta ao seu negócio. Escalável quando necessário.",
     "mostPopular": "Mais Popular",
     "perMonth": "/mês",
     "free": "Grátis",
     "custom": "Personalizado",
     "footer": "Todos os planos incluem criptografia de dados e conexão segura com seu Odoo.",
     "needSpecial": "Precisa de algo especial?",
-    "contactUs": "Fale Conosco",
+    "contactUs": "Contate-nos",
     "plans": {
       "free": {
         "name": "Free",
-        "description": "Para explorar as capacidades do agente de IA com Odoo.",
+        "description": "Explore as capacidades do agente de IA com o Odoo.",
         "cta": "Começar Grátis",
         "features": {
           "agents": "1 Agente de IA",
           "queries": "50 consultas por mês",
           "instances": "1 instância do Odoo",
-          "history": "Histórico de 7 dias",
-          "support": "Suporte comunitário"
+          "history": "7 dias de histórico",
+          "support": "Suporte da comunidade"
         }
       },
       "pro": {
         "name": "Pro",
-        "description": "Para profissionais que precisam de acesso completo ao seu Odoo.",
+        "description": "Para profissionais que precisam de acesso total ao seu Odoo.",
         "cta": "Escolher Pro",
         "features": {
           "agents": "Agentes ilimitados",
           "queries": "Consultas ilimitadas",
           "instances": "1 instância do Odoo",
           "history": "Histórico completo",
-          "support": "Suporte por email prioritário",
+          "support": "Suporte prioritário por e-mail",
           "export": "Exportação de relatórios",
-          "markdown": "Respostas Markdown avançadas"
+          "markdown": "Respostas em Markdown avançado"
         }
       },
       "enterprise": {
@@ -153,63 +157,98 @@
   },
   "Settings": {
     "heading": "Configurações do Odoo",
-    "subheading": "Conecte sua instância do Odoo para que o agente possa acessar seus dados.",
+    "subheading": "Conecte sua instância do Odoo para que o agente acesse seus dados.",
     "security": {
       "title": "Segurança",
-      "description": "Sua chave API é armazenada de forma segura e criptografada. É utilizada apenas para realizar consultas autorizadas à sua instância do Odoo. Nunca compartilhamos suas credenciais com terceiros."
+      "description": "Sua API Key é armazenada de forma segura e criptografada. Usada apenas para consultas autorizadas. Nunca compartilhamos suas credenciais."
     },
     "inspector": {
       "heading": "Inspetor de Instância",
       "buttonLabel": "Inspecionar Instância",
       "modulesFound": "{count} módulos encontrados",
-      "errorGeneric": "Falha ao inspecionar a instância",
+      "errorGeneric": "Falha ao inspecionar instância",
       "networkError": "Não foi possível conectar ao servidor backend."
+    },
+    "admin": {
+      "orgTitle": "Minha Organização",
+      "orgName": "Nome",
+      "orgSlug": "Slug",
+      "orgType": "Tipo",
+      "tier": "Plano",
+      "slots": "Slots usados",
+      "slotsValue": "{paid} pagos / {paidLimit} · {free} grátis / {freeLimit}",
+      "edit": "Editar",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "saveError": "Não foi possível salvar. Tente novamente.",
+      "odooConfigsTitle": "Conexões Odoo",
+      "noConfigs": "Nenhuma conexão salva ainda.",
+      "savedConfigs": "Conexões salvas",
+      "delete": "Excluir",
+      "confirmDelete": "Excluir esta conexão?",
+      "yes": "Sim",
+      "no": "Não",
+      "usersTitle": "Usuários",
+      "noUsers": "Nenhum usuário nesta organização.",
+      "joined": "Entrou em",
+      "toggleFree": "Alternar grátis/pago",
+      "free": "Grátis",
+      "paid": "Pago",
+      "invitationsTitle": "Convidar usuários",
+      "inviteEmail": "E-mail",
+      "invite": "Enviar convite",
+      "inviteError": "Não foi possível enviar o convite.",
+      "noInvitations": "Nenhum convite enviado ainda.",
+      "pendingInvitations": "Convites pendentes",
+      "accepted": "Aceito",
+      "expired": "Expirado",
+      "pending": "Pendente"
     },
     "form": {
       "urlLabel": "URL do Odoo",
       "urlPlaceholder": "https://sua-empresa.odoo.com",
       "databaseLabel": "Banco de Dados",
-      "databasePlaceholder": "nome-do-seu-banco-de-dados",
-      "loginLabel": "Login / Email",
+      "databasePlaceholder": "nome-do-banco",
+      "loginLabel": "Login / E-mail",
       "loginPlaceholder": "admin@sua-empresa.com",
-      "apiKeyLabel": "Chave API",
-      "apiKeyPlaceholder": "Sua chave API do Odoo",
+      "apiKeyLabel": "API Key",
+      "apiKeyPlaceholder": "Sua chave de API do Odoo",
       "testConnection": "Testar Conexão",
       "saveConfig": "Salvar Configurações",
       "saved": "Salvo",
       "statusTesting": "Testando conexão com Odoo...",
       "statusSuccess": "Conexão bem-sucedida.",
       "statusSuccessCompany": "Conectado a {company}",
-      "statusError": "Não foi possível conectar. Verifique suas credenciais e tente novamente.",
-      "networkError": "Não foi possível conectar ao servidor backend."
+      "statusError": "Falha na conexão. Verifique suas credenciais.",
+      "networkError": "Erro de rede com o servidor."
     }
   },
   "PinnedInsights": {
     "title": "Insights Fixados",
     "empty": "Nenhum insight fixado",
-    "emptyHint": "Fixe gráficos e arquivos das suas conversas para mantê-los à mão.",
+    "emptyHint": "Fixe gráficos e arquivos para mantê-los à mão.",
     "pinTooltip": "Fixar no painel",
-    "unpinTooltip": "Desfixar do painel",
+    "unpinTooltip": "Desafixar do painel",
     "clearAll": "Limpar tudo",
     "chartPin": "Gráfico fixado",
     "filePin": "Arquivo fixado",
     "excelPin": "Exportação fixada",
     "viewInChat": "Ver no chat",
     "pinnedCount": "{count} fixados",
-    "errorPin": "Não foi possível fixar este item. Tente novamente.",
-    "errorUnpin": "Não foi possível desfixar este item. Tente novamente.",
-    "errorClear": "Não foi possível limpar os fixados. Tente novamente."
+    "errorPin": "Não foi possível fixar.",
+    "errorUnpin": "Não foi possível desafixar.",
+    "errorClear": "Não foi possível limpar os itens."
   },
   "Notifications": {
     "title": "Alertas",
-    "empty": "Sem alertas ainda",
-    "emptyHint": "Alertas proativos aparecerão aqui quando anomalias forem detectadas.",
-    "markAllRead": "Marcar tudo como lido",
-    "settingsTitle": "Configurações de Alertas",
+    "empty": "Nenhum alerta ainda",
+    "emptyHint": "Insights proativos aparecerão aqui quando anomalias forem detectadas.",
+    "markAllRead": "Marcar todas como lidas",
+    "settingsTitle": "Configurações de Alerta",
     "salesAlerts": "Alertas de Vendas",
-    "salesAlertsDesc": "Notificar quando as vendas caírem mais de 30%",
+    "salesAlertsDesc": "Notificar quando vendas caírem mais de 30%",
     "stockAlerts": "Alertas de Estoque Baixo",
-    "stockAlertsDesc": "Notificar quando o estoque cair abaixo do mínimo",
+    "stockAlertsDesc": "Notificar quando o estoque estiver abaixo do mínimo",
     "invoiceAlerts": "Alertas de Faturas",
     "invoiceAlertsDesc": "Notificar sobre faturas vencidas ou incomuns",
     "dailySummary": "Resumo Diário",
@@ -221,21 +260,21 @@
   "Auth": {
     "loginTitle": "Entrar no Odoo Agent",
     "registerTitle": "Criar sua conta",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Senha",
     "loginCta": "Entrar",
     "loggingIn": "Entrando...",
     "registerCta": "Criar conta",
     "registering": "Criando conta...",
-    "noAccount": "Não tem conta?",
+    "noAccount": "Não tem uma conta?",
     "registerLink": "Cadastre-se",
-    "hasAccount": "Já tem conta?",
+    "hasAccount": "Já tem uma conta?",
     "loginLink": "Entrar",
-    "tryDemo": "Experimentar sem cadastro",
-    "demoBanner": "Modo Demo — você está conversando com dados fictícios de uma empresa distribuidora.",
+    "tryDemo": "Testar sem cadastro",
+    "demoBanner": "Modo Demo — dados fictícios para teste.",
     "demoSignUp": "Cadastre-se para conectar seu Odoo",
-    "devMode": "Modo Desenvolvimento",
-    "devModeDesc": "Supabase não está configurado. A autenticação está desativada.",
+    "devMode": "Modo de Desenvolvimento",
+    "devModeDesc": "Autenticação desativada.",
     "devModeContinue": "Continuar sem login"
   },
   "Onboarding": {
@@ -244,41 +283,41 @@
     "step1Title": "Crie sua organização",
     "step1Desc": "Dê um nome à sua organização.",
     "step2Title": "Conecte seu Odoo",
-    "step2Desc": "Adicione suas credenciais Odoo para começar.",
+    "step2Desc": "Adicione as credenciais para começar.",
     "orgName": "Nome da organização",
     "orgNamePlaceholder": "Acme Corp",
     "step1Cta": "Criar organização",
-    "orgCreateError": "Não foi possível criar a organização.",
-    "configLabel": "Rótulo",
+    "orgCreateError": "Erro ao criar organização.",
+    "configLabel": "Etiqueta",
     "configLabelPlaceholder": "Produção",
     "configUrl": "URL do Odoo",
-    "configDb": "Nome do banco de dados",
-    "configApiKey": "Chave API",
+    "configDb": "Banco de dados",
+    "configApiKey": "API Key",
+    "configLogin": "Usuário Odoo",
     "testConnection": "Testar conexão",
     "connectionOk": "Conexão bem-sucedida",
-    "connectionError": "Não foi possível conectar.",
+    "connectionError": "Erro de conexão.",
     "step2Cta": "Salvar e começar",
-    "configLogin": "Usuário do Odoo",
-    "configSaveError": "Não foi possível salvar a conexão.",
+    "configSaveError": "Erro ao salvar conexão.",
     "back": "Voltar"
   },
   "LimitReachedModal": {
     "title": "Limite de usuários atingido",
-    "description": "Sua organização atingiu o número máximo de usuários. Contate o administrador.",
-    "cta": "Entendido",
+    "description": "Sua organização atingiu o limite de usuários do plano.",
+    "cta": "Entendi",
     "close": "Fechar"
   },
   "Invite": {
     "loading": "Aceitando convite...",
-    "loadingDesc": "Por favor aguarde.",
+    "loadingDesc": "Aguarde enquanto configuramos sua conta.",
     "success": "Convite aceito!",
-    "successDesc": "Você agora faz parte da organização.",
+    "successDesc": "Redirecionando para o app...",
     "notFound": "Convite não encontrado",
-    "notFoundDesc": "Este link de convite é inválido.",
-    "alreadyUsed": "Convite já usado",
+    "notFoundDesc": "Link inválido ou inexistente.",
+    "alreadyUsed": "Convite já utilizado",
     "alreadyUsedDesc": "Este convite já foi aceito.",
     "expired": "Convite expirado",
-    "expiredDesc": "Este convite expirou. Peça ao administrador que envie um novo.",
+    "expiredDesc": "Este convite expirou.",
     "error": "Algo deu errado",
     "errorDesc": "Não foi possível aceitar o convite.",
     "goHome": "Ir para o app"

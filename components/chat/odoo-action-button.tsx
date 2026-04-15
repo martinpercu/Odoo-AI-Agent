@@ -43,16 +43,16 @@ export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) 
 
   return (
     <motion.button
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       onClick={handleClick}
       disabled={loading || completed}
-      className="mt-2 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
-      style={{
-        backgroundColor: completed ? "var(--color-success)" : "var(--odoo-purple)",
-      }}
+      className={`mt-2 inline-flex h-9 items-center gap-2 rounded-md px-4 py-2 text-body font-medium text-white shadow-sm transition-colors disabled:opacity-50 ${
+        completed ? "bg-success-solid" : "bg-accent hover:bg-accent-hover"
+      }`}
     >
-      {loading && <Loader2 size={16} className="animate-spin" />}
+      {loading && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
       <span>
         {loading
           ? t("processing")

@@ -65,8 +65,8 @@ export function FlyingPinPortal() {
           onAnimationComplete={() => removeFlyingPin(fp.id)}
           className="pointer-events-none fixed left-0 top-0 z-[9999]"
         >
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-odoo-purple/20">
-            <Pin size={14} className="text-odoo-purple" />
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-subtle">
+            <Pin size={14} strokeWidth={1.5} className="text-accent" />
           </div>
         </motion.div>
       ))}

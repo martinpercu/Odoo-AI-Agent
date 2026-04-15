@@ -10,10 +10,10 @@ import { inspectInstance } from "@/lib/api";
 const SUGGESTION_KEYS = ["sales", "invoice", "inventory", "report"] as const;
 const SUGGESTION_ICONS = [BarChart3, FileUp, Package, FileText];
 const SUGGESTION_COLORS = [
-  "text-emerald-500",
-  "text-amber-500",
-  "text-blue-500",
-  "text-purple-500",
+  "text-success-solid",
+  "text-warning-solid",
+  "text-info",
+  "text-accent",
 ];
 
 /** Map suggestion keys to the Odoo module names they require. */
@@ -57,18 +57,18 @@ export function WelcomeDashboard({ onSend }: WelcomeDashboardProps) {
   return (
     <div className="flex flex-col items-center justify-center px-4 py-20">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="mb-8 text-center"
       >
-        <h3 className="text-xl font-semibold">{t("heading")}</h3>
+        <h3 className="text-heading">{t("heading")}</h3>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, ease: "easeOut", delay: 0.05 }}
         className="grid w-full max-w-lg grid-cols-1 gap-3 sm:grid-cols-2"
       >
         {SUGGESTION_KEYS.map((key, i) => {
@@ -80,17 +80,17 @@ export function WelcomeDashboard({ onSend }: WelcomeDashboardProps) {
               key={key}
               onClick={() => available && onSend(text)}
               disabled={!available}
-              className={`relative flex items-center gap-3 rounded-xl border p-4 text-left text-sm transition-all ${
+              className={`relative flex items-center gap-3 rounded-md border p-4 text-left text-body transition-all ${
                 available
-                  ? "border-border bg-card hover:border-primary/30 hover:bg-muted hover:shadow-sm"
-                  : "cursor-not-allowed border-border/50 bg-muted/50 opacity-60"
+                  ? "border-border bg-surface hover:border-accent/30 hover:bg-raised hover:shadow-sm"
+                  : "cursor-not-allowed border-border bg-raised/50 opacity-60"
               }`}
             >
-              <Icon size={18} className={available ? SUGGESTION_COLORS[i] : "text-muted-foreground"} />
+              <Icon size={20} strokeWidth={1.5} className={available ? SUGGESTION_COLORS[i] : "text-text-secondary"} />
               <span>{text}</span>
               {!available && (
-                <span className="ml-auto flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                  <Lock size={10} />
+                <span className="ml-auto flex items-center gap-1 rounded-md bg-raised px-2 py-0.5 text-micro font-medium text-text-secondary">
+                  <Lock size={10} strokeWidth={1.5} />
                   {t("comingSoon")}
                 </span>
               )}

@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Loader2, X, Pencil, Check, AlertCircle } from "lucide-react";
+import { Loader2, X, Pencil, Check, AlertTriangle } from "lucide-react";
 import type { ActionProposalMetadata, ActionContext, EntitySearchResult } from "@/lib/types";
 import { EntityAutocomplete } from "./entity-autocomplete";
 import { AuditHistoryPopover } from "./audit-history-popover";
@@ -168,10 +168,11 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
       <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 0.5 }}
-        className="mt-2 rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground"
+        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="mt-2 rounded-md border border-border bg-raised px-4 py-3 text-body text-text-secondary"
       >
         <div className="flex items-start gap-2">
-          <X size={16} className="mt-0.5 shrink-0" />
+          <X size={16} strokeWidth={1.5} className="mt-0.5 shrink-0" />
           <span>{metadata.labels.cancelled_msg}</span>
         </div>
       </motion.div>
@@ -183,10 +184,11 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="mt-2 flex items-center gap-3"
       >
-        <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400">
-          <Check size={14} />
+        <div className="flex items-center gap-1.5 text-small text-success-solid">
+          <Check size={16} strokeWidth={1.5} />
           <span>{t("completed")}</span>
         </div>
         {currentChatId && <AuditHistoryPopover chatId={currentChatId} />}
@@ -198,13 +200,14 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mt-3 rounded-xl border border-border bg-card p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="mt-3 rounded-lg border border-border bg-surface p-4"
     >
       {/* Header */}
-      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
-        <span className="font-medium uppercase tracking-wide">
+      <div className="mb-3 flex items-center justify-between text-small text-text-secondary">
+        <span className="font-medium uppercase tracking-wide font-technical">
           {metadata.action.action} &middot; {metadata.action.model}
         </span>
         <AnimatePresence>
@@ -214,7 +217,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={dirtyTransition}
-              className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400"
+              className="rounded-md bg-success-subtle px-2 py-0.5 text-micro font-semibold text-success-solid"
             >
               {dirtyCount} {t("actionProposal.fieldEdited").toLowerCase()}
             </motion.span>
@@ -238,18 +241,18 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
             <motion.div
               animate={{
                 backgroundColor: fieldError
-                  ? "rgba(239,68,68,0.06)"
+                  ? "var(--state-error-subtle)"
                   : dirty
-                    ? "var(--dirty-field-bg, rgba(34,197,94,0.06))"
+                    ? "var(--state-success-subtle)"
                     : "transparent",
                 borderColor: fieldError
-                  ? "rgba(239,68,68,0.5)"
+                  ? "var(--state-error)"
                   : dirty
-                    ? "var(--dirty-field-border, rgba(34,197,94,0.35))"
+                    ? "var(--state-success)"
                     : "transparent",
               }}
               transition={dirtyTransition}
-              className="relative flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-sm"
+              className="relative flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-body"
               onMouseEnter={() => dirty && setHoveredDirtyField(key)}
               onMouseLeave={() => setHoveredDirtyField(null)}
             >
@@ -261,7 +264,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}
                     transition={dirtyTransition}
-                    className="absolute -left-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 shadow-sm"
+                    className="absolute -left-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-success-solid shadow-sm"
                   >
                     <Pencil size={8} className="text-white" />
                   </motion.div>
@@ -269,7 +272,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
               </AnimatePresence>
 
               {/* Label */}
-              <span className="w-36 shrink-0 truncate text-muted-foreground" title={key}>
+              <span className="w-36 shrink-0 truncate text-text-secondary" title={key}>
                 {formatFieldLabel(key)}
               </span>
 
@@ -289,7 +292,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                   <div className="flex items-center gap-2">
                     <motion.span
                       animate={{
-                        color: dirty ? "var(--dirty-text, rgb(22,163,74))" : "inherit",
+                        color: dirty ? "var(--state-success)" : "inherit",
                         fontWeight: dirty ? 600 : 400,
                       }}
                       transition={dirtyTransition}
@@ -305,10 +308,11 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                 <button
                   type="button"
                   onClick={() => setEditingField(isEditing ? null : key)}
-                  className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="shrink-0 rounded-md p-1 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
                   title={t("actionProposal.editField")}
+                  aria-label={t("actionProposal.editField")}
                 >
-                  {isEditing ? <Check size={14} /> : <Pencil size={14} />}
+                  {isEditing ? <Check size={14} strokeWidth={1.5} /> : <Pencil size={14} strokeWidth={1.5} />}
                 </button>
               )}
 
@@ -320,7 +324,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 4 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute -bottom-8 left-10 z-50 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-xs text-background shadow-lg"
+                    className="absolute -bottom-8 left-10 z-50 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-small text-background shadow-lg"
                   >
                     {t("actionProposal.originalValue")}: {formatDisplayValue(originalValue)}
                   </motion.div>
@@ -333,9 +337,10 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-1 px-2.5 text-xs text-red-500"
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="flex items-center gap-1 px-2.5 text-small text-error font-technical"
                 >
-                  <AlertCircle size={12} className="shrink-0" />
+                  <AlertTriangle size={12} strokeWidth={1.5} className="shrink-0" />
                   {fieldError}
                 </motion.p>
               )}
@@ -352,9 +357,10 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-2 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400"
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="mt-2 flex items-center gap-2 rounded-md border border-error-subtle bg-error-subtle px-3 py-2 text-small text-error"
           >
-            <AlertCircle size={14} className="shrink-0" />
+            <AlertTriangle size={14} strokeWidth={1.5} className="shrink-0" />
             <span>{t("actionProposal.validationError")}</span>
           </motion.div>
         )}
@@ -365,16 +371,15 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
         <button
           onClick={handleConfirm}
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
-          style={{ backgroundColor: "var(--odoo-purple)" }}
+          className="inline-flex h-9 items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
         >
-          {loading && <Loader2 size={16} className="animate-spin" />}
+          {loading && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
           <span>{loading ? metadata.labels.confirm_btn : metadata.labels.action_btn}</span>
         </button>
         <button
           onClick={handleReject}
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-4 py-2.5 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
+          className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
         >
           {metadata.labels.cancel_btn}
         </button>
@@ -397,8 +402,8 @@ interface FieldInputProps {
 
 function FieldInput({ fieldKey, fieldType, value, onChange, chatId, onDone, isDirty }: FieldInputProps) {
   const dirtyInputClass = isDirty
-    ? "border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-950/20"
-    : "border-border bg-background";
+    ? "border-success-solid bg-success-subtle"
+    : "border-border bg-surface";
 
   if (fieldType === "entity") {
     const model = fieldKeyToModel(fieldKey);
@@ -433,7 +438,7 @@ function FieldInput({ fieldKey, fieldType, value, onChange, chatId, onDone, isDi
         value={value != null ? Number(value) : ""}
         onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
         onKeyDown={(e) => e.key === "Enter" && onDone()}
-        className={`w-full rounded-lg border px-3 py-1.5 text-sm outline-none transition-colors focus:border-primary ${dirtyInputClass}`}
+        className={`w-full rounded-md border px-3 py-1.5 text-body font-technical outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/30 ${dirtyInputClass}`}
         autoFocus
       />
     );
@@ -447,7 +452,7 @@ function FieldInput({ fieldKey, fieldType, value, onChange, chatId, onDone, isDi
         value={dateStr}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && onDone()}
-        className={`w-full rounded-lg border px-3 py-1.5 text-sm outline-none transition-colors focus:border-primary ${dirtyInputClass}`}
+        className={`w-full rounded-md border px-3 py-1.5 text-body font-technical outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/30 ${dirtyInputClass}`}
         autoFocus
       />
     );
@@ -463,7 +468,7 @@ function FieldInput({ fieldKey, fieldType, value, onChange, chatId, onDone, isDi
             onChange(e.target.checked);
             onDone();
           }}
-          className="h-4 w-4 rounded border-border accent-emerald-500"
+          className="h-4 w-4 rounded-md border-border accent-[var(--state-success)]"
         />
       </label>
     );
@@ -476,7 +481,7 @@ function FieldInput({ fieldKey, fieldType, value, onChange, chatId, onDone, isDi
       value={String(value ?? "")}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={(e) => e.key === "Enter" && onDone()}
-      className={`w-full rounded-lg border px-3 py-1.5 text-sm outline-none transition-colors focus:border-primary ${dirtyInputClass}`}
+      className={`w-full rounded-md border px-3 py-1.5 text-body outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/30 ${dirtyInputClass}`}
       autoFocus
     />
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle, AlertCircle, Info, CheckCircle } from "lucide-react";
+import { AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AppNotification } from "@/lib/types";
 
@@ -12,24 +12,24 @@ interface NotificationCardProps {
 
 const severityConfig = {
   critical: {
-    icon: AlertCircle,
-    borderColor: "border-l-red-500",
-    iconColor: "text-red-500",
+    icon: AlertTriangle,
+    borderColor: "border-l-error",
+    iconColor: "text-error",
   },
   warning: {
     icon: AlertTriangle,
-    borderColor: "border-l-amber-500",
-    iconColor: "text-amber-500",
+    borderColor: "border-l-warning-solid",
+    iconColor: "text-warning-solid",
   },
   info: {
     icon: Info,
-    borderColor: "border-l-blue-500",
-    iconColor: "text-blue-500",
+    borderColor: "border-l-info",
+    iconColor: "text-info",
   },
   success: {
-    icon: CheckCircle,
-    borderColor: "border-l-emerald-500",
-    iconColor: "text-emerald-500",
+    icon: CheckCircle2,
+    borderColor: "border-l-success-solid",
+    iconColor: "text-success-solid",
   },
 };
 
@@ -54,29 +54,30 @@ export function NotificationCard({ notification, onClick }: NotificationCardProp
   return (
     <motion.button
       layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: 20 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       onClick={() => onClick(notification)}
-      className={`w-full rounded-lg border border-border bg-card p-3 text-left transition-colors hover:bg-muted/50 border-l-[3px] ${config.borderColor} ${
+      className={`w-full rounded-md border border-border bg-surface p-3 text-left transition-colors hover:bg-raised border-l-[3px] ${config.borderColor} ${
         notification.read ? "opacity-60" : ""
       }`}
     >
       <div className="flex items-start gap-2.5">
-        <Icon size={16} className={`mt-0.5 shrink-0 ${config.iconColor}`} />
+        <Icon size={16} strokeWidth={1.5} className={`mt-0.5 shrink-0 ${config.iconColor}`} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             {!notification.read && (
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
             )}
-            <p className={`truncate text-xs leading-tight ${notification.read ? "font-normal" : "font-medium"}`}>
+            <p className={`truncate text-small leading-tight ${notification.read ? "font-normal" : "font-medium"}`}>
               {notification.title}
             </p>
           </div>
-          <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
+          <p className="mt-0.5 line-clamp-2 text-micro text-text-secondary">
             {notification.body}
           </p>
-          <p className="mt-1 text-[10px] text-muted-foreground/70">
+          <p className="mt-1 text-micro text-text-muted">
             {timeAgo(notification.createdAt)} {t("timeAgo")}
           </p>
         </div>

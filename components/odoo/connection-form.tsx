@@ -11,7 +11,7 @@ import {
   Key,
   Loader2,
   CheckCircle2,
-  XCircle,
+  AlertTriangle,
   Plug,
 } from "lucide-react";
 import type { OdooConfig, ConnectionStatus } from "@/lib/types";
@@ -79,10 +79,10 @@ export function ConnectionForm() {
   }
 
   const fields = [
-    { key: "url" as const, label: t("urlLabel"), placeholder: t("urlPlaceholder"), icon: Globe, type: "url" },
-    { key: "db" as const, label: t("databaseLabel"), placeholder: t("databasePlaceholder"), icon: Database, type: "text" },
-    { key: "login" as const, label: t("loginLabel"), placeholder: t("loginPlaceholder"), icon: User, type: "text" },
-    { key: "apiKey" as const, label: t("apiKeyLabel"), placeholder: t("apiKeyPlaceholder"), icon: Key, type: "password" },
+    { key: "url" as const, label: t("urlLabel"), placeholder: t("urlPlaceholder"), icon: Globe, type: "url", technical: true },
+    { key: "db" as const, label: t("databaseLabel"), placeholder: t("databasePlaceholder"), icon: Database, type: "text", technical: true },
+    { key: "login" as const, label: t("loginLabel"), placeholder: t("loginPlaceholder"), icon: User, type: "text", technical: false },
+    { key: "apiKey" as const, label: t("apiKeyLabel"), placeholder: t("apiKeyPlaceholder"), icon: Key, type: "password", technical: true },
   ];
 
   return (
@@ -91,8 +91,8 @@ export function ConnectionForm() {
         const Icon = field.icon;
         return (
           <div key={field.key}>
-            <label className="mb-2 flex items-center gap-2 text-sm font-medium">
-              <Icon size={16} className="text-muted-foreground" />
+            <label className="mb-2 flex items-center gap-2 text-small font-medium text-text-secondary">
+              <Icon size={16} strokeWidth={1.5} className="text-text-secondary" />
               {field.label}
             </label>
             <input
@@ -100,7 +100,7 @@ export function ConnectionForm() {
               value={config[field.key]}
               onChange={(e) => setConfig({ ...config, [field.key]: e.target.value })}
               placeholder={field.placeholder}
-              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
+              className={`w-full rounded-md border border-border bg-surface px-4 py-2 text-body outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30 focus:ring-offset-1${field.technical ? " font-technical" : ""}`}
             />
           </div>
         );
@@ -113,26 +113,27 @@ export function ConnectionForm() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="overflow-hidden"
           >
             <div
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm ${
+              className={`flex items-center gap-3 rounded-md px-4 py-3 text-body ${
                 status === "loading"
-                  ? "bg-muted text-muted-foreground"
+                  ? "bg-raised text-text-secondary"
                   : status === "success"
-                    ? "bg-success/10 text-success"
-                    : "bg-destructive/10 text-destructive"
+                    ? "bg-success-subtle text-success-solid"
+                    : "bg-error-subtle text-error"
               }`}
             >
               {status === "loading" && (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
+                  <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
                   <span>{t("statusTesting")}</span>
                 </>
               )}
               {status === "success" && (
                 <>
-                  <CheckCircle2 size={18} />
+                  <CheckCircle2 size={16} strokeWidth={1.5} />
                   <span>
                     {companyName
                       ? t("statusSuccessCompany", { company: companyName })
@@ -142,8 +143,8 @@ export function ConnectionForm() {
               )}
               {status === "error" && (
                 <>
-                  <XCircle size={18} />
-                  <span>{errorMessage ?? t("statusError")}</span>
+                  <AlertTriangle size={16} strokeWidth={1.5} />
+                  <span className="font-technical">{errorMessage ?? t("statusError")}</span>
                 </>
               )}
             </div>
@@ -152,7 +153,7 @@ export function ConnectionForm() {
       </AnimatePresence>
 
       {saveError && (
-        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{saveError}</p>
+        <p className="rounded-md bg-error-subtle px-3 py-2 text-small text-error font-technical">{saveError}</p>
       )}
 
       {/* Actions */}
@@ -160,20 +161,20 @@ export function ConnectionForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-5 py-3 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
+          className="flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-body font-medium text-foreground transition-colors hover:bg-raised disabled:opacity-50"
         >
-          <Plug size={16} />
+          <Plug size={16} strokeWidth={1.5} />
           {t("testConnection")}
         </button>
         <button
           type="button"
           onClick={handleSave}
           disabled={status !== "success"}
-          className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
+          className="flex h-9 items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40"
         >
           {saved ? (
             <>
-              <CheckCircle2 size={16} />
+              <CheckCircle2 size={16} strokeWidth={1.5} />
               {t("saved")}
             </>
           ) : (

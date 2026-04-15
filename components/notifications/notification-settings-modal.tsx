@@ -23,13 +23,15 @@ function ToggleRow({ label, description, checked, onChange }: ToggleRowProps) {
   return (
     <div className="flex items-center justify-between gap-4 py-3">
       <div className="min-w-0">
-        <p className="text-sm font-medium">{label}</p>
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="text-body font-medium">{label}</p>
+        <p className="text-small text-text-secondary">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}
+        aria-checked={checked}
+        role="switch"
         className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
-          checked ? "bg-primary" : "bg-muted-foreground/30"
+          checked ? "bg-accent" : "bg-raised"
         }`}
       >
         <span
@@ -84,19 +86,21 @@ export function NotificationSettingsModal({ onClose }: NotificationSettingsModal
 
       {/* Card */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="relative z-10 mx-4 w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 8 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="relative z-10 mx-4 w-full max-w-md rounded-lg border border-border bg-surface p-6 shadow-lg"
       >
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{t("settingsTitle")}</h2>
+          <h2 className="text-heading">{t("settingsTitle")}</h2>
           <button
             onClick={onClose}
-            className="rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
+            className="rounded-md p-1 text-text-secondary transition-colors hover:text-foreground"
+            aria-label="Close"
           >
-            <X size={18} />
+            <X size={20} strokeWidth={1.5} />
           </button>
         </div>
 
@@ -133,7 +137,7 @@ export function NotificationSettingsModal({ onClose }: NotificationSettingsModal
           <button
             onClick={handleSave}
             disabled={saving}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+            className="h-9 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
           >
             {saving ? "..." : t("save")}
           </button>

@@ -71,9 +71,9 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
   const hasContent = value.trim() || imageFile;
 
   return (
-    <div className="border-t border-border bg-background px-4 py-4">
+    <div className="border-t border-border bg-base px-4 py-4">
       <div className="mx-auto max-w-3xl">
-        <div className="rounded-2xl border border-border bg-card shadow-sm transition-shadow focus-within:shadow-md focus-within:ring-2 focus-within:ring-ring/20">
+        <div className="rounded-lg border border-border bg-surface shadow-sm transition-shadow focus-within:shadow-md focus-within:ring-2 focus-within:ring-accent/30">
           {/* Image preview */}
           <AnimatePresence>
             {imagePreview && (
@@ -81,20 +81,22 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
                 className="px-3 pt-3"
               >
                 <div className="relative inline-block">
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="h-16 w-16 rounded-lg border border-border object-cover"
+                    className="h-16 w-16 rounded-md border border-border object-cover"
                   />
                   <button
                     onClick={clearImage}
-                    className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white shadow-sm transition-colors hover:bg-destructive/90"
+                    className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-error text-white shadow-sm transition-colors hover:opacity-90"
                     title={t("removeImage")}
+                    aria-label={t("removeImage")}
                   >
-                    <X size={10} />
+                    <X size={10} strokeWidth={1.5} />
                   </button>
                 </div>
               </motion.div>
@@ -113,10 +115,11 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isStreaming || disabled}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
               title={t("attachImage")}
+              aria-label={t("attachImage")}
             >
-              <Paperclip size={18} />
+              <Paperclip size={20} strokeWidth={1.5} />
             </button>
 
             <textarea
@@ -130,30 +133,33 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
               placeholder={t("placeholder")}
               rows={1}
               disabled={disabled}
-              className="max-h-50 min-h-11 flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
+              className="max-h-50 min-h-11 flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"
             />
 
             {isStreaming ? (
               <motion.button
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
                 onClick={onStop}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-destructive text-white transition-colors hover:bg-destructive/90"
+                aria-label={t("stop")}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-error text-white transition-colors hover:opacity-90"
               >
-                <Square size={16} fill="currentColor" />
+                <Square size={16} strokeWidth={1.5} fill="currentColor" />
               </motion.button>
             ) : (
               <button
                 onClick={handleSubmit}
                 disabled={!hasContent || disabled}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40 disabled:hover:bg-primary"
+                aria-label={t("send")}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:hover:bg-accent"
               >
-                <Send size={16} />
+                <Send size={16} strokeWidth={1.5} />
               </button>
             )}
           </div>
         </div>
-        <p className="mt-2 text-center text-xs text-muted-foreground">
+        <p className="mt-2 text-center text-small text-text-muted">
           {t("disclaimer")}
         </p>
       </div>

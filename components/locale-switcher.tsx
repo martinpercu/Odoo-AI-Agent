@@ -37,14 +37,15 @@ export function LocaleSwitcher({ collapsed = false }: LocaleSwitcherProps) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-sidebar-hover"
+        className="flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-raised"
       >
-        <Globe size={18} />
+        <Globe size={20} strokeWidth={1.5} />
         {!collapsed && (
           <>
             <span className="flex-1 text-left">{t(locale)}</span>
             <ChevronDown
               size={14}
+              strokeWidth={1.5}
               className={`transition-transform ${open ? "rotate-180" : ""}`}
             />
           </>
@@ -52,13 +53,13 @@ export function LocaleSwitcher({ collapsed = false }: LocaleSwitcherProps) {
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 mb-1 w-full min-w-[160px] rounded-lg border border-sidebar-border bg-sidebar py-1 shadow-lg">
+        <div className="absolute bottom-full left-0 mb-1 w-full min-w-[160px] rounded-md border border-border bg-surface py-1 shadow-lg">
           {routing.locales.map((loc) => (
             <button
               key={loc}
               onClick={() => switchTo(loc)}
-              className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-sidebar-hover ${
-                loc === locale ? "font-medium text-primary" : ""
+              className={`flex w-full items-center px-3 py-2 text-left text-body transition-colors hover:bg-raised ${
+                loc === locale ? "font-medium text-accent" : ""
               }`}
             >
               {t(loc)}
