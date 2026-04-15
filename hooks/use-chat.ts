@@ -59,7 +59,9 @@ function delay(ms: number) {
 }
 
 export function useChat(chatId?: string) {
+  const chatsRef = useRef<Chat[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
+  chatsRef.current = chats;
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(chatId);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -525,7 +527,7 @@ export function useChat(chatId?: string) {
       // Skip if already loaded or currently loading
       if (loadedChatIdsRef.current.has(targetChatId)) return;
       // Skip if chat already exists in state with messages
-      const existing = chats.find((c) => c.id === targetChatId);
+      const existing = chatsRef.current.find((c) => c.id === targetChatId);
       if (existing && existing.messages.length > 0) {
         loadedChatIdsRef.current.add(targetChatId);
         return;
@@ -567,7 +569,7 @@ export function useChat(chatId?: string) {
         setIsLoadingHistory(false);
       }
     },
-    [chats, activeConfigId]
+    [activeConfigId]
   );
 
   return {

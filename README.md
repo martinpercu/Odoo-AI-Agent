@@ -62,7 +62,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - 402 payment limit modal (graceful degradation, no crash)
 
 **Configuration:**
-- Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations
+- Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations, feedback reports
 - Odoo connection configuration, validation, and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese)
 - Light / dark mode with preference persisted in `localStorage` (no flash on reload)
@@ -125,7 +125,8 @@ components/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
   chat/
     sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle (persisted in localStorage) + logout
-    chat-messages.tsx           # Message bubbles with metadata + charts + image handling
+    chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
+    feedback-modal.tsx          # Modal to report an AI message (category + comment)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
     welcome-dashboard.tsx       # First-chat landing with suggestion cards
     demo-banner.tsx             # Banner shown in demo mode (unauthenticated or no org)
@@ -327,8 +328,9 @@ Settings
 ├── Connections   → CRUD for Odoo configs (multiple per org)
 │                   test connection, inspect installed modules
 ├── Users         → list members, change role, toggle free/paid slot, remove
-└── Invitations   → send invite by email, view status (pending / accepted / expired)
-                    pending invitations show "Show link" button to reveal and copy the invite URL
+├── Invitations   → send invite by email, view status (pending / accepted / expired)
+│                   pending invitations show "Show link" button to reveal and copy the invite URL
+└── Feedback      → read-only list of feedback reports submitted by org users (expandable rows)
 ```
 
 Role comparison:
@@ -336,12 +338,15 @@ Role comparison:
 | Capability | CLIENT_USER | ADMIN | SUPERADMIN |
 |------------|:-----------:|:-----:|:----------:|
 | Chat & query Odoo | ✓ | ✓ | ✓ |
+| Submit feedback on AI messages | per `allow_feedback` flag | per `allow_feedback` flag | per `allow_feedback` flag |
 | View plans/pricing link | — | ✓ | ✓ |
 | View settings | — | ✓ | ✓ |
 | Manage Odoo connections | — | ✓ | ✓ |
 | Manage users & invitations | — | ✓ | ✓ |
+| View org feedback reports | — | ✓ | ✓ |
 | Edit organization | — | ✓ | ✓ |
 | Cross-org administration | — | — | ✓ |
+| Feedback dashboard + full triage | — | — | ✓ |
 
 ### Invitation Flow
 
@@ -386,7 +391,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
 | **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
-| **allow_feedback** | `boolean` (per user) | Flag on `OrgUser` and `SuperAdminUser` indicating whether the user has feedback enabled; visible in the superadmin users table |
+| **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over AI messages. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`) and comment. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
 
 **Settings page** (`/settings`) provides admin controls for:
 - Organization name/slug/type editing
@@ -455,6 +460,12 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `DELETE` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: delete a user's credentials for a config |
 | `POST` | `/billing/checkout` | Create Stripe checkout session for a given tier |
 | `POST` | `/billing/portal` | Create Stripe billing portal session |
+| `POST` | `/chat/{id}/feedback` | Submit user feedback for a message (body: `{ config_id, message_id?, user_comment?, category? }`) |
+| `GET` | `/admin/feedback` | List feedback reports (filterable by status, category, org_id; paginated) |
+| `GET` | `/admin/feedback/stats` | Feedback statistics (total, 24h, 7d, by_status, by_category, top_orgs) |
+| `GET` | `/admin/feedback/{id}` | Fetch single feedback report detail |
+| `PATCH` | `/admin/feedback/{id}` | Update report (status, admin_notes, is_hidden) |
+| `DELETE` | `/admin/feedback/{id}` | Delete feedback report |
 
 ### SSE Event Types
 
@@ -748,11 +759,12 @@ Translations are located in `messages/[locale].json`.
 | `ChatGroups` | Date-based grouping labels |
 | `NewChat` | Welcome screen and suggestions |
 | `ChatInput` | Input placeholder, disclaimer, image attach/remove, send/stop aria labels |
-| `ChatMessages` | Chat UI: typing, success, validation, selection, file, chart, export, action proposal, audit |
+| `ChatMessages` | Chat UI: typing, success, validation, selection, file, chart, export, action proposal, audit, feedback button |
+| `Feedback` | Feedback modal: title, categories, comment, submit/cancel, success toast |
 | `ChatHistory` | Loading states |
 | `WelcomeDashboard` | Suggestion cards for first-chat landing |
 | `Pricing` | Plans, features, and CTAs |
-| `Settings` | Connection form, inspector, security, admin panel (org, configs, users, invitations) |
+| `Settings` | Connection form, inspector, security, admin panel (org, configs, users, invitations, feedback reports) |
 | `PinnedInsights` | Pin/unpin tooltips, empty state, error messages |
 | `Notifications` | Alert feed, settings, time labels |
 | `Auth` | Login, register, DEV MODE bypass |
