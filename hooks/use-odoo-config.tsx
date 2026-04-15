@@ -1,15 +1,19 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import type { OdooConfig } from "@/lib/types";
-
-const STORAGE_KEY = "odoo_config";
+import type { OdooConfigSummary } from "@/lib/types";
+import { useSession } from "@/hooks/use-session";
 
 interface OdooConfigContextType {
-  config: OdooConfig | null;
+  configs: OdooConfigSummary[];
+  activeConfig: OdooConfigSummary | null;
+  activeConfigId: string | null;
+  setActiveConfigId: (id: string) => void;
   isConfigured: boolean;
-  saveConfig: (config: OdooConfig) => void;
-  clearConfig: () => void;
+  isDemoMode: boolean;
+  // Legacy compat: expose a minimal OdooConfig-like object for components
+  // still reading url/db for display purposes (e.g. Settings form, Inspector)
+  config: { url: string; db: string; login: string; apiKey: string } | null;
 }
 
 const OdooConfigContext = createContext<OdooConfigContextType | null>(null);
@@ -21,46 +25,48 @@ export function useOdooConfig() {
 }
 
 export function OdooConfigProvider({ children }: { children: React.ReactNode }) {
-  const [config, setConfig] = useState<OdooConfig | null>(null);
+  const { meData } = useSession();
+  const configs = meData?.odoo_configs ?? [];
 
+  // Persist the selected config_id in localStorage so it survives page refresh
+  const [activeConfigId, setActiveConfigIdState] = useState<string | null>(null);
+
+  // On mount / when configs load, restore or default to first active (or "demo" if none)
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setConfig(JSON.parse(stored));
-      }
-    } catch {
-      // Invalid JSON or localStorage unavailable
+    if (configs.length === 0) {
+      // No real configs — use demo mode
+      setActiveConfigIdState("demo");
+      return;
     }
+
+    const stored = typeof window !== "undefined"
+      ? localStorage.getItem("odoo_active_config_id")
+      : null;
+
+    if (stored && (stored === "demo" || configs.find((c) => c.id === stored))) {
+      setActiveConfigIdState(stored);
+    } else {
+      const first = configs.find((c) => c.is_active) ?? configs[0];
+      setActiveConfigIdState(first.id);
+    }
+  }, [configs.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const setActiveConfigId = useCallback((id: string) => {
+    setActiveConfigIdState(id);
+    try { localStorage.setItem("odoo_active_config_id", id); } catch { /* ignore */ }
   }, []);
 
-  const saveConfig = useCallback((newConfig: OdooConfig) => {
-    setConfig(newConfig);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
-    } catch {
-      // localStorage unavailable
-    }
-  }, []);
+  const activeConfig = configs.find((c) => c.id === activeConfigId) ?? null;
+  const isDemoMode = activeConfigId === "demo";
+  const isConfigured = isDemoMode || activeConfig !== null;
 
-  const clearConfig = useCallback(() => {
-    setConfig(null);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // localStorage unavailable
-    }
-  }, []);
-
-  const isConfigured =
-    config !== null &&
-    config.url.length > 0 &&
-    config.db.length > 0 &&
-    config.login.length > 0 &&
-    config.apiKey.length > 0;
+  // Legacy compat shape (no apiKey — it lives only in the backend now)
+  const config = activeConfig
+    ? { url: activeConfig.url, db: activeConfig.db_name, login: activeConfig.username, apiKey: "" }
+    : null;
 
   return (
-    <OdooConfigContext.Provider value={{ config, isConfigured, saveConfig, clearConfig }}>
+    <OdooConfigContext.Provider value={{ configs, activeConfig, activeConfigId, setActiveConfigId, isConfigured, isDemoMode, config }}>
       {children}
     </OdooConfigContext.Provider>
   );

@@ -7,12 +7,13 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
-import { Loader2 } from "lucide-react";
+import { Loader2, Zap } from "lucide-react";
 
 function LoginContent() {
   const t = useTranslations("Auth");
   const { login, isLoading: authLoading } = useAuth();
-  const { reload } = useSession();
+  const { reload, meData } = useSession();
+  const demoAvailable = meData?.demo_available ?? false;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -128,6 +129,19 @@ function LoginContent() {
             {t("registerLink")}
           </Link>
         </p>
+
+        {demoAvailable && (
+          <div className="mt-4 border-t border-(--color-border) pt-4">
+            <button
+              type="button"
+              onClick={() => router.push(`/${locale}/chat`)}
+              className="w-full flex items-center justify-center gap-2 rounded-lg border border-(--color-border) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-hover) transition-colors"
+            >
+              <Zap size={14} className="text-amber-500" />
+              {t("tryDemo")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

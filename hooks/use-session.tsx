@@ -45,8 +45,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       const result = await fetchMe();
       if (result.success && result.data) {
         setMeData(result.data);
-        // Guard: if user has no org, redirect to onboarding
+        // Guard: if real authenticated user has no org, redirect to onboarding
+        // (skip for demo/unauthenticated stubs)
         if (
+          user &&
           result.data.org === null &&
           !pathname?.includes("/onboarding") &&
           !pathname?.includes("/login") &&
@@ -69,14 +71,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }
   }, [user, pathname, getLocale, router]);
 
-  // Load session whenever user becomes available
+  // Always load /me — works without JWT (returns demo stub when unauthenticated)
   useEffect(() => {
-    if (user) {
-      load();
-    } else {
-      setMeData(null);
-      setIsError(false);
-    }
+    load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
