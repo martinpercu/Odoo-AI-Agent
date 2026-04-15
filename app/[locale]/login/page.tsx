@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, Suspense } from "react";
+import { useState, FormEvent, Suspense, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -11,7 +11,7 @@ import { Loader2, Zap } from "lucide-react";
 
 function LoginContent() {
   const t = useTranslations("Auth");
-  const { login, isLoading: authLoading } = useAuth();
+  const { login, isLoading: authLoading, user } = useAuth();
   const { reload, meData } = useSession();
   const demoAvailable = meData?.demo_available ?? false;
   const router = useRouter();
@@ -25,6 +25,13 @@ function LoginContent() {
 
   const locale = pathname?.split("/")[1] || "en";
   const nextPath = searchParams.get("next") || `/${locale}/chat`;
+
+  // Redirect already-logged-in users
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace(meData?.org ? `/${locale}/chat` : `/${locale}/onboarding`);
+    }
+  }, [authLoading, user, meData?.org, locale, router]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
