@@ -41,7 +41,7 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
         expected_response: expectedResponse || undefined,
       });
       setSubmitted(true);
-      setTimeout(onClose, 3000);
+      setTimeout(onClose, 2400);
     } catch {
       // fail silently per spec
       console.error("Feedback submission failed");

@@ -425,6 +425,7 @@ export interface FeedbackReport {
   status: FeedbackStatus;
   is_hidden: boolean;
   admin_notes: string | null;
+  tenant_notes: string | null;
 
   // Conversation snapshot
   last_messages: Array<{ role: "human" | "ai"; content: string; id: string | null }>;

@@ -72,14 +72,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Handle 401 events dispatched by authFetch
     const handle401 = () => {
-      const currentPath = window.location.pathname;
-      const publicPaths = ["/login", "/register", "/invite", "/onboarding"];
-      const withoutLocale = "/" + currentPath.split("/").slice(2).join("/");
-      if (publicPaths.some((p) => withoutLocale.startsWith(p))) return;
-      setUser(null);
-      supabase!.auth.signOut();
-      const locale = getLocale();
-      router.push(`/${locale}/login`);
+      // If there's no active session, the 401 is expected (unauthenticated user
+      // hitting a protected endpoint) — don't redirect to login.
+      supabase!.auth.getSession().then(({ data }) => {
+        if (!data.session) return;
+        const currentPath = window.location.pathname;
+        const publicPaths = ["/login", "/register", "/invite", "/onboarding"];
+        const withoutLocale = "/" + currentPath.split("/").slice(2).join("/");
+        if (publicPaths.some((p) => withoutLocale.startsWith(p))) return;
+        setUser(null);
+        supabase!.auth.signOut();
+        const locale = getLocale();
+        router.push(`/${locale}/login`);
+      });
     };
 
     window.addEventListener("auth:unauthorized", handle401);

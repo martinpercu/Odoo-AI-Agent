@@ -15,7 +15,8 @@
     "loadMore": "Mehr laden",
     "collapse": "Seitenleiste einklappen",
     "expand": "Seitenleiste ausklappen",
-    "superAdmin": "Admin-Panel"
+    "superAdmin": "Admin-Panel",
+    "login": "Anmelden"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -138,6 +139,7 @@
       },
       "starter": {
         "name": "Starter",
+        "price": "$50",
         "description": "Für einzelne Nutzer mit vollem, uneingeschränktem Zugriff.",
         "cta": "Abonnieren",
         "features": {
@@ -148,7 +150,7 @@
       },
       "enterprise": {
         "name": "Enterprise",
-        "fromPrice": "Ab $8",
+        "fromPrice": "Ab $100",
         "description": "Für Odoo-Implementierer, die mehrere Kunden verwalten.",
         "features": {
           "seatsFrom": "Ab 10 Plätze (5 kostenlos + 5 kostenpflichtig)",
@@ -184,7 +186,20 @@
       "userQuery": "Benutzeranfrage",
       "agentResponse": "Agentenantwort",
       "comment": "Kommentar",
-      "adminNotes": "Admin-Notizen"
+      "adminNotes": "Admin-Notizen",
+      "tabData": "Kommentare",
+      "tabMessages": "Nachrichten",
+      "category": "Kategorie",
+      "expectedResponse": "Erwartete Antwort",
+      "noMessages": "Keine Nachrichten aufgezeichnet.",
+      "tabNote": "Notiz",
+      "noteHint": "Internes Notizfeld (hilft dem Entwicklungsteam, dieses Feedback zu lösen)",
+      "notePlaceholder": "Interne Notiz schreiben...",
+      "noteSave": "Speichern",
+      "noteCancel": "Abbrechen",
+      "noteEdit": "Bearbeiten",
+      "noteSavedTitle": "Notiz gespeichert",
+      "noteSavedBody": "Die Notiz wurde erfolgreich gespeichert."
     },
     "inspector": {
       "heading": "Instanz-Inspektor",
@@ -594,7 +609,8 @@
       "filterAllCategory": "Alle Kategorien",
       "filterOrg": "Org filtern...",
       "prev": "Zurück",
-      "next": "Weiter"
+      "next": "Weiter",
+      "tenantNotes": "Hinweis des Tenant-Admins"
     }
   }
 }

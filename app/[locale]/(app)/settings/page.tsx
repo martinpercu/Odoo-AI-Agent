@@ -2,7 +2,7 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Settings,
   Shield,
@@ -21,6 +21,8 @@ import {
   Flag,
   ChevronDown,
   ChevronUp,
+  X,
+  CheckCircle2,
 } from "lucide-react";
 import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
@@ -37,6 +39,7 @@ import {
   createInvitation,
   listInvitations,
   fetchAdminFeedback,
+  updateTenantNotes,
 } from "@/lib/api";
 import type { OdooConfigItem, OdooConfigSummary, OrgUser, Invitation, UserRole, FeedbackReport } from "@/lib/types";
 
@@ -569,10 +572,7 @@ function InvitationsSection() {
                 className="rounded-md border border-border text-body overflow-hidden"
               >
                 <div className="flex items-center justify-between px-3 py-2">
-                  <div>
-                    <p className="font-medium">{inv.email}</p>
-                    <p className="text-small text-text-muted font-technical">{inv.role}</p>
-                  </div>
+                  <p className="font-medium">{inv.email}</p>
                   <div className="flex items-center gap-2">
                     {inv.accepted_at ? (
                       <span className="text-small text-success-solid">{t("admin.accepted")}</span>
@@ -626,6 +626,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: "Otro",
 };
 
+const STATUS_COLOR: Record<string, string> = {
+  pending: "bg-accent-subtle text-accent",
+  reviewed: "bg-accent-subtle text-accent",
+  test_alpha: "bg-accent-subtle text-accent",
+  test_beta: "bg-accent-subtle text-accent",
+  resolved: "bg-success-subtle text-success-solid",
+};
+
 const STATUS_LABELS: Record<string, string> = {
   pending: "Pendiente",
   reviewed: "Revisado",
@@ -634,6 +642,224 @@ const STATUS_LABELS: Record<string, string> = {
   resolved: "Resuelto",
 };
 
+type FeedbackTab = "data" | "messages" | "note";
+
+function FeedbackReportRow({ r }: { r: FeedbackReport }) {
+  const t = useTranslations("Settings");
+  const [expanded, setExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState<FeedbackTab>("data");
+
+  // Note tab state
+  const [noteText, setNoteText] = useState(r.tenant_notes ?? "");
+  const [editing, setEditing] = useState(!r.tenant_notes);
+  const [saving, setSaving] = useState(false);
+  const [savedModal, setSavedModal] = useState(false);
+
+  async function handleSaveNote() {
+    setSaving(true);
+    await updateTenantNotes(r.thread_id, r.id, noteText.trim() || null);
+    setSaving(false);
+    setEditing(false);
+    setSavedModal(true);
+    setTimeout(() => setSavedModal(false), 3000);
+  }
+
+  return (
+    <div className="rounded-md border border-border overflow-hidden">
+      {/* Row header */}
+      <button
+        onClick={() => setExpanded((prev) => !prev)}
+        className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-raised/80 transition-colors"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <span className={`shrink-0 rounded-md px-2 py-0.5 text-small font-medium ${STATUS_COLOR[r.status] ?? "bg-accent-subtle text-accent"}`}>
+            {STATUS_LABELS[r.status] ?? r.status}
+          </span>
+          <span className="truncate text-small text-text-secondary">
+            {r.user_comment ?? r.user_query ?? "—"}
+          </span>
+        </div>
+        <div className="shrink-0 ml-2 text-text-muted">
+          {expanded ? <ChevronUp size={14} strokeWidth={1.5} /> : <ChevronDown size={14} strokeWidth={1.5} />}
+        </div>
+      </button>
+
+      {/* Expanded panel */}
+      {expanded && (
+        <div className="border-t border-border">
+          {/* Tabs */}
+          <div className="flex border-b border-border">
+            {(["data", "messages", "note"] as FeedbackTab[]).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 py-2 text-center text-small font-medium transition-colors ${
+                  activeTab === tab
+                    ? "border-b-2 border-accent text-accent"
+                    : "text-text-muted hover:text-text-secondary"
+                }`}
+              >
+                {t(`feedback.tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`)}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab: DATA */}
+          {activeTab === "data" && (
+            <div className="px-4 py-3 space-y-3">
+              {r.category && (
+                <div>
+                  <span className="rounded-md bg-surface border border-border px-2 py-0.5 text-small text-text-secondary">
+                    {CATEGORY_LABELS[r.category] ?? r.category}
+                  </span>
+                </div>
+              )}
+              {r.user_comment && (
+                <div>
+                  <p className="text-small text-foreground">{r.user_comment}</p>
+                </div>
+              )}
+              {r.expected_response && (
+                <div>
+                  <p className="text-micro text-text-muted mb-0.5">{t("feedback.expectedResponse")}</p>
+                  <p className="text-small text-foreground">{r.expected_response}</p>
+                </div>
+              )}
+              {r.admin_notes && (
+                <div>
+                  <p className="text-micro text-text-muted mb-0.5">{t("feedback.adminNotes")}</p>
+                  <p className="text-small text-foreground">{r.admin_notes}</p>
+                </div>
+              )}
+              <p className="text-micro text-text-muted pt-1">
+                {new Date(r.reported_at).toLocaleDateString()}
+              </p>
+            </div>
+          )}
+
+          {/* Tab: MESSAGES */}
+          {activeTab === "messages" && (
+            <div className="px-4 py-3 space-y-2 max-h-80 overflow-y-auto">
+              {r.last_messages && r.last_messages.length > 0 ? (
+                r.last_messages.map((msg, i) => (
+                  <div
+                    key={msg.id ?? i}
+                    className={`flex ${msg.role === "human" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-md px-3 py-2 text-small ${
+                        msg.role === "human"
+                          ? "bg-accent-subtle text-foreground"
+                          : "bg-surface border border-border text-foreground"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-small text-text-muted">{t("feedback.noMessages")}</p>
+              )}
+            </div>
+          )}
+
+          {/* Tab: NOTE */}
+          {activeTab === "note" && (
+            <div className="px-4 py-3 space-y-3">
+              {!editing && noteText ? (
+                <>
+                  <p className="text-small text-foreground whitespace-pre-wrap">{noteText}</p>
+                  <button
+                    onClick={() => setEditing(true)}
+                    className="rounded-md border border-border px-3 py-1.5 text-small text-text-secondary hover:bg-raised transition-colors"
+                  >
+                    {t("feedback.noteEdit")}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-micro text-text-muted">{t("feedback.noteHint")}</p>
+                  <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    rows={4}
+                    placeholder={t("feedback.notePlaceholder")}
+                    className="w-full rounded-md border border-border bg-base px-3 py-2 text-small text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+                  />
+                  <div className="flex gap-2">
+                    {r.tenant_notes && (
+                      <button
+                        onClick={() => { setNoteText(r.tenant_notes ?? ""); setEditing(false); }}
+                        className="rounded-md border border-border px-3 py-1.5 text-small text-text-secondary hover:bg-raised transition-colors"
+                      >
+                        {t("feedback.noteCancel")}
+                      </button>
+                    )}
+                    <button
+                      onClick={handleSaveNote}
+                      disabled={saving || !noteText.trim()}
+                      className="inline-flex items-center gap-2 rounded-md bg-accent px-3 py-1.5 text-small font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-60"
+                    >
+                      {saving && <Loader2 size={13} strokeWidth={1.5} className="animate-spin" />}
+                      {t("feedback.noteSave")}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Success modal */}
+      <AnimatePresence>
+        {savedModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            onClick={() => setSavedModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="w-full max-w-sm rounded-lg border border-border bg-surface shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-border px-5 py-4">
+                <p className="text-subheading">{t("feedback.noteSavedTitle")}</p>
+                <button
+                  onClick={() => setSavedModal(false)}
+                  className="rounded-md p-1 text-text-muted hover:bg-raised hover:text-foreground transition-colors"
+                  aria-label="Cerrar"
+                >
+                  <X size={16} strokeWidth={1.5} />
+                </button>
+              </div>
+              <div className="flex flex-col items-center gap-3 px-5 py-8 text-center">
+                <CheckCircle2 size={32} strokeWidth={1.5} className="text-success-solid" />
+                <p className="text-body text-foreground">{t("feedback.noteSavedBody")}</p>
+              </div>
+              <div className="flex justify-center border-t border-border px-5 py-4">
+                <button
+                  onClick={() => setSavedModal(false)}
+                  className="rounded-md bg-accent px-5 py-2 text-small font-medium text-white hover:bg-accent-hover transition-colors"
+                >
+                  OK
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function FeedbackSection() {
   const t = useTranslations("Settings");
   const { meData } = useSession();
@@ -641,7 +867,6 @@ function FeedbackSection() {
 
   const [reports, setReports] = useState<FeedbackReport[]>([]);
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     if (!orgId) return;
@@ -669,63 +894,7 @@ function FeedbackSection() {
       ) : (
         <div className="space-y-2">
           {reports.map((r) => (
-            <div key={r.id} className="rounded-md border border-border bg-raised overflow-hidden">
-              <button
-                onClick={() => setExpanded(expanded === r.id ? null : r.id)}
-                className="flex w-full items-center justify-between px-4 py-3 text-left"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-small font-medium ${
-                    r.status === "resolved" ? "bg-success-subtle text-success-solid" : "bg-accent-subtle text-accent"
-                  }`}>
-                    {STATUS_LABELS[r.status] ?? r.status}
-                  </span>
-                  {r.category && (
-                    <span className="rounded-md bg-surface px-2 py-0.5 text-small text-text-secondary border border-border">
-                      {CATEGORY_LABELS[r.category] ?? r.category}
-                    </span>
-                  )}
-                  <span className="truncate text-small text-text-secondary">
-                    {r.user_query ?? r.user_comment ?? "—"}
-                  </span>
-                </div>
-                <div className="shrink-0 ml-2 text-text-muted">
-                  {expanded === r.id ? <ChevronUp size={14} strokeWidth={1.5} /> : <ChevronDown size={14} strokeWidth={1.5} />}
-                </div>
-              </button>
-
-              {expanded === r.id && (
-                <div className="border-t border-border px-4 py-3 space-y-2">
-                  {r.user_query && (
-                    <div>
-                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.userQuery")}</p>
-                      <p className="text-small text-foreground">{r.user_query}</p>
-                    </div>
-                  )}
-                  {r.agent_response && (
-                    <div>
-                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.agentResponse")}</p>
-                      <p className="text-small text-foreground">{r.agent_response}</p>
-                    </div>
-                  )}
-                  {r.user_comment && (
-                    <div>
-                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.comment")}</p>
-                      <p className="text-small text-foreground">{r.user_comment}</p>
-                    </div>
-                  )}
-                  {r.admin_notes && (
-                    <div>
-                      <p className="text-micro text-text-muted mb-0.5">{t("feedback.adminNotes")}</p>
-                      <p className="text-small text-foreground">{r.admin_notes}</p>
-                    </div>
-                  )}
-                  <p className="text-micro text-text-muted">
-                    {new Date(r.reported_at).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
-            </div>
+            <FeedbackReportRow key={r.id} r={r} />
           ))}
         </div>
       )}
