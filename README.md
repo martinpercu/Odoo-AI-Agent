@@ -126,7 +126,7 @@ components/
   chat/
     sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle (persisted in localStorage) + logout
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
-    feedback-modal.tsx          # Modal to report an AI message (category + comment)
+    feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
     welcome-dashboard.tsx       # First-chat landing with suggestion cards
     demo-banner.tsx             # Banner shown in demo mode (unauthenticated or no org)
@@ -391,7 +391,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
 | **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
-| **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over AI messages. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`) and comment. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
+| **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over AI messages. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`), comment, and expected response. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
 
 **Settings page** (`/settings`) provides admin controls for:
 - Organization name/slug/type editing
@@ -460,7 +460,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `DELETE` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: delete a user's credentials for a config |
 | `POST` | `/billing/checkout` | Create Stripe checkout session for a given tier |
 | `POST` | `/billing/portal` | Create Stripe billing portal session |
-| `POST` | `/chat/{id}/feedback` | Submit user feedback for a message (body: `{ config_id, message_id?, user_comment?, category? }`) |
+| `POST` | `/chat/{id}/feedback` | Submit user feedback for a message (body: `{ config_id, message_id?, user_comment?, category?, expected_response? }`) |
 | `GET` | `/admin/feedback` | List feedback reports (filterable by status, category, org_id; paginated) |
 | `GET` | `/admin/feedback/stats` | Feedback statistics (total, 24h, 7d, by_status, by_category, top_orgs) |
 | `GET` | `/admin/feedback/{id}` | Fetch single feedback report detail |
