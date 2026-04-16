@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
@@ -94,14 +95,11 @@ export default function RegisterPage() {
             <label className="text-small font-medium text-text-secondary">
               {t("password")}
             </label>
-            <input
-              type="password"
+            <PasswordInput
+              value={password}
+              onChange={setPassword}
               required
               minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="rounded-md border border-border bg-base px-3 py-2 text-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </div>
 

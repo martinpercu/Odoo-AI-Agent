@@ -14,7 +14,8 @@
     "logout": "Déconnexion",
     "loadMore": "Charger plus",
     "collapse": "Réduire la barre latérale",
-    "expand": "Agrandir la barre latérale"
+    "expand": "Agrandir la barre latérale",
+    "superAdmin": "Panneau Admin"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -214,10 +215,12 @@
       "accepted": "Acceptée",
       "expired": "Expirée",
       "pending": "En attente",
+      "showLink": "Voir le lien",
       "copy": "Copier",
       "copied": "Copié",
       "credentials": "Identifiants",
-      "manageCredentials": "Gérer les identifiants Odoo"
+      "manageCredentials": "Gérer les identifiants Odoo",
+      "removeUser": "Supprimer l'utilisateur"
     },
     "credentials": {
       "sectionTitle": "Mes identifiants Odoo",
@@ -280,7 +283,12 @@
       "statusSuccess": "Connexion réussie.",
       "statusSuccessCompany": "Connecté à {company}",
       "statusError": "Échec de connexion. Vérifiez vos identifiants.",
-      "networkError": "Erreur serveur."
+      "networkError": "Erreur serveur.",
+      "labelLabel": "Étiquette",
+      "labelPlaceholder": "Ex : Production, Tests...",
+      "optional": "optionnel",
+      "statusSaving": "Enregistrement...",
+      "statusSaved": "Enregistré"
     }
   },
   "PinnedInsights": {
@@ -396,5 +404,90 @@
     "fr": "Français",
     "de": "Deutsch",
     "pt": "Português"
+  },
+  "SuperAdmin": {
+    "title": "Panneau SuperAdmin",
+    "navLink": "Panneau Admin",
+    "tabOrgs": "Organisations",
+    "tabUsers": "Utilisateurs",
+    "tabActivity": "Activité",
+    "loading": "Chargement...",
+    "errorLoad": "Impossible de charger les données. Veuillez réessayer.",
+    "retry": "Réessayer",
+    "orgs": {
+      "statsTotal": "Total orgs",
+      "statsActive": "Actives",
+      "statsSuspended": "Suspendues",
+      "colStatus": "Statut",
+      "colName": "Nom",
+      "colSlug": "Slug",
+      "colType": "Type",
+      "colPlan": "Plan",
+      "colSlots": "Slots",
+      "colWatermark": "Watermark",
+      "colUsers": "Utilisateurs",
+      "colCreated": "Créée",
+      "colActions": "Actions",
+      "statusActive": "Active",
+      "statusSuspended": "Suspendue",
+      "btnSuspend": "Suspendre",
+      "btnActivate": "Activer",
+      "btnEdit": "Modifier",
+      "btnView": "Voir",
+      "confirmSuspend": "Suspendre l'org {name} ? Tous les utilisateurs perdront l'accès.",
+      "confirmActivate": "Réactiver l'org {name} ?",
+      "editModalTitle": "Modifier l'abonnement",
+      "editTier": "Plan",
+      "editPaidSlots": "Slots payants",
+      "editFreeSlots": "Slots gratuits",
+      "editWatermark": "Afficher le watermark",
+      "editSave": "Enregistrer",
+      "editCancel": "Annuler",
+      "editSuccess": "Abonnement mis à jour.",
+      "editError": "Impossible de mettre à jour. Veuillez réessayer.",
+      "suspendSuccess": "Organisation suspendue.",
+      "activateSuccess": "Organisation activée.",
+      "actionError": "Une erreur s'est produite. Veuillez réessayer.",
+      "detailTitle": "Détail de l'organisation",
+      "detailSlots": "Slots utilisés",
+      "detailPaidUsed": "Payants utilisés",
+      "detailFreeUsed": "Gratuits utilisés",
+      "detailOdooConfigs": "Connexions Odoo",
+      "detailClose": "Fermer"
+    },
+    "users": {
+      "statsTotal": "Total utilisateurs",
+      "statsActive": "Actifs",
+      "statsNoOrg": "Sans org",
+      "colStatus": "Statut",
+      "colEmail": "Email",
+      "colRole": "Rôle",
+      "colOrg": "Organisation",
+      "colFree": "Gratuit",
+      "colCreated": "Inscrit",
+      "colActions": "Actions",
+      "statusActive": "Actif",
+      "statusSuspended": "Suspendu",
+      "noOrg": "Sans org",
+      "btnSuspend": "Suspendre",
+      "btnActivate": "Activer",
+      "confirmSuspend": "Suspendre l'utilisateur {email} ?",
+      "confirmActivate": "Réactiver l'utilisateur {email} ?",
+      "roleLabel": "Rôle",
+      "roleWarning": "⚠ Vous êtes sur le point d'attribuer le rôle SUPERADMIN. Confirmer ?",
+      "suspendSuccess": "Utilisateur suspendu.",
+      "activateSuccess": "Utilisateur activé.",
+      "updateSuccess": "Utilisateur mis à jour.",
+      "actionError": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "activity": {
+      "title": "Activité par organisation",
+      "subtitle": "Organisations triées par nombre d'utilisateurs.",
+      "colName": "Organisation",
+      "colUsers": "Utilisateurs",
+      "colPlan": "Plan",
+      "colType": "Type",
+      "colStatus": "Statut"
+    }
   }
 }

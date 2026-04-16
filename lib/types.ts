@@ -344,3 +344,56 @@ export interface Invitation {
   accepted_at: string | null;
   expires_at: string;
 }
+
+// ---- SuperAdmin ----
+
+export interface SuperAdminSubscription {
+  tier: string;
+  paid_slots_limit: number;
+  free_slots_limit: number;
+  show_watermark: boolean;
+  is_active: boolean;
+}
+
+export interface SuperAdminOrg {
+  id: string;
+  name: string;
+  slug: string;
+  type: OrgType;
+  is_active: boolean;
+  created_at: string;
+  subscription: SuperAdminSubscription;
+  user_count: number;
+}
+
+export interface SuperAdminOrgsResponse {
+  orgs: SuperAdminOrg[];
+  count: number;
+}
+
+export interface SuperAdminOrgDetail extends SuperAdminOrg {
+  slots: {
+    paid_used: number;
+    free_used: number;
+  };
+  odoo_configs?: OdooConfigItem[];
+}
+
+export interface SuperAdminUser {
+  id: string;
+  email: string;
+  role: UserRole;
+  is_free_license: boolean;
+  is_active: boolean;
+  created_at: string;
+  org: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+}
+
+export interface SuperAdminUsersResponse {
+  users: SuperAdminUser[];
+  count: number;
+}

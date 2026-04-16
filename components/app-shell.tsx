@@ -32,10 +32,17 @@ export function useRightPanel() {
   return ctx;
 }
 
+function isShelllessPath(pathname: string) {
+  // next-intl's usePathname already strips the locale prefix (e.g. returns /invite, not /es/invite)
+  return pathname.startsWith("/invite");
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<RightPanelTab>("pins");
+
+  const isPublic = isShelllessPath(pathname);
 
   // Extract chat ID from pathname if on a chat/[id] page
   const chatIdMatch = pathname.match(/^\/chat\/(.+)$/);
@@ -56,6 +63,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const handleBellClick = useCallback(() => {
     setActiveTab("alerts");
   }, []);
+
+  if (isPublic) {
+    return <>{children}</>;
+  }
 
   return (
     <ChatContext.Provider value={chat}>

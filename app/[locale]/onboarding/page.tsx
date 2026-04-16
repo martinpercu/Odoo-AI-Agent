@@ -51,6 +51,7 @@ function OnboardingContent() {
         org_slug: "",
         odoo_url: url,
         odoo_db: dbName,
+        odoo_username: login,
         odoo_api_key: apiKey,
       });
 

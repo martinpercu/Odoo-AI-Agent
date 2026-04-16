@@ -13,6 +13,7 @@ import { ToastProvider } from "@/components/ui/error-toast";
 import { LimitReachedModalProvider } from "@/hooks/use-limit-reached-modal";
 import { LimitReachedModal } from "@/components/ui/limit-reached-modal";
 import { AppShell } from "@/components/app-shell";
+import { ThemeInitializer } from "@/components/theme-initializer";
 import "../globals.css";
 
 const inter = Inter({
@@ -54,9 +55,17 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}})()`,
+          }}
+        />
+      </head>
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased`}
       >
+        <ThemeInitializer />
         <NextIntlClientProvider>
           <AuthProvider>
             <SessionProvider>

@@ -18,6 +18,9 @@ import type {
   UserOdooCredential,
   OdooCredentialSummary,
   SubscriptionTier,
+  SuperAdminOrgsResponse,
+  SuperAdminUsersResponse,
+  SuperAdminOrgDetail,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -177,6 +180,7 @@ export interface OnboardingPayload {
   org_slug: string;
   odoo_url: string;
   odoo_db: string;
+  odoo_username: string;
   odoo_api_key: string;
   odoo_label?: string;
 }
@@ -1154,6 +1158,180 @@ export async function createBillingPortalSession(): Promise<BillingPortalResult>
     const data = await res.json();
     if (res.ok) return { success: true, portal_url: data.portal_url ?? data.url };
     return { success: false, error: extractError(data.detail, "Failed to open billing portal") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- SuperAdmin API ----
+
+export interface SuperAdminOrgsResult {
+  success: boolean;
+  data?: SuperAdminOrgsResponse;
+  error?: string;
+}
+
+export async function superadminListOrgs(
+  limit = 100,
+  offset = 0
+): Promise<SuperAdminOrgsResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/orgs?limit=${limit}&offset=${offset}`
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: data.detail || "Failed to list orgs" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface SuperAdminUsersResult {
+  success: boolean;
+  data?: SuperAdminUsersResponse;
+  error?: string;
+}
+
+export async function superadminListUsers(
+  limit = 100,
+  offset = 0
+): Promise<SuperAdminUsersResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/users?limit=${limit}&offset=${offset}`
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: data.detail || "Failed to list users" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface SuperAdminOrgDetailResult {
+  success: boolean;
+  org?: SuperAdminOrgDetail;
+  error?: string;
+}
+
+export async function superadminGetOrg(orgId: string): Promise<SuperAdminOrgDetailResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, org: data };
+    return { success: false, error: data.detail || "Org not found" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function superadminSuspendOrg(orgId: string): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/orgs/${orgId}/suspend`,
+      { method: "PATCH" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to suspend org" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function superadminActivateOrg(orgId: string): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/orgs/${orgId}/activate`,
+      { method: "PATCH" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to activate org" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface UpdateOrgSubscriptionPayload {
+  tier?: string;
+  paid_slots_limit?: number;
+  free_slots_limit?: number;
+  show_watermark?: boolean;
+}
+
+export async function superadminUpdateSubscription(
+  orgId: string,
+  payload: UpdateOrgSubscriptionPayload
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/subscription`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: extractError(data.detail, "Failed to update subscription") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function superadminSuspendUser(userId: string): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/users/${userId}/suspend`,
+      { method: "PATCH" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to suspend user" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function superadminActivateUser(userId: string): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/users/${userId}/activate`,
+      { method: "PATCH" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to activate user" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function superadminUpdateUser(
+  userId: string,
+  payload: { role?: UserRole; is_free_license?: boolean }
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/users/${userId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: extractError(data.detail, "Failed to update user") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
