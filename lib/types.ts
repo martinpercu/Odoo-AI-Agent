@@ -419,6 +419,7 @@ export interface FeedbackReport {
   message_id: string | null;
   user_comment: string | null;
   category: FeedbackCategory | null;
+  expected_response: string | null;
 
   // Admin workflow
   status: FeedbackStatus;

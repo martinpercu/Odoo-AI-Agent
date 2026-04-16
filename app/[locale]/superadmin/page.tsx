@@ -31,6 +31,7 @@ import {
   Copy,
   EyeOff,
   Filter,
+  MessageSquare,
 } from "lucide-react";
 import {
   superadminListOrgs,
@@ -1355,10 +1356,25 @@ function ReportDetailPanel({ reportId, onClose, onUpdate, onDelete, t }: {
                   {report.supabase_user_id && <KVRow label="User" value={<span className="font-technical text-micro">{report.supabase_user_id}</span>} />}
                   {report.resolved_at && <KVRow label={t("feedback.resolvedAt")} value={new Date(report.resolved_at).toLocaleString()} />}
                 </dl>
-                {report.user_comment && (
-                  <blockquote className="mt-3 border-l-2 border-accent pl-3 text-small text-text-secondary italic">
-                    {report.user_comment}
-                  </blockquote>
+                {(report.user_comment || report.expected_response) && (
+                  <div className="mt-3 space-y-2">
+                    {report.user_comment && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-micro text-text-muted shrink-0 mt-0.5">💬</span>
+                        <blockquote className="border-l-2 border-accent pl-3 text-small text-text-secondary italic">
+                          {report.user_comment}
+                        </blockquote>
+                      </div>
+                    )}
+                    {report.expected_response && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-micro text-text-muted shrink-0 mt-0.5">🎯</span>
+                        <blockquote className="border-l-2 border-accent/50 pl-3 text-small text-text-secondary italic">
+                          {report.expected_response}
+                        </blockquote>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
 
@@ -1376,6 +1392,15 @@ function ReportDetailPanel({ reportId, onClose, onUpdate, onDelete, t }: {
                     <div className="rounded-md bg-accent-subtle px-3 py-2">
                       <p className="mb-1 text-micro font-medium text-accent">{t("feedback.agentResponse")}</p>
                       <p className="text-small text-foreground whitespace-pre-wrap">{report.agent_response}</p>
+                    </div>
+                  )}
+                  {report.expected_response && (
+                    <div className="rounded-md bg-surface border border-border px-3 py-2">
+                      <p className="mb-1 text-micro font-medium text-text-secondary flex items-center gap-1">
+                        <MessageSquare size={12} strokeWidth={1.5} className="text-accent" />
+                        {t("feedback.expectedResponse")}
+                      </p>
+                      <p className="text-small text-foreground italic whitespace-pre-wrap">&ldquo;{report.expected_response}&rdquo;</p>
                     </div>
                   )}
 
@@ -1745,7 +1770,14 @@ function FeedbackList({ onViewReport, onBack, t }: {
                       {r.org_id ? r.org_id.slice(0, 8) + "…" : "—"}
                     </td>
                     <td className="px-3 py-2">
-                      <CategoryBadge category={r.category} />
+                      <div className="flex items-center gap-1.5">
+                        <CategoryBadge category={r.category} />
+                        {r.expected_response && (
+                          <span title={t("feedback.expectedResponseTooltip")}>
+                            <MessageSquare size={13} strokeWidth={1.5} className="text-accent" />
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-3 py-2">
                       <StatusBadge status={r.status} />
