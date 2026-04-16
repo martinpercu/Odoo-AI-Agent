@@ -1350,6 +1350,7 @@ export interface SubmitFeedbackPayload {
   message_id?: string;
   user_comment?: string;
   category?: FeedbackCategory;
+  expected_response?: string;
 }
 
 export interface SubmitFeedbackResult {

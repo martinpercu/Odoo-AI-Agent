@@ -430,6 +430,8 @@
     },
     "commentLabel": "Comment (optional)",
     "commentPlaceholder": "Describe the problem (optional)",
+    "expectedResponseLabel": "What should the agent have responded? (optional)",
+    "expectedResponsePlaceholder": "E.g.: It should have given me the total sales for March, not a list of orders",
     "cancel": "Cancel",
     "submit": "Send report",
     "successToast": "Thanks, your report was submitted"
@@ -527,6 +529,8 @@
       "hidden": "Hidden",
       "userQuery": "User query",
       "agentResponse": "Agent response",
+      "expectedResponse": "User expected",
+      "expectedResponseTooltip": "The user indicated the expected response",
       "comment": "User comment",
       "adminNotes": "Internal notes",
       "adminNotesPlaceholder": "Add internal notes...",
