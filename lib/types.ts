@@ -333,7 +333,8 @@ export interface OrgUser {
   email: string;
   role: UserRole;
   is_free_license: boolean;
-  joined_at: string;
+  allow_feedback: boolean;
+  created_at: string;
 }
 
 export interface Invitation {
@@ -384,6 +385,7 @@ export interface SuperAdminUser {
   email: string;
   role: UserRole;
   is_free_license: boolean;
+  allow_feedback: boolean;
   is_active: boolean;
   created_at: string;
   org: {

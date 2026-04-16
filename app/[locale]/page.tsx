@@ -26,6 +26,11 @@ export default function RootPage() {
       return;
     }
 
+    if (meData.user?.role === "SUPERADMIN") {
+      router.push(`/${locale}/superadmin`);
+      return;
+    }
+
     if (meData.org === null) {
       router.push(`/${locale}/onboarding`);
       return;

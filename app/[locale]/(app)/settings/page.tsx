@@ -318,9 +318,6 @@ function UsersSection() {
               >
                 <div className="min-w-0">
                   <p className="font-medium truncate">{user.email}</p>
-                  <p className="text-small text-text-muted">
-                    {t("admin.joined")}: {new Date(user.joined_at).toLocaleDateString()}
-                  </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap shrink-0">
                   {/* Role selector — disabled for own account */}
@@ -334,6 +331,23 @@ function UsersSection() {
                       <option key={r} value={r}>{r}</option>
                     ))}
                   </select>
+
+                  {/* Feedback toggle */}
+                  <button
+                    onClick={async () => {
+                      if (!orgId) return;
+                      await updateOrgUser(orgId, user.id, { allow_feedback: !user.allow_feedback });
+                      setUsers((prev) => prev.map((u) => u.id === user.id ? { ...u, allow_feedback: !u.allow_feedback } : u));
+                    }}
+                    className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                      user.allow_feedback
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                        : "bg-raised text-text-secondary"
+                    }`}
+                    title="Toggle feedback"
+                  >
+                    {user.allow_feedback ? t("admin.feedback") : t("admin.noFeedback")}
+                  </button>
 
                   {/* Free/Paid toggle */}
                   <button
