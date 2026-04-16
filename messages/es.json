@@ -14,7 +14,8 @@
     "logout": "Cerrar sesión",
     "loadMore": "Cargar más",
     "collapse": "Contraer sidebar",
-    "expand": "Expandir sidebar"
+    "expand": "Expandir sidebar",
+    "superAdmin": "Panel Admin"
   },
   "ChatGroups": {
     "today": "Hoy",
@@ -207,10 +208,12 @@
       "accepted": "Aceptada",
       "expired": "Expirada",
       "pending": "Pendiente",
+      "showLink": "Ver link",
       "copy": "Copiar",
       "copied": "Copiado",
       "credentials": "Credenciales",
-      "manageCredentials": "Gestionar credenciales de Odoo"
+      "manageCredentials": "Gestionar credenciales de Odoo",
+      "removeUser": "Eliminar usuario"
     },
     "credentials": {
       "sectionTitle": "Mis Credenciales Odoo",
@@ -280,7 +283,12 @@
       "statusSuccess": "Conexión exitosa.",
       "statusSuccessCompany": "Conectado a {company}",
       "statusError": "No se pudo conectar. Verifica tus credenciales e intenta de nuevo.",
-      "networkError": "No se pudo conectar con el servidor backend."
+      "networkError": "No se pudo conectar con el servidor backend.",
+      "labelLabel": "Etiqueta",
+      "labelPlaceholder": "Ej: Producción, Pruebas...",
+      "optional": "opcional",
+      "statusSaving": "Guardando...",
+      "statusSaved": "Guardado"
     }
   },
   "PinnedInsights": {
@@ -396,5 +404,90 @@
     "fr": "Français",
     "de": "Deutsch",
     "pt": "Português"
+  },
+  "SuperAdmin": {
+    "title": "Panel SuperAdmin",
+    "navLink": "Panel Admin",
+    "tabOrgs": "Organizaciones",
+    "tabUsers": "Usuarios",
+    "tabActivity": "Actividad",
+    "loading": "Cargando...",
+    "errorLoad": "No se pudo cargar la información. Intentá de nuevo.",
+    "retry": "Reintentar",
+    "orgs": {
+      "statsTotal": "Total orgs",
+      "statsActive": "Activas",
+      "statsSuspended": "Suspendidas",
+      "colStatus": "Estado",
+      "colName": "Nombre",
+      "colSlug": "Slug",
+      "colType": "Tipo",
+      "colPlan": "Plan",
+      "colSlots": "Slots",
+      "colWatermark": "Watermark",
+      "colUsers": "Usuarios",
+      "colCreated": "Creada",
+      "colActions": "Acciones",
+      "statusActive": "Activa",
+      "statusSuspended": "Suspendida",
+      "btnSuspend": "Suspender",
+      "btnActivate": "Activar",
+      "btnEdit": "Editar",
+      "btnView": "Ver",
+      "confirmSuspend": "¿Suspender org {name}? Todos sus usuarios perderán acceso.",
+      "confirmActivate": "¿Reactivar org {name}?",
+      "editModalTitle": "Editar suscripción",
+      "editTier": "Plan",
+      "editPaidSlots": "Slots pagos",
+      "editFreeSlots": "Slots gratuitos",
+      "editWatermark": "Mostrar watermark",
+      "editSave": "Guardar",
+      "editCancel": "Cancelar",
+      "editSuccess": "Suscripción actualizada.",
+      "editError": "No se pudo actualizar. Intentá de nuevo.",
+      "suspendSuccess": "Organización suspendida.",
+      "activateSuccess": "Organización activada.",
+      "actionError": "Algo salió mal. Intentá de nuevo.",
+      "detailTitle": "Detalle de organización",
+      "detailSlots": "Slots usados",
+      "detailPaidUsed": "Pagos usados",
+      "detailFreeUsed": "Gratis usados",
+      "detailOdooConfigs": "Conexiones Odoo",
+      "detailClose": "Cerrar"
+    },
+    "users": {
+      "statsTotal": "Total usuarios",
+      "statsActive": "Activos",
+      "statsNoOrg": "Sin org",
+      "colStatus": "Estado",
+      "colEmail": "Email",
+      "colRole": "Rol",
+      "colOrg": "Organización",
+      "colFree": "Free",
+      "colCreated": "Registrado",
+      "colActions": "Acciones",
+      "statusActive": "Activo",
+      "statusSuspended": "Suspendido",
+      "noOrg": "Sin org",
+      "btnSuspend": "Suspender",
+      "btnActivate": "Activar",
+      "confirmSuspend": "¿Suspender usuario {email}?",
+      "confirmActivate": "¿Reactivar usuario {email}?",
+      "roleLabel": "Rol",
+      "roleWarning": "⚠ Estás a punto de asignar rol SUPERADMIN. ¿Confirmás?",
+      "suspendSuccess": "Usuario suspendido.",
+      "activateSuccess": "Usuario activado.",
+      "updateSuccess": "Usuario actualizado.",
+      "actionError": "Algo salió mal. Intentá de nuevo."
+    },
+    "activity": {
+      "title": "Actividad por organización",
+      "subtitle": "Organizaciones ordenadas por cantidad de usuarios.",
+      "colName": "Organización",
+      "colUsers": "Usuarios",
+      "colPlan": "Plan",
+      "colType": "Tipo",
+      "colStatus": "Estado"
+    }
   }
 }

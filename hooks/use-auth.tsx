@@ -72,6 +72,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Handle 401 events dispatched by authFetch
     const handle401 = () => {
+      const currentPath = window.location.pathname;
+      const publicPaths = ["/login", "/register", "/invite", "/onboarding"];
+      const withoutLocale = "/" + currentPath.split("/").slice(2).join("/");
+      if (publicPaths.some((p) => withoutLocale.startsWith(p))) return;
       setUser(null);
       supabase!.auth.signOut();
       const locale = getLocale();

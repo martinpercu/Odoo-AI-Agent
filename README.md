@@ -65,7 +65,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations
 - Odoo connection configuration, validation, and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese)
-- Light / dark mode
+- Light / dark mode with preference persisted in `localStorage` (no flash on reload)
 - Collapsible and responsive sidebar (mobile-friendly)
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
@@ -115,12 +115,13 @@ app/
     pricing/page.tsx            # Subscription plans
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
-  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext
+  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; renders shellless (no sidebar) for /invite
   locale-switcher.tsx           # Language selector dropdown
+  theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
   auth/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle + logout
+    sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle (persisted in localStorage) + logout
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
     welcome-dashboard.tsx       # First-chat landing with suggestion cards
@@ -155,6 +156,7 @@ components/
   ui/
     error-toast.tsx             # Toast notification provider + display
     limit-reached-modal.tsx     # 402 payment limit upgrade modal
+    password-input.tsx          # Password field with show/hide toggle (Eye/EyeOff)
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
@@ -321,6 +323,7 @@ Settings
 │                   test connection, inspect installed modules
 ├── Users         → list members, change role, toggle free/paid slot, remove
 └── Invitations   → send invite by email, view status (pending / accepted / expired)
+                    pending invitations show "Show link" button to reveal and copy the invite URL
 ```
 
 Role comparison:
@@ -341,10 +344,11 @@ Admin sends invite (email) → POST /admin/orgs/{id}/invitations
                            → backend emails token link: /invite?token=...
 
 Invitee opens link → GET /admin/invitations/{token}/preview  (no auth)
+                   → renders without app shell (no sidebar, no chat context)
                    → shows registration form
                       email  (pre-filled, read-only)
                       org name + role badge
-                      password field
+                      password field (with show/hide toggle)
                    → submit:
                       1. POST Supabase signUp  → gets accessToken
                       2. POST /admin/invitations/accept  (Bearer accessToken)
@@ -665,6 +669,8 @@ Open `http://localhost:3000` — it automatically redirects based on auth state.
 ## Themes and Design
 
 The color system supports **light and dark mode** with CSS variables defined in `app/globals.css` under `@theme`. Components use semantic utility tokens — never raw hex values.
+
+Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` | `"light"`). The `ThemeInitializer` component (mounted in `<body>` in `app/[locale]/layout.tsx`) applies the `.dark` class on every route change via `usePathname`, ensuring the correct theme is always active across navigations.
 
 ### Design Token System
 

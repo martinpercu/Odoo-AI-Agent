@@ -16,6 +16,8 @@ import {
   Check,
   AlertTriangle,
   KeyRound,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
@@ -420,6 +422,24 @@ function InvitationsSection() {
 
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingList, setLoadingList] = useState(false);
+  const [expandedTokens, setExpandedTokens] = useState<Set<string>>(new Set());
+  const [copiedToken, setCopiedToken] = useState<string | null>(null);
+
+  function toggleLinkExpanded(token: string) {
+    setExpandedTokens((prev) => {
+      const next = new Set(prev);
+      if (next.has(token)) next.delete(token);
+      else next.add(token);
+      return next;
+    });
+  }
+
+  function handleCopyInvLink(token: string) {
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+    navigator.clipboard.writeText(`${baseUrl}/invite?token=${token}`);
+    setCopiedToken(token);
+    setTimeout(() => setCopiedToken(null), 2000);
+  }
 
   useEffect(() => {
     if (!orgId) return;
@@ -495,7 +515,7 @@ function InvitationsSection() {
         {/* Generated link */}
         {inviteLink && (
           <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
-            <p className="flex-1 truncate text-small font-technical text-text-muted">{inviteLink}</p>
+            <p className="flex-1 truncate text-small font-technical text-text-muted dark:text-text-secondary">{inviteLink}</p>
             <button
               type="button"
               onClick={handleCopy}
@@ -522,24 +542,54 @@ function InvitationsSection() {
           </p>
           {invitations.map((inv) => {
             const expired = new Date(inv.expires_at) < new Date();
+            const isPending = !inv.accepted_at && !expired;
+            const isExpanded = expandedTokens.has(inv.token);
+            const invLink = `${typeof window !== "undefined" ? window.location.origin : ""}/invite?token=${inv.token}`;
             return (
               <div
                 key={inv.id ?? inv.token}
-                className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-body"
+                className="rounded-md border border-border text-body overflow-hidden"
               >
-                <div>
-                  <p className="font-medium">{inv.email}</p>
-                  <p className="text-small text-text-muted font-technical">{inv.role}</p>
+                <div className="flex items-center justify-between px-3 py-2">
+                  <div>
+                    <p className="font-medium">{inv.email}</p>
+                    <p className="text-small text-text-muted font-technical">{inv.role}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {inv.accepted_at ? (
+                      <span className="text-small text-success-solid">{t("admin.accepted")}</span>
+                    ) : expired ? (
+                      <span className="text-small text-error">{t("admin.expired")}</span>
+                    ) : (
+                      <span className="text-small text-warning-solid">{t("admin.pending")}</span>
+                    )}
+                    {isPending && (
+                      <button
+                        type="button"
+                        onClick={() => toggleLinkExpanded(inv.token)}
+                        className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-small text-text-secondary hover:bg-raised transition-colors"
+                      >
+                        {isExpanded ? <EyeOff size={13} strokeWidth={1.5} /> : <Eye size={13} strokeWidth={1.5} />}
+                        {t("admin.showLink")}
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  {inv.accepted_at ? (
-                    <span className="text-small text-success-solid">{t("admin.accepted")}</span>
-                  ) : expired ? (
-                    <span className="text-small text-error">{t("admin.expired")}</span>
-                  ) : (
-                    <span className="text-small text-text-muted">{t("admin.pending")}</span>
-                  )}
-                </div>
+                {isPending && isExpanded && (
+                  <div className="flex items-center gap-2 border-t border-border bg-raised px-3 py-2">
+                    <p className="flex-1 truncate text-small font-technical text-text-muted dark:text-text-secondary">{invLink}</p>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyInvLink(inv.token)}
+                      className="shrink-0 rounded-md p-1 hover:bg-border transition-colors"
+                      aria-label={copiedToken === inv.token ? t("admin.copied") : t("admin.copy")}
+                    >
+                      {copiedToken === inv.token
+                        ? <Check size={14} strokeWidth={1.5} className="text-success-solid" />
+                        : <Copy size={14} strokeWidth={1.5} />}
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}
