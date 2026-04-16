@@ -430,6 +430,8 @@
     },
     "commentLabel": "Kommentar (optional)",
     "commentPlaceholder": "Beschreibe das Problem (optional)",
+    "expectedResponseLabel": "Was hätte der Agent antworten sollen? (optional)",
+    "expectedResponsePlaceholder": "Z.B.: Er hätte mir den Gesamtumsatz für März geben sollen, keine Bestellliste",
     "cancel": "Abbrechen",
     "submit": "Bericht senden",
     "successToast": "Danke, dein Bericht wurde gesendet"
@@ -527,6 +529,8 @@
       "hidden": "Versteckt",
       "userQuery": "Benutzeranfrage",
       "agentResponse": "Agentenantwort",
+      "expectedResponse": "Benutzer erwartete",
+      "expectedResponseTooltip": "Der Benutzer hat die erwartete Antwort angegeben",
       "comment": "Benutzerkommentar",
       "adminNotes": "Interne Notizen",
       "adminNotesPlaceholder": "Interne Notizen hinzufügen...",

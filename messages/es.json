@@ -430,6 +430,8 @@
     },
     "commentLabel": "Comentario (opcional)",
     "commentPlaceholder": "Describí el problema (opcional)",
+    "expectedResponseLabel": "¿Qué debería haber respondido? (opcional)",
+    "expectedResponsePlaceholder": "Ej: Debería haberme dado el total de ventas de marzo, no una lista de pedidos",
     "cancel": "Cancelar",
     "submit": "Enviar reporte",
     "successToast": "Gracias, tu reporte fue enviado"
@@ -527,6 +529,8 @@
       "hidden": "Oculto",
       "userQuery": "Consulta del usuario",
       "agentResponse": "Respuesta del agente",
+      "expectedResponse": "El usuario esperaba",
+      "expectedResponseTooltip": "El usuario indicó la respuesta esperada",
       "comment": "Comentario del usuario",
       "adminNotes": "Notas internas",
       "adminNotesPlaceholder": "Agregar notas internas...",

@@ -26,6 +26,7 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
 
   const [category, setCategory] = useState<FeedbackCategory | null>(null);
   const [comment, setComment] = useState("");
+  const [expectedResponse, setExpectedResponse] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -37,6 +38,7 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
         message_id: messageId,
         user_comment: comment || undefined,
         category: category ?? undefined,
+        expected_response: expectedResponse || undefined,
       });
       setSubmitted(true);
       setTimeout(onClose, 3000);
@@ -117,6 +119,18 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder={t("commentPlaceholder")}
+                    rows={3}
+                    className="w-full rounded-md border border-border bg-base px-3 py-2 text-body text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+                  />
+                </div>
+
+                {/* Expected response */}
+                <div className="space-y-2">
+                  <p className="text-small font-medium text-text-secondary">{t("expectedResponseLabel")}</p>
+                  <textarea
+                    value={expectedResponse}
+                    onChange={(e) => setExpectedResponse(e.target.value)}
+                    placeholder={t("expectedResponsePlaceholder")}
                     rows={3}
                     className="w-full rounded-md border border-border bg-base px-3 py-2 text-body text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
                   />
