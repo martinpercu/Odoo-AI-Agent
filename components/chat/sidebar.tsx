@@ -259,18 +259,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       {/* Bottom Navigation */}
       <div className="border-t border-sidebar-border p-3">
         <nav className="flex flex-col gap-1">
-          <Link
-            href="/pricing"
-            onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
-              pathname === "/pricing"
-                ? "bg-sidebar-active font-medium text-accent"
-                : "hover:bg-sidebar-hover"
-            }`}
-          >
-            <CreditCard size={20} strokeWidth={1.5} />
-            {!collapsed && <span>{t("plans")}</span>}
-          </Link>
+          {meData?.user?.role !== "CLIENT_USER" && (
+            <Link
+              href="/pricing"
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
+                pathname === "/pricing"
+                  ? "bg-sidebar-active font-medium text-accent"
+                  : "hover:bg-sidebar-hover"
+              }`}
+            >
+              <CreditCard size={20} strokeWidth={1.5} />
+              {!collapsed && <span>{t("plans")}</span>}
+            </Link>
+          )}
           {user && (
             <Link
               href={settingsHref}
