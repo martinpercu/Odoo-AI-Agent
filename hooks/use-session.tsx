@@ -50,6 +50,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         if (
           user &&
           result.data.org === null &&
+          result.data.user?.role !== "SUPERADMIN" &&
           !pathname?.includes("/onboarding") &&
           !pathname?.includes("/login") &&
           !pathname?.includes("/register") &&

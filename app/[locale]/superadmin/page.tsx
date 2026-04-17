@@ -1356,7 +1356,7 @@ function ReportDetailPanel({ reportId, onClose, onUpdate, onDelete, t }: {
                   {report.supabase_user_id && <KVRow label="User" value={<span className="font-technical text-micro">{report.supabase_user_id}</span>} />}
                   {report.resolved_at && <KVRow label={t("feedback.resolvedAt")} value={new Date(report.resolved_at).toLocaleString()} />}
                 </dl>
-                {(report.user_comment || report.expected_response) && (
+                {(report.user_comment || report.expected_response || report.tenant_notes) && (
                   <div className="mt-3 space-y-2">
                     {report.user_comment && (
                       <div className="flex items-start gap-2">
@@ -1372,6 +1372,17 @@ function ReportDetailPanel({ reportId, onClose, onUpdate, onDelete, t }: {
                         <blockquote className="border-l-2 border-accent/50 pl-3 text-small text-text-secondary italic">
                           {report.expected_response}
                         </blockquote>
+                      </div>
+                    )}
+                    {report.tenant_notes && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-micro text-text-muted shrink-0 mt-0.5">🏢</span>
+                        <div className="flex-1">
+                          <p className="text-micro text-text-muted mb-0.5">{t("feedback.tenantNotes")}</p>
+                          <blockquote className="border-l-2 border-warning-solid/60 pl-3 text-small text-text-secondary italic">
+                            {report.tenant_notes}
+                          </blockquote>
+                        </div>
                       </div>
                     )}
                   </div>

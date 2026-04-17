@@ -15,7 +15,8 @@
     "loadMore": "Load more",
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar",
-    "superAdmin": "Admin Panel"
+    "superAdmin": "Admin Panel",
+    "login": "Sign in"
   },
   "ChatGroups": {
     "today": "Today",
@@ -138,6 +139,7 @@
       },
       "starter": {
         "name": "Starter",
+        "price": "$50",
         "description": "For individual users who want full unrestricted access.",
         "cta": "Subscribe",
         "features": {
@@ -148,7 +150,7 @@
       },
       "enterprise": {
         "name": "Enterprise",
-        "fromPrice": "From $8",
+        "fromPrice": "From $100",
         "description": "For Odoo implementors managing multiple clients.",
         "features": {
           "seatsFrom": "From 10 seats (5 free + 5 paid)",
@@ -184,7 +186,20 @@
       "userQuery": "User query",
       "agentResponse": "Agent response",
       "comment": "Comment",
-      "adminNotes": "Admin notes"
+      "adminNotes": "Admin notes",
+      "tabData": "Comments",
+      "tabMessages": "Messages",
+      "category": "Category",
+      "expectedResponse": "Expected response",
+      "noMessages": "No messages recorded.",
+      "tabNote": "Note",
+      "noteHint": "Internal note field (helps the development team resolve this feedback)",
+      "notePlaceholder": "Write an internal note...",
+      "noteSave": "Save",
+      "noteCancel": "Cancel",
+      "noteEdit": "Edit",
+      "noteSavedTitle": "Note saved",
+      "noteSavedBody": "The note was saved successfully."
     },
     "inspector": {
       "heading": "Instance Inspector",
@@ -594,7 +609,8 @@
       "filterAllCategory": "All categories",
       "filterOrg": "Filter org...",
       "prev": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "tenantNotes": "Tenant admin note"
     }
   }
 }

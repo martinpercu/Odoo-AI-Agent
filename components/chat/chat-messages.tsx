@@ -91,6 +91,11 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
     return null;
   }
 
+  const lastAssistantIndex = messages.reduce(
+    (last, m, i) => (m.role === "assistant" && m.content ? i : last),
+    -1
+  );
+
   return (
     <div className="flex flex-col gap-6 px-4 py-6">
       {messages.map((message, index) => {
@@ -199,14 +204,14 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                 )}
               </div>
 
-              {/* Feedback button — only for AI messages when allow_feedback is true */}
-              {!isUser && allowFeedback && message.content && (
+              {/* Feedback button — only on the last AI message when allow_feedback is true */}
+              {!isUser && allowFeedback && index === lastAssistantIndex && (
                 <button
                   onClick={() => setFeedbackMessageId(message.id)}
-                  className="mt-1 flex items-center gap-1 rounded-md px-2 py-1 text-micro text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:bg-raised hover:text-text-secondary"
+                  className="mt-1 flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-small opacity-0 group-hover:opacity-100 group-hover:text-text-secondary transition-all hover:bg-accent hover:text-white"
                   aria-label={t("feedback.report")}
                 >
-                  <Flag size={12} strokeWidth={1.5} />
+                  <Flag size={14} strokeWidth={1.5} />
                   {t("feedback.report")}
                 </button>
               )}

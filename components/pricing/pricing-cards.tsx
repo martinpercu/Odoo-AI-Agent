@@ -245,7 +245,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
           </div>
 
           <div className="mb-2 flex items-baseline gap-1">
-            <span className="text-4xl font-extrabold">$5</span>
+            <span className="text-4xl font-extrabold">{t("plans.starter.price")}</span>
             <span className="text-body text-text-secondary">{t("perMonth")}</span>
           </div>
 
