@@ -3,6 +3,9 @@
     "title": "Odoo Agent - KI-Agenten-Plattform für Odoo",
     "description": "Abfragen und Verwalten Ihrer Odoo-Daten mit künstlicher Intelligenz. Inventar, Rechnungsstellung, Verkauf und mehr."
   },
+  "InstanceSwitcher": {
+    "instances": "Instanzen"
+  },
   "Sidebar": {
     "appName": "Odoo Agent",
     "newChat": "Neue Abfrage",
@@ -249,7 +252,10 @@
       "copied": "Kopiert",
       "credentials": "Anmeldedaten",
       "manageCredentials": "Odoo-Anmeldedaten verwalten",
-      "removeUser": "Benutzer entfernen"
+      "removeUser": "Benutzer entfernen",
+      "filterPending": "Ausstehend",
+      "filterAccepted": "Akzeptiert",
+      "filterAll": "Alle"
     },
     "credentials": {
       "sectionTitle": "Meine Odoo-Anmeldedaten",

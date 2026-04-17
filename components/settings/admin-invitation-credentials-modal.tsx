@@ -17,25 +17,25 @@ import {
   ChevronUp,
 } from "lucide-react";
 import {
-  fetchUserCredential,
-  saveUserCredential,
-  deleteUserCredential,
+  fetchPendingCredentials,
+  savePendingCredential,
+  deletePendingCredential,
   NETWORK_ERROR,
 } from "@/lib/api";
-import type { OdooConfigSummary, OrgUser, UserOdooCredential } from "@/lib/types";
+import type { OdooConfigSummary, Invitation } from "@/lib/types";
 
-interface ConfigCredentialPanel {
+interface PendingConfigPanelProps {
   config: OdooConfigSummary;
   orgId: string;
-  userId: string;
+  invitationId: string;
 }
 
-function ConfigCredentialPanel({ config, orgId, userId }: ConfigCredentialPanel) {
+function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelProps) {
   const t = useTranslations("Settings.adminCredentials");
 
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
-  const [credential, setCredential] = useState<UserOdooCredential | null>(null);
+  const [existingUsername, setExistingUsername] = useState<string | null>(null);
   const [username, setUsername] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
@@ -47,18 +47,21 @@ function ConfigCredentialPanel({ config, orgId, userId }: ConfigCredentialPanel)
 
   useEffect(() => {
     setLoading(true);
-    fetchUserCredential(orgId, userId, config.id).then((r) => {
-      if (r.success && r.credential) {
-        setCredential(r.credential);
-        setUsername(r.credential.odoo_username);
-      } else {
-        setCredential(null);
+    fetchPendingCredentials(orgId, invitationId).then((r) => {
+      if (r.success && r.pending_credentials) {
+        const found = r.pending_credentials.find((c) => c.odoo_config_id === config.id);
+        if (found) {
+          setExistingUsername(found.odoo_username);
+          setUsername(found.odoo_username);
+        } else {
+          setExistingUsername(null);
+        }
       }
       setLoading(false);
     });
-  }, [orgId, userId, config.id]);
+  }, [orgId, invitationId, config.id]);
 
-  const isConfigured = credential !== null;
+  const isConfigured = existingUsername !== null;
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
@@ -67,16 +70,16 @@ function ConfigCredentialPanel({ config, orgId, userId }: ConfigCredentialPanel)
     setSaveStatus("idle");
     setSaveError(null);
 
-    const result = await saveUserCredential(orgId, userId, config.id, {
+    const result = await savePendingCredential(orgId, invitationId, config.id, {
       odoo_username: username.trim(),
       odoo_api_key: apiKey.trim(),
     });
 
-    if (result.success && result.credential) {
-      setCredential(result.credential);
-      setUsername(result.credential.odoo_username);
-      setSaveStatus("success");
+    if (result.success && result.pending_credential) {
+      setExistingUsername(result.pending_credential.odoo_username);
+      setUsername(result.pending_credential.odoo_username);
       setApiKey("");
+      setSaveStatus("success");
       setTimeout(() => setSaveStatus("idle"), 3000);
     } else {
       setSaveStatus("error");
@@ -89,9 +92,9 @@ function ConfigCredentialPanel({ config, orgId, userId }: ConfigCredentialPanel)
 
   async function handleDelete() {
     setDeleting(true);
-    const result = await deleteUserCredential(orgId, userId, config.id);
+    const result = await deletePendingCredential(orgId, invitationId, config.id);
     if (result.success) {
-      setCredential(null);
+      setExistingUsername(null);
       setUsername("");
       setApiKey("");
       setConfirmDelete(false);
@@ -132,12 +135,12 @@ function ConfigCredentialPanel({ config, orgId, userId }: ConfigCredentialPanel)
       {/* Expanded form */}
       {expanded && !loading && (
         <form onSubmit={handleSave} className="border-t border-border px-4 py-4 space-y-3">
-          {isConfigured && credential && (
+          {isConfigured && existingUsername && (
             <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
               <User size={13} strokeWidth={1.5} className="text-text-muted shrink-0" />
               <span className="text-small text-text-secondary">{t("currentUser")}</span>
               <span className="text-small font-technical font-medium text-foreground">
-                {credential.odoo_username}
+                {existingUsername}
               </span>
             </div>
           )}
@@ -246,22 +249,21 @@ function ConfigCredentialPanel({ config, orgId, userId }: ConfigCredentialPanel)
   );
 }
 
-interface AdminUserCredentialsModalProps {
-  user: OrgUser;
+interface AdminInvitationCredentialsModalProps {
+  invitation: Invitation;
   orgId: string;
   configs: OdooConfigSummary[];
   onClose: () => void;
 }
 
-export function AdminUserCredentialsModal({
-  user,
+export function AdminInvitationCredentialsModal({
+  invitation,
   orgId,
   configs,
   onClose,
-}: AdminUserCredentialsModalProps) {
+}: AdminInvitationCredentialsModalProps) {
   const t = useTranslations("Settings.adminCredentials");
 
-  // Close on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -299,7 +301,7 @@ export function AdminUserCredentialsModal({
               </div>
               <div>
                 <h2 className="text-subheading">{t("modalTitle")}</h2>
-                <p className="text-small text-text-secondary font-technical">{user.email}</p>
+                <p className="text-small text-text-secondary font-technical">{invitation.email}</p>
               </div>
             </div>
             <button
@@ -317,11 +319,11 @@ export function AdminUserCredentialsModal({
               <p className="text-body text-text-secondary">{t("noConfigs")}</p>
             ) : (
               configs.map((cfg) => (
-                <ConfigCredentialPanel
+                <PendingConfigPanel
                   key={cfg.id}
                   config={cfg}
                   orgId={orgId}
-                  userId={user.id}
+                  invitationId={invitation.id}
                 />
               ))
             )}
