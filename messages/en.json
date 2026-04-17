@@ -3,6 +3,9 @@
     "title": "Odoo Agent - AI Agent Platform for Odoo",
     "description": "Query and manage your Odoo data with artificial intelligence. Inventory, invoicing, sales and more."
   },
+  "InstanceSwitcher": {
+    "instances": "Instances"
+  },
   "Sidebar": {
     "appName": "Odoo Agent",
     "newChat": "New Query",
@@ -249,7 +252,10 @@
       "copied": "Copied",
       "credentials": "Credentials",
       "manageCredentials": "Manage Odoo credentials",
-      "removeUser": "Remove user"
+      "removeUser": "Remove user",
+      "filterPending": "Pending",
+      "filterAccepted": "Accepted",
+      "filterAll": "All"
     },
     "credentials": {
       "sectionTitle": "My Odoo Credentials",

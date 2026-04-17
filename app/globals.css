@@ -23,7 +23,7 @@
   /* === Light Mode — Text === */
   --text-primary: #0F172A;   /* Slate 900 */
   --text-secondary: #64748B; /* Slate 500 */
-  --text-muted: #94A3B8;     /* Slate 400 — timestamps, secondary IDs */
+  --text-muted: #64748B;     /* Slate 500 — timestamps, secondary IDs */
 
   /* === Semantic State === */
   --state-success: #10B981;  /* Emerald 500 */
@@ -79,7 +79,7 @@
   /* === Dark Mode — Text === */
   --text-primary: #F1F5F9;   /* Slate 100 */
   --text-secondary: #94A3B8; /* Slate 400 */
-  --text-muted: #475569;     /* Slate 600 */
+  --text-muted: #64748B;     /* Slate 500 */
 
   /* === Semantic State — dark backgrounds === */
   --state-success: #10B981;

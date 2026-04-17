@@ -24,6 +24,7 @@ import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { InstanceSwitcher } from "@/components/chat/instance-switcher";
 import { fetchMyConversations } from "@/lib/api";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import type { ChatGroup, ServerConversation } from "@/lib/types";
@@ -324,6 +325,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             {isDark ? <Sun size={20} strokeWidth={1.5} /> : <Moon size={20} strokeWidth={1.5} />}
             {!collapsed && <span>{isDark ? t("lightMode") : t("darkMode")}</span>}
           </button>
+          <InstanceSwitcher collapsed={collapsed} />
           <LocaleSwitcher collapsed={collapsed} />
           {/* Logout — only shown when auth is enabled and user is logged in */}
           {IS_AUTH_ENABLED && user && (

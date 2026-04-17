@@ -515,6 +515,88 @@ export async function deleteUserCredential(
   }
 }
 
+// ---- Admin: Pending credentials for invitations ----
+
+export interface PendingCredential {
+  odoo_config_id: string;
+  odoo_username: string;
+  created_at: string;
+  config_label?: string | null;
+  config_url?: string | null;
+}
+
+export interface PendingCredentialsResult {
+  success: boolean;
+  pending_credentials?: PendingCredential[];
+  error?: string;
+}
+
+export interface SavePendingCredentialResult {
+  success: boolean;
+  pending_credential?: PendingCredential;
+  error?: string;
+}
+
+export async function fetchPendingCredentials(
+  orgId: string,
+  invitationId: string
+): Promise<PendingCredentialsResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/invitations/${invitationId}/pending-credentials`
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, pending_credentials: data.pending_credentials };
+    return { success: false, error: data.detail || "Failed to fetch pending credentials" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function savePendingCredential(
+  orgId: string,
+  invitationId: string,
+  configId: string,
+  payload: { odoo_username: string; odoo_api_key: string }
+): Promise<SavePendingCredentialResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/invitations/${invitationId}/pending-credentials/${configId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, pending_credential: data.pending_credential };
+    return { success: false, error: data.detail || "Failed to save pending credential" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function deletePendingCredential(
+  orgId: string,
+  invitationId: string,
+  configId: string
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/invitations/${invitationId}/pending-credentials/${configId}`,
+      { method: "DELETE" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to delete pending credential" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 // ---- Admin: Invitations ----
 
 export interface InvitationsResult {
