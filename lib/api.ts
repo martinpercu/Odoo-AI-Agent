@@ -1487,6 +1487,26 @@ export interface FetchFeedbackReportResult {
   error?: string;
 }
 
+export async function updateTenantNotes(
+  chatId: string,
+  feedbackId: string,
+  tenantNotes: string | null
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/chat/${chatId}/feedback/${feedbackId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tenant_notes: tenantNotes }),
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: data.detail || "Failed to save note" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export async function fetchFeedbackReport(reportId: string): Promise<FetchFeedbackReportResult> {
   try {
     const res = await authFetch(`${API_BASE}/admin/feedback/${reportId}`);

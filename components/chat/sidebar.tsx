@@ -18,6 +18,7 @@ import {
   Bell,
   LogOut,
   Shield,
+  LogIn,
 } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
@@ -259,6 +260,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       {/* Bottom Navigation */}
       <div className="border-t border-sidebar-border p-3">
         <nav className="flex flex-col gap-1">
+          {!user && (
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
+                pathname === "/login"
+                  ? "bg-sidebar-active font-medium text-accent"
+                  : "hover:bg-sidebar-hover"
+              }`}
+            >
+              <LogIn size={20} strokeWidth={1.5} />
+              {!collapsed && <span>{t("login")}</span>}
+            </Link>
+          )}
           {meData?.user?.role !== "CLIENT_USER" && (
             <Link
               href="/pricing"

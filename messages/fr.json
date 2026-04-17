@@ -15,7 +15,8 @@
     "loadMore": "Charger plus",
     "collapse": "Réduire la barre latérale",
     "expand": "Agrandir la barre latérale",
-    "superAdmin": "Panneau Admin"
+    "superAdmin": "Panneau Admin",
+    "login": "Se connecter"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -138,6 +139,7 @@
       },
       "starter": {
         "name": "Starter",
+        "price": "$50",
         "description": "Pour les utilisateurs individuels souhaitant un accès complet sans restrictions.",
         "cta": "S'abonner",
         "features": {
@@ -148,7 +150,7 @@
       },
       "enterprise": {
         "name": "Entreprise",
-        "fromPrice": "À partir de $8",
+        "fromPrice": "À partir de $100",
         "description": "Pour les implémentateurs Odoo gérant plusieurs clients.",
         "features": {
           "seatsFrom": "À partir de 10 sièges (5 gratuits + 5 payants)",
@@ -184,7 +186,20 @@
       "userQuery": "Requête utilisateur",
       "agentResponse": "Réponse de l'agent",
       "comment": "Commentaire",
-      "adminNotes": "Notes admin"
+      "adminNotes": "Notes admin",
+      "tabData": "Commentaires",
+      "tabMessages": "Messages",
+      "category": "Catégorie",
+      "expectedResponse": "Réponse attendue",
+      "noMessages": "Aucun message enregistré.",
+      "tabNote": "Note",
+      "noteHint": "Champ de note interne (aide l'équipe de développement à résoudre ce retour)",
+      "notePlaceholder": "Écrivez une note interne...",
+      "noteSave": "Enregistrer",
+      "noteCancel": "Annuler",
+      "noteEdit": "Modifier",
+      "noteSavedTitle": "Note enregistrée",
+      "noteSavedBody": "La note a été enregistrée avec succès."
     },
     "inspector": {
       "heading": "Inspecteur d'instance",
@@ -594,7 +609,8 @@
       "filterAllCategory": "Toutes les catégories",
       "filterOrg": "Filtrer org...",
       "prev": "Précédent",
-      "next": "Suivant"
+      "next": "Suivant",
+      "tenantNotes": "Note de l'admin tenant"
     }
   }
 }

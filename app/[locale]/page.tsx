@@ -17,7 +17,7 @@ export default function RootPage() {
     if (authLoading || sessionLoading) return;
 
     if (!user) {
-      router.push(`/${locale}/login`);
+      router.push(`/${locale}/chat`);
       return;
     }
 

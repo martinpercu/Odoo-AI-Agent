@@ -70,7 +70,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
 **Other:**
-- Plans and pricing page (Free, Starter, Implementor) with Stripe checkout and billing portal integration; current plan highlighted; Implementor detail modal with tier comparison table
+- Plans and pricing page (Free, Starter $50/mo, Implementor from $100/mo) with Stripe checkout and billing portal integration; current plan highlighted; Implementor detail modal with tier comparison table
 
 ## Architecture
 
@@ -104,7 +104,7 @@ A modern, responsive interface that allows users to query and manage data from t
 app/
   [locale]/
     layout.tsx                  # Root layout with provider stack (9 nested contexts)
-    page.tsx                    # Auth-based redirector (no user→login, no org→onboarding, SUPERADMIN→/superadmin, else→chat)
+    page.tsx                    # Auth-based redirector (no user→/chat, no org→onboarding, SUPERADMIN→/superadmin, else→chat)
     login/page.tsx              # Supabase email/password login (+ DEV MODE bypass)
     register/page.tsx           # Account signup → onboarding flow
     onboarding/page.tsx         # 2-step wizard: org name/slug + Odoo connection
@@ -297,14 +297,15 @@ Odoo model search with autocomplete:
 
 ```
 App loads → GET /me (no auth token)
-         → demo_available: false → /login
-         → demo_available: true  → /chat (Demo Mode)
-                                    activeConfigId = "demo"
-                                    banner shown in chat
-                                    "Try Demo" button on login page
+         → redirected to /chat
+            → demo_available: false → /chat (no demo, login link visible in sidebar)
+            → demo_available: true  → /chat (Demo Mode)
+                                       activeConfigId = "demo"
+                                       banner shown in chat
+                                       "Try Demo" button on login page
 ```
 
-> Demo Mode lets visitors interact with the AI using a read-only Odoo demo instance — no account required.
+> Demo Mode lets visitors interact with the AI using a read-only Odoo demo instance — no account required. Unauthenticated users always land on `/chat` first; a "Sign in" link is visible in the sidebar bottom nav.
 
 ### Authenticated User (any role)
 
@@ -314,7 +315,7 @@ App loads → AuthProvider restores Supabase session
          → SUPERADMIN      → /superadmin (standalone panel, no app shell)
          → No org yet      → /onboarding (2-step wizard: org name + Odoo connection)
          → Org exists      → /chat
-         → 401 from any API call → clear session → /login
+         → 401 from any API call → check active Supabase session → if session exists: clear session → /login; if no session: ignore (unauthenticated user hitting protected endpoint)
          → 402 from any API call → show LimitReachedModal (no crash)
 ```
 
@@ -330,7 +331,9 @@ Settings
 ├── Users         → list members, change role, toggle free/paid slot, remove
 ├── Invitations   → send invite by email, view status (pending / accepted / expired)
 │                   pending invitations show "Show link" button to reveal and copy the invite URL
-└── Feedback      → read-only list of feedback reports submitted by org users (expandable rows)
+└── Feedback      → list of feedback reports submitted by org users; expandable rows con 3 tabs:
+│                   Data (categoría, comentario, expected response, admin_notes), Messages (conversación snapshot),
+│                   Note (tenant_notes: nota interna editable por el admin)
 ```
 
 Role comparison:
@@ -391,7 +394,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
 | **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
-| **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over AI messages. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`), comment, and expected response. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
+| **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over the **last AI message** only. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`), comment, and expected response. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
 
 **Settings page** (`/settings`) provides admin controls for:
 - Organization name/slug/type editing
@@ -461,6 +464,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `POST` | `/billing/checkout` | Create Stripe checkout session for a given tier |
 | `POST` | `/billing/portal` | Create Stripe billing portal session |
 | `POST` | `/chat/{id}/feedback` | Submit user feedback for a message (body: `{ config_id, message_id?, user_comment?, category?, expected_response? }`) |
+| `PATCH` | `/chat/{id}/feedback/{feedbackId}` | Update tenant notes on a feedback report (body: `{ tenant_notes }`) |
 | `GET` | `/admin/feedback` | List feedback reports (filterable by status, category, org_id; paginated) |
 | `GET` | `/admin/feedback/stats` | Feedback statistics (total, 24h, 7d, by_status, by_category, top_orgs) |
 | `GET` | `/admin/feedback/{id}` | Fetch single feedback report detail |
