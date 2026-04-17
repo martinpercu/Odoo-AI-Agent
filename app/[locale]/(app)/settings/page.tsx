@@ -28,6 +28,7 @@ import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
 import { UserCredentialsSection } from "@/components/settings/user-credentials-section";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
+import { AdminInvitationCredentialsModal } from "@/components/settings/admin-invitation-credentials-modal";
 import { useSession } from "@/hooks/use-session";
 import {
   listOdooConfigs,
@@ -348,7 +349,7 @@ function UsersSection() {
                     }}
                     className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
                       user.allow_feedback
-                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                        ? "bg-warning-subtle text-warning-solid"
                         : "bg-raised text-text-secondary"
                     }`}
                     title="Toggle feedback"
@@ -433,6 +434,7 @@ function InvitationsSection() {
   const t = useTranslations("Settings");
   const { meData } = useSession();
   const orgId = meData?.org?.id;
+  const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
 
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<UserRole>("CLIENT_USER");
@@ -445,6 +447,8 @@ function InvitationsSection() {
   const [loadingList, setLoadingList] = useState(false);
   const [expandedTokens, setExpandedTokens] = useState<Set<string>>(new Set());
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
+  const [credentialsInvitation, setCredentialsInvitation] = useState<Invitation | null>(null);
+  const [invFilter, setInvFilter] = useState<"pending" | "accepted" | "all">("pending");
 
   function toggleLinkExpanded(token: string) {
     setExpandedTokens((prev) => {
@@ -558,12 +562,43 @@ function InvitationsSection() {
         <p className="text-body text-text-secondary">{t("admin.noInvitations")}</p>
       ) : (
         <div className="space-y-2 border-t border-border pt-4">
-          <p className="text-micro uppercase tracking-wide text-text-secondary mb-2">
-            {t("admin.pendingInvitations")}
-          </p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-micro uppercase tracking-wide text-text-secondary">
+              {t("admin.pendingInvitations")}
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setInvFilter("pending")}
+                className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                  invFilter === "pending" ? "bg-warning-subtle text-warning-solid" : "bg-raised text-text-secondary"
+                }`}
+              >
+                {t("admin.filterPending")}
+              </button>
+              <button
+                onClick={() => setInvFilter("accepted")}
+                className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                  invFilter === "accepted" ? "bg-success-subtle text-success-solid" : "bg-raised text-text-secondary"
+                }`}
+              >
+                {t("admin.filterAccepted")}
+              </button>
+              <button
+                onClick={() => setInvFilter("all")}
+                className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                  invFilter === "all" ? "bg-accent-subtle text-accent" : "bg-raised text-text-secondary"
+                }`}
+              >
+                {t("admin.filterAll")}
+              </button>
+            </div>
+          </div>
           {invitations.map((inv) => {
             const expired = new Date(inv.expires_at) < new Date();
             const isPending = !inv.accepted_at && !expired;
+            const isAccepted = !!inv.accepted_at;
+            if (invFilter === "pending" && !isPending) return null;
+            if (invFilter === "accepted" && !isAccepted) return null;
             const isExpanded = expandedTokens.has(inv.token);
             const invLink = `${typeof window !== "undefined" ? window.location.origin : ""}/invite?token=${inv.token}`;
             return (
@@ -574,6 +609,17 @@ function InvitationsSection() {
                 <div className="flex items-center justify-between px-3 py-2">
                   <p className="font-medium">{inv.email}</p>
                   <div className="flex items-center gap-2">
+                    {isPending && (
+                      <button
+                        type="button"
+                        onClick={() => setCredentialsInvitation(inv)}
+                        className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-small text-text-secondary hover:bg-raised transition-colors"
+                        aria-label={t("admin.credentials")}
+                      >
+                        <KeyRound size={13} strokeWidth={1.5} />
+                        {t("admin.credentials")}
+                      </button>
+                    )}
                     {inv.accepted_at ? (
                       <span className="text-small text-success-solid">{t("admin.accepted")}</span>
                     ) : expired ? (
@@ -612,6 +658,16 @@ function InvitationsSection() {
             );
           })}
         </div>
+      )}
+
+      {/* Invitation credentials modal */}
+      {credentialsInvitation && orgId && (
+        <AdminInvitationCredentialsModal
+          invitation={credentialsInvitation}
+          orgId={orgId}
+          configs={configs}
+          onClose={() => setCredentialsInvitation(null)}
+        />
       )}
     </div>
   );
@@ -696,7 +752,7 @@ function FeedbackReportRow({ r }: { r: FeedbackReport }) {
                 className={`flex-1 py-2 text-center text-small font-medium transition-colors ${
                   activeTab === tab
                     ? "border-b-2 border-accent text-accent"
-                    : "text-text-muted hover:text-text-secondary"
+                    : "text-text-secondary hover:text-foreground"
                 }`}
               >
                 {t(`feedback.tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`)}
@@ -721,17 +777,17 @@ function FeedbackReportRow({ r }: { r: FeedbackReport }) {
               )}
               {r.expected_response && (
                 <div>
-                  <p className="text-micro text-text-muted mb-0.5">{t("feedback.expectedResponse")}</p>
+                  <p className="text-micro text-text-secondary mb-0.5">{t("feedback.expectedResponse")}</p>
                   <p className="text-small text-foreground">{r.expected_response}</p>
                 </div>
               )}
               {r.admin_notes && (
                 <div>
-                  <p className="text-micro text-text-muted mb-0.5">{t("feedback.adminNotes")}</p>
+                  <p className="text-micro text-text-secondary mb-0.5">{t("feedback.adminNotes")}</p>
                   <p className="text-small text-foreground">{r.admin_notes}</p>
                 </div>
               )}
-              <p className="text-micro text-text-muted pt-1">
+              <p className="text-micro text-text-secondary pt-1">
                 {new Date(r.reported_at).toLocaleDateString()}
               </p>
             </div>
@@ -778,13 +834,13 @@ function FeedbackReportRow({ r }: { r: FeedbackReport }) {
                 </>
               ) : (
                 <>
-                  <p className="text-micro text-text-muted">{t("feedback.noteHint")}</p>
+                  <p className="text-micro text-text-secondary">{t("feedback.noteHint")}</p>
                   <textarea
                     value={noteText}
                     onChange={(e) => setNoteText(e.target.value)}
                     rows={4}
                     placeholder={t("feedback.notePlaceholder")}
-                    className="w-full rounded-md border border-border bg-base px-3 py-2 text-small text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+                    className="w-full rounded-md border border-border bg-base px-3 py-2 text-small text-foreground placeholder:text-text-secondary focus:border-accent focus:outline-none resize-none"
                   />
                   <div className="flex gap-2">
                     {r.tenant_notes && (

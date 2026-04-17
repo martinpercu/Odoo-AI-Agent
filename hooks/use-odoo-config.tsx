@@ -48,6 +48,18 @@ export function OdooConfigProvider({ children }: { children: React.ReactNode }) 
     fetchAllMyCredentials().then((result) => {
       if (result.success && result.credentials) {
         setCredentials(result.credentials);
+
+        // If the currently active config has no credentials but there is exactly
+        // one config that does, auto-switch to it so the user is never stuck.
+        setActiveConfigIdState((current) => {
+          const creds = result.credentials!;
+          const currentHasCreds = creds.some((cr) => cr.config_id === current);
+          if (!currentHasCreds && creds.length === 1) {
+            try { localStorage.setItem("odoo_active_config_id", creds[0].config_id); } catch { /* ignore */ }
+            return creds[0].config_id;
+          }
+          return current;
+        });
       }
     });
   }, [meData?.user?.id]); // eslint-disable-line react-hooks/exhaustive-deps

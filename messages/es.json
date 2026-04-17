@@ -3,6 +3,9 @@
     "title": "Odoo Agent - Plataforma de Agentes IA para Odoo",
     "description": "Consulta y gestiona tus datos de Odoo con inteligencia artificial. Inventario, facturación, ventas y más."
   },
+  "InstanceSwitcher": {
+    "instances": "Instancias"
+  },
   "Sidebar": {
     "appName": "Odoo Agent",
     "newChat": "Nueva Consulta",
@@ -220,7 +223,10 @@
       "copied": "Copiado",
       "credentials": "Credenciales",
       "manageCredentials": "Gestionar credenciales de Odoo",
-      "removeUser": "Eliminar usuario"
+      "removeUser": "Eliminar usuario",
+      "filterPending": "Pendientes",
+      "filterAccepted": "Aceptadas",
+      "filterAll": "Todas"
     },
     "credentials": {
       "sectionTitle": "Mis Credenciales Odoo",
