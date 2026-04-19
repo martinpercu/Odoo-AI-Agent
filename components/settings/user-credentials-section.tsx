@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
   User,
+  Pencil,
 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { fetchMyCredential, saveMyCredential, NETWORK_ERROR } from "@/lib/api";
@@ -234,6 +235,7 @@ function ClientUserCredentialBlock({ config }: ClientUserCredentialBlockProps) {
 
   const [loading, setLoading] = useState(true);
   const [credential, setCredential] = useState<UserOdooCredential | null>(null);
+  const [editing, setEditing] = useState(false);
   const [username, setUsername] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
@@ -242,7 +244,6 @@ function ClientUserCredentialBlock({ config }: ClientUserCredentialBlockProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    // If /me already told us there are no credentials, skip the fetch
     if (config.has_credentials === false) {
       setLoading(false);
       return;
@@ -275,6 +276,7 @@ function ClientUserCredentialBlock({ config }: ClientUserCredentialBlockProps) {
       setUsername(result.credential.odoo_username);
       setApiKey("");
       setSaveStatus("success");
+      setEditing(false);
       setTimeout(() => setSaveStatus("idle"), 3000);
     } else {
       setSaveStatus("error");
@@ -294,83 +296,136 @@ function ClientUserCredentialBlock({ config }: ClientUserCredentialBlockProps) {
   }
 
   return (
-    <form onSubmit={handleSave} className="space-y-4">
-      {/* Instance — read-only */}
+    <div className="space-y-3">
+      {/* Instance block — read-only */}
       <div>
-        <label className="mb-1.5 flex items-center gap-1.5 text-small font-medium text-text-secondary">
-          {t("instanceLabel")}
-        </label>
-        <div className="rounded-md border border-border bg-raised/50 px-3 py-2">
+        <p className="mb-1.5 text-small font-medium text-text-secondary">{t("instanceLabel")}</p>
+        <div className="rounded-lg border border-border bg-raised/50 px-3 py-2.5">
           <p className="text-body font-medium text-foreground">{config.label || config.url}</p>
           <p className="text-small font-technical text-text-muted">{config.url} · {config.db_name}</p>
         </div>
       </div>
 
-      {/* Username */}
+      {/* User block */}
       <div>
-        <label className="mb-1.5 flex items-center gap-1.5 text-small font-medium text-text-secondary">
-          <User size={14} strokeWidth={1.5} />
-          {t("usernameLabel")}
-        </label>
-        <input
-          type="text"
-          required
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder={t("usernamePlaceholder")}
-          className="w-full rounded-md border border-border bg-base px-3 py-2 text-body font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
-        />
-      </div>
+        <p className="mb-1.5 text-small font-medium text-text-secondary">{t("usernameLabel")}</p>
+        <div className="rounded-lg border border-border bg-surface overflow-hidden">
+          {/* Status row */}
+          <div className="flex items-center justify-between px-3 py-2.5">
+            <div className="flex items-center gap-2">
+              {isConfigured ? (
+                <CheckCircle2 size={16} strokeWidth={1.5} className="text-success-solid shrink-0" />
+              ) : (
+                <AlertTriangle size={16} strokeWidth={1.5} className="text-warning-solid shrink-0" />
+              )}
+              <span className={`text-body font-medium ${isConfigured ? "text-success-solid" : "text-warning-solid"}`}>
+                {isConfigured ? t("statusConfigured") : t("statusNotConfigured")}
+              </span>
+              {isConfigured && credential && (
+                <span className="text-body font-technical text-text-secondary">
+                  · {credential.odoo_username}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => { setEditing((v) => !v); setApiKey(""); setSaveStatus("idle"); }}
+              className="rounded-md p-1.5 text-text-muted hover:bg-raised hover:text-foreground transition-colors"
+              aria-label={t("updateBtn")}
+            >
+              <Pencil size={14} strokeWidth={1.5} />
+            </button>
+          </div>
 
-      {/* API Key */}
-      <div>
-        <label className="mb-1.5 flex items-center gap-1.5 text-small font-medium text-text-secondary">
-          <KeyRound size={14} strokeWidth={1.5} />
-          {t("apiKeyLabel")}
-        </label>
-        <div className="relative">
-          <input
-            type={showKey ? "text" : "password"}
-            required
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder={isConfigured ? t("apiKeyUpdatePlaceholder") : t("apiKeyPlaceholder")}
-            className="w-full rounded-md border border-border bg-base px-3 py-2 pr-10 text-body font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
-          />
-          <button
-            type="button"
-            onClick={() => setShowKey((v) => !v)}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
-            aria-label={showKey ? t("hideKey") : t("showKey")}
-          >
-            {showKey ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
-          </button>
+          {/* Inline edit form */}
+          <AnimatePresence>
+            {editing && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="overflow-hidden"
+              >
+                <form onSubmit={handleSave} className="border-t border-border px-3 py-4 space-y-4">
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-small font-medium text-text-secondary">
+                      <User size={14} strokeWidth={1.5} />
+                      {t("usernameLabel")}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder={t("usernamePlaceholder")}
+                      className="w-full rounded-md border border-border bg-base px-3 py-2 text-body font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-small font-medium text-text-secondary">
+                      <KeyRound size={14} strokeWidth={1.5} />
+                      {t("apiKeyLabel")}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showKey ? "text" : "password"}
+                        required
+                        value={apiKey}
+                        onChange={(e) => setApiKey(e.target.value)}
+                        placeholder={isConfigured ? t("apiKeyUpdatePlaceholder") : t("apiKeyPlaceholder")}
+                        className="w-full rounded-md border border-border bg-base px-3 py-2 pr-10 text-body font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowKey((v) => !v)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
+                        aria-label={showKey ? t("hideKey") : t("showKey")}
+                      >
+                        {showKey ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+                      </button>
+                    </div>
+                    <p className="mt-1 text-micro text-text-muted">{t("apiKeyHint")}</p>
+                  </div>
+
+                  {saveStatus === "error" && saveError && (
+                    <p className="flex items-center gap-1.5 text-small text-error font-technical">
+                      <AlertTriangle size={14} strokeWidth={1.5} />
+                      {saveError}
+                    </p>
+                  )}
+
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      disabled={saving || !username.trim() || !apiKey.trim()}
+                      className="flex h-8 items-center gap-1.5 rounded-md bg-accent px-3 text-small font-medium text-white shadow-sm hover:bg-accent-hover disabled:opacity-40 transition-colors"
+                    >
+                      {saving && <Loader2 size={13} strokeWidth={1.5} className="animate-spin" />}
+                      {isConfigured ? t("updateBtn") : t("saveBtn")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setEditing(false); setApiKey(""); setSaveStatus("idle"); }}
+                      className="flex h-8 items-center px-3 rounded-md border border-border text-small text-text-secondary hover:bg-raised transition-colors"
+                    >
+                      {t("cancelBtn")}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-        <p className="mt-1 text-micro text-text-muted">{t("apiKeyHint")}</p>
+
+        {saveStatus === "success" && !editing && (
+          <p className="mt-2 flex items-center gap-1.5 text-small text-success-solid">
+            <CheckCircle2 size={14} strokeWidth={1.5} />
+            {t("saveSuccess")}
+          </p>
+        )}
       </div>
-
-      {saveStatus === "error" && saveError && (
-        <p className="flex items-center gap-1.5 text-small text-error font-technical">
-          <AlertTriangle size={14} strokeWidth={1.5} />
-          {saveError}
-        </p>
-      )}
-      {saveStatus === "success" && (
-        <p className="flex items-center gap-1.5 text-small text-success-solid">
-          <CheckCircle2 size={14} strokeWidth={1.5} />
-          {t("saveSuccess")}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={saving || !username.trim() || !apiKey.trim()}
-        className="flex h-8 items-center gap-1.5 rounded-md bg-accent px-3 text-small font-medium text-white shadow-sm hover:bg-accent-hover disabled:opacity-40 transition-colors"
-      >
-        {saving && <Loader2 size={13} strokeWidth={1.5} className="animate-spin" />}
-        {isConfigured ? t("updateBtn") : t("saveBtn")}
-      </button>
-    </form>
+    </div>
   );
 }
 
