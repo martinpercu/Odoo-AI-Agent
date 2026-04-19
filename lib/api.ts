@@ -17,6 +17,7 @@ import type {
   OrgType,
   UserOdooCredential,
   OdooCredentialSummary,
+  AdminUserCredential,
   SubscriptionTier,
   SuperAdminOrgsResponse,
   SuperAdminUsersResponse,
@@ -472,6 +473,29 @@ export async function fetchUserCredential(
   }
 }
 
+export async function assignUserInstance(
+  orgId: string,
+  userId: string,
+  configId: string
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/users/${userId}/odoo-credentials/${configId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ odoo_username: "", odoo_api_key: "" }),
+      }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: extractError(data.detail, "Failed to assign instance") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export async function saveUserCredential(
   orgId: string,
   userId: string,
@@ -509,6 +533,29 @@ export async function deleteUserCredential(
     if (res.ok) return { success: true };
     const data = await res.json();
     return { success: false, error: data.detail || "Failed to delete credential" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface AllUserCredentialsResult {
+  success: boolean;
+  credentials?: AdminUserCredential[];
+  error?: string;
+}
+
+export async function fetchAllUserCredentials(
+  orgId: string,
+  userId: string
+): Promise<AllUserCredentialsResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/users/${userId}/odoo-credentials`
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, credentials: data };
+    return { success: false, error: data.detail || "Failed to fetch credentials" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
