@@ -283,6 +283,7 @@ export interface OdooConfigSummary {
   url: string;
   db_name: string;
   is_active: boolean;
+  has_credentials?: boolean;
 }
 
 export interface UserOdooCredential {
@@ -298,6 +299,18 @@ export interface UserOdooCredential {
 export interface OdooCredentialSummary {
   config_id: string;
   odoo_username: string;
+}
+
+/** Returned by GET /admin/orgs/{orgId}/users/{userId}/odoo-credentials */
+export interface AdminUserCredential {
+  id: string;
+  user_id: string;
+  odoo_config_id: string;
+  odoo_username: string;
+  created_at: string;
+  updated_at: string;
+  config_label?: string;
+  config_url?: string;
 }
 
 export interface OdooConfigSummaryWithCreds extends OdooConfigSummary {

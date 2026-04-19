@@ -63,6 +63,7 @@ A modern, responsive interface that allows users to query and manage data from t
 
 **Configuration:**
 - Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations, feedback reports
+- Credential UI is role-aware: `CLIENT_USER` sees a single-instance block (instance selector + pencil edit); `ADMIN` sees an accordion per config
 - Odoo connection configuration, validation, and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese)
 - Light / dark mode with preference persisted in `localStorage` (no flash on reload)
@@ -151,8 +152,9 @@ components/
     notification-card.tsx       # Individual alert card with time-ago
     notification-settings-modal.tsx # Toggle alerts by category
   settings/
-    user-credentials-section.tsx      # Section for users to save their own Odoo credentials (username + API key)
-    admin-user-credentials-modal.tsx  # Admin modal to manage credentials for any org user
+    user-credentials-section.tsx      # Section for users to save their own Odoo credentials; CLIENT_USER: single-instance block; ADMIN: accordion per config
+    admin-user-credentials-modal.tsx  # Admin modal to manage credentials for any org user; CLIENT_USER: single block with instance switcher + pencil edit; ADMIN: accordion per config
+    admin-invitation-credentials-modal.tsx  # Admin modal to pre-load credentials for a pending invitation; CLIENT_USER: single block (ClientPendingCredentialBlock); ADMIN: accordion (PendingConfigPanel)
   odoo/
     connection-form.tsx         # Odoo connection form (saves via POST /admin/orgs/{id}/configs, not localStorage)
     instance-inspector.tsx      # View installed Odoo modules
@@ -458,8 +460,9 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `POST` | `/admin/invitations/accept` | Accept invitation by token |
 | `GET` | `/me/odoo-credentials` | List current user's saved credentials (one per config) |
 | `PUT` | `/me/odoo-credentials/{configId}` | Save/update current user's credentials for a config |
-| `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: get a user's credentials for a config |
-| `PUT` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: save/update a user's credentials for a config |
+| `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials` | Admin: list all credentials for a user (returns `AdminUserCredential[]`) |
+| `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: get a user's credentials for a specific config |
+| `PUT` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: save/update a user's credentials for a config (empty strings = assign instance without credentials) |
 | `DELETE` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: delete a user's credentials for a config |
 | `POST` | `/billing/checkout` | Create Stripe checkout session for a given tier |
 | `POST` | `/billing/portal` | Create Stripe billing portal session |

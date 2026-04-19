@@ -15,6 +15,7 @@ import {
   User,
   ChevronDown,
   ChevronUp,
+  Pencil,
 } from "lucide-react";
 import {
   fetchPendingCredentials,
@@ -23,6 +24,8 @@ import {
   NETWORK_ERROR,
 } from "@/lib/api";
 import type { OdooConfigSummary, Invitation } from "@/lib/types";
+
+// ---- ADMIN role: accordion per config (unchanged) ----
 
 interface PendingConfigPanelProps {
   config: OdooConfigSummary;
@@ -104,7 +107,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
 
   return (
     <div className="rounded-lg border border-border bg-raised/30 overflow-hidden">
-      {/* Collapsed row */}
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -132,7 +134,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
         </div>
       </button>
 
-      {/* Expanded form */}
       {expanded && !loading && (
         <form onSubmit={handleSave} className="border-t border-border px-4 py-4 space-y-3">
           {isConfigured && existingUsername && (
@@ -144,8 +145,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
               </span>
             </div>
           )}
-
-          {/* Username */}
           <div>
             <label className="mb-1 flex items-center gap-1.5 text-micro font-medium text-text-secondary uppercase tracking-wide">
               {t("usernameLabel")}
@@ -159,8 +158,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
               className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
             />
           </div>
-
-          {/* API Key */}
           <div>
             <label className="mb-1 flex items-center gap-1.5 text-micro font-medium text-text-secondary uppercase tracking-wide">
               {t("apiKeyLabel")}
@@ -184,8 +181,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
               </button>
             </div>
           </div>
-
-          {/* Status */}
           {saveStatus === "error" && saveError && (
             <p className="flex items-center gap-1.5 text-micro text-error font-technical">
               <AlertTriangle size={12} strokeWidth={1.5} />
@@ -198,8 +193,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
               {t("saveSuccess")}
             </p>
           )}
-
-          {/* Actions */}
           <div className="flex items-center gap-2 pt-1">
             <button
               type="submit"
@@ -209,7 +202,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
               {saving && <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />}
               {isConfigured ? t("updateBtn") : t("saveBtn")}
             </button>
-
             {isConfigured && !confirmDelete && (
               <button
                 type="button"
@@ -221,7 +213,6 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
                 {t("deleteBtn")}
               </button>
             )}
-
             {confirmDelete && (
               <div className="flex items-center gap-1.5">
                 <span className="text-micro text-error">{t("confirmDelete")}</span>
@@ -249,6 +240,318 @@ function PendingConfigPanel({ config, orgId, invitationId }: PendingConfigPanelP
   );
 }
 
+// ---- CLIENT_USER: single pending credential block ----
+
+type ClientPendingView =
+  | "loading"
+  | "no_cred"
+  | "has_cred"
+  | "editing_cred"
+  | "changing_inst";
+
+interface ClientPendingCredentialBlockProps {
+  configs: OdooConfigSummary[];
+  orgId: string;
+  invitationId: string;
+}
+
+function ClientPendingCredentialBlock({ configs, orgId, invitationId }: ClientPendingCredentialBlockProps) {
+  const t = useTranslations("Settings.adminCredentials");
+
+  const [view, setView] = useState<ClientPendingView>("loading");
+  const [configuredId, setConfiguredId] = useState<string | null>(null);
+  const [existingUsername, setExistingUsername] = useState<string | null>(null);
+
+  const [pendingConfigId, setPendingConfigId] = useState<string>("");
+  const [deletingInst, setDeletingInst] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [showKey, setShowKey] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const [confirmEdit, setConfirmEdit] = useState(false);
+
+  useEffect(() => {
+    fetchPendingCredentials(orgId, invitationId).then((r) => {
+      if (r.success && r.pending_credentials && r.pending_credentials.length > 0) {
+        const cred = r.pending_credentials[0];
+        setConfiguredId(cred.odoo_config_id);
+        setExistingUsername(cred.odoo_username);
+        setUsername(cred.odoo_username);
+        setView("has_cred");
+      } else {
+        setConfiguredId(configs[0]?.id ?? null);
+        setView("no_cred");
+      }
+    });
+  }, [orgId, invitationId, configs]);
+
+  const configuredConfig = configs.find((c) => c.id === configuredId);
+
+  async function handleChangeInstance(newConfigId: string) {
+    if (!newConfigId) return;
+    if (newConfigId === configuredId) {
+      setView(existingUsername ? "has_cred" : "no_cred");
+      setPendingConfigId("");
+      return;
+    }
+    setDeletingInst(true);
+    if (configuredId && existingUsername) {
+      await deletePendingCredential(orgId, invitationId, configuredId);
+    }
+    setConfiguredId(newConfigId);
+    setExistingUsername(null);
+    setUsername("");
+    setApiKey("");
+    setPendingConfigId("");
+    setView("no_cred");
+    setDeletingInst(false);
+  }
+
+  async function handleSaveCred(e: FormEvent) {
+    e.preventDefault();
+    if (!username.trim() || !apiKey.trim() || !configuredId) return;
+    setSaving(true);
+    setSaveStatus("idle");
+    setSaveError(null);
+
+    const result = await savePendingCredential(orgId, invitationId, configuredId, {
+      odoo_username: username.trim(),
+      odoo_api_key: apiKey.trim(),
+    });
+
+    if (result.success && result.pending_credential) {
+      setExistingUsername(result.pending_credential.odoo_username);
+      setUsername(result.pending_credential.odoo_username);
+      setApiKey("");
+      setSaveStatus("success");
+      setView("has_cred");
+      setConfirmEdit(false);
+      setTimeout(() => setSaveStatus("idle"), 3000);
+    } else {
+      setSaveStatus("error");
+      setSaveError(
+        result.error === NETWORK_ERROR ? t("networkError") : result.error ?? t("saveError")
+      );
+    }
+    setSaving(false);
+  }
+
+  if (view === "loading") {
+    return (
+      <div className="flex justify-center py-6">
+        <Loader2 size={16} strokeWidth={1.5} className="animate-spin text-text-muted" />
+      </div>
+    );
+  }
+
+  const instanceName = configuredConfig
+    ? (configuredConfig.label || configuredConfig.url)
+    : configuredId ?? "—";
+
+  return (
+    <div className="space-y-3">
+      {/* Instance row */}
+      <div>
+        <label className="mb-1 flex items-center gap-1.5 text-micro font-medium text-text-secondary uppercase tracking-wide">
+          {t("instanceLabel")}
+        </label>
+
+        {view === "changing_inst" ? (
+          <div className="space-y-2">
+            <select
+              value={pendingConfigId}
+              onChange={(e) => setPendingConfigId(e.target.value)}
+              autoFocus
+              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/30"
+            >
+              <option value="">{t("selectInstance")}</option>
+              {configs.map((c) => (
+                <option key={c.id} value={c.id}>{c.label || c.url}</option>
+              ))}
+            </select>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                disabled={!pendingConfigId || deletingInst}
+                onClick={() => handleChangeInstance(pendingConfigId)}
+                className="flex h-7 items-center gap-1.5 rounded-md bg-accent px-3 text-micro font-medium text-white hover:bg-accent-hover disabled:opacity-40 transition-colors"
+              >
+                {deletingInst && <Loader2 size={11} strokeWidth={1.5} className="animate-spin" />}
+                {t("confirmChangeInstance")}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setView(existingUsername ? "has_cred" : "no_cred"); setPendingConfigId(""); }}
+                className="flex h-7 items-center px-3 rounded-md border border-border text-micro text-text-secondary hover:bg-raised transition-colors"
+              >
+                {t("no")}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between rounded-md border border-border bg-raised/50 px-3 py-1.5">
+            <p className="text-small font-technical text-foreground truncate mr-2">
+              {instanceName}
+            </p>
+            <div className="relative group shrink-0">
+              <button
+                type="button"
+                onClick={() => { setView("changing_inst"); setPendingConfigId(""); setConfirmEdit(false); }}
+                className="text-micro text-text-secondary hover:text-accent transition-colors whitespace-nowrap"
+              >
+                {t("changeInstance")}
+              </button>
+              <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 hidden group-hover:block z-10 w-48">
+                <div className="rounded-md bg-raised border border-border px-2 py-1 text-micro text-text-secondary shadow-sm text-right">
+                  {t("changeInstanceTooltip")}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Credential row — badge always visible when not changing instance */}
+      {(view === "has_cred" || view === "no_cred") && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between rounded-md border border-border bg-raised/50 px-3 py-2">
+            <div className="flex items-center gap-2 min-w-0">
+              {view === "has_cred" ? (
+                <CheckCircle2 size={14} strokeWidth={1.5} className="text-success-solid shrink-0" />
+              ) : (
+                <AlertTriangle size={14} strokeWidth={1.5} className="text-warning-solid shrink-0" />
+              )}
+              <span className="text-small text-text-secondary shrink-0">
+                {view === "has_cred" ? t("credConfigured") : t("credNotConfigured")}
+              </span>
+              {view === "has_cred" && existingUsername && (
+                <span className="text-small font-technical font-medium text-foreground truncate">
+                  {existingUsername}
+                </span>
+              )}
+            </div>
+            {/* Pencil: no_cred → open directly; has_cred → confirm Yes/No */}
+            {view === "no_cred" ? (
+              <button
+                type="button"
+                onClick={() => { setView("editing_cred"); setApiKey(""); setSaveStatus("idle"); }}
+                className="rounded-md p-1.5 text-text-secondary hover:text-accent hover:bg-accent-subtle transition-colors shrink-0 ml-2"
+                aria-label={t("editCredBtn")}
+              >
+                <Pencil size={14} strokeWidth={1.5} />
+              </button>
+            ) : !confirmEdit ? (
+              <button
+                type="button"
+                onClick={() => setConfirmEdit(true)}
+                className="rounded-md p-1.5 text-text-secondary hover:text-accent hover:bg-accent-subtle transition-colors shrink-0 ml-2"
+                aria-label={t("editCredBtn")}
+              >
+                <Pencil size={14} strokeWidth={1.5} />
+              </button>
+            ) : (
+              <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                <AlertTriangle size={14} strokeWidth={1.5} className="text-warning-solid" />
+                <button
+                  onClick={() => { setView("editing_cred"); setApiKey(""); setSaveStatus("idle"); }}
+                  className="rounded-md px-2 py-1 text-small bg-accent text-white hover:bg-accent-hover"
+                >
+                  {t("yes")}
+                </button>
+                <button
+                  onClick={() => setConfirmEdit(false)}
+                  className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
+                >
+                  {t("no")}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {saveStatus === "success" && (
+            <p className="flex items-center gap-1.5 text-micro text-success-solid">
+              <CheckCircle2 size={12} strokeWidth={1.5} />
+              {t("saveSuccess")}
+            </p>
+          )}
+        </div>
+      )}
+
+      {view === "editing_cred" && (
+        <form onSubmit={handleSaveCred} className="space-y-3">
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-micro font-medium text-text-secondary uppercase tracking-wide">
+              {t("usernameLabel")}
+            </label>
+            <input
+              type="text"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder={t("usernamePlaceholder")}
+              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+            />
+          </div>
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-micro font-medium text-text-secondary uppercase tracking-wide">
+              {t("apiKeyLabel")}
+            </label>
+            <div className="relative">
+              <input
+                type={showKey ? "text" : "password"}
+                required
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder={t("apiKeyPlaceholder")}
+                className="w-full rounded-md border border-border bg-surface px-3 py-1.5 pr-9 text-small font-technical outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+              />
+              <button
+                type="button"
+                onClick={() => setShowKey((v) => !v)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
+                aria-label={showKey ? t("hideKey") : t("showKey")}
+              >
+                {showKey ? <EyeOff size={14} strokeWidth={1.5} /> : <Eye size={14} strokeWidth={1.5} />}
+              </button>
+            </div>
+          </div>
+
+          {saveStatus === "error" && saveError && (
+            <p className="flex items-center gap-1.5 text-micro text-error font-technical">
+              <AlertTriangle size={12} strokeWidth={1.5} />
+              {saveError}
+            </p>
+          )}
+
+          <div className="flex items-center gap-2 pt-1">
+            <button
+              type="submit"
+              disabled={saving || !username.trim() || !apiKey.trim()}
+              className="flex h-7 items-center gap-1.5 rounded-md bg-accent px-3 text-micro font-medium text-white shadow-sm hover:bg-accent-hover disabled:opacity-40 transition-colors"
+            >
+              {saving && <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />}
+              {t("saveBtn")}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setView(existingUsername ? "has_cred" : "no_cred"); setApiKey(""); setSaveStatus("idle"); setConfirmEdit(false); }}
+              className="flex h-7 items-center px-3 rounded-md border border-border text-micro text-text-secondary hover:bg-raised transition-colors"
+            >
+              {t("cancelBtn")}
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
+
+// ---- Modal ----
+
 interface AdminInvitationCredentialsModalProps {
   invitation: Invitation;
   orgId: string;
@@ -263,6 +566,7 @@ export function AdminInvitationCredentialsModal({
   onClose,
 }: AdminInvitationCredentialsModalProps) {
   const t = useTranslations("Settings.adminCredentials");
+  const isClientUser = invitation.role === "CLIENT_USER";
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -275,7 +579,6 @@ export function AdminInvitationCredentialsModal({
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -284,8 +587,6 @@ export function AdminInvitationCredentialsModal({
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           onClick={onClose}
         />
-
-        {/* Modal */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 8 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -293,7 +594,6 @@ export function AdminInvitationCredentialsModal({
           transition={{ duration: 0.15, ease: "easeOut" }}
           className="relative z-10 w-full max-w-lg rounded-lg border border-border bg-surface shadow-lg max-h-[85vh] flex flex-col"
         >
-          {/* Header */}
           <div className="flex items-start justify-between border-b border-border px-5 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent-subtle shrink-0">
@@ -313,10 +613,15 @@ export function AdminInvitationCredentialsModal({
             </button>
           </div>
 
-          {/* Body */}
           <div className="overflow-y-auto flex-1 px-5 py-4 space-y-3">
             {configs.length === 0 ? (
               <p className="text-body text-text-secondary">{t("noConfigs")}</p>
+            ) : isClientUser ? (
+              <ClientPendingCredentialBlock
+                configs={configs}
+                orgId={orgId}
+                invitationId={invitation.id}
+              />
             ) : (
               configs.map((cfg) => (
                 <PendingConfigPanel
@@ -328,7 +633,6 @@ export function AdminInvitationCredentialsModal({
               ))
             )}
           </div>
-
         </motion.div>
       </div>
     </AnimatePresence>
