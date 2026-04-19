@@ -39,6 +39,7 @@ import {
   removeOrgUser,
   createInvitation,
   listInvitations,
+  savePendingCredential,
   fetchAdminFeedback,
   updateTenantNotes,
 } from "@/lib/api";
@@ -443,6 +444,13 @@ function InvitationsSection() {
   const [copied, setCopied] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
 
+  // Pre-load credential fields (CLIENT_USER only)
+  // If org has 1 config: credConfigId is fixed; if 2+ configs: starts empty (required)
+  const [credConfigId, setCredConfigId] = useState<string>(configs.length === 1 ? (configs[0]?.id ?? "") : "");
+  const [credUsername, setCredUsername] = useState("");
+  const [credApiKey, setCredApiKey] = useState("");
+  const [showCredKey, setShowCredKey] = useState(false);
+
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingList, setLoadingList] = useState(false);
   const [expandedTokens, setExpandedTokens] = useState<Set<string>>(new Set());
@@ -478,6 +486,11 @@ function InvitationsSection() {
   async function handleInvite(e: FormEvent) {
     e.preventDefault();
     if (!orgId) return;
+    // For CLIENT_USER with multiple configs, instance selection is required
+    if (role === "CLIENT_USER" && configs.length > 1 && !credConfigId) {
+      setInviteError(t("admin.preloadInstanceRequired"));
+      return;
+    }
     setSubmitting(true);
     setInviteError(null);
     setInviteLink(null);
@@ -486,7 +499,17 @@ function InvitationsSection() {
       const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
       setInviteLink(`${baseUrl}/invite?token=${result.invitation.token}`);
       setInvitations((prev) => [result.invitation!, ...prev]);
+      // Pre-load credential for CLIENT_USER if credential fields were filled
+      if (role === "CLIENT_USER" && credUsername.trim() && credApiKey.trim() && credConfigId) {
+        await savePendingCredential(orgId, result.invitation.id, credConfigId, {
+          odoo_username: credUsername.trim(),
+          odoo_api_key: credApiKey.trim(),
+        });
+      }
       setEmail("");
+      setCredUsername("");
+      setCredApiKey("");
+      setCredConfigId(configs.length === 1 ? (configs[0]?.id ?? "") : "");
     } else {
       setInviteError(result.error ?? t("admin.inviteError"));
     }
@@ -520,7 +543,13 @@ function InvitationsSection() {
           />
           <select
             value={role}
-            onChange={(e) => setRole(e.target.value as UserRole)}
+            onChange={(e) => {
+              const newRole = e.target.value as UserRole;
+              setRole(newRole);
+              setCredUsername("");
+              setCredApiKey("");
+              setCredConfigId(newRole === "CLIENT_USER" && configs.length === 1 ? (configs[0]?.id ?? "") : "");
+            }}
             className="rounded-md border border-border bg-surface px-2 py-2 text-body font-technical focus:outline-none focus:ring-1 focus:ring-accent/30"
           >
             {(["ADMIN", "CLIENT_USER"] as UserRole[]).map((r) => (
@@ -535,6 +564,60 @@ function InvitationsSection() {
             {submitting ? <Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> : t("admin.invite")}
           </button>
         </div>
+
+        {/* Required instance selection for CLIENT_USER with multiple configs */}
+        {role === "CLIENT_USER" && configs.length > 1 && (
+          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
+            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
+              {t("admin.preloadInstance")} <span className="text-error">*</span>
+            </p>
+            <select
+              value={credConfigId}
+              onChange={(e) => setCredConfigId(e.target.value)}
+              required
+              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
+            >
+              <option value="">{t("adminCredentials.selectInstance")}</option>
+              {configs.map((c) => (
+                <option key={c.id} value={c.id}>{c.label || c.url}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Optional credential pre-load for CLIENT_USER */}
+        {role === "CLIENT_USER" && configs.length > 0 && (
+          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
+            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
+              {t("admin.preloadCredentials")}
+            </p>
+            <input
+              type="text"
+              value={credUsername}
+              onChange={(e) => setCredUsername(e.target.value)}
+              placeholder={t("admin.preloadUsername")}
+              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+            />
+            <div className="relative">
+              <input
+                type={showCredKey ? "text" : "password"}
+                value={credApiKey}
+                onChange={(e) => setCredApiKey(e.target.value)}
+                placeholder={t("admin.preloadApiKey")}
+                className="w-full rounded-md border border-border bg-surface px-3 py-1.5 pr-9 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCredKey((v) => !v)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
+                aria-label={showCredKey ? t("adminCredentials.hideKey") : t("adminCredentials.showKey")}
+              >
+                {showCredKey ? <EyeOff size={14} strokeWidth={1.5} /> : <Eye size={14} strokeWidth={1.5} />}
+              </button>
+            </div>
+          </div>
+        )}
+
         {inviteError && <p className="text-small text-error">{inviteError}</p>}
 
         {/* Generated link */}
