@@ -322,7 +322,7 @@ export interface MeResponse {
   user: MeUser;
   org: MeOrg | null;
   subscription: MeSubscription | null;
-  slots_used: SlotsUsed;
+  slots_used: SlotsUsed | null;
   odoo_configs: OdooConfigSummary[];
   demo_available?: boolean;
 }
