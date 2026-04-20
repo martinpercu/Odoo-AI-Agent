@@ -333,6 +333,7 @@ Settings
 ├── Users         → list members, change role, toggle free/paid slot, remove
 ├── Invitations   → send invite by email, view status (pending / accepted / expired)
 │                   pending invitations show "Show link" button to reveal and copy the invite URL
+│                   pending invitations can be cancelled (X button with inline confirmation; frees the seat immediately)
 └── Feedback      → list of feedback reports submitted by org users; expandable rows con 3 tabs:
 │                   Data (categoría, comentario, expected response, admin_notes), Messages (conversación snapshot),
 │                   Note (tenant_notes: nota interna editable por el admin)
@@ -457,6 +458,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `DELETE` | `/admin/orgs/{id}/users/{id}` | Remove user from organization |
 | `POST` | `/admin/orgs/{id}/invitations` | Send invitation by email |
 | `GET` | `/admin/orgs/{id}/invitations` | List invitations |
+| `DELETE` | `/admin/orgs/{id}/invitations/{invId}` | Cancel a pending invitation (frees seat immediately) |
 | `POST` | `/admin/invitations/accept` | Accept invitation by token |
 | `GET` | `/me/odoo-credentials` | List current user's saved credentials (one per config) |
 | `PUT` | `/me/odoo-credentials/{configId}` | Save/update current user's credentials for a config |

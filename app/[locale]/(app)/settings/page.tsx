@@ -39,6 +39,7 @@ import {
   removeOrgUser,
   createInvitation,
   listInvitations,
+  cancelInvitation,
   savePendingCredential,
   fetchAdminFeedback,
   updateTenantNotes,
@@ -268,13 +269,14 @@ function UsersSection() {
   const { meData } = useSession();
   const orgId = meData?.org?.id;
   const myUserId = meData?.user?.id;
-  // Cast to OdooConfigSummary[] — the shapes are compatible (id, label, url, db_name, is_active)
+  const subscription = meData?.subscription;
   const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
 
   const [users, setUsers] = useState<OrgUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [credentialsUser, setCredentialsUser] = useState<OrgUser | null>(null);
+  const [freeToggleError, setFreeToggleError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!orgId) return;
@@ -293,8 +295,18 @@ function UsersSection() {
 
   async function handleFreeToggle(userId: string, is_free_license: boolean) {
     if (!orgId) return;
-    await updateOrgUser(orgId, userId, { is_free_license });
-    setUsers((prev) => prev.map((u) => u.id === userId ? { ...u, is_free_license } : u));
+    setFreeToggleError(null);
+    const result = await updateOrgUser(orgId, userId, { is_free_license });
+    if (result.success) {
+      setUsers((prev) => prev.map((u) => u.id === userId ? { ...u, is_free_license } : u));
+    } else {
+      // 409 from backend — show the error message inline
+      const msg = is_free_license
+        ? t("admin.paidToFreeError")
+        : t("admin.freeTooPaidError");
+      setFreeToggleError(msg);
+      setTimeout(() => setFreeToggleError(null), 6000);
+    }
   }
 
   async function handleRemove(userId: string) {
@@ -304,13 +316,42 @@ function UsersSection() {
     setConfirmRemoveId(null);
   }
 
+  // Compute seat counts from the loaded users list
+  const paidUsed = users.filter((u) => !u.is_free_license).length;
+  const freeUsed = users.filter((u) => u.is_free_license).length;
+  const paidLimit = subscription?.paid_slots_limit ?? 0;
+  const freeLimit = subscription?.free_slots_limit ?? 0;
+
   return (
     <>
       <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-        <div className="mb-4 flex items-center gap-2">
-          <Users size={20} strokeWidth={1.5} className="text-accent" />
-          <h2 className="text-subheading">{t("admin.usersTitle")}</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Users size={20} strokeWidth={1.5} className="text-accent" />
+            <h2 className="text-subheading">{t("admin.usersTitle")}</h2>
+          </div>
+          {/* Seats widget */}
+          {subscription && (
+            <div className="flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
+              <span className="text-text-secondary font-medium">{t("admin.seatsWidget")}</span>
+              <span className={`font-technical ${paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
+                {t("admin.seatsPaid")}: {paidUsed}/{paidLimit}
+              </span>
+              <span className="text-border">·</span>
+              <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
+                {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
+              </span>
+            </div>
+          )}
         </div>
+
+        {/* Free/Paid toggle error banner */}
+        {freeToggleError && (
+          <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
+            <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+            <span>{freeToggleError}</span>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center py-4">
@@ -457,6 +498,9 @@ function InvitationsSection() {
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   const [credentialsInvitation, setCredentialsInvitation] = useState<Invitation | null>(null);
   const [invFilter, setInvFilter] = useState<"pending" | "accepted" | "all">("pending");
+  const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   function toggleLinkExpanded(token: string) {
     setExpandedTokens((prev) => {
@@ -482,6 +526,21 @@ function InvitationsSection() {
       setLoadingList(false);
     });
   }, [orgId]);
+
+  async function handleCancelInvitation(invId: string) {
+    if (!orgId) return;
+    setCancellingId(invId);
+    setCancelError(null);
+    const result = await cancelInvitation(orgId, invId);
+    if (result.success) {
+      setInvitations((prev) => prev.filter((i) => i.id !== invId));
+    } else {
+      setCancelError(result.error ?? t("admin.cancelInvitationError"));
+      setTimeout(() => setCancelError(null), 5000);
+    }
+    setCancellingId(null);
+    setConfirmCancelId(null);
+  }
 
   async function handleInvite(e: FormEvent) {
     e.preventDefault();
@@ -511,7 +570,7 @@ function InvitationsSection() {
       setCredApiKey("");
       setCredConfigId(configs.length === 1 ? (configs[0]?.id ?? "") : "");
     } else {
-      setInviteError(result.error ?? t("admin.inviteError"));
+      setInviteError(result.seatLimitReached ? t("admin.inviteSeatLimitReached") : (result.error ?? t("admin.inviteError")));
     }
     setSubmitting(false);
   }
@@ -529,6 +588,14 @@ function InvitationsSection() {
         <Mail size={20} strokeWidth={1.5} className="text-accent" />
         <h2 className="text-subheading">{t("admin.invitationsTitle")}</h2>
       </div>
+
+      {/* Invite error banner */}
+      {inviteError && (
+        <div className="mb-4 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
+          <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <span>{inviteError}</span>
+        </div>
+      )}
 
       {/* Invite form */}
       <form onSubmit={handleInvite} className="mb-6 flex flex-col gap-3">
@@ -618,8 +685,6 @@ function InvitationsSection() {
           </div>
         )}
 
-        {inviteError && <p className="text-small text-error">{inviteError}</p>}
-
         {/* Generated link */}
         {inviteLink && (
           <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
@@ -635,6 +700,14 @@ function InvitationsSection() {
           </div>
         )}
       </form>
+
+      {/* Cancel error banner */}
+      {cancelError && (
+        <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
+          <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <span>{cancelError}</span>
+        </div>
+      )}
 
       {/* Pending invitations list */}
       {loadingList ? (
@@ -719,6 +792,40 @@ function InvitationsSection() {
                         {isExpanded ? <EyeOff size={13} strokeWidth={1.5} /> : <Eye size={13} strokeWidth={1.5} />}
                         {t("admin.showLink")}
                       </button>
+                    )}
+                    {/* Cancel invitation */}
+                    {isPending && (
+                      confirmCancelId === inv.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-small text-error">{t("admin.confirmCancelInvitation")}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleCancelInvitation(inv.id)}
+                            disabled={cancellingId === inv.id}
+                            className="rounded-md px-2 py-1 text-small bg-error text-white hover:opacity-90 disabled:opacity-50"
+                          >
+                            {cancellingId === inv.id
+                              ? <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />
+                              : t("admin.yes")}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmCancelId(null)}
+                            className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
+                          >
+                            {t("admin.no")}
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmCancelId(inv.id)}
+                          className="rounded-md p-1.5 text-text-secondary hover:text-error hover:bg-error-subtle transition-colors"
+                          aria-label={t("admin.cancelInvitation")}
+                        >
+                          <X size={13} strokeWidth={1.5} />
+                        </button>
+                      )
                     )}
                   </div>
                 </div>
