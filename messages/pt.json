@@ -242,6 +242,7 @@
       "inviteEmail": "E-mail",
       "invite": "Enviar convite",
       "inviteError": "Não foi possível enviar o convite.",
+      "inviteSeatLimitReached": "Não é possível convidar. Limite máximo de vagas atingido.",
       "noInvitations": "Nenhum convite enviado ainda.",
       "pendingInvitations": "Convites pendentes",
       "accepted": "Aceito",
@@ -260,7 +261,16 @@
       "preloadInstanceRequired": "Selecione uma instância Odoo para este usuário.",
       "preloadCredentials": "Pré-carregar credenciais Odoo (opcional)",
       "preloadUsername": "Usuário Odoo",
-      "preloadApiKey": "API Key"
+      "preloadApiKey": "API Key",
+      "cancelInvitation": "Cancelar",
+      "confirmCancelInvitation": "Cancelar este convite? A vaga será liberada imediatamente.",
+      "cancelInvitationError": "Não foi possível cancelar o convite.",
+      "seatsWidget": "Vagas",
+      "seatsPaid": "Pagas",
+      "seatsFree": "Gratuitas",
+      "seatsPending": "Pendentes",
+      "freeTooPaidError": "Não há vagas pagas disponíveis. Para fazer essa alteração, mova primeiro um usuário pago para gratuito.",
+      "paidToFreeError": "Limite de overflow de vagas gratuitas atingido. Não é possível mover mais usuários para gratuito."
     },
     "credentials": {
       "sectionTitle": "Minhas Credenciais Odoo",

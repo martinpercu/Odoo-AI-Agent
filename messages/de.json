@@ -242,6 +242,7 @@
       "inviteEmail": "E-Mail-Adresse",
       "invite": "Einladung senden",
       "inviteError": "Senden fehlgeschlagen.",
+      "inviteSeatLimitReached": "Einladung nicht möglich. Maximales Platzlimit erreicht.",
       "noInvitations": "Noch keine Einladungen gesendet.",
       "pendingInvitations": "Ausstehende Einladungen",
       "accepted": "Akzeptiert",
@@ -260,7 +261,16 @@
       "preloadInstanceRequired": "Bitte wählen Sie eine Odoo-Instanz für diesen Benutzer.",
       "preloadCredentials": "Odoo-Anmeldedaten vorladen (optional)",
       "preloadUsername": "Odoo-Benutzername",
-      "preloadApiKey": "API-Schlüssel"
+      "preloadApiKey": "API-Schlüssel",
+      "cancelInvitation": "Stornieren",
+      "confirmCancelInvitation": "Diese Einladung stornieren? Der Platz wird sofort freigegeben.",
+      "cancelInvitationError": "Einladung konnte nicht storniert werden.",
+      "seatsWidget": "Plätze",
+      "seatsPaid": "Bezahlt",
+      "seatsFree": "Kostenlos",
+      "seatsPending": "Ausstehend",
+      "freeTooPaidError": "Keine bezahlten Plätze verfügbar. Verschieben Sie zuerst einen bezahlten Benutzer zu kostenlos.",
+      "paidToFreeError": "Überlauflimit für kostenlose Plätze erreicht. Es können keine weiteren Benutzer auf kostenlos umgestellt werden."
     },
     "credentials": {
       "sectionTitle": "Meine Odoo-Anmeldedaten",
