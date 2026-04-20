@@ -63,7 +63,7 @@ A modern, responsive interface that allows users to query and manage data from t
 
 **Configuration:**
 - Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations, feedback reports
-- Credential UI is role-aware: `CLIENT_USER` sees a single-instance block (instance selector + pencil edit); `ADMIN` sees an accordion per config
+- Credential UI is role-aware: `CLIENT_USER` sees a single-instance block with a status row (configured/not-configured + username inline) and an inline edit form that expands via a Pencil button (animated with `AnimatePresence`); `ADMIN` sees an accordion per config
 - Odoo connection configuration, validation, and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese)
 - Light / dark mode with preference persisted in `localStorage` (no flash on reload)
