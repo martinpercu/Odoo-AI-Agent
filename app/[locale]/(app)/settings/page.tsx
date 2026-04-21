@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -8,8 +8,10 @@ import {
   Shield,
   Building2,
   Plug,
+  Database,
   Users,
-  Mail,
+  UserPlus,
+  Send,
   Loader2,
   Trash2,
   Copy,
@@ -46,6 +48,67 @@ import {
 } from "@/lib/api";
 import type { OdooConfigItem, OdooConfigSummary, OrgUser, Invitation, UserRole, FeedbackReport } from "@/lib/types";
 
+// ---- CollapsibleCard ----
+
+interface CollapsibleCardProps {
+  icon: React.ReactNode;
+  title: React.ReactNode;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+  /** Extra content rendered below the title row, inside the header area (always visible) */
+  subheader?: React.ReactNode;
+}
+
+function CollapsibleCard({ icon, title, defaultOpen = false, children, subheader }: CollapsibleCardProps) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div className="rounded-lg border border-border bg-surface shadow-sm">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-6 py-5 text-left"
+        aria-expanded={open}
+      >
+        <div className="flex items-center gap-2">
+          {icon}
+          <span className="text-subheading">{title}</span>
+        </div>
+        <motion.div
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="shrink-0 text-text-muted"
+        >
+          <ChevronDown size={18} strokeWidth={1.5} />
+        </motion.div>
+      </button>
+
+      {subheader && open && (
+        <div className="px-6 pb-3 -mt-2">
+          {subheader}
+        </div>
+      )}
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-6">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ---- Org Section ----
 
 function OrgSection() {
@@ -78,12 +141,7 @@ function OrgSection() {
   if (!org) return null;
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-2">
-        <Building2 size={20} strokeWidth={1.5} className="text-accent" />
-        <h2 className="text-subheading">{t("admin.orgTitle")}</h2>
-      </div>
-
+    <CollapsibleCard icon={<Building2 size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.orgTitle")}>
       {!editing ? (
         <div className="space-y-3">
           <div className="flex justify-between text-body">
@@ -158,13 +216,25 @@ function OrgSection() {
           </div>
         </form>
       )}
-    </div>
+    </CollapsibleCard>
   );
 }
 
 // ---- Odoo Configs Section ----
 
 function OdooConfigsSection() {
+  const t = useTranslations("Settings");
+
+  return (
+    <CollapsibleCard icon={<Plug size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.odooConfigsTitle")}>
+      <ConnectionForm />
+    </CollapsibleCard>
+  );
+}
+
+// ---- Saved Configs Section ----
+
+function SavedConfigsSection() {
   const t = useTranslations("Settings");
   const { meData } = useSession();
   const orgId = meData?.org?.id;
@@ -193,18 +263,7 @@ function OdooConfigsSection() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-2">
-        <Plug size={20} strokeWidth={1.5} className="text-accent" />
-        <h2 className="text-subheading">{t("admin.odooConfigsTitle")}</h2>
-      </div>
-
-      {/* Form to add a new config — no credential fields */}
-      <div className="mb-4">
-        <ConnectionForm />
-      </div>
-
-      {/* List of existing configs */}
+    <CollapsibleCard icon={<Database size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.savedConfigs")}>
       {loading ? (
         <div className="flex justify-center py-4">
           <Loader2 size={18} strokeWidth={1.5} className="animate-spin text-text-secondary" />
@@ -212,10 +271,7 @@ function OdooConfigsSection() {
       ) : configs.length === 0 ? (
         <p className="text-body text-text-secondary">{t("admin.noConfigs")}</p>
       ) : (
-        <div className="space-y-2 mt-4 border-t border-border pt-4">
-          <p className="text-micro uppercase tracking-wide text-text-secondary mb-2">
-            {t("admin.savedConfigs")}
-          </p>
+        <div className="space-y-2">
           {configs.map((cfg) => (
             <div
               key={cfg.id}
@@ -256,7 +312,7 @@ function OdooConfigsSection() {
           ))}
         </div>
       )}
-    </div>
+    </CollapsibleCard>
   );
 }
 
@@ -322,29 +378,26 @@ function UsersSection() {
   const paidLimit = subscription?.paid_slots_limit ?? 0;
   const freeLimit = subscription?.free_slots_limit ?? 0;
 
+  const seatsWidget = subscription ? (
+    <div className="inline-flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
+      <span className="text-text-secondary font-medium">{t("admin.seatsWidget")}</span>
+      <span className={`font-technical ${paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
+        {t("admin.seatsPaid")}: {paidUsed}/{paidLimit}
+      </span>
+      <span className="text-border">·</span>
+      <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
+        {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
+      </span>
+    </div>
+  ) : undefined;
+
   return (
     <>
-      <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Users size={20} strokeWidth={1.5} className="text-accent" />
-            <h2 className="text-subheading">{t("admin.usersTitle")}</h2>
-          </div>
-          {/* Seats widget */}
-          {subscription && (
-            <div className="flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
-              <span className="text-text-secondary font-medium">{t("admin.seatsWidget")}</span>
-              <span className={`font-technical ${paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
-                {t("admin.seatsPaid")}: {paidUsed}/{paidLimit}
-              </span>
-              <span className="text-border">·</span>
-              <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
-                {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
-              </span>
-            </div>
-          )}
-        </div>
-
+      <CollapsibleCard
+        icon={<Users size={20} strokeWidth={1.5} className="text-accent" />}
+        title={t("admin.usersTitle")}
+        subheader={seatsWidget}
+      >
         {/* Free/Paid toggle error banner */}
         {freeToggleError && (
           <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
@@ -375,7 +428,7 @@ function UsersSection() {
                     value={user.role}
                     onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
                     disabled={user.id === myUserId}
-                    className="rounded-md border border-border bg-surface px-2 py-1 text-small font-technical focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="hidden rounded-md border border-border bg-surface px-2 py-1 text-small font-technical focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {ROLE_OPTIONS.map((r) => (
                       <option key={r} value={r}>{r}</option>
@@ -455,7 +508,7 @@ function UsersSection() {
             ))}
           </div>
         )}
-      </div>
+      </CollapsibleCard>
 
       {/* Credentials modal */}
       {credentialsUser && orgId && (
@@ -470,16 +523,16 @@ function UsersSection() {
   );
 }
 
-// ---- Invitations Section ----
+// ---- Invite Form Section ----
 
-function InvitationsSection() {
+function InviteFormSection() {
   const t = useTranslations("Settings");
   const { meData } = useSession();
   const orgId = meData?.org?.id;
   const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
 
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<UserRole>("CLIENT_USER");
+  const role: UserRole = "CLIENT_USER";
   const [submitting, setSubmitting] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -491,6 +544,155 @@ function InvitationsSection() {
   const [credUsername, setCredUsername] = useState("");
   const [credApiKey, setCredApiKey] = useState("");
   const [showCredKey, setShowCredKey] = useState(false);
+
+  async function handleInvite(e: FormEvent) {
+    e.preventDefault();
+    if (!orgId) return;
+    // For CLIENT_USER with multiple configs, instance selection is required
+    if (role === "CLIENT_USER" && configs.length > 1 && !credConfigId) {
+      setInviteError(t("admin.preloadInstanceRequired"));
+      return;
+    }
+    setSubmitting(true);
+    setInviteError(null);
+    setInviteLink(null);
+    const result = await createInvitation(orgId, email, role);
+    if (result.success && result.invitation) {
+      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+      setInviteLink(`${baseUrl}/invite?token=${result.invitation.token}`);
+      // Pre-load credential for CLIENT_USER if credential fields were filled
+      if (credUsername.trim() && credApiKey.trim() && credConfigId) {
+        await savePendingCredential(orgId, result.invitation.id, credConfigId, {
+          odoo_username: credUsername.trim(),
+          odoo_api_key: credApiKey.trim(),
+        });
+      }
+      setEmail("");
+      setCredUsername("");
+      setCredApiKey("");
+      setCredConfigId(configs.length === 1 ? (configs[0]?.id ?? "") : "");
+    } else {
+      setInviteError(result.seatLimitReached ? t("admin.inviteSeatLimitReached") : (result.error ?? t("admin.inviteError")));
+    }
+    setSubmitting(false);
+  }
+
+  function handleCopy() {
+    if (!inviteLink) return;
+    navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <CollapsibleCard icon={<UserPlus size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.invitationsTitle")}>
+      {/* Invite error banner */}
+      {inviteError && (
+        <div className="mb-4 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
+          <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <span>{inviteError}</span>
+        </div>
+      )}
+
+      {/* Invite form */}
+      <form onSubmit={handleInvite} className="flex flex-col gap-3">
+        <div className="flex gap-2">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("admin.inviteEmail")}
+            className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
+          />
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex h-9 items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
+          >
+            {submitting ? <Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> : t("admin.invite")}
+          </button>
+        </div>
+
+        {/* Required instance selection for CLIENT_USER with multiple configs */}
+        {configs.length > 1 && (
+          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
+            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
+              {t("admin.preloadInstance")} <span className="text-error">*</span>
+            </p>
+            <select
+              value={credConfigId}
+              onChange={(e) => setCredConfigId(e.target.value)}
+              required
+              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
+            >
+              <option value="">{t("adminCredentials.selectInstance")}</option>
+              {configs.map((c) => (
+                <option key={c.id} value={c.id}>{c.label || c.url}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Optional credential pre-load */}
+        {configs.length > 0 && (
+          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
+            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
+              {t("admin.preloadCredentials")}
+            </p>
+            <input
+              type="text"
+              value={credUsername}
+              onChange={(e) => setCredUsername(e.target.value)}
+              placeholder={t("admin.preloadUsername")}
+              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+            />
+            <div className="relative">
+              <input
+                type={showCredKey ? "text" : "password"}
+                value={credApiKey}
+                onChange={(e) => setCredApiKey(e.target.value)}
+                placeholder={t("admin.preloadApiKey")}
+                className="w-full rounded-md border border-border bg-surface px-3 py-1.5 pr-9 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCredKey((v) => !v)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
+                aria-label={showCredKey ? t("adminCredentials.hideKey") : t("adminCredentials.showKey")}
+              >
+                {showCredKey ? <EyeOff size={14} strokeWidth={1.5} /> : <Eye size={14} strokeWidth={1.5} />}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Generated link */}
+        {inviteLink && (
+          <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
+            <p className="flex-1 truncate text-small font-technical text-text-muted dark:text-text-secondary">{inviteLink}</p>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="shrink-0 rounded-md p-1 hover:bg-border transition-colors"
+              aria-label={copied ? t("admin.copied") : t("admin.copy")}
+            >
+              {copied ? <Check size={14} strokeWidth={1.5} className="text-success-solid" /> : <Copy size={14} strokeWidth={1.5} />}
+            </button>
+          </div>
+        )}
+      </form>
+    </CollapsibleCard>
+  );
+}
+
+// ---- Sent Invitations Section ----
+
+function SentInvitationsSection() {
+  const t = useTranslations("Settings");
+  const { meData } = useSession();
+  const orgId = meData?.org?.id;
+  const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
 
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingList, setLoadingList] = useState(false);
@@ -542,165 +744,8 @@ function InvitationsSection() {
     setConfirmCancelId(null);
   }
 
-  async function handleInvite(e: FormEvent) {
-    e.preventDefault();
-    if (!orgId) return;
-    // For CLIENT_USER with multiple configs, instance selection is required
-    if (role === "CLIENT_USER" && configs.length > 1 && !credConfigId) {
-      setInviteError(t("admin.preloadInstanceRequired"));
-      return;
-    }
-    setSubmitting(true);
-    setInviteError(null);
-    setInviteLink(null);
-    const result = await createInvitation(orgId, email, role);
-    if (result.success && result.invitation) {
-      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-      setInviteLink(`${baseUrl}/invite?token=${result.invitation.token}`);
-      setInvitations((prev) => [result.invitation!, ...prev]);
-      // Pre-load credential for CLIENT_USER if credential fields were filled
-      if (role === "CLIENT_USER" && credUsername.trim() && credApiKey.trim() && credConfigId) {
-        await savePendingCredential(orgId, result.invitation.id, credConfigId, {
-          odoo_username: credUsername.trim(),
-          odoo_api_key: credApiKey.trim(),
-        });
-      }
-      setEmail("");
-      setCredUsername("");
-      setCredApiKey("");
-      setCredConfigId(configs.length === 1 ? (configs[0]?.id ?? "") : "");
-    } else {
-      setInviteError(result.seatLimitReached ? t("admin.inviteSeatLimitReached") : (result.error ?? t("admin.inviteError")));
-    }
-    setSubmitting(false);
-  }
-
-  function handleCopy() {
-    if (!inviteLink) return;
-    navigator.clipboard.writeText(inviteLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
   return (
-    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-2">
-        <Mail size={20} strokeWidth={1.5} className="text-accent" />
-        <h2 className="text-subheading">{t("admin.invitationsTitle")}</h2>
-      </div>
-
-      {/* Invite error banner */}
-      {inviteError && (
-        <div className="mb-4 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
-          <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
-          <span>{inviteError}</span>
-        </div>
-      )}
-
-      {/* Invite form */}
-      <form onSubmit={handleInvite} className="mb-6 flex flex-col gap-3">
-        <div className="flex gap-2">
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("admin.inviteEmail")}
-            className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
-          />
-          <select
-            value={role}
-            onChange={(e) => {
-              const newRole = e.target.value as UserRole;
-              setRole(newRole);
-              setCredUsername("");
-              setCredApiKey("");
-              setCredConfigId(newRole === "CLIENT_USER" && configs.length === 1 ? (configs[0]?.id ?? "") : "");
-            }}
-            className="rounded-md border border-border bg-surface px-2 py-2 text-body font-technical focus:outline-none focus:ring-1 focus:ring-accent/30"
-          >
-            {(["ADMIN", "CLIENT_USER"] as UserRole[]).map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            disabled={submitting}
-            className="flex h-9 items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
-          >
-            {submitting ? <Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> : t("admin.invite")}
-          </button>
-        </div>
-
-        {/* Required instance selection for CLIENT_USER with multiple configs */}
-        {role === "CLIENT_USER" && configs.length > 1 && (
-          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
-            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
-              {t("admin.preloadInstance")} <span className="text-error">*</span>
-            </p>
-            <select
-              value={credConfigId}
-              onChange={(e) => setCredConfigId(e.target.value)}
-              required
-              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
-            >
-              <option value="">{t("adminCredentials.selectInstance")}</option>
-              {configs.map((c) => (
-                <option key={c.id} value={c.id}>{c.label || c.url}</option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {/* Optional credential pre-load for CLIENT_USER */}
-        {role === "CLIENT_USER" && configs.length > 0 && (
-          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
-            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
-              {t("admin.preloadCredentials")}
-            </p>
-            <input
-              type="text"
-              value={credUsername}
-              onChange={(e) => setCredUsername(e.target.value)}
-              placeholder={t("admin.preloadUsername")}
-              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
-            />
-            <div className="relative">
-              <input
-                type={showCredKey ? "text" : "password"}
-                value={credApiKey}
-                onChange={(e) => setCredApiKey(e.target.value)}
-                placeholder={t("admin.preloadApiKey")}
-                className="w-full rounded-md border border-border bg-surface px-3 py-1.5 pr-9 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
-              />
-              <button
-                type="button"
-                onClick={() => setShowCredKey((v) => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
-                aria-label={showCredKey ? t("adminCredentials.hideKey") : t("adminCredentials.showKey")}
-              >
-                {showCredKey ? <EyeOff size={14} strokeWidth={1.5} /> : <Eye size={14} strokeWidth={1.5} />}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Generated link */}
-        {inviteLink && (
-          <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
-            <p className="flex-1 truncate text-small font-technical text-text-muted dark:text-text-secondary">{inviteLink}</p>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="shrink-0 rounded-md p-1 hover:bg-border transition-colors"
-              aria-label={copied ? t("admin.copied") : t("admin.copy")}
-            >
-              {copied ? <Check size={14} strokeWidth={1.5} className="text-success-solid" /> : <Copy size={14} strokeWidth={1.5} />}
-            </button>
-          </div>
-        )}
-      </form>
-
+    <CollapsibleCard icon={<Send size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.pendingInvitations")}>
       {/* Cancel error banner */}
       {cancelError && (
         <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
@@ -709,7 +754,34 @@ function InvitationsSection() {
         </div>
       )}
 
-      {/* Pending invitations list */}
+      {/* Filter tabs */}
+      <div className="flex items-center gap-1 mb-4">
+        <button
+          onClick={() => setInvFilter("pending")}
+          className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+            invFilter === "pending" ? "bg-warning-subtle text-warning-solid" : "bg-raised text-text-secondary"
+          }`}
+        >
+          {t("admin.filterPending")}
+        </button>
+        <button
+          onClick={() => setInvFilter("accepted")}
+          className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+            invFilter === "accepted" ? "bg-success-subtle text-success-solid" : "bg-raised text-text-secondary"
+          }`}
+        >
+          {t("admin.filterAccepted")}
+        </button>
+        <button
+          onClick={() => setInvFilter("all")}
+          className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+            invFilter === "all" ? "bg-accent-subtle text-accent" : "bg-raised text-text-secondary"
+          }`}
+        >
+          {t("admin.filterAll")}
+        </button>
+      </div>
+
       {loadingList ? (
         <div className="flex justify-center py-2">
           <Loader2 size={16} strokeWidth={1.5} className="animate-spin text-text-secondary" />
@@ -717,38 +789,7 @@ function InvitationsSection() {
       ) : invitations.length === 0 ? (
         <p className="text-body text-text-secondary">{t("admin.noInvitations")}</p>
       ) : (
-        <div className="space-y-2 border-t border-border pt-4">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-micro uppercase tracking-wide text-text-secondary">
-              {t("admin.pendingInvitations")}
-            </p>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setInvFilter("pending")}
-                className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
-                  invFilter === "pending" ? "bg-warning-subtle text-warning-solid" : "bg-raised text-text-secondary"
-                }`}
-              >
-                {t("admin.filterPending")}
-              </button>
-              <button
-                onClick={() => setInvFilter("accepted")}
-                className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
-                  invFilter === "accepted" ? "bg-success-subtle text-success-solid" : "bg-raised text-text-secondary"
-                }`}
-              >
-                {t("admin.filterAccepted")}
-              </button>
-              <button
-                onClick={() => setInvFilter("all")}
-                className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
-                  invFilter === "all" ? "bg-accent-subtle text-accent" : "bg-raised text-text-secondary"
-                }`}
-              >
-                {t("admin.filterAll")}
-              </button>
-            </div>
-          </div>
+        <div className="space-y-2">
           {invitations.map((inv) => {
             const expired = new Date(inv.expires_at) < new Date();
             const isPending = !inv.accepted_at && !expired;
@@ -859,7 +900,7 @@ function InvitationsSection() {
           onClose={() => setCredentialsInvitation(null)}
         />
       )}
-    </div>
+    </CollapsibleCard>
   );
 }
 
@@ -1124,12 +1165,7 @@ function FeedbackSection() {
   }, [orgId]);
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-2">
-        <Flag size={20} strokeWidth={1.5} className="text-accent" />
-        <h2 className="text-subheading">{t("feedback.title")}</h2>
-      </div>
-
+    <CollapsibleCard icon={<Flag size={20} strokeWidth={1.5} className="text-accent" />} title={t("feedback.title")}>
       {loading ? (
         <div className="flex items-center gap-2 text-body text-text-secondary">
           <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
@@ -1144,11 +1180,20 @@ function FeedbackSection() {
           ))}
         </div>
       )}
-    </div>
+    </CollapsibleCard>
   );
 }
 
 // ---- Main Settings Page ----
+
+type SettingsTab = "org" | "instances" | "users" | "feedback";
+
+const TAB_CONFIG: { id: SettingsTab; icon: React.ReactNode; labelKey: string }[] = [
+  { id: "org",       icon: <Building2 size={16} strokeWidth={1.5} />, labelKey: "tabOrg" },
+  { id: "instances", icon: <Database  size={16} strokeWidth={1.5} />, labelKey: "tabInstances" },
+  { id: "users",     icon: <Users     size={16} strokeWidth={1.5} />, labelKey: "tabUsers" },
+  { id: "feedback",  icon: <Flag      size={16} strokeWidth={1.5} />, labelKey: "tabFeedback" },
+];
 
 export default function SettingsPage() {
   const t = useTranslations("Settings");
@@ -1160,88 +1205,117 @@ export default function SettingsPage() {
   const isClientUser = roleUpper === "CLIENT_USER";
   const hasOrg = !!meData?.org;
 
+  const [activeTab, setActiveTab] = useState<SettingsTab>("org");
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
+
+        {/* Header — centrado */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="mb-10"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="mb-8 flex flex-col items-center text-center"
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-subtle">
-            <Settings size={24} strokeWidth={1.5} className="text-accent" />
+          <div className="flex items-center gap-3 mb-1">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-subtle shrink-0">
+              <Settings size={20} strokeWidth={1.5} className="text-accent" />
+            </div>
+            <h1 className="text-display">{t("heading")}</h1>
           </div>
-          <h1 className="mb-2 text-display">
-            {t("heading")}
-          </h1>
-          <p className="text-text-secondary">{t("subheading")}</p>
         </motion.div>
 
-        <div className="flex flex-col gap-6">
-          {/* Org info — ADMIN only */}
-          {hasOrg && isAdmin && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.05 }}>
-              <OrgSection />
-            </motion.div>
-          )}
-
-          {/* Odoo Connections — ADMIN only */}
-          {isAdmin && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.1 }}>
-              <OdooConfigsSection />
-            </motion.div>
-          )}
-
-          {/* My Odoo Credentials — CLIENT_USER */}
-          {isClientUser && hasOrg && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.1 }}>
-              <UserCredentialsSection />
-            </motion.div>
-          )}
-
-          {/* Instance Inspector — ADMIN only */}
-          {isAdmin && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.15 }}>
-              <div className="rounded-lg border border-border bg-surface p-6 shadow-sm">
-                <h2 className="mb-4 text-subheading">{t("inspector.heading")}</h2>
-                <InstanceInspector />
-              </div>
-            </motion.div>
-          )}
-
-          {/* Users — ADMIN only */}
-          {hasOrg && isAdmin && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.2 }}>
-              <UsersSection />
-            </motion.div>
-          )}
-
-          {/* Invitations — ADMIN only */}
-          {hasOrg && isAdmin && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.25 }}>
-              <InvitationsSection />
-            </motion.div>
-          )}
-
-          {/* Feedback reports — ADMIN only */}
-          {hasOrg && isAdmin && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.3 }}>
-              <FeedbackSection />
-            </motion.div>
-          )}
-
-          {/* Security notice */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, ease: "easeOut", delay: 0.35 }}>
-            <div className="flex items-start gap-3 rounded-md bg-raised p-4">
-              <Shield size={20} strokeWidth={1.5} className="mt-0.5 shrink-0 text-accent" />
-              <div className="text-body text-text-secondary">
-                <p className="mb-1 font-medium text-foreground">{t("security.title")}</p>
-                <p>{t("security.description")}</p>
-              </div>
+        {/* Tab selector — ADMIN only */}
+        {isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut", delay: 0.05 }}
+            className="mb-8 flex justify-center"
+          >
+            <div className="inline-flex items-center gap-1 rounded-lg bg-raised p-1">
+              {TAB_CONFIG.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`relative flex items-center gap-2 rounded-md px-4 py-2 text-small font-medium transition-colors duration-150 ${
+                      isActive
+                        ? "text-foreground"
+                        : "text-text-secondary hover:text-foreground"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="settings-tab-pill"
+                        className="absolute inset-0 rounded-md bg-surface shadow-sm border border-border"
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      {tab.icon}
+                      {t(tab.labelKey)}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
-        </div>
+        )}
+
+        {/* Tab content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="flex flex-col gap-6"
+          >
+            {/* ---- TAB: Organización ---- */}
+            {(activeTab === "org" || !isAdmin) && (
+              <>
+                {hasOrg && isAdmin && <OrgSection />}
+                {isClientUser && hasOrg && <UserCredentialsSection />}
+                <CollapsibleCard icon={<Shield size={20} strokeWidth={1.5} className="text-accent" />} title={t("security.title")}>
+                  <p className="text-body text-text-secondary">{t("security.description")}</p>
+                </CollapsibleCard>
+              </>
+            )}
+
+            {/* ---- TAB: Instancias ---- */}
+            {activeTab === "instances" && isAdmin && (
+              <>
+                <OdooConfigsSection />
+                <SavedConfigsSection />
+                <CollapsibleCard icon={<Shield size={20} strokeWidth={1.5} className="text-accent" />} title={t("inspector.heading")}>
+                  <InstanceInspector />
+                </CollapsibleCard>
+              </>
+            )}
+
+            {/* ---- TAB: Usuarios ---- */}
+            {activeTab === "users" && isAdmin && (
+              <>
+                {hasOrg && <UsersSection />}
+                {hasOrg && <InviteFormSection />}
+                {hasOrg && <SentInvitationsSection />}
+              </>
+            )}
+
+            {/* ---- TAB: Feedback ---- */}
+            {activeTab === "feedback" && isAdmin && (
+              <>
+                {hasOrg && <FeedbackSection />}
+              </>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
       </div>
     </div>
   );

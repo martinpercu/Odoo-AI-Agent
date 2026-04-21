@@ -176,11 +176,15 @@
     }
   },
   "Settings": {
-    "heading": "Odoo Settings",
+    "heading": "Settings",
     "subheading": "Connect your Odoo instance so the agent can access your data.",
+    "tabOrg": "Organization",
+    "tabInstances": "Instances",
+    "tabUsers": "Users",
+    "tabFeedback": "Feedback",
     "security": {
       "title": "Security",
-      "description": "Your API Key is stored securely and encrypted. It is only used to perform authorized queries to your Odoo instance. We never share your credentials with third parties."
+      "description": "API Keys are stored securely and encrypted. They are only used to perform authorized queries to Odoo instances. We never share credentials with third parties."
     },
     "feedback": {
       "title": "Feedback reports",

@@ -62,7 +62,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - 402 payment limit modal (graceful degradation, no crash)
 
 **Configuration:**
-- Admin settings panel with tabs: organization, Odoo connections (CRUD), users, invitations, feedback reports
+- Admin settings panel with 4 tabs (Org, Instances, Users, Feedback), each section rendered as a `CollapsibleCard` (animated accordion)
 - Credential UI is role-aware: `CLIENT_USER` sees a single-instance block with a status row (configured/not-configured + username inline) and an inline edit form that expands via a Pencil button (animated with `AnimatePresence`); `ADMIN` sees an accordion per config
 - Odoo connection configuration, validation, and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese)
@@ -323,20 +323,27 @@ App loads → AuthProvider restores Supabase session
 
 ### Admin User
 
-Admins have access to `/settings` (tab-based panel) with full control over:
+Admins have access to `/settings` (4-tab panel, each section a `CollapsibleCard`) with full control over:
 
 ```
 Settings
-├── Organization  → edit name, slug, org type
-├── Connections   → CRUD for Odoo configs (multiple per org)
-│                   test connection, inspect installed modules
-├── Users         → list members, change role, toggle free/paid slot, remove
-├── Invitations   → send invite by email, view status (pending / accepted / expired)
-│                   pending invitations show "Show link" button to reveal and copy the invite URL
-│                   pending invitations can be cancelled (X button with inline confirmation; frees the seat immediately)
-└── Feedback      → list of feedback reports submitted by org users; expandable rows con 3 tabs:
-│                   Data (categoría, comentario, expected response, admin_notes), Messages (conversación snapshot),
-│                   Note (tenant_notes: nota interna editable por el admin)
+├── Org tab
+│   └── Organization  → edit name, slug, org type
+├── Instances tab
+│   ├── Add Connection  → form to create a new Odoo config
+│   ├── Saved Configs   → list of existing connections (test, delete)
+│   └── Inspector       → inspect installed Odoo modules
+├── Users tab
+│   ├── Users         → list members, change role, toggle free/paid slot, remove
+│   │                   seats widget (paid X/limit · free X/limit) shown in section subheader
+│   ├── Invite        → send invite by email (role fixed as CLIENT_USER); optional instance + credential pre-load
+│   └── Sent Invitations → view status (pending / accepted / expired), filter tabs
+│                          pending invitations: "Show link" button + copy URL
+│                          pending invitations can be cancelled (X button with inline confirmation; frees seat immediately)
+└── Feedback tab
+    └── Feedback      → list of feedback reports submitted by org users; expandable rows with 3 tabs:
+                        Data (category, comment, expected response, admin_notes), Messages (conversation snapshot),
+                        Note (tenant_notes: internal note editable by admin)
 ```
 
 Role comparison:
