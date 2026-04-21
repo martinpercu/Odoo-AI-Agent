@@ -213,6 +213,7 @@
       "inviteEmail": "Email",
       "invite": "Invitar",
       "inviteError": "No se pudo enviar la invitación. Intentá de nuevo.",
+      "inviteSeatLimitReached": "No se puede invitar. Se alcanzó el límite de seats.",
       "noInvitations": "No hay invitaciones enviadas todavía.",
       "pendingInvitations": "Invitaciones enviadas",
       "accepted": "Aceptada",
@@ -231,7 +232,16 @@
       "preloadInstanceRequired": "Seleccioná una instancia de Odoo para el usuario.",
       "preloadCredentials": "Pre-cargar credenciales Odoo (opcional)",
       "preloadUsername": "Usuario Odoo",
-      "preloadApiKey": "API Key"
+      "preloadApiKey": "API Key",
+      "cancelInvitation": "Cancelar",
+      "confirmCancelInvitation": "¿Cancelar esta invitación? El seat quedará disponible de inmediato.",
+      "cancelInvitationError": "No se pudo cancelar la invitación.",
+      "seatsWidget": "Seats",
+      "seatsPaid": "Pagos",
+      "seatsFree": "Gratis",
+      "seatsPending": "Pendientes",
+      "freeTooPaidError": "No hay paid seats disponibles. Para hacer este cambio, primero mové un usuario paid a free.",
+      "paidToFreeError": "Se alcanzó el límite de overflow de free seats. No podés mover más usuarios a free."
     },
     "credentials": {
       "sectionTitle": "Mis Credenciales Odoo",
