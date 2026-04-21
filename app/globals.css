@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================================
    DESIGN TOKENS — TheOdooAgent v1.0

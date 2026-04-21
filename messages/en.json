@@ -242,6 +242,7 @@
       "inviteEmail": "Email address",
       "invite": "Send invite",
       "inviteError": "Could not send invitation. Please try again.",
+      "inviteSeatLimitReached": "Cannot invite user. Max seat limit reached.",
       "noInvitations": "No invitations sent yet.",
       "pendingInvitations": "Sent invitations",
       "accepted": "Accepted",
@@ -260,7 +261,16 @@
       "preloadInstanceRequired": "Please select an Odoo instance for this user.",
       "preloadCredentials": "Pre-load Odoo credentials (optional)",
       "preloadUsername": "Odoo username",
-      "preloadApiKey": "API Key"
+      "preloadApiKey": "API Key",
+      "cancelInvitation": "Cancel",
+      "confirmCancelInvitation": "Cancel this invitation? The seat will be freed immediately.",
+      "cancelInvitationError": "Could not cancel the invitation.",
+      "seatsWidget": "Seats",
+      "seatsPaid": "Paid",
+      "seatsFree": "Free",
+      "seatsPending": "Pending",
+      "freeTooPaidError": "No paid seats available. To make this change, first move a paid user to free.",
+      "paidToFreeError": "Free seat overflow limit reached. Cannot move more users to free."
     },
     "credentials": {
       "sectionTitle": "My Odoo Credentials",

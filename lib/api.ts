@@ -656,6 +656,7 @@ export interface InvitationResult {
   success: boolean;
   invitation?: Invitation;
   error?: string;
+  seatLimitReached?: boolean;
 }
 
 export async function createInvitation(
@@ -674,7 +675,29 @@ export async function createInvitation(
     );
     const data = await res.json();
     if (res.ok) return { success: true, invitation: data.invitation ?? data };
-    return { success: false, error: extractError(data.detail, "Failed to create invitation") };
+    return {
+      success: false,
+      seatLimitReached: res.status === 409,
+      error: extractError(data.detail, "Failed to create invitation"),
+    };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function cancelInvitation(
+  orgId: string,
+  invitationId: string
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/invitations/${invitationId}`,
+      { method: "DELETE" }
+    );
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: extractError(data.detail, "Failed to cancel invitation") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
