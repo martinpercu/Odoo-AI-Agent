@@ -176,11 +176,15 @@
     }
   },
   "Settings": {
-    "heading": "Configuración de Odoo",
+    "heading": "Configuración",
     "subheading": "Conecta tu instancia de Odoo para que el agente pueda acceder a tus datos.",
+    "tabOrg": "Organización",
+    "tabInstances": "Instancias",
+    "tabUsers": "Usuarios",
+    "tabFeedback": "Feedback",
     "security": {
       "title": "Seguridad",
-      "description": "Tu API Key se almacena de forma segura y cifrada. Solo se utiliza para realizar consultas autorizadas a tu instancia de Odoo. Nunca compartimos tus credenciales con terceros."
+      "description": "Las API Keys se almacenan de forma segura y cifrada. Solo se utilizan para realizar consultas autorizadas a las instancias de Odoo. Nunca compartimos credenciales con terceros."
     },
     "admin": {
       "orgTitle": "Mi Organización",

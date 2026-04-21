@@ -423,7 +423,7 @@ function ClientUserCredentialBlock({ configs, orgId, userId }: ClientUserCredent
                 {t("changeInstance")}
               </button>
               {/* Tooltip */}
-              <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 hidden group-hover:block z-10 w-48">
+              <div className="pointer-events-none absolute top-full right-0 mt-1.5 hidden group-hover:block z-10 w-48">
                 <div className="rounded-md bg-raised border border-border px-2 py-1 text-micro text-text-secondary shadow-sm text-right">
                   {t("changeInstanceTooltip")}
                 </div>

@@ -176,11 +176,15 @@
     }
   },
   "Settings": {
-    "heading": "Paramètres Odoo",
+    "heading": "Paramètres",
     "subheading": "Connectez votre instance Odoo.",
+    "tabOrg": "Organisation",
+    "tabInstances": "Instances",
+    "tabUsers": "Utilisateurs",
+    "tabFeedback": "Feedback",
     "security": {
       "title": "Sécurité",
-      "description": "Votre clé API est chiffrée. Nous ne partageons jamais vos identifiants."
+      "description": "Les clés API sont stockées de manière sécurisée et chiffrée. Elles sont uniquement utilisées pour effectuer des requêtes autorisées vers les instances Odoo. Nous ne partageons jamais les identifiants avec des tiers."
     },
     "feedback": {
       "title": "Rapports de feedback",
