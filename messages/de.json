@@ -176,11 +176,15 @@
     }
   },
   "Settings": {
-    "heading": "Odoo-Einstellungen",
+    "heading": "Einstellungen",
     "subheading": "Verbinden Sie Ihre Odoo-Instanz.",
+    "tabOrg": "Organisation",
+    "tabInstances": "Instanzen",
+    "tabUsers": "Benutzer",
+    "tabFeedback": "Feedback",
     "security": {
       "title": "Sicherheit",
-      "description": "Ihr API-Schlüssel wird sicher gespeichert. Wir teilen Ihre Daten niemals mit Dritten."
+      "description": "API-Schlüssel werden sicher und verschlüsselt gespeichert. Sie werden ausschließlich für autorisierte Abfragen an Odoo-Instanzen verwendet. Wir geben Zugangsdaten niemals an Dritte weiter."
     },
     "feedback": {
       "title": "Feedback-Berichte",
