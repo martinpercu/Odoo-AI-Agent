@@ -113,6 +113,8 @@ export interface Message {
 
 export interface Chat {
   id: string;
+  /** DB conversation ID — needed for DELETE and other endpoints that use the real DB id, not thread_id */
+  conversationId?: string;
   title: string;
   messages: Message[];
   createdAt: Date;

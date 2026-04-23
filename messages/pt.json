@@ -19,7 +19,12 @@
     "collapse": "Recolher barra lateral",
     "expand": "Expandir barra lateral",
     "superAdmin": "Painel Admin",
-    "login": "Entrar"
+    "login": "Entrar",
+    "newConversation": "Nova conversa",
+    "deleteChat": "Excluir conversa",
+    "confirmDeleteChat": "Excluir?",
+    "yes": "Sim",
+    "no": "Não"
   },
   "ChatGroups": {
     "today": "Hoje",

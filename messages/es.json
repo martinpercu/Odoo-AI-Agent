@@ -19,7 +19,12 @@
     "collapse": "Contraer sidebar",
     "expand": "Expandir sidebar",
     "superAdmin": "Panel Admin",
-    "login": "Entrar"
+    "login": "Entrar",
+    "newConversation": "Nueva conversación",
+    "deleteChat": "Eliminar conversación",
+    "confirmDeleteChat": "¿Eliminar?",
+    "yes": "Sí",
+    "no": "No"
   },
   "ChatGroups": {
     "today": "Hoy",

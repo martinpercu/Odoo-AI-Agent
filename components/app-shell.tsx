@@ -5,7 +5,8 @@ import { Sidebar } from "@/components/chat/sidebar";
 import { PinnedSidebar } from "@/components/pinned/pinned-sidebar";
 import { FlyingPinPortal } from "@/components/pinned/flying-pin-animation";
 import { useChat } from "@/hooks/use-chat";
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
 
 type ChatContextType = ReturnType<typeof useChat>;
 
@@ -49,6 +50,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const chatIdFromUrl = chatIdMatch ? chatIdMatch[1] : undefined;
 
   const chat = useChat(chatIdFromUrl);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    chat.loadServerConversations(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   function handleNewChat() {
     chat.setCurrentChatId(undefined);
@@ -78,6 +85,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onNewChat={handleNewChat}
             onSelectChat={handleSelectChat}
             onBellClick={handleBellClick}
+            onLoadMore={chat.loadMoreConversations}
+            hasMore={chat.hasMore}
+            onDeleteChat={chat.deleteChat}
           />
           <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
           <PinnedSidebar />

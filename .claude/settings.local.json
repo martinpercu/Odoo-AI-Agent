@@ -9,7 +9,8 @@
       "Bash(rmdir /Users/macbook/.claude/skills/design-refactor)",
       "Bash(git diff:*)",
       "Bash(git stash:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm run *)"
     ]
   }
 }

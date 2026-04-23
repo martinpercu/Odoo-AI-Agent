@@ -13,17 +13,17 @@ import type {
   ExcelExportMetadata,
   NoCredentialsMetadata,
 } from "@/lib/types";
-import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, LimitReachedError } from "@/lib/api";
+import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
-
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const yesterday = new Date(today.getTime() - 86400000);
+import { IS_AUTH_ENABLED } from "@/lib/supabase";
 
 function groupChatsByDate(chats: Chat[]): ChatGroup[] {
-  const groups: ChatGroup[] = [];
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today.getTime() - 86400000);
+
   const todayChats: Chat[] = [];
   const yesterdayChats: Chat[] = [];
   const weekChats: Chat[] = [];
@@ -46,6 +46,7 @@ function groupChatsByDate(chats: Chat[]): ChatGroup[] {
     }
   }
 
+  const groups: ChatGroup[] = [];
   if (todayChats.length) groups.push({ label: "today", chats: todayChats });
   if (yesterdayChats.length) groups.push({ label: "yesterday", chats: yesterdayChats });
   if (weekChats.length) groups.push({ label: "last7Days", chats: weekChats });
@@ -71,8 +72,59 @@ export function useChat(chatId?: string) {
   const locale = useLocale();
   const t = useTranslations("ChatMessages");
 
+  // Server-side conversation list
+  const serverChatsRef = useRef<Chat[]>([]);
+  const [serverChats, setServerChats] = useState<Chat[]>([]);
+  serverChatsRef.current = serverChats;
+  const [serverOffset, setServerOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+
   const currentChat = chats.find((c) => c.id === currentChatId) ?? null;
-  const chatGroups = groupChatsByDate(chats);
+
+  // Display list: server list merged with any optimistic local-only chats
+  const displayChats = (() => {
+    const serverIds = new Set(serverChats.map((c) => c.id));
+    const optimistic = chats.filter((c) => !serverIds.has(c.id));
+    return [...optimistic, ...serverChats];
+  })();
+  const chatGroups = groupChatsByDate(displayChats);
+
+  const deleteChat = useCallback(async (chatId: string) => {
+    const target = chatsRef.current.find((c) => c.id === chatId)
+      ?? serverChatsRef.current.find((c) => c.id === chatId);
+    const idForApi = target?.conversationId ?? chatId;
+    const result = await deleteChatAPI(idForApi);
+    if (result.success) {
+      setChats((prev) => prev.filter((c) => c.id !== chatId));
+      setServerChats((prev) => prev.filter((c) => c.id !== chatId));
+      if (currentChatId === chatId) {
+        setCurrentChatId(undefined);
+      }
+    }
+    return result;
+  }, [currentChatId]);
+
+  const loadServerConversations = useCallback(async (offset: number) => {
+    if (!IS_AUTH_ENABLED) return;
+    const result = await fetchMyConversations(50, offset);
+    if (!result.success || !result.conversations) return;
+    const loaded: Chat[] = result.conversations.map((c) => ({
+      id: c.thread_id,
+      conversationId: c.id,
+      title: c.title ?? "",
+      messages: [],
+      createdAt: new Date(c.last_message_at),
+      updatedAt: new Date(c.last_message_at),
+    }));
+    setServerChats((prev) => (offset === 0 ? loaded : [...prev, ...loaded]));
+    setHasMore((result.count ?? 0) > offset + 50);
+  }, []);
+
+  const loadMoreConversations = useCallback(() => {
+    const next = serverOffset + 50;
+    setServerOffset(next);
+    loadServerConversations(next);
+  }, [serverOffset, loadServerConversations]);
 
   const createChat = useCallback(
     (firstMessage: string): string => {
@@ -86,6 +138,8 @@ export function useChat(chatId?: string) {
         updatedAt: new Date(),
       };
       setChats((prev) => [newChat, ...prev]);
+      // Add optimistically to server list so it appears in the sidebar immediately
+      setServerChats((prev) => [newChat, ...prev]);
       setCurrentChatId(id);
       return id;
     },
@@ -433,9 +487,11 @@ export function useChat(chatId?: string) {
       } finally {
         abortControllerRef.current = null;
         setIsStreaming(false);
+        // Reload server list so the new thread gets its real title from the backend
+        loadServerConversations(0);
       }
     },
-    [currentChatId, createChat, activeConfigId, isConfigured, locale, t]
+    [currentChatId, createChat, activeConfigId, isConfigured, locale, t, loadServerConversations]
   );
 
   const stopStreaming = useCallback(() => {
@@ -555,7 +611,7 @@ export function useChat(chatId?: string) {
           }
           // Create new chat entry from history
           const title =
-            messages.find((m) => m.role === "user")?.content.slice(0, 47) || "Chat";
+            messages.find((m) => m.role === "user")?.content.slice(0, 47) || "";
           const newChat: Chat = {
             id: targetChatId,
             title: title.length >= 47 ? title + "..." : title,
@@ -585,5 +641,9 @@ export function useChat(chatId?: string) {
     createChat,
     executeAction,
     loadChatHistory,
+    loadServerConversations,
+    loadMoreConversations,
+    hasMore,
+    deleteChat,
   };
 }

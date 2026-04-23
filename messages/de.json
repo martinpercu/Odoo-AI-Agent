@@ -19,7 +19,12 @@
     "collapse": "Seitenleiste einklappen",
     "expand": "Seitenleiste ausklappen",
     "superAdmin": "Admin-Panel",
-    "login": "Anmelden"
+    "login": "Anmelden",
+    "newConversation": "Neues Gespräch",
+    "deleteChat": "Gespräch löschen",
+    "confirmDeleteChat": "Löschen?",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "ChatGroups": {
     "today": "Heute",
