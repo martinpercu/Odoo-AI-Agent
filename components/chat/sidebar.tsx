@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  MessageSquarePlus,
   SquarePen,
   Settings,
   CreditCard,
@@ -19,15 +18,17 @@ import {
   LogOut,
   Shield,
   LogIn,
+  Trash2,
+  AlertTriangle,
+  Loader2,
 } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { InstanceSwitcher } from "@/components/chat/instance-switcher";
-import { fetchMyConversations } from "@/lib/api";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
-import type { ChatGroup, ServerConversation } from "@/lib/types";
+import type { ChatGroup } from "@/lib/types";
 
 interface SidebarProps {
   chatGroups: ChatGroup[];
@@ -35,47 +36,17 @@ interface SidebarProps {
   onNewChat: () => void;
   onSelectChat: (id: string) => void;
   onBellClick: () => void;
+  onLoadMore: () => void;
+  hasMore: boolean;
+  onDeleteChat: (id: string) => Promise<{ success: boolean }>;
 }
 
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const yesterday = new Date(today.getTime() - 86400000);
-
-function groupServerConversations(conversations: ServerConversation[]): ChatGroup[] {
-  const groups: Record<string, ServerConversation[]> = {
-    today: [],
-    yesterday: [],
-    last7Days: [],
-    older: [],
-  };
-
-  for (const conv of conversations) {
-    const d = new Date(conv.last_message_at);
-    const day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    if (day.getTime() === today.getTime()) groups.today.push(conv);
-    else if (day.getTime() === yesterday.getTime()) groups.yesterday.push(conv);
-    else if (day.getTime() > today.getTime() - 86400000 * 7) groups.last7Days.push(conv);
-    else groups.older.push(conv);
-  }
-
-  return (["today", "yesterday", "last7Days", "older"] as const)
-    .filter((k) => groups[k].length > 0)
-    .map((k) => ({
-      label: k,
-      chats: groups[k].map((c) => ({
-        id: c.thread_id,
-        title: c.title ?? "Nueva conversación",
-        messages: [],
-        createdAt: new Date(c.last_message_at),
-        updatedAt: new Date(c.last_message_at),
-      })),
-    }));
-}
-
-export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick }: SidebarProps) {
+export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick, onLoadMore, hasMore, onDeleteChat }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -88,47 +59,14 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const { meData } = useSession();
   const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
 
-  // Server-side conversation list (when auth is enabled)
-  const [serverGroups, setServerGroups] = useState<ChatGroup[] | null>(null);
-  const [serverOffset, setServerOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  const displayGroups = chatGroups;
 
-  const loadConversations = useCallback(async (offset: number) => {
-    if (!IS_AUTH_ENABLED || !user) return;
-    const result = await fetchMyConversations(50, offset);
-    if (result.success && result.conversations) {
-      const newGroups = groupServerConversations(result.conversations);
-      setServerGroups((prev) => {
-        if (offset === 0 || !prev) return newGroups;
-        // Merge: append to existing groups
-        const merged = [...prev];
-        for (const ng of newGroups) {
-          const existing = merged.find((g) => g.label === ng.label);
-          if (existing) {
-            existing.chats = [...existing.chats, ...ng.chats];
-          } else {
-            merged.push(ng);
-          }
-        }
-        return merged;
-      });
-      setHasMore((result.count ?? 0) > offset + 50);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    loadConversations(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
-
-  const loadMore = useCallback(() => {
-    const nextOffset = serverOffset + 50;
-    setServerOffset(nextOffset);
-    loadConversations(nextOffset);
-  }, [serverOffset, loadConversations]);
-
-  // Use server groups when available, otherwise fall back to local groups
-  const displayGroups = serverGroups ?? chatGroups;
+  async function handleDeleteChat(id: string) {
+    setDeletingId(id);
+    await onDeleteChat(id);
+    setDeletingId(null);
+    setConfirmDeleteId(null);
+  }
 
   function toggleTheme() {
     setIsDark((prev) => {
@@ -206,21 +144,54 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                 {tGroups(group.label)}
               </p>
               {group.chats.map((chat) => (
-                <button
-                  key={chat.id}
-                  onClick={() => {
-                    onSelectChat(chat.id);
-                    setMobileOpen(false);
-                  }}
-                  className={`mb-0.5 flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-body transition-colors ${
-                    currentChatId === chat.id
-                      ? "bg-sidebar-active font-medium text-accent"
-                      : "hover:bg-sidebar-hover"
-                  }`}
-                >
-                  <MessageSquare size={16} strokeWidth={1.5} className="shrink-0 opacity-60" />
-                  <span className="truncate">{chat.title}</span>
-                </button>
+                <div key={chat.id} className="group/chat mb-0.5 relative">
+                  {confirmDeleteId === chat.id ? (
+                    <div className="flex items-center gap-1.5 rounded-md px-2.5 py-2 bg-error-subtle">
+                      <AlertTriangle size={13} strokeWidth={1.5} className="shrink-0 text-error" />
+                      <span className="text-small text-error flex-1">{t("confirmDeleteChat")}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteChat(chat.id)}
+                        disabled={deletingId === chat.id}
+                        className="rounded px-2 py-0.5 text-small bg-error text-white hover:opacity-90 disabled:opacity-50"
+                      >
+                        {deletingId === chat.id
+                          ? <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />
+                          : t("yes")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeleteId(null)}
+                        className="rounded px-2 py-0.5 text-small border border-border hover:bg-raised"
+                      >
+                        {t("no")}
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-body transition-colors cursor-pointer ${
+                        currentChatId === chat.id
+                          ? "bg-sidebar-active font-medium text-accent"
+                          : "hover:bg-sidebar-hover"
+                      }`}
+                      onClick={() => { onSelectChat(chat.id); setMobileOpen(false); }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === "Enter") { onSelectChat(chat.id); setMobileOpen(false); } }}
+                    >
+                      <MessageSquare size={16} strokeWidth={1.5} className="shrink-0 opacity-60" />
+                      <span className="truncate flex-1 text-left">{chat.title || t("newConversation")}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(chat.id); }}
+                        className="shrink-0 rounded p-1 opacity-0 group-hover/chat:opacity-100 text-text-secondary hover:text-error hover:bg-error-subtle transition-all"
+                        aria-label={t("deleteChat")}
+                      >
+                        <Trash2 size={13} strokeWidth={1.5} />
+                      </button>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           ))}
@@ -228,7 +199,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
         {/* Load more button */}
         {!collapsed && hasMore && (
           <button
-            onClick={loadMore}
+            onClick={onLoadMore}
             className="w-full rounded-md px-2.5 py-2 text-center text-small text-text-secondary hover:bg-sidebar-hover transition-colors"
           >
             {t("loadMore")}

@@ -19,7 +19,12 @@
     "collapse": "Réduire la barre latérale",
     "expand": "Agrandir la barre latérale",
     "superAdmin": "Panneau Admin",
-    "login": "Se connecter"
+    "login": "Se connecter",
+    "newConversation": "Nouvelle conversation",
+    "deleteChat": "Supprimer la conversation",
+    "confirmDeleteChat": "Supprimer ?",
+    "yes": "Oui",
+    "no": "Non"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",

@@ -153,6 +153,18 @@ export async function fetchMyConversations(
   }
 }
 
+export async function deleteChat(chatId: string): Promise<BasicResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/chat/${chatId}`, { method: "DELETE" });
+    if (res.ok) return { success: true };
+    const data = await res.json().catch(() => ({}));
+    return { success: false, error: data.detail || "Failed to delete chat" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 // ---- Admin: Org ----
 
 export interface OrgResult {
@@ -1198,6 +1210,7 @@ export async function fetchChatHistory(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (m: any) => ({
           ...m,
+          role: m.role === "human" ? "user" : m.role === "ai" ? "assistant" : m.role,
           timestamp: new Date(m.timestamp ?? m.created_at ?? Date.now()),
         })
       );
