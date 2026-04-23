@@ -19,7 +19,12 @@
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar",
     "superAdmin": "Admin Panel",
-    "login": "Sign in"
+    "login": "Sign in",
+    "newConversation": "New conversation",
+    "deleteChat": "Delete conversation",
+    "confirmDeleteChat": "Delete?",
+    "yes": "Yes",
+    "no": "No"
   },
   "ChatGroups": {
     "today": "Today",
