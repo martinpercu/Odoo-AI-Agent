@@ -79,7 +79,28 @@ export function useChat(chatId?: string) {
   const [serverOffset, setServerOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
 
-  const currentChat = chats.find((c) => c.id === currentChatId) ?? null;
+  const currentChat =
+    chats.find((c) => c.id === currentChatId) ??
+    serverChats.find((c) => c.id === currentChatId) ??
+    null;
+
+  // Update a chat by id in whichever list holds it (optimistic or server).
+  const updateChat = useCallback((id: string, updater: (c: Chat) => Chat) => {
+    setChats((prev) => {
+      const idx = prev.findIndex((c) => c.id === id);
+      if (idx === -1) return prev;
+      const next = [...prev];
+      next[idx] = updater(next[idx]);
+      return next;
+    });
+    setServerChats((prev) => {
+      const idx = prev.findIndex((c) => c.id === id);
+      if (idx === -1) return prev;
+      const next = [...prev];
+      next[idx] = updater(next[idx]);
+      return next;
+    });
+  }, []);
 
   // Display list: server list merged with any optimistic local-only chats
   const displayChats = (() => {
@@ -108,15 +129,39 @@ export function useChat(chatId?: string) {
     if (!IS_AUTH_ENABLED) return;
     const result = await fetchMyConversations(50, offset);
     if (!result.success || !result.conversations) return;
-    const loaded: Chat[] = result.conversations.map((c) => ({
-      id: c.thread_id,
-      conversationId: c.id,
-      title: c.title ?? "",
-      messages: [],
-      createdAt: new Date(c.last_message_at),
-      updatedAt: new Date(c.last_message_at),
-    }));
-    setServerChats((prev) => (offset === 0 ? loaded : [...prev, ...loaded]));
+    const loaded: Chat[] = result.conversations.map((c) => {
+      // thread_id is "{org_id}:{localId}" — use only the localId part as the
+      // navigation id so URLs stay clean (no encoded colons).
+      const colonIdx = c.thread_id.indexOf(":");
+      const navId = colonIdx !== -1 ? c.thread_id.slice(colonIdx + 1) : c.thread_id;
+      return {
+        id: navId,
+        conversationId: c.id,
+        title: c.title ?? "",
+        messages: [],
+        createdAt: new Date(c.last_message_at),
+        updatedAt: new Date(c.last_message_at),
+      };
+    });
+    if (offset === 0) {
+      // Preserve in-memory messages: check both optimistic (chats) and already-migrated (serverChats).
+      const localById = new Map([
+        ...serverChatsRef.current.map((c) => [c.id, c] as [string, Chat]),
+        ...chatsRef.current.map((c) => [c.id, c] as [string, Chat]),
+      ]);
+      const merged = loaded.map((s) => {
+        const local = localById.get(s.id);
+        return local && local.messages.length > 0 ? { ...s, messages: local.messages } : s;
+      });
+      setChats((prev) => {
+        const serverIds = new Set(loaded.map((c) => c.id));
+        return prev.filter((c) => !serverIds.has(c.id));
+      });
+      setServerChats(merged);
+      setHasMore((result.count ?? 0) > 50);
+      return;
+    }
+    setServerChats((prev) => [...prev, ...loaded]);
     setHasMore((result.count ?? 0) > offset + 50);
   }, []);
 
@@ -138,8 +183,6 @@ export function useChat(chatId?: string) {
         updatedAt: new Date(),
       };
       setChats((prev) => [newChat, ...prev]);
-      // Add optimistically to server list so it appears in the sidebar immediately
-      setServerChats((prev) => [newChat, ...prev]);
       setCurrentChatId(id);
       return id;
     },
@@ -174,40 +217,26 @@ export function useChat(chatId?: string) {
       const assistantId = `msg-${Date.now() + 1}`;
 
       // Add user message + empty assistant message
-      setChats((prev) =>
-        prev.map((c) =>
-          c.id === targetId
-            ? {
-                ...c,
-                messages: [
-                  ...c.messages,
-                  userMessage,
-                  { id: assistantId, role: "assistant" as const, content: "", timestamp: new Date() },
-                ],
-                updatedAt: new Date(),
-              }
-            : c
-        )
-      );
+      updateChat(targetId, (c) => ({
+        ...c,
+        messages: [
+          ...c.messages,
+          userMessage,
+          { id: assistantId, role: "assistant" as const, content: "", timestamp: new Date() },
+        ],
+        updatedAt: new Date(),
+      }));
 
       setIsStreaming(true);
 
       // Guard: require Odoo config before calling backend
       if (!isConfigured || !activeConfigId) {
-        setChats((prev) =>
-          prev.map((c) =>
-            c.id === targetId
-              ? {
-                  ...c,
-                  messages: c.messages.map((m) =>
-                    m.id === assistantId
-                      ? { ...m, content: `⚠️ ${t("configNotSet")}` }
-                      : m
-                  ),
-                }
-              : c
-          )
-        );
+        updateChat(targetId, (c) => ({
+          ...c,
+          messages: c.messages.map((m) =>
+            m.id === assistantId ? { ...m, content: `⚠️ ${t("configNotSet")}` } : m
+          ),
+        }));
         setIsStreaming(false);
         return;
       }
@@ -218,20 +247,12 @@ export function useChat(chatId?: string) {
           const result = await uploadImageAPI(targetId, image, activeConfigId!, locale);
 
           if (!result.success) {
-            setChats((prev) =>
-              prev.map((c) =>
-                c.id === targetId
-                  ? {
-                      ...c,
-                      messages: c.messages.map((m) =>
-                        m.id === assistantId
-                          ? { ...m, content: `⚠️ ${result.error || "Upload failed"}` }
-                          : m
-                      ),
-                    }
-                  : c
-              )
-            );
+            updateChat(targetId, (c) => ({
+              ...c,
+              messages: c.messages.map((m) =>
+                m.id === assistantId ? { ...m, content: `⚠️ ${result.error || "Upload failed"}` } : m
+              ),
+            }));
             return;
           }
 
@@ -247,20 +268,14 @@ export function useChat(chatId?: string) {
             metadata = data.metadata as MessageMetadata;
           }
 
-          setChats((prev) =>
-            prev.map((c) =>
-              c.id === targetId
-                ? {
-                    ...c,
-                    messages: c.messages.map((m) =>
-                      m.id === assistantId
-                        ? { ...m, content: responseContent, ...(metadata && { metadata }) }
-                        : m
-                    ),
-                  }
-                : c
-            )
-          );
+          updateChat(targetId, (c) => ({
+            ...c,
+            messages: c.messages.map((m) =>
+              m.id === assistantId
+                ? { ...m, content: responseContent, ...(metadata && { metadata }) }
+                : m
+            ),
+          }));
         } finally {
           setIsStreaming(false);
         }
@@ -291,13 +306,10 @@ export function useChat(chatId?: string) {
         if (res.status === 402) {
           if (typeof window !== "undefined")
             window.dispatchEvent(new CustomEvent("auth:limit_reached"));
-          setChats((prev) =>
-            prev.map((c) =>
-              c.id === targetId
-                ? { ...c, messages: c.messages.filter((m) => m.id !== assistantId) }
-                : c
-            )
-          );
+          updateChat(targetId, (c) => ({
+            ...c,
+            messages: c.messages.filter((m) => m.id !== assistantId),
+          }));
           return;
         }
 
@@ -311,20 +323,12 @@ export function useChat(chatId?: string) {
                 type: "no_credentials",
                 config_id: activeConfigId!,
               };
-              setChats((prev) =>
-                prev.map((c) =>
-                  c.id === targetId
-                    ? {
-                        ...c,
-                        messages: c.messages.map((m) =>
-                          m.id === assistantId
-                            ? { ...m, content: "", metadata: noCredsMetadata }
-                            : m
-                        ),
-                      }
-                    : c
-                )
-              );
+              updateChat(targetId, (c) => ({
+                ...c,
+                messages: c.messages.map((m) =>
+                  m.id === assistantId ? { ...m, content: "", metadata: noCredsMetadata } : m
+                ),
+              }));
               return;
             }
           } catch { /* ignore parse errors */ }
@@ -421,45 +425,30 @@ export function useChat(chatId?: string) {
                   type: "no_credentials",
                   config_id: activeConfigId!,
                 };
-                setChats((prev) =>
-                  prev.map((c) =>
-                    c.id === targetId
-                      ? {
-                          ...c,
-                          messages: c.messages.map((m) =>
-                            m.id === assistantId
-                              ? { ...m, content: "", metadata: noCredsMetadata }
-                              : m
-                          ),
-                        }
-                      : c
-                  )
-                );
+                updateChat(targetId, (c) => ({
+                  ...c,
+                  messages: c.messages.map((m) =>
+                    m.id === assistantId ? { ...m, content: "", metadata: noCredsMetadata } : m
+                  ),
+                }));
                 reader.cancel();
                 return;
               }
 
-              setChats((prev) =>
-                prev.map((c) =>
-                  c.id === targetId
+              updateChat(targetId, (c) => ({
+                ...c,
+                messages: c.messages.map((m) =>
+                  m.id === assistantId
                     ? {
-                        ...c,
-                        messages: c.messages.map((m) =>
-                          m.id === assistantId
-                            ? {
-                                ...m,
-                                content: accumulated,
-                                ...(metadata && { metadata }),
-                                ...(charts.length > 0 && { charts }),
-                                // watermark: undefined = safe default (show). false = paid client.
-                                watermark: showWatermark,
-                              }
-                            : m
-                        ),
+                        ...m,
+                        content: accumulated,
+                        ...(metadata && { metadata }),
+                        ...(charts.length > 0 && { charts }),
+                        watermark: showWatermark,
                       }
-                    : c
-                )
-              );
+                    : m
+                ),
+              }));
             }
           }
         }
@@ -469,20 +458,12 @@ export function useChat(chatId?: string) {
         } else {
           // Show error in the assistant message
           const errorMsg = (err as Error).message || "Error de conexión";
-          setChats((prev) =>
-            prev.map((c) =>
-              c.id === targetId
-                ? {
-                    ...c,
-                    messages: c.messages.map((m) =>
-                      m.id === assistantId
-                        ? { ...m, content: `⚠️ ${errorMsg}` }
-                        : m
-                    ),
-                  }
-                : c
-            )
-          );
+          updateChat(targetId, (c) => ({
+            ...c,
+            messages: c.messages.map((m) =>
+              m.id === assistantId ? { ...m, content: `⚠️ ${errorMsg}` } : m
+            ),
+          }));
         }
       } finally {
         abortControllerRef.current = null;
@@ -491,7 +472,7 @@ export function useChat(chatId?: string) {
         loadServerConversations(0);
       }
     },
-    [currentChatId, createChat, activeConfigId, isConfigured, locale, t, loadServerConversations]
+    [currentChatId, createChat, updateChat, activeConfigId, isConfigured, locale, t, loadServerConversations]
   );
 
   const stopStreaming = useCallback(() => {

@@ -49,8 +49,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const chatIdMatch = pathname.match(/^\/chat\/(.+)$/);
   const chatIdFromUrl = chatIdMatch ? chatIdMatch[1] : undefined;
 
-  const chat = useChat(chatIdFromUrl);
   const { user } = useAuth();
+  const chat = useChat(chatIdFromUrl);
 
   useEffect(() => {
     chat.loadServerConversations(0);
