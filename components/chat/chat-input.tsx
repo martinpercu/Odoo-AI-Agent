@@ -159,7 +159,6 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
             )}
           </div>
         </div>
-        <p className="mt-2 text-center text-small text-text-muted">{t("disclaimer")}</p>
       </div>
     </div>
   );
