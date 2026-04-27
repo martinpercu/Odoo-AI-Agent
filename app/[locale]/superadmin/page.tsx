@@ -40,6 +40,7 @@ import {
   superadminSuspendOrg,
   superadminActivateOrg,
   superadminUpdateSubscription,
+  superadminUpdateOrgType,
   superadminSuspendUser,
   superadminActivateUser,
   superadminUpdateUser,
@@ -55,6 +56,7 @@ import type {
   SuperAdminUser,
   SuperAdminOrgDetail,
   UserRole,
+  OrgType,
   FeedbackReport,
   FeedbackStats,
   FeedbackStatus,
@@ -122,6 +124,20 @@ function TierBadge({ tier }: { tier: string }) {
   return (
     <span className="inline-block rounded-md bg-accent-subtle px-2 py-0.5 text-small font-medium text-accent">
       {tier}
+    </span>
+  );
+}
+
+function TypeBadge({ type }: { type: OrgType }) {
+  return (
+    <span
+      className={`inline-block rounded-md px-2 py-0.5 text-small font-medium ${
+        type === "PARTNER"
+          ? "bg-success-subtle text-success-solid"
+          : "bg-raised text-text-secondary"
+      }`}
+    >
+      {type}
     </span>
   );
 }
@@ -343,7 +359,7 @@ function OrgDetailModal({
               <div className="text-text-secondary">Slug</div>
               <div>{org.slug}</div>
               <div className="text-text-secondary">Tipo</div>
-              <div>{org.type}</div>
+              <div><TypeBadge type={org.type} /></div>
               <div className="text-text-secondary">Plan</div>
               <div>
                 <TierBadge tier={org.subscription.tier} />
@@ -416,6 +432,11 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
     orgId: string;
     orgName: string;
     action: "suspend" | "activate";
+  } | null>(null);
+  const [confirmTypeAction, setConfirmTypeAction] = useState<{
+    orgId: string;
+    orgName: string;
+    newType: OrgType;
   } | null>(null);
 
   const load = useCallback(async () => {
@@ -491,6 +512,21 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
     }
   }
 
+  async function executeTypeToggle() {
+    if (!confirmTypeAction) return;
+    const { orgId, newType } = confirmTypeAction;
+    setConfirmTypeAction(null);
+    const res = await superadminUpdateOrgType(orgId, newType);
+    if (res.success) {
+      setToast({ msg: t("orgs.typeToggleSuccess"), type: "success" });
+      setOrgs((prev) =>
+        prev.map((o) => (o.id === orgId ? { ...o, type: newType } : o))
+      );
+    } else {
+      setToast({ msg: res.error ?? t("orgs.typeToggleError"), type: "error" });
+    }
+  }
+
   const active = orgs.filter((o) => o.is_active).length;
   const suspended = orgs.filter((o) => !o.is_active).length;
 
@@ -546,6 +582,33 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                     ? "bg-error hover:bg-error"
                     : "bg-accent hover:bg-accent-hover"
                 }`}
+              >
+                Sí
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Type toggle confirm dialog */}
+      {confirmTypeAction && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+            <p className="mb-4 text-body text-foreground">
+              {confirmTypeAction.newType === "PARTNER"
+                ? t("orgs.typeToggleConfirmPartner", { name: confirmTypeAction.orgName })
+                : t("orgs.typeToggleConfirmSolitary", { name: confirmTypeAction.orgName })}
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setConfirmTypeAction(null)}
+                className="rounded-md px-4 py-2 text-body text-text-secondary hover:bg-raised"
+              >
+                No
+              </button>
+              <button
+                onClick={executeTypeToggle}
+                className="rounded-md bg-accent px-4 py-2 text-body font-medium text-white hover:bg-accent-hover"
               >
                 Sí
               </button>
@@ -616,7 +679,9 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                 </td>
                 <td className="px-3 py-2 font-medium text-foreground">{org.name}</td>
                 <td className="px-3 py-2 font-technical text-text-secondary">{org.slug}</td>
-                <td className="px-3 py-2 text-text-secondary">{org.type}</td>
+                <td className="px-3 py-2">
+                  <TypeBadge type={org.type} />
+                </td>
                 <td className="px-3 py-2">
                   <TierBadge tier={org.subscription.tier} />
                 </td>
@@ -645,6 +710,25 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                       className="rounded-md px-2 py-1 text-small text-accent hover:bg-accent-subtle"
                     >
                       {t("orgs.btnEdit")}
+                    </button>
+                    <button
+                      onClick={() =>
+                        setConfirmTypeAction({
+                          orgId: org.id,
+                          orgName: org.name,
+                          newType: org.type === "PARTNER" ? "SOLITARY" : "PARTNER",
+                        })
+                      }
+                      className={`rounded-md px-2 py-1 text-small font-medium ${
+                        org.type === "PARTNER"
+                          ? "text-text-secondary hover:bg-raised"
+                          : "text-success-solid hover:bg-success-subtle"
+                      }`}
+                      title={t("orgs.typeToggleTitle")}
+                    >
+                      {org.type === "PARTNER"
+                        ? t("orgs.typeToggleToSolitary")
+                        : t("orgs.typeToggleToPartner")}
                     </button>
                     <button
                       onClick={() => handleToggle(org)}
@@ -986,7 +1070,9 @@ function ActivityTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                 <td className="px-3 py-2">
                   <TierBadge tier={org.subscription.tier} />
                 </td>
-                <td className="px-3 py-2 text-text-secondary">{org.type}</td>
+                <td className="px-3 py-2">
+                  <TypeBadge type={org.type} />
+                </td>
                 <td className="px-3 py-2">
                   <span
                     className={`text-small font-medium ${

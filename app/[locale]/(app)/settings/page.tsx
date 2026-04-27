@@ -25,6 +25,8 @@ import {
   ChevronUp,
   X,
   CheckCircle2,
+  Zap,
+  BookSearch,
 } from "lucide-react";
 import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
@@ -1204,6 +1206,8 @@ export default function SettingsPage() {
   const isAdmin = roleUpper === "ADMIN";
   const isClientUser = roleUpper === "CLIENT_USER";
   const hasOrg = !!meData?.org;
+  const isPartner = meData?.org?.type === "PARTNER";
+  const isSolitary = meData?.org?.type === "SOLITARY";
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("org");
 
@@ -1281,30 +1285,46 @@ export default function SettingsPage() {
               <>
                 {hasOrg && isAdmin && <OrgSection />}
                 {isClientUser && hasOrg && <UserCredentialsSection />}
-                <CollapsibleCard icon={<Shield size={20} strokeWidth={1.5} className="text-accent" />} title={t("security.title")}>
-                  <p className="text-body text-text-secondary">{t("security.description")}</p>
-                </CollapsibleCard>
               </>
             )}
 
             {/* ---- TAB: Instancias ---- */}
             {activeTab === "instances" && isAdmin && (
               <>
-                <OdooConfigsSection />
+                {isPartner && <OdooConfigsSection />}
                 <SavedConfigsSection />
-                <CollapsibleCard icon={<Shield size={20} strokeWidth={1.5} className="text-accent" />} title={t("inspector.heading")}>
+                <CollapsibleCard icon={<BookSearch size={20} strokeWidth={1.5} className="text-accent" />} title={t("inspector.heading")}>
                   <InstanceInspector />
+                </CollapsibleCard>
+                <CollapsibleCard icon={<Shield size={20} strokeWidth={1.5} className="text-accent" />} title={t("security.title")}>
+                  <p className="text-body text-text-secondary">{t("security.description")}</p>
                 </CollapsibleCard>
               </>
             )}
 
             {/* ---- TAB: Usuarios ---- */}
             {activeTab === "users" && isAdmin && (
-              <>
-                {hasOrg && <UsersSection />}
-                {hasOrg && <InviteFormSection />}
-                {hasOrg && <SentInvitationsSection />}
-              </>
+              isSolitary ? (
+                <div className="rounded-lg border border-border bg-surface p-8 text-center">
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-subtle">
+                    <Zap size={24} strokeWidth={1.5} className="text-accent" />
+                  </div>
+                  <h3 className="mb-2 text-subheading font-medium text-heading">{t("admin.solitaryBannerTitle")}</h3>
+                  <p className="mb-6 text-body text-text-secondary">{t("admin.solitaryBannerBody")}</p>
+                  <a
+                    href="mailto:info@odooagent.com"
+                    className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-body font-medium text-white hover:bg-accent-hover transition-colors"
+                  >
+                    {t("admin.solitaryBannerCta")}
+                  </a>
+                </div>
+              ) : (
+                <>
+                  {hasOrg && <UsersSection />}
+                  {hasOrg && <InviteFormSection />}
+                  {hasOrg && <SentInvitationsSection />}
+                </>
+              )
             )}
 
             {/* ---- TAB: Feedback ---- */}
