@@ -2,16 +2,16 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Bot, Database, FileText, Users, BarChart3, Package, AlertTriangle } from "lucide-react";
+import { Bot, FileText, Users, BarChart3, Package, FileUp, AlertTriangle } from "lucide-react";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useRouter } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
 
-const SUGGESTION_KEYS = ["inventory", "invoices", "sales", "employees"] as const;
-const SUGGESTION_ICONS = [Package, FileText, BarChart3, Users];
-const SUGGESTION_COLORS = ["text-info", "text-warning-solid", "text-success-solid", "text-accent"];
+const SUGGESTION_KEYS = ["inventory", "invoices", "sales", "employees", "salesPeriod", "invoice", "inventoryCheck", "report"] as const;
+const SUGGESTION_ICONS = [Package, FileText, BarChart3, Users, BarChart3, FileUp, Package, FileText];
+const SUGGESTION_COLORS = ["text-info", "text-warning-solid", "text-success-solid", "text-accent", "text-success-solid", "text-warning-solid", "text-info", "text-accent"];
 
 export default function NewChatPage() {
   const router = useRouter();
@@ -69,24 +69,17 @@ export default function NewChatPage() {
             })}
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.15, ease: "easeOut" }}
-            className="mt-6 flex items-center justify-center gap-2 text-small text-text-muted"
-          >
-            {isConfigured ? (
-              <>
-                <Database size={16} strokeWidth={1.5} />
-                <span>{t("connectedMessage")}</span>
-              </>
-            ) : (
-              <>
-                <AlertTriangle size={16} strokeWidth={1.5} className="text-error" />
-                <span className="text-error">{t("notConnected")}</span>
-              </>
-            )}
-          </motion.div>
+          {!isConfigured && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.15, ease: "easeOut" }}
+              className="mt-6 flex items-center justify-center gap-2 text-small"
+            >
+              <AlertTriangle size={16} strokeWidth={1.5} className="text-error" />
+              <span className="text-error">{t("notConnected")}</span>
+            </motion.div>
+          )}
         </div>
       </div>
 

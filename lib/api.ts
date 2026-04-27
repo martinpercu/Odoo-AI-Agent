@@ -1508,6 +1508,25 @@ export async function superadminUpdateUser(
   }
 }
 
+export async function superadminUpdateOrgType(
+  orgId: string,
+  type: OrgType
+): Promise<BasicResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/type`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type }),
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: extractError(data.detail, "Failed to update org type") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 // ---- Feedback API ----
 
 export interface SubmitFeedbackPayload {

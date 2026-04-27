@@ -6,13 +6,12 @@ import { useTranslations } from "next-intl";
 import { useSession } from "@/hooks/use-session";
 import { submitOnboarding, testOdooConnection } from "@/lib/api";
 import type { OdooConfig } from "@/lib/types";
-import { AuthGuard } from "@/components/auth/auth-guard";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, Database } from "lucide-react";
 
 const inputCls =
   "rounded-md border border-border bg-base px-3 py-2 text-body text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/30";
 
-function OnboardingContent() {
+export default function OnboardingPage() {
   const t = useTranslations("Onboarding");
   const router = useRouter();
   const pathname = usePathname();
@@ -70,11 +69,15 @@ function OnboardingContent() {
   const canSubmit = !!url && !!dbName && !!login && !!apiKey;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-base px-4">
+    <div className="flex flex-1 items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="rounded-lg border border-border bg-surface p-8 shadow-lg">
           <h1 className="mb-1 text-heading">{t("step1Title")}</h1>
-          <p className="mb-6 text-body text-text-secondary">{t("step1Desc")}</p>
+          <p className="mb-4 text-body text-text-secondary">{t("step1Desc")}</p>
+          <div className="mb-6 flex items-center gap-2 text-small text-text-muted">
+            <Database size={16} strokeWidth={1.5} />
+            <span>{t("connectedMessage")}</span>
+          </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
@@ -125,7 +128,6 @@ function OnboardingContent() {
               />
             </div>
 
-            {/* Test connection — optional but available */}
             <button
               type="button"
               onClick={handleTestConnection}
@@ -162,13 +164,5 @@ function OnboardingContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function OnboardingPage() {
-  return (
-    <AuthGuard>
-      <OnboardingContent />
-    </AuthGuard>
   );
 }

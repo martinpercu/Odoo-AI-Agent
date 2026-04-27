@@ -35,13 +35,16 @@
   "NewChat": {
     "heading": "How can I help you?",
     "subheading": "Query inventory, invoicing, sales, HR and more directly from your Odoo.",
-    "connectedMessage": "Securely connected to your Odoo instance",
     "notConnected": "Odoo not configured. Go to Settings to connect.",
     "suggestions": {
       "inventory": "View current product inventory",
       "invoices": "Show pending invoices",
       "sales": "Generate monthly sales report",
-      "employees": "List employees by department"
+      "employees": "List employees by department",
+      "salesPeriod": "Analyze sales by period",
+      "invoice": "Upload an invoice image",
+      "inventoryCheck": "Check product inventory",
+      "report": "Generate a PDF report"
     }
   },
   "ChatInput": {
@@ -279,7 +282,10 @@
       "seatsFree": "Free",
       "seatsPending": "Pending",
       "freeTooPaidError": "No paid seats available. To make this change, first move a paid user to free.",
-      "paidToFreeError": "Free seat overflow limit reached. Cannot move more users to free."
+      "paidToFreeError": "Free seat overflow limit reached. Cannot move more users to free.",
+      "solitaryBannerTitle": "Want to manage a team?",
+      "solitaryBannerBody": "Your account is in individual mode. Contact us to activate the partner plan and manage multiple users and instances.",
+      "solitaryBannerCta": "Contact us"
     },
     "credentials": {
       "sectionTitle": "My Odoo Credentials",
@@ -423,6 +429,7 @@
     "step2Label": "Organization",
     "step1Title": "Connect your Odoo",
     "step1Desc": "Add your Odoo instance credentials to start chatting.",
+    "connectedMessage": "Securely connected to your Odoo instance",
     "step2Title": "Create your organization",
     "step2Desc": "Give your organization a name. You can change it later.",
     "orgName": "Organization name",
@@ -542,7 +549,14 @@
       "detailPaidUsed": "Paid used",
       "detailFreeUsed": "Free used",
       "detailOdooConfigs": "Odoo connections",
-      "detailClose": "Close"
+      "detailClose": "Close",
+      "typeToggleTitle": "Change type",
+      "typeToggleToPartner": "Promote to PARTNER",
+      "typeToggleToSolitary": "Revert to SOLITARY",
+      "typeToggleConfirmPartner": "Promote org {name} to PARTNER? This enables the full UI for its users.",
+      "typeToggleConfirmSolitary": "Revert org {name} to SOLITARY? The tenant UI will be simplified.",
+      "typeToggleSuccess": "Organization type updated.",
+      "typeToggleError": "Could not change type. Please try again."
     },
     "users": {
       "statsTotal": "Total users",
