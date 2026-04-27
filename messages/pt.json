@@ -35,13 +35,16 @@
   "NewChat": {
     "heading": "Como posso ajudar?",
     "subheading": "Consulte inventário, faturamento, vendas, RH e mais diretamente do seu Odoo.",
-    "connectedMessage": "Conectado com segurança à sua instância do Odoo",
     "notConnected": "Odoo não configurado. Vá em Configurações para conectar.",
     "suggestions": {
       "inventory": "Ver o inventário atual de produtos",
       "invoices": "Mostrar faturas pendentes",
       "sales": "Gerar relatório de vendas mensal",
-      "employees": "Listar funcionários por departamento"
+      "employees": "Listar funcionários por departamento",
+      "salesPeriod": "Analisar vendas por período",
+      "invoice": "Fazer upload de imagem de fatura",
+      "inventoryCheck": "Verificar inventário de produtos",
+      "report": "Gerar um relatório PDF"
     }
   },
   "ChatInput": {
@@ -279,7 +282,10 @@
       "seatsFree": "Gratuitas",
       "seatsPending": "Pendentes",
       "freeTooPaidError": "Não há vagas pagas disponíveis. Para fazer essa alteração, mova primeiro um usuário pago para gratuito.",
-      "paidToFreeError": "Limite de overflow de vagas gratuitas atingido. Não é possível mover mais usuários para gratuito."
+      "paidToFreeError": "Limite de overflow de vagas gratuitas atingido. Não é possível mover mais usuários para gratuito.",
+      "solitaryBannerTitle": "Quer gerir uma equipa?",
+      "solitaryBannerBody": "A sua conta está em modo individual. Contacte-nos para ativar o plano parceiro e gerir múltiplos utilizadores e instâncias.",
+      "solitaryBannerCta": "Contactar"
     },
     "credentials": {
       "sectionTitle": "Minhas Credenciais Odoo",
@@ -423,6 +429,7 @@
     "step2Label": "Organização",
     "step1Title": "Conecte seu Odoo",
     "step1Desc": "Adicione as credenciais para começar.",
+    "connectedMessage": "Conectado com segurança à sua instância do Odoo",
     "step2Title": "Crie sua organização",
     "step2Desc": "Dê um nome à sua organização.",
     "orgName": "Nome da organização",
@@ -542,7 +549,14 @@
       "detailPaidUsed": "Pagos utilizados",
       "detailFreeUsed": "Gratuitos utilizados",
       "detailOdooConfigs": "Conexões Odoo",
-      "detailClose": "Fechar"
+      "detailClose": "Fechar",
+      "typeToggleTitle": "Alterar tipo",
+      "typeToggleToPartner": "Promover a PARTNER",
+      "typeToggleToSolitary": "Reverter a SOLITARY",
+      "typeToggleConfirmPartner": "Promover org {name} a PARTNER? Isso ativa a interface completa para os seus utilizadores.",
+      "typeToggleConfirmSolitary": "Reverter org {name} a SOLITARY? A interface do tenant será simplificada.",
+      "typeToggleSuccess": "Tipo de organização atualizado.",
+      "typeToggleError": "Não foi possível alterar o tipo. Tente novamente."
     },
     "users": {
       "statsTotal": "Total de usuários",

@@ -108,13 +108,13 @@ app/
     page.tsx                    # Auth-based redirector (no user→/chat, no org→onboarding, SUPERADMIN→/superadmin, else→chat)
     login/page.tsx              # Supabase email/password login (+ DEV MODE bypass)
     register/page.tsx           # Account signup → onboarding flow
-    onboarding/page.tsx         # 2-step wizard: org name/slug + Odoo connection
     invite/page.tsx             # Accept team invitation by token
     superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
     (app)/
       layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
-      chat/page.tsx             # New query (suggestions + input)
+      chat/page.tsx             # New query (8 suggestion cards + input)
       chat/[id]/page.tsx        # Conversation with SSE streaming
+      onboarding/page.tsx       # Odoo connection form (inside AppShell; no full-screen wrapper)
       settings/page.tsx         # Admin panel: org, Odoo configs, users, invitations
       pricing/page.tsx          # Subscription plans
   globals.css                   # Theme variables (light/dark) + markdown styles
@@ -315,7 +315,7 @@ App loads → GET /me (no auth token)
 App loads → AuthProvider restores Supabase session
          → SessionProvider calls GET /me
          → SUPERADMIN      → /superadmin (standalone panel, no app shell)
-         → No org yet      → /onboarding (2-step wizard: org name + Odoo connection)
+         → No org yet      → /onboarding (Odoo connection form, inside AppShell)
          → Org exists      → /chat
          → 401 from any API call → check active Supabase session → if session exists: clear session → /login; if no session: ignore (unauthenticated user hitting protected endpoint)
          → 402 from any API call → show LimitReachedModal (no crash)
@@ -334,12 +334,13 @@ Settings
 │   ├── Saved Configs   → list of existing connections (test, delete)
 │   └── Inspector       → inspect installed Odoo modules
 ├── Users tab
-│   ├── Users         → list members, change role, toggle free/paid slot, remove
-│   │                   seats widget (paid X/limit · free X/limit) shown in section subheader
-│   ├── Invite        → send invite by email (role fixed as CLIENT_USER); optional instance + credential pre-load
-│   └── Sent Invitations → view status (pending / accepted / expired), filter tabs
-│                          pending invitations: "Show link" button + copy URL
-│                          pending invitations can be cancelled (X button with inline confirmation; frees seat immediately)
+│   ├── (PARTNER org) Users         → list members, change role, toggle free/paid slot, remove
+│   │                                 seats widget (paid X/limit · free X/limit) shown in section subheader
+│   │               Invite        → send invite by email (role fixed as CLIENT_USER); optional instance + credential pre-load
+│   │               Sent Invitations → view status (pending / accepted / expired), filter tabs
+│   │                                  pending invitations: "Show link" button + copy URL
+│   │                                  pending invitations can be cancelled (X button with inline confirmation; frees seat immediately)
+│   └── (SOLITARY org) → upgrade banner with contact CTA (no team management UI)
 └── Feedback tab
     └── Feedback      → list of feedback reports submitted by org users; expandable rows with 3 tabs:
                         Data (category, comment, expected response, admin_notes), Messages (conversation snapshot),
@@ -408,9 +409,9 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 
 **Settings page** (`/settings`) provides admin controls for:
 - Organization name/slug/type editing
-- Odoo connections: create, update, delete (multiple per org)
-- Users: list, change role, toggle free/paid, remove
-- Invitations: send by email, view status (pending/accepted/expired)
+- Odoo connections: create (PARTNER only), update, delete (multiple per org)
+- Users: list, change role, toggle free/paid, remove (PARTNER); upgrade banner (SOLITARY)
+- Invitations: send by email, view status (pending/accepted/expired) — PARTNER only
 
 ## Communication Flow
 
@@ -456,6 +457,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `POST` | `/inspect-instance` | Fetch installed Odoo modules |
 | `POST` | `/admin/orgs` | Create organization |
 | `PATCH` | `/admin/orgs/{id}` | Update organization (name, slug, type) |
+| `PATCH` | `/admin/orgs/{id}/type` | Change org type (`PARTNER` ↔ `SOLITARY`) — superadmin only |
 | `GET` | `/admin/orgs/{id}/configs` | List Odoo connections |
 | `POST` | `/admin/orgs/{id}/configs` | Create Odoo connection |
 | `PATCH` | `/admin/orgs/{id}/configs/{id}` | Update Odoo connection |
