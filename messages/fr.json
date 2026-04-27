@@ -35,13 +35,16 @@
   "NewChat": {
     "heading": "Comment puis-je vous aider ?",
     "subheading": "Consultez l'inventaire, la facturation, les ventes, les RH et plus encore directement depuis votre Odoo.",
-    "connectedMessage": "Connecté en toute sécurité à votre instance Odoo",
     "notConnected": "Odoo n'est pas configuré. Allez dans Paramètres pour vous connecter.",
     "suggestions": {
       "inventory": "Voir l'inventaire actuel des produits",
       "invoices": "Afficher les factures en attente",
       "sales": "Générer le rapport de ventes mensuel",
-      "employees": "Lister les employés par département"
+      "employees": "Lister les employés par département",
+      "salesPeriod": "Analyser les ventes par période",
+      "invoice": "Télécharger une image de facture",
+      "inventoryCheck": "Vérifier l'inventaire des produits",
+      "report": "Générer un rapport PDF"
     }
   },
   "ChatInput": {
@@ -279,7 +282,10 @@
       "seatsFree": "Gratuites",
       "seatsPending": "En attente",
       "freeTooPaidError": "Aucune place payante disponible. Pour effectuer ce changement, déplacez d'abord un utilisateur payant vers gratuit.",
-      "paidToFreeError": "Limite de débordement des places gratuites atteinte. Impossible de déplacer plus d'utilisateurs vers gratuit."
+      "paidToFreeError": "Limite de débordement des places gratuites atteinte. Impossible de déplacer plus d'utilisateurs vers gratuit.",
+      "solitaryBannerTitle": "Vous souhaitez gérer une équipe ?",
+      "solitaryBannerBody": "Votre compte est en mode individuel. Contactez-nous pour activer le plan partenaire et gérer plusieurs utilisateurs et instances.",
+      "solitaryBannerCta": "Nous contacter"
     },
     "credentials": {
       "sectionTitle": "Mes identifiants Odoo",
@@ -423,6 +429,7 @@
     "step2Label": "Organisation",
     "step1Title": "Connectez votre Odoo",
     "step1Desc": "Ajoutez vos identifiants Odoo.",
+    "connectedMessage": "Connecté en toute sécurité à votre instance Odoo",
     "step2Title": "Créez votre organisation",
     "step2Desc": "Donnez un nom à votre structure.",
     "orgName": "Nom de l'organisation",
@@ -542,7 +549,14 @@
       "detailPaidUsed": "Payants utilisés",
       "detailFreeUsed": "Gratuits utilisés",
       "detailOdooConfigs": "Connexions Odoo",
-      "detailClose": "Fermer"
+      "detailClose": "Fermer",
+      "typeToggleTitle": "Changer le type",
+      "typeToggleToPartner": "Promouvoir en PARTNER",
+      "typeToggleToSolitary": "Rétrograder en SOLITARY",
+      "typeToggleConfirmPartner": "Promouvoir l'org {name} en PARTNER ? Cela active l'interface complète pour ses utilisateurs.",
+      "typeToggleConfirmSolitary": "Rétrograder l'org {name} en SOLITARY ? L'interface du tenant sera simplifiée.",
+      "typeToggleSuccess": "Type d'organisation mis à jour.",
+      "typeToggleError": "Impossible de changer le type. Réessayez."
     },
     "users": {
       "statsTotal": "Total utilisateurs",
