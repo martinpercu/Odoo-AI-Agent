@@ -17,7 +17,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Real-time chat with SSE streaming
 - Rich Markdown-formatted responses
 - Image upload with inline preview (vision-based AI interactions)
-- Predefined suggestions to quickly start querying
+- Predefined suggestion cards to quickly start querying (some marked as disabled/coming soon)
 - Conversation history grouped by date (today, yesterday, last 7 days)
 
 **Action Management:**
@@ -129,7 +129,6 @@ components/
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
-    welcome-dashboard.tsx       # First-chat landing with suggestion cards
     demo-banner.tsx             # Banner shown in demo mode (unauthenticated or no org)
     odoo-config-selector.tsx    # Dropdown to switch active Odoo config + credential status indicator
     success-card.tsx            # Green card for successful actions
@@ -247,6 +246,7 @@ Interactive analytics visualization:
 - Supports bar, line (area), and pie charts via Recharts
 - Responsive layout with horizontal bars on narrow containers
 - Custom tooltip with formatted values (currency, integer, decimal)
+- Axis tick values auto-compacted (K / M / B / T) for large numbers; `no_decimals` flag suppresses decimal places
 - Purple color palette matching Odoo branding
 - Footer with global total and group-by info
 - **Excel export button** appears when `export_url` is present (ghost style, top-right)
@@ -544,6 +544,8 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
     "value_label": "Revenue",
     "value_format": "currency",
     "currency_symbol": "$",
+    "currency_iso": "USD",
+    "no_decimals": false,
     "group_by": "product",
     "model": "sale.order",
     "period": "2026-02",
@@ -780,7 +782,6 @@ Translations are located in `messages/[locale].json`.
 | `ChatMessages` | Chat UI: typing, success, validation, selection, file, chart, export, action proposal, audit, feedback button |
 | `Feedback` | Feedback modal: title, categories, comment, submit/cancel, success toast |
 | `ChatHistory` | Loading states |
-| `WelcomeDashboard` | Suggestion cards for first-chat landing |
 | `Pricing` | Plans, features, and CTAs |
 | `Settings` | Connection form, inspector, security, admin panel (org, configs, users, invitations, feedback reports) |
 | `PinnedInsights` | Pin/unpin tooltips, empty state, error messages |

@@ -154,6 +154,8 @@ export interface ChartMeta {
   value_label: string;
   value_format: "currency" | "number" | "integer" | "decimal";
   currency_symbol: string;
+  currency_iso: string | null;
+  no_decimals: boolean;
   group_by: string;
   model: string;
   period: string | null;
