@@ -39,12 +39,12 @@
     "suggestions": {
       "inventory": "View current product inventory",
       "invoices": "Show pending invoices",
-      "sales": "Generate monthly sales report",
-      "employees": "List employees by department",
-      "salesPeriod": "Analyze sales by period",
-      "invoice": "Upload an invoice image",
       "inventoryCheck": "Check product inventory",
-      "report": "Generate a PDF report"
+      "employees": "List employees by department",
+      "billingByClient": "Billing by customer in 2024",
+      "salesReport": "Generate monthly sales report",
+      "uploadInvoice": "Upload an invoice image",
+      "pdfReport": "Generate a PDF report"
     }
   },
   "ChatInput": {
@@ -111,16 +111,6 @@
   },
   "ChatHistory": {
     "loading": "Loading conversation..."
-  },
-  "WelcomeDashboard": {
-    "heading": "What would you like to do?",
-    "comingSoon": "Coming soon",
-    "suggestions": {
-      "sales": "Analyze sales by period",
-      "invoice": "Upload an invoice image",
-      "inventory": "Check product inventory",
-      "report": "Generate a PDF report"
-    }
   },
   "Pricing": {
     "heading": "Plans & Pricing",

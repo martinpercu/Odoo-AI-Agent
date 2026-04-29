@@ -2,16 +2,30 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Bot, FileText, Users, BarChart3, Package, FileUp, AlertTriangle } from "lucide-react";
+import { Bot, FileText, Users, BarChart3, Package, FileUp, FileBarChart, Receipt, AlertTriangle } from "lucide-react";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useRouter } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
 
-const SUGGESTION_KEYS = ["inventory", "invoices", "sales", "employees", "salesPeriod", "invoice", "inventoryCheck", "report"] as const;
-const SUGGESTION_ICONS = [Package, FileText, BarChart3, Users, BarChart3, FileUp, Package, FileText];
-const SUGGESTION_COLORS = ["text-info", "text-warning-solid", "text-success-solid", "text-accent", "text-success-solid", "text-warning-solid", "text-info", "text-accent"];
+interface Suggestion {
+  key: string;
+  icon: React.ElementType;
+  color: string;
+  disabled?: boolean;
+}
+
+const SUGGESTIONS: Suggestion[] = [
+  { key: "inventory",       icon: Package,      color: "text-info" },
+  { key: "invoices",        icon: FileText,     color: "text-warning-solid" },
+  { key: "inventoryCheck",  icon: Package,      color: "text-info" },
+  { key: "employees",       icon: Users,        color: "text-success-solid" },
+  { key: "billingByClient", icon: Receipt,      color: "text-accent" },
+  { key: "salesReport",     icon: BarChart3,    color: "text-text-muted", disabled: true },
+  { key: "uploadInvoice",   icon: FileUp,       color: "text-text-muted", disabled: true },
+  { key: "pdfReport",       icon: FileBarChart, color: "text-text-muted", disabled: true },
+];
 
 export default function NewChatPage() {
   const router = useRouter();
@@ -53,17 +67,22 @@ export default function NewChatPage() {
             transition={{ duration: 0.15, delay: 0.1, ease: "easeOut" }}
             className="grid grid-cols-1 gap-3 sm:grid-cols-2"
           >
-            {SUGGESTION_KEYS.map((key, i) => {
-              const Icon = SUGGESTION_ICONS[i];
+            {SUGGESTIONS.map(({ key, icon: Icon, color, disabled }) => {
               const text = t(`suggestions.${key}`);
               return (
                 <button
                   key={key}
-                  onClick={() => handleSuggestion(text)}
-                  className="flex items-center gap-3 rounded-md border border-border bg-surface p-4 text-left text-body transition-all hover:border-accent/30 hover:bg-raised hover:shadow-sm"
+                  onClick={disabled ? undefined : () => handleSuggestion(text)}
+                  disabled={disabled}
+                  aria-label={text}
+                  className={`flex items-center gap-3 rounded-md border p-4 text-left text-body transition-all ${
+                    disabled
+                      ? "cursor-not-allowed border-border/50 bg-surface/50 opacity-50"
+                      : "border-border bg-surface hover:border-accent/30 hover:bg-raised hover:shadow-sm"
+                  }`}
                 >
-                  <Icon size={20} strokeWidth={1.5} className={SUGGESTION_COLORS[i]} />
-                  <span>{text}</span>
+                  <Icon size={20} strokeWidth={1.5} className={color} />
+                  <span className={disabled ? "text-text-muted" : ""}>{text}</span>
                 </button>
               );
             })}
