@@ -39,12 +39,12 @@
     "suggestions": {
       "inventory": "Aktuellen Produktbestand anzeigen",
       "invoices": "Ausstehende Rechnungen anzeigen",
-      "sales": "Monatlichen Verkaufsbericht erstellen",
-      "employees": "Mitarbeiter nach Abteilung auflisten",
-      "salesPeriod": "Verkäufe nach Zeitraum analysieren",
-      "invoice": "Rechnungsbild hochladen",
       "inventoryCheck": "Produktbestand prüfen",
-      "report": "PDF-Bericht erstellen"
+      "employees": "Mitarbeiter nach Abteilung auflisten",
+      "billingByClient": "Abrechnung nach Kunde im Jahr 2024",
+      "salesReport": "Monatlichen Verkaufsbericht erstellen",
+      "uploadInvoice": "Rechnungsbild hochladen",
+      "pdfReport": "PDF-Bericht erstellen"
     }
   },
   "ChatInput": {
@@ -111,16 +111,6 @@
   },
   "ChatHistory": {
     "loading": "Konversation wird geladen..."
-  },
-  "WelcomeDashboard": {
-    "heading": "Was möchten Sie tun?",
-    "comingSoon": "Demnächst",
-    "suggestions": {
-      "sales": "Verkäufe nach Zeitraum analysieren",
-      "invoice": "Rechnungsbild hochladen",
-      "inventory": "Produktbestand prüfen",
-      "report": "PDF-Bericht erstellen"
-    }
   },
   "Pricing": {
     "heading": "Tarife & Preise",
