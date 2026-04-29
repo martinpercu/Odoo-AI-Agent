@@ -39,12 +39,12 @@
     "suggestions": {
       "inventory": "Voir l'inventaire actuel des produits",
       "invoices": "Afficher les factures en attente",
-      "sales": "Générer le rapport de ventes mensuel",
-      "employees": "Lister les employés par département",
-      "salesPeriod": "Analyser les ventes par période",
-      "invoice": "Télécharger une image de facture",
       "inventoryCheck": "Vérifier l'inventaire des produits",
-      "report": "Générer un rapport PDF"
+      "employees": "Lister les employés par département",
+      "billingByClient": "Facturation par client en 2024",
+      "salesReport": "Générer le rapport de ventes mensuel",
+      "uploadInvoice": "Télécharger une image de facture",
+      "pdfReport": "Générer un rapport PDF"
     }
   },
   "ChatInput": {
@@ -111,16 +111,6 @@
   },
   "ChatHistory": {
     "loading": "Chargement de la conversation..."
-  },
-  "WelcomeDashboard": {
-    "heading": "Que souhaitez-vous faire ?",
-    "comingSoon": "Bientôt disponible",
-    "suggestions": {
-      "sales": "Analyser les ventes par période",
-      "invoice": "Télécharger l'image d'une facture",
-      "inventory": "Vérifier le stock de produits",
-      "report": "Générer un rapport PDF"
-    }
   },
   "Pricing": {
     "heading": "Forfaits et Tarifs",

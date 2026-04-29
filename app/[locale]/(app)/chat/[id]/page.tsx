@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { ChatInput } from "@/components/chat/chat-input";
-import { WelcomeDashboard } from "@/components/chat/welcome-dashboard";
 import { DemoBanner } from "@/components/chat/demo-banner";
 import { useChatContext } from "@/components/app-shell";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
@@ -49,9 +48,6 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
               <Loader2 size={24} strokeWidth={1.5} className="animate-spin text-accent" />
               <span className="text-body text-text-secondary">{t("loading")}</span>
             </motion.div>
-          )}
-          {!isLoadingHistory && !hasMessages && (
-            <WelcomeDashboard onSend={sendMessage} />
           )}
           {hasMessages && (
             <ChatMessages messages={currentChat.messages} isStreaming={isStreaming} />

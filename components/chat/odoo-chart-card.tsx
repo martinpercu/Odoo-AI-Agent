@@ -30,11 +30,14 @@ const PIE_COLORS = ["#714B67", "#8d6584", "#a87fa1", "#c49bbe", "#deb8db"];
 function formatValue(
   val: number,
   format: string,
-  symbol: string
+  symbol: string,
+  noDecimals = false
 ): string {
   switch (format) {
-    case "currency":
-      return `${symbol}${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)}`;
+    case "currency": {
+      const decimals = noDecimals ? 0 : 2;
+      return `${symbol}${new Intl.NumberFormat("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(val)}`;
+    }
     case "integer":
       return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(val);
     case "decimal":
@@ -42,6 +45,38 @@ function formatValue(
     default:
       return new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
   }
+}
+
+function formatAxisValue(
+  val: number,
+  format: string,
+  symbol: string,
+  noDecimals = false
+): string {
+  if (format !== "currency" && format !== "decimal" && format !== "number") {
+    return formatValue(val, format, symbol, noDecimals);
+  }
+
+  const abs = Math.abs(val);
+  let compact: string;
+
+  if (abs >= 1_000_000_000_000) {
+    compact = `${parseFloat((val / 1_000_000_000_000).toFixed(1))}T`;
+  } else if (abs >= 1_000_000_000) {
+    compact = `${parseFloat((val / 1_000_000_000).toFixed(1))}B`;
+  } else if (abs >= 1_000_000) {
+    compact = `${parseFloat((val / 1_000_000).toFixed(1))}M`;
+  } else if (abs >= 1_000) {
+    compact = `${parseFloat((val / 1_000).toFixed(1))}K`;
+  } else {
+    const decimals = noDecimals ? 0 : 2;
+    compact = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(val);
+  }
+
+  return format === "currency" ? `${symbol}${compact}` : compact;
 }
 
 function ChartTooltip(props: Record<string, unknown> & { meta: ChartSSEEvent["meta"] }) {
@@ -57,7 +92,7 @@ function ChartTooltip(props: Record<string, unknown> & { meta: ChartSSEEvent["me
     <div className="rounded-md border border-border bg-surface px-3 py-2 shadow-lg">
       <p className="text-small font-medium text-foreground">{label ?? payload[0].name}</p>
       <p className="text-body font-semibold font-technical text-odoo-purple">
-        {formatValue(payload[0].value as number, meta.value_format, meta.currency_symbol)}
+        {formatValue(payload[0].value as number, meta.value_format, meta.currency_symbol, meta.no_decimals)}
       </p>
     </div>
   );
@@ -151,7 +186,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                     <XAxis
                       type="number"
                       tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
-                      tickFormatter={(v) => formatValue(v, meta.value_format, meta.currency_symbol)}
+                      tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                     />
                     <YAxis
                       dataKey="label"
@@ -173,7 +208,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                     />
                     <YAxis
                       tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
-                      tickFormatter={(v) => formatValue(v, meta.value_format, meta.currency_symbol)}
+                      tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                     />
                     <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
                     <Bar dataKey="value" fill="var(--color-odoo-purple)" radius={[4, 4, 0, 0]} />
@@ -195,7 +230,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                   />
                   <YAxis
                     tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
-                    tickFormatter={(v) => formatValue(v, meta.value_format, meta.currency_symbol)}
+                    tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                   />
                   <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
                   <Area
@@ -241,7 +276,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
             {t("globalTotal")}
           </span>
           <span className="text-body font-semibold font-technical text-odoo-purple">
-            {formatValue(meta.total, meta.value_format, meta.currency_symbol)}
+            {formatValue(meta.total, meta.value_format, meta.currency_symbol, meta.no_decimals)}
           </span>
         </div>
       )}
