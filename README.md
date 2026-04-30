@@ -165,7 +165,7 @@ components/
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
-  use-chat.ts                   # Chat state + SSE + image upload + action execution
+  use-chat.ts                   # Chat state + SSE + image upload + action execution + clearChats (resets all chat state on logout)
   use-odoo-config.tsx           # Odoo config context (configs from backend; activeConfigId persisted in localStorage; isDemoMode flag)
   use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear)
   use-notifications.tsx         # Notification context (polling/read/dismiss/settings)

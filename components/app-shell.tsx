@@ -50,10 +50,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const chatIdFromUrl = chatIdMatch ? chatIdMatch[1] : undefined;
 
   const { user } = useAuth();
-  const chat = useChat(chatIdFromUrl);
+  const chat = useChat(chatIdFromUrl, user?.id);
 
   useEffect(() => {
-    chat.loadServerConversations(0);
+    if (!user) {
+      chat.clearChats();
+    } else {
+      chat.loadServerConversations(0);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
