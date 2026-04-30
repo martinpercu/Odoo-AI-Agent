@@ -59,7 +59,7 @@ function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function useChat(chatId?: string) {
+export function useChat(chatId?: string, userId?: string) {
   const chatsRef = useRef<Chat[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
   chatsRef.current = chats;
@@ -126,7 +126,7 @@ export function useChat(chatId?: string) {
   }, [currentChatId]);
 
   const loadServerConversations = useCallback(async (offset: number) => {
-    if (!IS_AUTH_ENABLED) return;
+    if (!IS_AUTH_ENABLED || !userId) return;
     const result = await fetchMyConversations(50, offset);
     if (!result.success || !result.conversations) return;
     const loaded: Chat[] = result.conversations.map((c) => {
@@ -163,7 +163,7 @@ export function useChat(chatId?: string) {
     }
     setServerChats((prev) => [...prev, ...loaded]);
     setHasMore((result.count ?? 0) > offset + 50);
-  }, []);
+  }, [userId]);
 
   const loadMoreConversations = useCallback(() => {
     const next = serverOffset + 50;
@@ -609,6 +609,14 @@ export function useChat(chatId?: string) {
     [activeConfigId]
   );
 
+  const clearChats = useCallback(() => {
+    setChats([]);
+    setServerChats([]);
+    setCurrentChatId(undefined);
+    setHasMore(false);
+    setServerOffset(0);
+  }, []);
+
   return {
     chats,
     chatGroups,
@@ -626,5 +634,6 @@ export function useChat(chatId?: string) {
     loadMoreConversations,
     hasMore,
     deleteChat,
+    clearChats,
   };
 }
