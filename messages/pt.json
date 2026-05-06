@@ -44,7 +44,14 @@
       "billingByClient": "Faturamento por cliente em 2024",
       "salesReport": "Gerar relatório de vendas mensal",
       "uploadInvoice": "Fazer upload de imagem de fatura",
-      "pdfReport": "Gerar um relatório PDF"
+      "pdfReport": "Gerar um relatório PDF",
+      "topProducts": "Produtos mais vendidos no T3 2025",
+      "salesByClientMonth": "Quanto vendemos por cliente em fevereiro?",
+      "purchasesBySupplier": "Compras por fornecedor em 2025",
+      "paymentsByClientNov": "Total de pagamentos por cliente em novembro",
+      "paymentsByClientJan": "Total de pagamentos por cliente em janeiro",
+      "salesBySellerYear": "Vendas por vendedor este ano",
+      "salesBySeller2024": "Vendas por vendedor em 2024"
     }
   },
   "ChatInput": {

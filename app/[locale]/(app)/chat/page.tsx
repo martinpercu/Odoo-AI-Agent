@@ -1,37 +1,57 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
-import { Bot, FileText, Users, BarChart3, Package, FileUp, FileBarChart, Receipt, AlertTriangle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Bot, AlertTriangle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useRouter } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
+import { getRandomSuggestions, type Suggestion } from "@/lib/suggestions";
 
-interface Suggestion {
-  key: string;
-  icon: React.ElementType;
-  color: string;
-  disabled?: boolean;
-}
-
-const SUGGESTIONS: Suggestion[] = [
-  { key: "inventory",       icon: Package,      color: "text-info" },
-  { key: "invoices",        icon: FileText,     color: "text-warning-solid" },
-  { key: "inventoryCheck",  icon: Package,      color: "text-info" },
-  { key: "employees",       icon: Users,        color: "text-success-solid" },
-  { key: "billingByClient", icon: Receipt,      color: "text-accent" },
-  { key: "salesReport",     icon: BarChart3,    color: "text-text-muted", disabled: true },
-  { key: "uploadInvoice",   icon: FileUp,       color: "text-text-muted", disabled: true },
-  { key: "pdfReport",       icon: FileBarChart, color: "text-text-muted", disabled: true },
-];
+const ROTATION_INTERVAL = 7000;
 
 export default function NewChatPage() {
   const router = useRouter();
   const t = useTranslations("NewChat");
   const { sendMessage, isStreaming, stopStreaming, createChat } = useChatContext();
   const { isConfigured, isDemoMode } = useOdooConfig();
+
+  const [visible, setVisible] = useState<Suggestion[]>([]);
+  const [show, setShow] = useState(true);
+  const [hovered, setHovered] = useState(false);
+
+  // Populate on client only to avoid SSR/client hydration mismatch
+  useEffect(() => {
+    setVisible(getRandomSuggestions(4));
+  }, []);
+
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const fadeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (hovered) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (fadeRef.current) clearTimeout(fadeRef.current);
+      setShow(true);
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      setShow(false);
+      fadeRef.current = setTimeout(() => {
+        setVisible(getRandomSuggestions(4));
+        setShow(true);
+      }, 800);
+    }, ROTATION_INTERVAL);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (fadeRef.current) clearTimeout(fadeRef.current);
+    };
+  }, [hovered]);
 
   async function handleSend(content: string, image?: File) {
     const id = createChat(content || "Image upload");
@@ -65,27 +85,34 @@ export default function NewChatPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15, delay: 0.1, ease: "easeOut" }}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
           >
-            {SUGGESTIONS.map(({ key, icon: Icon, color, disabled }) => {
-              const text = t(`suggestions.${key}`);
-              return (
-                <button
-                  key={key}
-                  onClick={disabled ? undefined : () => handleSuggestion(text)}
-                  disabled={disabled}
-                  aria-label={text}
-                  className={`flex items-center gap-3 rounded-md border p-4 text-left text-body transition-all ${
-                    disabled
-                      ? "cursor-not-allowed border-border/50 bg-surface/50 opacity-50"
-                      : "border-border bg-surface hover:border-accent/30 hover:bg-raised hover:shadow-sm"
-                  }`}
-                >
-                  <Icon size={20} strokeWidth={1.5} className={color} />
-                  <span className={disabled ? "text-text-muted" : ""}>{text}</span>
-                </button>
-              );
-            })}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={visible.map((s) => s.key).join(",")}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: show ? 1 : 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              >
+                {visible.map(({ key, icon: Icon, color }) => {
+                  const text = t(`suggestions.${key}`);
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => handleSuggestion(text)}
+                      aria-label={text}
+                      className="flex items-center gap-3 rounded-md border border-border bg-surface p-4 text-left text-body transition-all hover:border-accent/30 hover:bg-raised hover:shadow-sm"
+                    >
+                      <Icon size={20} strokeWidth={1.5} className={color} />
+                      <span>{text}</span>
+                    </button>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
 
           {!isConfigured && (
