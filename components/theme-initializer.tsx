@@ -1,19 +1,37 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useSession } from "@/hooks/use-session";
 
 export function ThemeInitializer() {
-  const pathname = usePathname();
+  const { meData } = useSession();
 
+  // Tema: sincronizar dark/light desde localStorage al montar
   useEffect(() => {
+    const h = document.documentElement;
     const stored = localStorage.getItem("theme");
     if (stored === "light") {
-      document.documentElement.classList.remove("dark");
+      h.classList.remove("dark");
     } else {
-      document.documentElement.classList.add("dark");
+      h.classList.add("dark");
     }
-  }, [pathname]);
+  }, []);
+
+  // Audience: aplicar builder/client según role cuando /me responde
+  useEffect(() => {
+    if (meData === null) return;
+    const h = document.documentElement;
+    const role = meData.user?.role;
+    if (role === "ADMIN" || role === "SUPERADMIN") {
+      h.classList.remove("client");
+      h.classList.add("builder");
+      localStorage.setItem("audience", "builder");
+    } else {
+      h.classList.remove("builder");
+      h.classList.add("client");
+      localStorage.setItem("audience", "client");
+    }
+  }, [meData]);
 
   return null;
 }

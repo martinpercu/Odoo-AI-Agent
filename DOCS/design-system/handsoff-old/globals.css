@@ -1,40 +1,75 @@
 /* ============================================================
-   THE ODOO AGENT — globals.css v2.1
-   Unified warm light + dark · single token set across audiences
-   Audience differentiation = density · voice · components (NOT palette)
+   THE ODOO AGENT — globals.css v2.0
+   Dual-audience design tokens: Builder + Client
+   "Una marca, dos audiencias. Mismo cerebro, dos caras."
    ============================================================ */
 
 @import "tailwindcss";
 
 /* ============================================================
-   SHARED BRAND
+   SHARED BRAND (ambas audiencias)
    ============================================================ */
 :root {
   --brand: #6366F1;          /* Indigo 500 — único acento */
   --brand-hover: #4F46E5;    /* Indigo 600 */
-  --odoo-purple: #714B67;    /* Guiño Odoo — sólo en mark */
+  --odoo-purple: #714B67;    /* Guiño Odoo — solo en mark */
 }
 
 /* ============================================================
-   LIGHT (default) — Warm Stone
+   BUILDER (implementador) — Slate Dark
+   Usar agregando .builder al <html> o un wrapper
    ============================================================ */
-:root {
+.builder {
   /* Surfaces */
-  --bg-base:        #FAFAF7;   /* warm off-white */
-  --bg-surface:     #FFFFFF;
-  --bg-raised:      #F5F4EE;   /* warm stone 100 */
-
-  /* Deep — sólo Builder activa esta capa para logs/code/terminal */
-  --bg-deep:        #1A1816;   /* warm dark, alto contraste con base light */
+  --bg-base:        #0F172A;
+  --bg-surface:     #1E293B;
+  --bg-raised:      #334155;
+  --bg-logs:        #020617;
 
   /* Borders */
-  --border-default: #E7E5DD;   /* warm stone 200 */
+  --border-default: #334155;
+  --border-subtle:  #1E293B;
+
+  /* Text */
+  --text-primary:   #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted:     #64748B;
+
+  /* Semantic */
+  --state-success:        #10B981;
+  --state-success-subtle: #064E3B;
+  --state-error:          #F43F5E;
+  --state-error-subtle:   #4C0519;
+  --state-warning:        #F59E0B;
+  --state-warning-subtle: #451A03;
+  --state-info:           #38BDF8;
+  --state-info-subtle:    #0C4A6E;
+
+  /* Accent subtle */
+  --accent-subtle: #1E1B4B;
+
+  /* Base font size */
+  --base-font-size: 14px;
+}
+
+/* ============================================================
+   CLIENT (usuario final) — Warm Stone Light
+   Usar agregando .client al <html> o un wrapper
+   ============================================================ */
+.client {
+  /* Surfaces */
+  --bg-base:        #FAFAF7;
+  --bg-surface:     #FFFFFF;
+  --bg-raised:      #F5F4EE;
+
+  /* Borders */
+  --border-default: #E7E5DD;
   --border-subtle:  #EFEDE6;
 
   /* Text */
-  --text-primary:   #1C1917;   /* stone-900, warm */
-  --text-secondary: #57534E;   /* stone-600 */
-  --text-muted:     #A8A29E;   /* stone-400 */
+  --text-primary:   #1C1917;
+  --text-secondary: #57534E;
+  --text-muted:     #A8A29E;
 
   /* Semantic */
   --state-success:        #16A34A;
@@ -48,41 +83,9 @@
 
   /* Accent subtle */
   --accent-subtle: #EEF2FF;
-}
 
-/* ============================================================
-   DARK — Warm Stone Dark (unificado para ambas audiencias)
-   ============================================================ */
-.dark {
-  /* Surfaces */
-  --bg-base:        #1A1816;   /* warm dark base */
-  --bg-surface:     #25221F;
-  --bg-raised:      #35312D;
-
-  /* Deep — Builder activa para logs/code/terminal */
-  --bg-deep:        #0A0908;   /* near-black, máxima profundidad */
-
-  /* Borders */
-  --border-default: #3A3733;
-  --border-subtle:  #2A2520;
-
-  /* Text */
-  --text-primary:   #FAFAF7;
-  --text-secondary: #B8B3AC;
-  --text-muted:     #7A7670;
-
-  /* Semantic — tonos más vivos en dark cálido */
-  --state-success:        #34D399;   /* emerald 400 */
-  --state-success-subtle: rgba(52, 211, 153, 0.12);
-  --state-error:          #FB7185;   /* rose 400 */
-  --state-error-subtle:   rgba(251, 113, 133, 0.12);
-  --state-warning:        #FBBF24;   /* amber 400 */
-  --state-warning-subtle: rgba(251, 191, 36, 0.12);
-  --state-info:           #60A5FA;   /* blue 400 */
-  --state-info-subtle:    rgba(96, 165, 250, 0.12);
-
-  /* Accent subtle */
-  --accent-subtle: rgba(99, 102, 241, 0.14);
+  /* Base font size */
+  --base-font-size: 16px;
 }
 
 /* ============================================================
@@ -96,7 +99,6 @@
   --color-bg-base: var(--bg-base);
   --color-bg-surface: var(--bg-surface);
   --color-bg-raised: var(--bg-raised);
-  --color-bg-deep: var(--bg-deep);
 
   --color-border-default: var(--border-default);
   --color-border-subtle: var(--border-subtle);
@@ -127,8 +129,7 @@ body {
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  font-size: var(--base-font-size, 16px);
-  line-height: 1.6;
+  font-size: var(--base-font-size);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -137,42 +138,12 @@ body {
 }
 
 /* ============================================================
-   AUDIENCE MODIFIERS
-   Apply .builder or .client to a parent (html, body, or wrapper)
-   to switch density/heights/font scale.
-   Palette stays the same — only density and component sizing differ.
-   ============================================================ */
-
-.builder {
-  --base-font-size: 14px;
-  --btn-h-sm: 32px;
-  --btn-h-md: 36px;
-  --btn-h-lg: 40px;
-  --btn-radius: 6px;
-  --input-h: 36px;
-  --input-radius: 6px;
-  --card-radius: 8px;
-  --layout-gap: 12px;
-}
-
-.client {
-  --base-font-size: 16px;
-  --btn-h-sm: 40px;
-  --btn-h-md: 44px;
-  --btn-h-lg: 48px;
-  --btn-radius: 10px;
-  --input-h: 44px;
-  --input-radius: 10px;
-  --card-radius: 12px;
-  --layout-gap: 16px;
-}
-
-/* ============================================================
    TYPOGRAPHY SCALE
+   Builder = denser (14px base), Client = airier (16px base)
    ============================================================ */
 @layer utilities {
 
-  /* === BUILDER scale (denser) === */
+  /* === BUILDER scale === */
   .builder .text-display    { font-size: 28px; font-weight: 700; line-height: 1.2; }
   .builder .text-heading    { font-size: 20px; font-weight: 600; line-height: 1.3; }
   .builder .text-subheading { font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -180,7 +151,7 @@ body {
   .builder .text-small      { font-size: 12px; font-weight: 400; line-height: 1.4; }
   .builder .text-micro      { font-size: 11px; font-weight: 500; line-height: 1.3; }
 
-  /* === CLIENT scale (airier) === */
+  /* === CLIENT scale === */
   .client .text-display    { font-size: 32px; font-weight: 600; line-height: 1.15; letter-spacing: -0.015em; }
   .client .text-heading    { font-size: 24px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
   .client .text-subheading { font-size: 18px; font-weight: 600; line-height: 1.4; }
@@ -188,7 +159,7 @@ body {
   .client .text-small      { font-size: 14px; font-weight: 400; line-height: 1.5; }
   .client .text-micro      { font-size: 12px; font-weight: 500; line-height: 1.4; }
 
-  /* === Roboto Mono — datos técnicos === */
+  /* === Roboto Mono — uso obligatorio para datos técnicos === */
   .font-technical {
     font-family: var(--font-roboto-mono), ui-monospace, monospace;
     font-size: 12px;
@@ -200,7 +171,7 @@ body {
     font-weight: 500;
   }
 
-  /* === Document number (Client only — para #1847, totales) === */
+  /* === Document number (Client only — para #1847, etc.) === */
   .docnum {
     font-family: var(--font-roboto-mono), ui-monospace, monospace;
     font-size: 0.9em;
@@ -212,19 +183,27 @@ body {
 }
 
 /* ============================================================
-   DEEP SURFACE — only for Builder log panels / code / terminal
-   Always uses warm dark regardless of light/dark mode.
-   Use class="deep-surface" or apply background: var(--bg-deep).
+   COMPONENT HEIGHTS / RADII per audience
    ============================================================ */
-.deep-surface {
-  background: var(--bg-deep);
-  color: #B8B3AC;
+.builder {
+  --btn-h-sm: 32px;
+  --btn-h-md: 36px;
+  --btn-h-lg: 40px;
+  --btn-radius: 6px;
+  --input-h: 36px;
+  --input-radius: 6px;
+  --card-radius: 8px;
 }
-.deep-surface .deep-ok    { color: #34D399; }
-.deep-surface .deep-info  { color: #60A5FA; }
-.deep-surface .deep-err   { color: #FB7185; }
-.deep-surface .deep-warn  { color: #FBBF24; }
-.deep-surface .deep-ts    { color: #7A7670; }
+
+.client {
+  --btn-h-sm: 40px;
+  --btn-h-md: 44px;
+  --btn-h-lg: 48px;
+  --btn-radius: 10px;
+  --input-h: 44px;
+  --input-radius: 10px;
+  --card-radius: 12px;
+}
 
 /* ============================================================
    SCROLLBAR

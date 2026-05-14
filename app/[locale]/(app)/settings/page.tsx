@@ -402,7 +402,7 @@ function UsersSection() {
       >
         {/* Free/Paid toggle error banner */}
         {freeToggleError && (
-          <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
+          <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
             <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
             <span>{freeToggleError}</span>
           </div>
@@ -590,7 +590,7 @@ function InviteFormSection() {
     <CollapsibleCard icon={<UserPlus size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.invitationsTitle")}>
       {/* Invite error banner */}
       {inviteError && (
-        <div className="mb-4 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-rose-700 dark:text-rose-300">
+        <div className="mb-4 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
           <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
           <span>{inviteError}</span>
         </div>
@@ -672,7 +672,7 @@ function InviteFormSection() {
         {/* Generated link */}
         {inviteLink && (
           <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
-            <p className="flex-1 truncate text-small font-technical text-text-muted dark:text-text-secondary">{inviteLink}</p>
+            <p className="flex-1 truncate text-small font-technical text-text-secondary">{inviteLink}</p>
             <button
               type="button"
               onClick={handleCopy}
@@ -874,7 +874,7 @@ function SentInvitationsSection() {
                 </div>
                 {isPending && isExpanded && (
                   <div className="flex items-center gap-2 border-t border-border bg-raised px-3 py-2">
-                    <p className="flex-1 truncate text-small font-technical text-text-muted dark:text-text-secondary">{invLink}</p>
+                    <p className="flex-1 truncate text-small font-technical text-text-secondary">{invLink}</p>
                     <button
                       type="button"
                       onClick={() => handleCopyInvLink(inv.token)}

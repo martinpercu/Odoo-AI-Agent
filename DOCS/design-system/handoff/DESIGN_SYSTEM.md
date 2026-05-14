@@ -1,8 +1,9 @@
-<!-- This file is the canonical source of truth for Claude Code -->
-# TheOdooAgent — Design System v2.0
+<!-- Canonical source of truth for Claude Code -->
+# TheOdooAgent — Design System v2.1
 
-**Versión:** 2.0.0 (dual-audience) · **Fecha:** 2026-05  
-**Audiencias:** Implementadores Odoo (técnicos) + Clientes finales (no técnicos)
+**Versión:** 2.1.0 (unified warm) · **Fecha:** 2026-05  
+**Audiencias:** Implementadores Odoo (técnicos) + Clientes finales (no técnicos)  
+**Cambio vs v2.0:** Paleta unificada warm stone para ambas audiencias en light + dark. La distinción ahora es **densidad, voz y componentes**, no paleta.
 
 ---
 
@@ -12,115 +13,158 @@
 
 TheOdooAgent vive en dos manos:
 
-- **Builder** — implementador Odoo. Configura, monitorea, depura. Quiere ver el endpoint, el modelo, el log.
-- **Client** — usuario final del cliente del implementador. Le pregunta al agente sobre su negocio. No sabe ni quiere saber qué es Odoo.
+- **Builder** — implementador Odoo. Configura, monitorea, depura.
+- **Client** — usuario final del cliente del implementador. Le pregunta al agente cosas de su negocio. No sabe ni quiere saber qué es Odoo.
 
-**Mismo cerebro:** Indigo `#6366F1`, Inter, Lucide outline stroke 1.5, marca con guiño violeta Odoo.  
-**Distintas caras:** densidad, mono usage, voz, tamaño de hit targets, modo default.
+**Lo que comparten:**
+- Indigo `#6366F1` como único acento
+- Inter como UI font + Roboto Mono para datos técnicos
+- Lucide outline stroke 1.5
+- MarkB con guiño violeta Odoo `#714B67`
+- **La misma paleta warm stone** (light + dark)
+
+**Lo que los diferencia:**
+- Densidad (Builder 14px base / Client 16px base)
+- Uso de Roboto Mono (Builder omnipresente / Client sólo doc#)
+- Voz del agente (técnica vs natural)
+- Tamaño de botones (36px / 44px)
+- Acceso al log panel LangGraph (Builder sí / Client nunca)
+- Marca prominente (Builder TheOdooAgent / Client white-label parcial)
 
 ---
 
 ## 1. Personas
 
-### Builder (implementador)
+### Builder
 
 ```
 mood       → Denso · técnico · control absoluto
-voz        → Reporta XML-RPC, IDs, modelos, endpoints, latencias
-UI         → Slate dark default · mono everywhere · 14px base
+voz        → Reporta XML-RPC, IDs, modelos, endpoints
+UI         → 14px base · mono omnipresente · log panel siempre
 gestos     → Tablas densas, logs en vivo, atajos de teclado
-defaults   → Dark mode SIEMPRE por default
+brand      → TheOdooAgent prominente
 ```
 
-### Client (usuario final)
+### Client
 
 ```
 mood       → Amable · claro · respirado
-voz        → Lenguaje natural · números de documento (no modelos)
-UI         → Warm stone light default · mono solo en doc#  · 16px base
-gestos     → Chat, tarjetas grandes, descargar / aprobar / pagar
-defaults   → Light mode SIEMPRE por default
+voz        → Lenguaje natural · números de documento
+UI         → 16px base · mono solo en doc# · sin logs técnicos
+gestos     → Chat, tarjetas grandes, descargar / aprobar
+brand      → Marca del implementador prominente · "Powered by" footer
 ```
 
 ---
 
-## 2. Tokens (compartidos)
+## 2. Tokens compartidos (brand)
 
 ```css
---brand: #6366F1;          /* Indigo 500 — único acento, ambas audiencias */
---brand-hover: #4F46E5;    /* Indigo 600 */
---odoo-purple: #714B67;    /* Guiño Odoo — solo en el mark y detalles */
+--brand:        #6366F1;   /* Indigo 500 — único acento */
+--brand-hover:  #4F46E5;   /* Indigo 600 */
+--odoo-purple:  #714B67;   /* Guiño Odoo — solo en mark */
 ```
 
-Indigo 500 es el accent ÚNICO. No mezclar con otros acentos. El violeta Odoo aparece **sólo** en el mark (boca del socket) y opcionalmente en detalles de marca del implementador.
+Indigo 500 es el accent ÚNICO. Sin mezcla con otros acentos.
 
 ---
 
-## 3. Tokens — Builder (Slate Dark)
+## 3. Tokens — Light Mode (default warm stone)
 
 ```css
 /* Surfaces */
---b-bg-base:        #0F172A;  /* Slate 900 — app background */
---b-bg-surface:     #1E293B;  /* Slate 800 — cards, panels */
---b-bg-raised:      #334155;  /* Slate 700 — dropdowns, hover */
---b-bg-logs:        #020617;  /* Para panel de logs LangGraph */
+--bg-base:        #FAFAF7;   /* warm off-white */
+--bg-surface:     #FFFFFF;
+--bg-raised:      #F5F4EE;
 
 /* Borders */
---b-border:         #334155;
---b-border-subtle:  #1E293B;
+--border-default: #E7E5DD;
+--border-subtle:  #EFEDE6;
 
 /* Text */
---b-text:           #F1F5F9;  /* Slate 100 */
---b-text-secondary: #94A3B8;  /* Slate 400 */
---b-text-muted:     #64748B;  /* Slate 500 */
+--text-primary:   #1C1917;
+--text-secondary: #57534E;
+--text-muted:     #A8A29E;
 
 /* Semantic */
---b-success:        #10B981;  --b-success-bg: #064E3B;
---b-error:          #F43F5E;  --b-error-bg:   #4C0519;
---b-warning:        #F59E0B;  --b-warning-bg: #451A03;
---b-info:           #38BDF8;  --b-info-bg:    #0C4A6E;
+--state-success:        #16A34A;  --state-success-subtle: #F0FDF4;
+--state-error:          #DC2626;  --state-error-subtle:   #FEF2F2;
+--state-warning:        #D97706;  --state-warning-subtle: #FFFBEB;
+--state-info:           #0EA5E9;  --state-info-subtle:    #F0F9FF;
 
-/* Accent subtle */
---b-accent-subtle:  #1E1B4B;  /* Indigo 950 — chips, badges */
+--accent-subtle: #EEF2FF;
 ```
 
 ---
 
-## 4. Tokens — Client (Warm Stone Light)
+## 4. Tokens — Dark Mode (warm stone dark)
 
 ```css
 /* Surfaces */
---c-bg-base:        #FAFAF7;  /* warm off-white */
---c-bg-surface:     #FFFFFF;
---c-bg-raised:      #F5F4EE;  /* warm stone 100 */
+--bg-base:        #1A1816;   /* warm dark */
+--bg-surface:     #25221F;
+--bg-raised:      #35312D;
 
 /* Borders */
---c-border:         #E7E5DD;  /* warm stone 200 */
---c-border-subtle:  #EFEDE6;
+--border-default: #3A3733;
+--border-subtle:  #2A2520;
 
 /* Text */
---c-text:           #1C1917;  /* stone-900, warm */
---c-text-secondary: #57534E;  /* stone-600 */
---c-text-muted:     #A8A29E;  /* stone-400 */
+--text-primary:   #FAFAF7;
+--text-secondary: #B8B3AC;
+--text-muted:     #7A7670;
 
-/* Semantic (más cálidos que Builder) */
---c-success:        #16A34A;  --c-success-bg: #F0FDF4;
---c-error:          #DC2626;  --c-error-bg:   #FEF2F2;
---c-warning:        #D97706;  --c-warning-bg: #FFFBEB;
---c-info:           #0EA5E9;  --c-info-bg:    #F0F9FF;
+/* Semantic — tonos más vivos en dark cálido */
+--state-success:        #34D399;  /* emerald 400 */
+--state-error:          #FB7185;  /* rose 400 */
+--state-warning:        #FBBF24;  /* amber 400 */
+--state-info:           #60A5FA;  /* blue 400 */
 
-/* Accent subtle */
---c-accent-subtle:  #EEF2FF;  /* Indigo 50 */
+/* subtles a 12% alpha sobre el dark base */
+--state-success-subtle: rgba(52, 211, 153, 0.12);
+--state-error-subtle:   rgba(251, 113, 133, 0.12);
+--state-warning-subtle: rgba(251, 191, 36, 0.12);
+--state-info-subtle:    rgba(96, 165, 250, 0.12);
+
+--accent-subtle: rgba(99, 102, 241, 0.14);
 ```
 
 ---
 
-## 5. Tipografía
+## 5. Tokens — Deep Surface (Builder only)
+
+```css
+--bg-deep: #0A0908;   /* near-black, capa máxima profundidad */
+```
+
+Reservado para:
+- Panel de logs LangGraph
+- Code blocks / fragmentos XML-RPC
+- Terminal output
+- API request/response viewers
+
+**Comportamiento:** siempre es `#0A0908` independiente del modo (light o dark). No cambia. Es la capa donde el implementador "lee código".
+
+**Uso:** clase `.deep-surface` o `background: var(--bg-deep)`.
+
+**Foreground recommended:**
+- texto base: `#B8B3AC` (stone 400 invertido)
+- success log: `#34D399`
+- info log: `#60A5FA`
+- error log: `#FB7185`
+- warning log: `#FBBF24`
+- timestamps: `#7A7670`
+
+**Nunca exponer `--bg-deep` ni nada de su contenido al cliente final.**
+
+---
+
+## 6. Tipografía
 
 ### Fuentes (ambas audiencias)
 
 - **Inter** — UI principal
-- **Roboto Mono** — datos técnicos (uso difiere por audiencia, ver abajo)
+- **Roboto Mono** — datos técnicos (uso difiere por audiencia)
 
 ### Escala Builder (denso, 14px base)
 
@@ -149,29 +193,27 @@ Indigo 500 es el accent ÚNICO. No mezclar con otros acentos. El violeta Odoo ap
 **Builder — omnipresente:**
 
 ```
-- IDs de registros        →  sale.order(47)
-- Modelos                 →  account.move
-- Campos                  →  partner_id
-- Logs LangGraph          →  [NODE: validate] → OK
-- Endpoints               →  /web/dataset/call_kw
-- Errores raw             →  ValidationError: Field 'name' required
-- API keys (parcial)      →  sk-od-••••••••XJ8F
-- Versiones               →  Odoo 17.0 CE
+IDs de registro      →  sale.order(47)
+Modelos              →  account.move
+Campos               →  partner_id
+Logs LangGraph       →  [NODE: validate] → OK
+Endpoints            →  /web/dataset/call_kw
+Errores raw          →  ValidationError: Field 'name' required
 ```
 
-**Client — sólo en números de documento:**
+**Client — sólo números de documento:**
 
 ```
-- Número de factura       →  #1847
-- Número de pedido        →  #SO-204
-- Total monetario         →  $12.450,00 ARS
+Número de factura    →  #1847
+Número de pedido     →  #SO-204
+Total monetario      →  $12.450,00 ARS
 ```
 
-Todo lo demás en Inter normal. NUNCA mostrar al cliente nombres de modelos, endpoints, stack traces, ni jerga Odoo.
+Todo lo demás en Inter normal. NUNCA exponer al cliente nombres de modelos, endpoints o stack traces.
 
 ---
 
-## 6. Logo
+## 7. Logo
 
 **Mark primario (MarkB · "Socket Eyes"):**
 - viewBox 24×24, stroke 1.5
@@ -181,21 +223,21 @@ Todo lo demás en Inter normal. NUNCA mostrar al cliente nombres de modelos, end
 - archivo: `logo/mark-b.svg`
 
 **Mark procesando (MarkI · "Cursor"):**
-- misma base, pero antena → cursor terminal (rectángulo indigo)
-- boca → prompt bar (línea horizontal Odoo)
+- antena → cursor terminal
+- boca → prompt bar
 - usar para: loading states, "agente pensando"
 - archivo: `logo/mark-i.svg`
 
 **Wordmark:**
 - "The" en Inter 400, opacity 0.5
-- "OdooAgent" en Inter 600 (junto, sin espacio)
+- "OdooAgent" en Inter 600 (junto)
 - letter-spacing -0.015em, gap 0.22em
 
-**Componente React:** `AgentMark.tsx` (exporta `<MarkB>`, `<MarkI>`, `<Wordmark>`, `<Lockup>`).
+**Componente React:** `AgentMark.tsx`.
 
 ---
 
-## 7. Componentes
+## 8. Componentes
 
 ### Botones
 
@@ -204,7 +246,7 @@ Todo lo demás en Inter normal. NUNCA mostrar al cliente nombres de modelos, end
 | Builder | 36px (sm 32, lg 40) | 6px | px-4 | 13px |
 | Client | 44px (sm 40, lg 48) | 10px | px-6 | 15px |
 
-### Verbos de botón
+### Verbos
 
 | Builder (ejecución) | Client (natural) |
 |---|---|
@@ -213,8 +255,6 @@ Todo lo demás en Inter normal. NUNCA mostrar al cliente nombres de modelos, end
 | Validar | Pagar ahora |
 | Configurar | Confirmar pedido |
 | Diagnosticar | Tengo otra duda |
-| Revocar | Cancelar |
-| Reintentar | Volver a intentar |
 
 ### Status pills
 
@@ -227,31 +267,31 @@ Todo lo demás en Inter normal. NUNCA mostrar al cliente nombres de modelos, end
 
 ### Cards
 
-- Builder: `bg-surface`, `border-default`, `rounded-lg` 8px, sin sombra
-- Client: `bg-surface`, `border-default`, `rounded-xl` 12px, `shadow-sm` sutil
+- Builder: `bg-surface`, radius 8, sin sombra (apariencia plana)
+- Client: `bg-surface`, radius 12, `box-shadow: 0 1px 3px rgba(28,25,23,0.04)` sutil
 
-### Inputs
+### Log panel LangGraph — Builder only
 
-- Builder: 36px alto, radius 6, mono cuando es dato técnico
-- Client: 44px alto, radius 10, Inter normal
+```css
+.langgraph-trace {
+  background: var(--bg-deep);     /* #0A0908 — siempre, independiente del modo */
+  color: #B8B3AC;
+  font-family: var(--font-roboto-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 16px;
+}
+```
 
-### Log panel LangGraph (Builder ONLY)
-
-- Background `#020617` (más oscuro que base)
-- Roboto Mono 12px
-- Timestamps en `--b-text-muted`
-- Nodo activo en `--b-info` con spinner
-- Nodo OK en `--b-success` con `✓`
-- Nodo error en `--b-error` con `!`
-- **NUNCA exponer al cliente final.**
+**Nunca exponer al cliente.**
 
 ---
 
-## 8. Voz y tono
+## 9. Voz
 
 ### Builder — Senior Technical Consultant
 
-Directo, técnico, sin disculpas. Reporta endpoint, modelo, ID, latencia, código de error. Usa Roboto Mono para datos técnicos.
+Directo, técnico, sin disculpas. Reporta endpoint, modelo, ID, latencia. Roboto Mono para datos técnicos.
 
 ```
 ✓ "account.move(1847) creada. Estado: draft → posted. Importe: $12.450,00 ARS."
@@ -261,26 +301,24 @@ Directo, técnico, sin disculpas. Reporta endpoint, modelo, ID, latencia, códig
 
 ### Client — Concierge claro
 
-Amable, directo, sin diminutivos ni emojis decorativos. Confirma resultado en lenguaje natural. Oculta toda la tecnología subyacente.
+Amable, directo, sin diminutivos ni emojis decorativos. Oculta toda la tecnología subyacente.
 
 ```
 ✓ "Listo. Tu factura #1847 está emitida por $12.450,00 ARS. La podés descargar cuando quieras."
 ✓ "No pude conectarme con tu sistema ahora. Ya avisé al equipo técnico, volvé a intentar en unos minutos."
-✓ "No encontré clientes con apellido 'García'. ¿Querés que busque distinto?"
 ✗ "Hubo un ValidationError en account.move.create()"
 ✗ "¡Hola! 😊 Con mucho gusto te ayudo..."
 ```
 
-**Reglas para client:**
+**Reglas para Client:**
 - Cero jerga técnica (no "modelo", "endpoint", "registro", "instancia")
 - Sí decir "factura", "pedido", "pago", "cliente", "documento"
 - Números de documento OK en mono: `#1847`
 - Sin frases de cierre tipo "¿algo más?"
-- Sin disculpas excesivas
 
 ---
 
-## 9. Iconografía
+## 10. Iconografía
 
 - **Librería:** Lucide Icons (MIT)
 - **Estilo:** outline, `stroke-width: 1.5`
@@ -294,13 +332,13 @@ Amable, directo, sin diminutivos ni emojis decorativos. Confirma resultado en le
 
 ---
 
-## 10. Layout
+## 11. Layout
 
 ### Builder
 
 - Sidebar: 240px (expandida), 56px (colapsada)
 - Panel chat: max-width 760px centrado
-- Panel logs LangGraph: 320px fijo a la derecha (colapsable)
+- Panel logs LangGraph: 320px fijo a la derecha (colapsable, `.deep-surface`)
 - Padding página: `px-6 py-4`
 - Gap entre cards: 16px
 
@@ -310,62 +348,95 @@ Amable, directo, sin diminutivos ni emojis decorativos. Confirma resultado en le
 - Panel chat: max-width 720px centrado
 - Sidebar de documentos: 360px
 - Padding página: `px-8 py-8` desktop, `px-5 py-5` mobile
-- Gap entre cards: 16-20px
 - Hit targets mínimo 44px (mobile-first)
 
 ---
 
-## 11. Spacing
+## 12. Spacing
 
 Base 4px, múltiplos: `4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80`.
 
 ---
 
-## 12. Motion
+## 13. Motion
 
-- Builder: 150ms ease-out (micro), 250ms (vistas). `animate-spin` en nodos, `animate-pulse` en reconectando.
-- Client: 200ms ease-out (micro), 300ms (vistas). Transiciones suaves. Sin bounce, sin parallax.
-- **Prohibido en ambos:** bounce, parallax, entradas decorativas, scroll-triggered animations.
+- Builder: 150ms ease-out (micro), 250ms (vistas). `animate-spin` en nodos.
+- Client: 200ms ease-out (micro), 300ms (vistas).
+- **Prohibido:** bounce, parallax, entradas decorativas, scroll-triggered.
 
 ---
 
-## 13. Accesibilidad
+## 14. Accesibilidad
 
 - Contrast ratio mínimo: 4.5:1 (body), 3:1 (UI large)
-- Focus visible en todos los interactivos: `outline: 2px solid var(--brand); outline-offset: 2px;`
+- Focus visible: `outline: 2px solid var(--brand); outline-offset: 2px;`
 - Aria-labels en botones icon-only
 - Estado nunca solo por color — siempre con ícono o texto
 - Roboto Mono nunca por debajo de 11px
 
 ---
 
-## 14. Branding · qué ve cada uno
+## 15. Branding — qué ve cada audiencia
 
 | Pantalla | Builder | Client |
 |---|---|---|
 | Sidebar / nav | TheOdooAgent prominente (logo + wordmark) | Marca del implementador prominente |
 | Footer | TheOdooAgent | "Powered by TheOdooAgent" pequeño |
-| Logo del agente en chat | MarkB (indigo + odoo) | MarkB (mismo) |
+| Logo del agente en chat | MarkB | MarkB (mismo) |
 | Modelo de IA visible | Sí (badge con `claude-sonnet-4.5`) | No |
 | Endpoint / instancia visible | Sí (`acme.odoo.com`) | No |
+| Log panel LangGraph | Sí (`.deep-surface`) | Nunca |
 
 ---
 
-## 15. Checklist de implementación
+## 16. Implementación — patrón sugerido
 
-Antes de hacer merge:
+```tsx
+// app/(builder)/layout.tsx
+<html className="builder dark">  {/* implementador en dark warm */}
+  <body>{children}</body>
+</html>
 
-- [ ] ¿Usa tokens CSS (`--b-*` o `--c-*`) y no valores hardcodeados?
-- [ ] ¿Está claro de qué lado es el componente (Builder o Client)?
-- [ ] Builder: ¿los datos técnicos usan Roboto Mono?
-- [ ] Client: ¿el único mono es número de documento?
-- [ ] Builder: ¿los botones usan verbos de ejecución?
-- [ ] Client: ¿los botones usan verbos naturales y son ≥ 44px?
-- [ ] ¿El contraste cumple 4.5:1?
-- [ ] Client: ¿no aparece NINGÚN nombre de modelo / endpoint / stack trace?
-- [ ] Builder: ¿el panel de logs LangGraph está disponible?
-- [ ] ¿La marca aparece donde corresponde según §14?
+// app/(client)/layout.tsx
+<html className="client">  {/* cliente en light por default */}
+  <body>{children}</body>
+</html>
+```
+
+Toggle de modo:
+
+```tsx
+// Aplicar/quitar .dark en <html> — funciona idéntico en builder y client
+document.documentElement.classList.toggle('dark');
+```
 
 ---
 
-*TheOdooAgent — Design System v2.0 · Confidencial · uso interno*
+## 17. Checklist de implementación
+
+- [ ] Layout aplica `.builder` o `.client` según ruta
+- [ ] Toggle de `.dark` funciona en ambos lados (mismo código)
+- [ ] Tokens CSS (`--bg-*`, `--text-*`, `--state-*`) — no valores hardcodeados
+- [ ] Builder: log panel usa `.deep-surface` (#0A0908)
+- [ ] Builder: datos técnicos en Roboto Mono
+- [ ] Client: el único mono es `.docnum` (número de documento)
+- [ ] Client: botones ≥ 44px
+- [ ] Client: NO aparece ningún nombre de modelo / endpoint / stack trace
+- [ ] Contraste cumple 4.5:1 en light y dark
+- [ ] Marca aparece donde corresponde según §15
+
+---
+
+## 18. Cambios desde v2.0
+
+| | v2.0 | v2.1 |
+|---|---|---|
+| Sets de tokens | 4 (Builder L/D + Client L/D) | 2 (light + dark warm) |
+| Builder dark base | `#0F172A` (Slate cold) | `#1A1816` (Warm) |
+| Coherencia visual | Builder y Client se sienten distintos | Builder y Client se sienten parientes |
+| Deep surface | Builder dark logs: `#020617` | Builder logs: `--bg-deep` `#0A0908`, agnóstico al modo |
+| Distinción audiencia | Paleta + densidad + voz | Densidad + voz + componentes (paleta compartida) |
+
+---
+
+*TheOdooAgent — Design System v2.1 · Confidencial · uso interno*
