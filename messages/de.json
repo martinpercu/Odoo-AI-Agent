@@ -44,7 +44,14 @@
       "billingByClient": "Abrechnung nach Kunde im Jahr 2024",
       "salesReport": "Monatlichen Verkaufsbericht erstellen",
       "uploadInvoice": "Rechnungsbild hochladen",
-      "pdfReport": "PDF-Bericht erstellen"
+      "pdfReport": "PDF-Bericht erstellen",
+      "topProducts": "Meistverkaufte Produkte im Q3 2025",
+      "salesByClientMonth": "Wie viel haben wir im Februar pro Kunde verkauft?",
+      "purchasesBySupplier": "Einkäufe nach Lieferant in 2025",
+      "paymentsByClientNov": "Gesamtzahlungen pro Kunde im November",
+      "paymentsByClientJan": "Gesamtzahlungen pro Kunde im Januar",
+      "salesBySellerYear": "Verkäufe nach Verkäufer dieses Jahr",
+      "salesBySeller2024": "Verkäufe nach Verkäufer in 2024"
     }
   },
   "ChatInput": {

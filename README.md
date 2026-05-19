@@ -17,7 +17,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Real-time chat with SSE streaming
 - Rich Markdown-formatted responses
 - Image upload with inline preview (vision-based AI interactions)
-- Predefined suggestion cards to quickly start querying (some marked as disabled/coming soon)
+- Rotating suggestion carousel: 4 random cards from a pool of 11 active suggestions, auto-rotates every 7s, pauses on hover
 - Conversation history grouped by date (today, yesterday, last 7 days)
 
 **Action Management:**
@@ -112,7 +112,7 @@ app/
     superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
     (app)/
       layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
-      chat/page.tsx             # New query (8 suggestion cards + input)
+      chat/page.tsx             # New query (rotating carousel: 4 random suggestions from pool of 11 + input)
       chat/[id]/page.tsx        # Conversation with SSE streaming
       onboarding/page.tsx       # Odoo connection form (inside AppShell; no full-screen wrapper)
       settings/page.tsx         # Admin panel: org, Odoo configs, users, invitations

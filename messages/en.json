@@ -44,7 +44,14 @@
       "billingByClient": "Billing by customer in 2024",
       "salesReport": "Generate monthly sales report",
       "uploadInvoice": "Upload an invoice image",
-      "pdfReport": "Generate a PDF report"
+      "pdfReport": "Generate a PDF report",
+      "topProducts": "Best-selling products in Q3 2025",
+      "salesByClientMonth": "How much did we sell per customer in February?",
+      "purchasesBySupplier": "Purchases by supplier in 2025",
+      "paymentsByClientNov": "Total payments by customer in November",
+      "paymentsByClientJan": "Total payments by customer in January",
+      "salesBySellerYear": "Sales by salesperson this year",
+      "salesBySeller2024": "Sales by salesperson in 2024"
     }
   },
   "ChatInput": {
