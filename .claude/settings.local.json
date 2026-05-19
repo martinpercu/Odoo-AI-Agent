@@ -10,7 +10,14 @@
       "Bash(git diff:*)",
       "Bash(git stash:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('NewChat', {}\\), indent=2, ensure_ascii=False\\)\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash(mv /tmp/es.json /Users/macbook/apps/agents/odoo/odoo-agent-front/messages/es.json)",
+      "Bash(mv /tmp/en.json /Users/macbook/apps/agents/odoo/odoo-agent-front/messages/en.json)",
+      "Bash(mv /tmp/fr.json /Users/macbook/apps/agents/odoo/odoo-agent-front/messages/fr.json)",
+      "Bash(mv /tmp/de.json /Users/macbook/apps/agents/odoo/odoo-agent-front/messages/de.json)",
+      "Bash(mv /tmp/pt.json /Users/macbook/apps/agents/odoo/odoo-agent-front/messages/pt.json)"
     ]
   }
 }
