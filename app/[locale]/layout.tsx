@@ -57,17 +57,17 @@ export default async function LocaleLayout({ children, params }: Props) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}})()`,
+            __html: `(function(){var h=document.documentElement;var t=localStorage.getItem('theme');if(t==='light'){h.classList.remove('dark')}else{h.classList.add('dark')};var a=localStorage.getItem('audience');if(a==='builder'){h.classList.remove('client');h.classList.add('builder')}else{h.classList.remove('builder');h.classList.add('client')}})()`,
           }}
         />
       </head>
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased`}
       >
-        <ThemeInitializer />
         <NextIntlClientProvider>
           <AuthProvider>
             <SessionProvider>
+              <ThemeInitializer />
               <OdooConfigProvider>
                 <ToastProvider>
                   <LimitReachedModalProvider>
