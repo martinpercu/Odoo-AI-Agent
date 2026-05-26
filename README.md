@@ -458,6 +458,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `POST` | `/admin/orgs` | Create organization |
 | `PATCH` | `/admin/orgs/{id}` | Update organization (name, slug, type) |
 | `PATCH` | `/admin/orgs/{id}/type` | Change org type (`PARTNER` ↔ `SOLITARY`) — superadmin only |
+| `POST` | `/admin/superadmin/users/{id}/promote` | Create a new org for a user with no org (legacy accounts without auto-provisioning) — superadmin only |
 | `GET` | `/admin/orgs/{id}/configs` | List Odoo connections |
 | `POST` | `/admin/orgs/{id}/configs` | Create Odoo connection |
 | `PATCH` | `/admin/orgs/{id}/configs/{id}` | Update Odoo connection |
