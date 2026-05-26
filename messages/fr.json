@@ -579,7 +579,11 @@
       "suspendSuccess": "Utilisateur suspendu.",
       "activateSuccess": "Utilisateur activé.",
       "updateSuccess": "Utilisateur mis à jour.",
-      "actionError": "Une erreur s'est produite. Veuillez réessayer."
+      "actionError": "Une erreur s'est produite. Veuillez réessayer.",
+      "btnPromote": "Assigner org",
+      "promoteTooltip": "Créer une nouvelle org pour cet utilisateur (compte legacy sans provisionnement auto).",
+      "promoteSuccess": "Org créée pour {email}.",
+      "promoteError": "Impossible d'assigner l'org."
     },
     "activity": {
       "title": "Activité par organisation",

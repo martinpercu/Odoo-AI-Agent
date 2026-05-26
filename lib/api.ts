@@ -1508,6 +1508,27 @@ export async function superadminUpdateUser(
   }
 }
 
+export interface PromoteUserResult {
+  success: boolean;
+  data?: { org_id: string; role: UserRole };
+  error?: string;
+}
+
+export async function superadminPromoteUser(userId: string): Promise<PromoteUserResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/users/${userId}/promote`,
+      { method: "POST" }
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: extractError(data.detail, "Failed to promote user") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export async function superadminUpdateOrgType(
   orgId: string,
   type: OrgType
