@@ -579,7 +579,11 @@
       "suspendSuccess": "Benutzer gesperrt.",
       "activateSuccess": "Benutzer aktiviert.",
       "updateSuccess": "Benutzer aktualisiert.",
-      "actionError": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+      "actionError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "btnPromote": "Org zuweisen",
+      "promoteTooltip": "Neue Org für diesen Benutzer erstellen (Legacy-Konto ohne Auto-Provisioning).",
+      "promoteSuccess": "Org für {email} erstellt.",
+      "promoteError": "Org konnte nicht zugewiesen werden."
     },
     "activity": {
       "title": "Aktivität nach Organisation",

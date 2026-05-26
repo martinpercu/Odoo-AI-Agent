@@ -32,6 +32,7 @@ import {
   EyeOff,
   Filter,
   MessageSquare,
+  UserPlus,
 } from "lucide-react";
 import {
   superadminListOrgs,
@@ -44,6 +45,7 @@ import {
   superadminSuspendUser,
   superadminActivateUser,
   superadminUpdateUser,
+  superadminPromoteUser,
   fetchAdminFeedback,
   fetchFeedbackStats,
   fetchFeedbackReport,
@@ -765,6 +767,7 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
     action: "suspend" | "activate";
   } | null>(null);
   const [roleDropdown, setRoleDropdown] = useState<string | null>(null);
+  const [promotingId, setPromotingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -820,6 +823,19 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
       setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role } : u)));
     } else {
       setToast({ msg: res.error ?? t("users.actionError"), type: "error" });
+    }
+  }
+
+  async function handlePromote(user: SuperAdminUser) {
+    if (promotingId) return;
+    setPromotingId(user.id);
+    const res = await superadminPromoteUser(user.id);
+    setPromotingId(null);
+    if (res.success) {
+      setToast({ msg: t("users.promoteSuccess", { email: user.email }), type: "success" });
+      await load();
+    } else {
+      setToast({ msg: res.error ?? t("users.promoteError"), type: "error" });
     }
   }
 
@@ -1001,16 +1017,34 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                   {new Date(user.created_at).toLocaleDateString()}
                 </td>
                 <td className="px-3 py-2">
-                  <button
-                    onClick={() => handleToggle(user)}
-                    className={`rounded-md px-2 py-1 text-small font-medium ${
-                      user.is_active
-                        ? "text-error hover:bg-error-subtle"
-                        : "text-success-solid hover:bg-success-subtle"
-                    }`}
-                  >
-                    {user.is_active ? t("users.btnSuspend") : t("users.btnActivate")}
-                  </button>
+                  <div className="flex items-center gap-1">
+                    {!user.org && (
+                      <button
+                        onClick={() => handlePromote(user)}
+                        disabled={promotingId === user.id}
+                        className="flex items-center gap-1 rounded-md px-2 py-1 text-small font-medium text-accent hover:bg-accent-subtle disabled:opacity-50"
+                        title={t("users.promoteTooltip")}
+                        aria-label={t("users.btnPromote")}
+                      >
+                        {promotingId === user.id ? (
+                          <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+                        ) : (
+                          <UserPlus size={14} strokeWidth={1.5} />
+                        )}
+                        {t("users.btnPromote")}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleToggle(user)}
+                      className={`rounded-md px-2 py-1 text-small font-medium ${
+                        user.is_active
+                          ? "text-error hover:bg-error-subtle"
+                          : "text-success-solid hover:bg-success-subtle"
+                      }`}
+                    >
+                      {user.is_active ? t("users.btnSuspend") : t("users.btnActivate")}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

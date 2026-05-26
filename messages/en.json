@@ -579,7 +579,11 @@
       "suspendSuccess": "User suspended.",
       "activateSuccess": "User activated.",
       "updateSuccess": "User updated.",
-      "actionError": "Something went wrong. Please try again."
+      "actionError": "Something went wrong. Please try again.",
+      "btnPromote": "Assign org",
+      "promoteTooltip": "Create a new org for this user (legacy account without auto-provisioning).",
+      "promoteSuccess": "Org created for {email}.",
+      "promoteError": "Could not assign org."
     },
     "activity": {
       "title": "Activity by organization",
