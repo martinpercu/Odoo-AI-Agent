@@ -579,7 +579,11 @@
       "suspendSuccess": "Usuario suspendido.",
       "activateSuccess": "Usuario activado.",
       "updateSuccess": "Usuario actualizado.",
-      "actionError": "Algo salió mal. Intentá de nuevo."
+      "actionError": "Algo salió mal. Intentá de nuevo.",
+      "btnPromote": "Asignar org",
+      "promoteTooltip": "Crear una org nueva para este usuario (legacy sin auto-provision).",
+      "promoteSuccess": "Org creada para {email}.",
+      "promoteError": "No se pudo asignar la org."
     },
     "activity": {
       "title": "Actividad por organización",
