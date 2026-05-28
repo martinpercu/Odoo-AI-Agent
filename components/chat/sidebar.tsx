@@ -246,7 +246,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
               {!collapsed && <span>{t("login")}</span>}
             </Link>
           )}
-          {meData?.user?.role !== "CLIENT_USER" && (
+          {/* {meData?.user?.role !== "CLIENT_USER" && (
             <Link
               href="/pricing"
               onClick={() => setMobileOpen(false)}
@@ -259,7 +259,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
               <CreditCard size={20} strokeWidth={1.5} />
               {!collapsed && <span>{t("plans")}</span>}
             </Link>
-          )}
+          )} */}
           {user && (
             <Link
               href={settingsHref}
