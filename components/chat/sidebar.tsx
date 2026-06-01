@@ -11,7 +11,6 @@ import {
   ChevronLeft,
   Menu,
   MessageSquare,
-  Bot,
   Sun,
   Moon,
   Bell,
@@ -22,6 +21,7 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
+import { MarkB, Wordmark } from "@/components/AgentMark";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
@@ -82,7 +82,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-sidebar-border p-4">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-white">
-          <Bot size={20} strokeWidth={1.5} />
+          <MarkB size={22} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
         </div>
         {!collapsed && (
           <motion.div
@@ -90,9 +90,9 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="overflow-hidden"
+            className="overflow-hidden whitespace-nowrap"
           >
-            <h1 className="whitespace-nowrap text-subheading">{t("appName")}</h1>
+            <Wordmark scale={0.9} />
           </motion.div>
         )}
         <button

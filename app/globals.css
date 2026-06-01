@@ -49,6 +49,18 @@
 
   /* Accent subtle */
   --accent-subtle: #EEF2FF;
+
+  /* Defaults — antes de que /me responda usamos densidad "client"
+     (público anónimo: landing, login, register, invite, demo mode) */
+  --base-font-size: 16px;
+  --btn-h-sm: 40px;
+  --btn-h-md: 44px;
+  --btn-h-lg: 48px;
+  --btn-radius: 10px;
+  --input-h: 44px;
+  --input-radius: 10px;
+  --card-radius: 12px;
+  --layout-gap: 16px;
 }
 
 /* ============================================================
@@ -119,6 +131,19 @@
 
   --font-sans: var(--font-inter);
   --font-mono: var(--font-roboto-mono);
+
+  /* ===== Audience density tokens (swap via .builder/.client) =====
+     Tailwind v4: --spacing-* unlocks h-*, w-*, p-*, m-*, gap-* utilities.
+     --radius-* unlocks rounded-*. */
+  --spacing-btn-sm: var(--btn-h-sm);
+  --spacing-btn-md: var(--btn-h-md);
+  --spacing-btn-lg: var(--btn-h-lg);
+  --spacing-input:  var(--input-h);
+  --spacing-layout-gap: var(--layout-gap);
+
+  --radius-btn:    var(--btn-radius);
+  --radius-input:  var(--input-radius);
+  --radius-card:   var(--card-radius);
 }
 
 /* ============================================================
