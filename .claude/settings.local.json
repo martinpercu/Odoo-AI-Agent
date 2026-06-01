@@ -21,7 +21,12 @@
       "Bash(find /Users/macbook/apps/agents/odoo/odoo-agent-front/app/[locale] -type f -name \"layout.tsx\")",
       "Bash(grep -v \":0$\")",
       "Bash(xargs dirname)",
-      "Bash(find /Users/macbook/apps/agents/odoo/odoo-agent-front/app/[locale]/superadmin -type f)"
+      "Bash(find /Users/macbook/apps/agents/odoo/odoo-agent-front/app/[locale]/superadmin -type f)",
+      "Bash(npx tailwindcss *)",
+      "Bash(sleep 8; tail -20 /tmp/dev.log)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s http://localhost:3000/es/chat?bust=__TRACKED_VAR__)",
+      "Bash(grep -vE \"^$\")"
     ]
   }
 }
