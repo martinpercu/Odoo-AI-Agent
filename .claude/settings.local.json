@@ -26,7 +26,13 @@
       "Bash(sleep 8; tail -20 /tmp/dev.log)",
       "Read(//private/tmp/**)",
       "Bash(curl -s http://localhost:3000/es/chat?bust=__TRACKED_VAR__)",
-      "Bash(grep -vE \"^$\")"
+      "Bash(grep -vE \"^$\")",
+      "Bash(curl -s http://localhost:3000/es/pricing?bust=__TRACKED_VAR__ -o /dev/null -w 'GET pricing: %{http_code}\\\\n')",
+      "Bash(curl -s http://localhost:3000/es/login?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /es/login: %{http_code}\\\\n')",
+      "Bash(curl -s http://localhost:3000/es/register?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /es/register: %{http_code}\\\\n')",
+      "Bash(curl -s http://localhost:3000/es/chat?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /es/chat: %{http_code}\\\\n')",
+      "Bash(grep -n \"^}$\" messages/es.json)",
+      "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''messages/__TRACKED_VAR__.json'\\\\''\\)\\)')"
     ]
   }
 }

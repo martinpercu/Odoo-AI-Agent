@@ -108,7 +108,7 @@ function InviteContent() {
         <p className="mb-6 text-body text-text-secondary">{t("alreadyUsedDesc")}</p>
         <button
           onClick={() => router.push(`/${locale}/chat`)}
-          className="h-9 rounded-md bg-accent px-4 text-body font-medium text-white hover:bg-accent-hover transition-colors"
+          className="h-btn-md rounded-btn bg-accent px-4 text-body font-medium text-white hover:bg-accent-hover transition-colors"
         >
           {t("goHome")}
         </button>
@@ -182,7 +182,7 @@ function InviteContent() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="mt-1 flex h-9 items-center justify-center gap-2 rounded-md bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
+          className="mt-1 flex h-btn-md items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
         >
           {status === "submitting" && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
           {status === "submitting" ? t("registering") : t("registerCta")}

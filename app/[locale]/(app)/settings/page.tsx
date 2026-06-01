@@ -203,7 +203,7 @@ function OrgSection() {
             <button
               type="submit"
               disabled={saving}
-              className="flex h-9 items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
+              className="flex h-btn-md items-center gap-1.5 rounded-btn bg-accent px-3 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
             >
               {saving && <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />}
               {t("admin.save")}
@@ -610,7 +610,7 @@ function InviteFormSection() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex h-9 items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
+            className="flex h-btn-md items-center gap-1.5 rounded-btn bg-accent px-3 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
           >
             {submitting ? <Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> : t("admin.invite")}
           </button>

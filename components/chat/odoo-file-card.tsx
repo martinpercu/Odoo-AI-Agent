@@ -27,7 +27,7 @@ export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className="mt-3 rounded-lg border border-border bg-surface p-4"
+      className="mt-3 rounded-card border border-border bg-surface p-4"
     >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-error-subtle text-error">
@@ -45,7 +45,7 @@ export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
           href={fullUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-9 items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+          className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
         >
           <Download size={16} strokeWidth={1.5} />
           <span>{t("fileCard.downloadPdf")}</span>

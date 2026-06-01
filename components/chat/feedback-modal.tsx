@@ -141,14 +141,14 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
               <div className="flex items-center justify-end gap-3 border-t border-border px-5 py-4">
                 <button
                   onClick={onClose}
-                  className="rounded-md px-4 py-2 text-small text-text-secondary hover:bg-raised hover:text-foreground transition-colors"
+                  className="h-btn-md rounded-btn px-4 text-small text-text-secondary hover:bg-raised hover:text-foreground transition-colors"
                 >
                   {t("cancel")}
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-small font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-60"
+                  className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-small font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-60"
                 >
                   {submitting && <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />}
                   {t("submit")}
