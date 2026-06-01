@@ -8,6 +8,7 @@ import type { ActionProposalMetadata, ActionContext, EntitySearchResult } from "
 import { EntityAutocomplete } from "./entity-autocomplete";
 import { AuditHistoryPopover } from "./audit-history-popover";
 import { useChatContext } from "@/components/app-shell";
+import { useSession } from "@/hooks/use-session";
 
 interface ActionProposalButtonProps {
   metadata: ActionProposalMetadata;
@@ -109,6 +110,8 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { currentChatId } = useChatContext();
   const t = useTranslations("ChatMessages");
+  const { meData } = useSession();
+  const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
 
   // Immutable reference to original values from backend/OCR — never mutated
   const initialValsRef = useRef<Record<string, unknown>>({ ...metadata.action.vals });
@@ -207,9 +210,13 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
     >
       {/* Header */}
       <div className="mb-3 flex items-center justify-between text-small text-text-secondary">
-        <span className="font-medium uppercase tracking-wide font-technical">
-          {metadata.action.action} &middot; {metadata.action.model}
-        </span>
+        {isBuilder ? (
+          <span className="font-medium uppercase tracking-wide font-technical">
+            {metadata.action.action} &middot; {metadata.action.model}
+          </span>
+        ) : (
+          <span className="font-medium">{t("actionProposal.confirm")}</span>
+        )}
         <AnimatePresence>
           {dirtyCount > 0 && (
             <motion.span
@@ -371,7 +378,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
         <button
           onClick={handleConfirm}
           disabled={loading}
-          className="inline-flex h-9 items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
+          className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
         >
           {loading && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
           <span>{loading ? metadata.labels.confirm_btn : metadata.labels.action_btn}</span>
@@ -379,7 +386,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
         <button
           onClick={handleReject}
           disabled={loading}
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
+          className="inline-flex h-btn-md items-center gap-2 rounded-btn border border-border bg-surface px-4 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
         >
           {metadata.labels.cancel_btn}
         </button>

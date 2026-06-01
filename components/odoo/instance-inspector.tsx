@@ -53,7 +53,7 @@ export function InstanceInspector() {
       <button
         onClick={handleInspect}
         disabled={status === "loading" || !config}
-        className="flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
+        className="flex h-btn-md items-center gap-2 rounded-btn border border-border bg-surface px-4 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
       >
         {status === "loading" ? (
           <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />

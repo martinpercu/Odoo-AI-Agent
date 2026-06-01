@@ -160,7 +160,7 @@ export function ConnectionForm() {
       <button
         type="submit"
         disabled={status === "loading" || status === "success"}
-        className="flex h-9 items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40"
+        className="flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40"
       >
         {status === "loading" ? (
           <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />

@@ -79,7 +79,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
   function FreeCtaButton() {
     if (currentTier === "FREE") {
       return (
-        <button disabled className="h-9 w-full rounded-md border border-border bg-raised px-4 text-body text-text-secondary opacity-60 cursor-not-allowed">
+        <button disabled className="h-btn-md w-full rounded-btn border border-border bg-raised px-4 text-body text-text-secondary opacity-60 cursor-not-allowed">
           {t("currentPlan")}
         </button>
       );
@@ -87,7 +87,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
     return (
       <button
         onClick={() => window.location.href = "/register"}
-        className="h-9 w-full rounded-md border border-border bg-surface px-4 text-body font-semibold text-foreground transition-colors hover:bg-raised"
+        className="h-btn-md w-full rounded-btn border border-border bg-surface px-4 text-body font-semibold text-foreground transition-colors hover:bg-raised"
       >
         {t("plans.free.cta")}
       </button>
@@ -100,7 +100,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
         <button
           onClick={handlePortal}
           disabled={loadingTier === "portal"}
-          className="h-9 w-full rounded-md bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-60"
+          className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-60"
         >
           {loadingTier === "portal" ? t("loading") : t("manageSubscription")}
         </button>
@@ -111,7 +111,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
         <button
           onClick={() => handleCheckout("STARTER")}
           disabled={loadingTier === "STARTER"}
-          className="h-9 w-full rounded-md bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-60"
+          className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-60"
         >
           {loadingTier === "STARTER" ? t("loading") : t("plans.starter.cta")}
         </button>
@@ -122,7 +122,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
       <button
         onClick={handlePortal}
         disabled={loadingTier === "portal"}
-        className="h-9 w-full rounded-md bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-60"
+        className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-60"
       >
         {loadingTier === "portal" ? t("loading") : t("manageSubscription")}
       </button>
@@ -134,7 +134,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
       return (
         <button
           onClick={() => setImplementorOpen(true)}
-          className="h-9 w-full rounded-md border border-border bg-surface px-4 text-body font-semibold text-foreground transition-colors hover:bg-raised"
+          className="h-btn-md w-full rounded-btn border border-border bg-surface px-4 text-body font-semibold text-foreground transition-colors hover:bg-raised"
         >
           {t("viewRates")}
         </button>
@@ -143,7 +143,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
     return (
       <button
         onClick={() => setImplementorOpen(true)}
-        className="h-9 w-full rounded-md border border-border bg-surface px-4 text-body font-semibold text-foreground transition-colors hover:bg-raised"
+        className="h-btn-md w-full rounded-btn border border-border bg-surface px-4 text-body font-semibold text-foreground transition-colors hover:bg-raised"
       >
         {t("viewRates")}
       </button>

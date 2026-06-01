@@ -48,7 +48,7 @@ export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) 
       transition={{ duration: 0.15, ease: "easeOut" }}
       onClick={handleClick}
       disabled={loading || completed}
-      className={`mt-2 inline-flex h-9 items-center gap-2 rounded-md px-4 py-2 text-body font-medium text-white shadow-sm transition-colors disabled:opacity-50 ${
+      className={`mt-2 inline-flex h-btn-md items-center gap-2 rounded-btn px-4 text-body font-medium text-white shadow-sm transition-colors disabled:opacity-50 ${
         completed ? "bg-success-solid" : "bg-accent hover:bg-accent-hover"
       }`}
     >

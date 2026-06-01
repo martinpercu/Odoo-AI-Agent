@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type Chan
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Square, Paperclip, X } from "lucide-react";
+import { useIconSize } from "@/hooks/use-icon-size";
 
 interface ChatInputProps {
   onSend: (message: string, image?: File) => void;
@@ -19,6 +20,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const iconBtn = useIconSize("button");
 
   // Cleanup preview URL on unmount or change
   useEffect(() => {
@@ -115,11 +117,11 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isStreaming || disabled}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
+              className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
               title={t("attachImage")}
               aria-label={t("attachImage")}
             >
-              <Paperclip size={20} strokeWidth={1.5} />
+              <Paperclip size={iconBtn} strokeWidth={1.5} />
             </button>
 
             <textarea
@@ -133,7 +135,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
               placeholder={t("placeholder")}
               rows={1}
               disabled={disabled}
-              className="max-h-50 min-h-11 flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"
+              className="max-h-50 min-h-input flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"
             />
 
             {isStreaming ? (
@@ -143,18 +145,18 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 onClick={onStop}
                 aria-label={t("stop")}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-error text-white transition-colors hover:opacity-90"
+                className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn bg-error text-white transition-colors hover:opacity-90"
               >
-                <Square size={16} strokeWidth={1.5} fill="currentColor" />
+                <Square size={iconBtn - 4} strokeWidth={1.5} fill="currentColor" />
               </motion.button>
             ) : (
               <button
                 onClick={handleSubmit}
                 disabled={!hasContent || disabled}
                 aria-label={t("send")}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:hover:bg-accent"
+                className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn bg-accent text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:hover:bg-accent"
               >
-                <Send size={16} strokeWidth={1.5} />
+                <Send size={iconBtn - 4} strokeWidth={1.5} />
               </button>
             )}
           </div>
