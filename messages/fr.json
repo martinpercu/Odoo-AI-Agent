@@ -685,6 +685,51 @@
   "Client": {
     "ChatMessages": {
       "typingIndicator": "Je cherche vos informations"
+    },
+    "ActionSuccess": {
+      "create": {
+        "invoice": "Votre facture {docnum} a été émise.",
+        "order": "Votre commande {docnum} est confirmée.",
+        "purchase": "Le bon de commande {docnum} a été créé.",
+        "delivery": "Votre livraison {docnum} est en préparation.",
+        "payment": "Votre paiement {docnum} a été enregistré.",
+        "contact": "Ajouté à vos contacts.",
+        "product": "Votre produit a été créé.",
+        "generic": "Terminé. Opération complétée."
+      },
+      "update": {
+        "invoice": "Détails de la facture {docnum} mis à jour.",
+        "order": "Commande {docnum} mise à jour.",
+        "generic": "Terminé. Modifications enregistrées."
+      },
+      "method_call": {
+        "generic": "Terminé. Opération complétée."
+      },
+      "report": {
+        "invoice": "Votre facture {docnum} est prête à télécharger.",
+        "order": "Votre commande {docnum} est prête à télécharger.",
+        "generic": "Votre document est prêt à télécharger."
+      }
+    },
+    "ActionProposal": {
+      "verb": {
+        "create": {
+          "invoice": "Confirmer la facture",
+          "order": "Confirmer la commande",
+          "purchase": "Confirmer le bon de commande",
+          "payment": "Confirmer le paiement",
+          "generic": "Confirmer"
+        },
+        "update": {
+          "generic": "Enregistrer les modifications"
+        },
+        "method_call": {
+          "generic": "Confirmer"
+        },
+        "report": {
+          "generic": "Télécharger"
+        }
+      }
     }
   }
 }

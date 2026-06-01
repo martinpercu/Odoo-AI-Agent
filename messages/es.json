@@ -685,6 +685,51 @@
   "Client": {
     "ChatMessages": {
       "typingIndicator": "Buscando tu información"
+    },
+    "ActionSuccess": {
+      "create": {
+        "invoice": "Tu factura {docnum} quedó emitida.",
+        "order": "Confirmamos tu pedido {docnum}.",
+        "purchase": "Tu orden de compra {docnum} fue creada.",
+        "delivery": "Tu envío {docnum} está en preparación.",
+        "payment": "Tu pago {docnum} quedó registrado.",
+        "contact": "Agregamos a tus contactos.",
+        "product": "Tu producto fue creado.",
+        "generic": "Listo. Operación completada."
+      },
+      "update": {
+        "invoice": "Actualizamos los datos de la factura {docnum}.",
+        "order": "Actualizamos el pedido {docnum}.",
+        "generic": "Listo. Cambios guardados."
+      },
+      "method_call": {
+        "generic": "Listo. Operación completada."
+      },
+      "report": {
+        "invoice": "Tu factura {docnum} está lista para descargar.",
+        "order": "Tu pedido {docnum} está listo para descargar.",
+        "generic": "Tu documento está listo para descargar."
+      }
+    },
+    "ActionProposal": {
+      "verb": {
+        "create": {
+          "invoice": "Confirmar factura",
+          "order": "Confirmar pedido",
+          "purchase": "Confirmar orden de compra",
+          "payment": "Confirmar pago",
+          "generic": "Confirmar"
+        },
+        "update": {
+          "generic": "Guardar cambios"
+        },
+        "method_call": {
+          "generic": "Confirmar"
+        },
+        "report": {
+          "generic": "Descargar"
+        }
+      }
     }
   }
 }

@@ -685,6 +685,51 @@
   "Client": {
     "ChatMessages": {
       "typingIndicator": "Suche deine Daten"
+    },
+    "ActionSuccess": {
+      "create": {
+        "invoice": "Deine Rechnung {docnum} wurde ausgestellt.",
+        "order": "Deine Bestellung {docnum} ist bestätigt.",
+        "purchase": "Bestellung {docnum} wurde erstellt.",
+        "delivery": "Deine Sendung {docnum} wird vorbereitet.",
+        "payment": "Deine Zahlung {docnum} wurde verbucht.",
+        "contact": "Zu deinen Kontakten hinzugefügt.",
+        "product": "Dein Produkt wurde erstellt.",
+        "generic": "Fertig. Vorgang abgeschlossen."
+      },
+      "update": {
+        "invoice": "Daten der Rechnung {docnum} aktualisiert.",
+        "order": "Bestellung {docnum} aktualisiert.",
+        "generic": "Fertig. Änderungen gespeichert."
+      },
+      "method_call": {
+        "generic": "Fertig. Vorgang abgeschlossen."
+      },
+      "report": {
+        "invoice": "Deine Rechnung {docnum} steht zum Download bereit.",
+        "order": "Deine Bestellung {docnum} steht zum Download bereit.",
+        "generic": "Dein Dokument steht zum Download bereit."
+      }
+    },
+    "ActionProposal": {
+      "verb": {
+        "create": {
+          "invoice": "Rechnung bestätigen",
+          "order": "Bestellung bestätigen",
+          "purchase": "Bestellung bestätigen",
+          "payment": "Zahlung bestätigen",
+          "generic": "Bestätigen"
+        },
+        "update": {
+          "generic": "Änderungen speichern"
+        },
+        "method_call": {
+          "generic": "Bestätigen"
+        },
+        "report": {
+          "generic": "Herunterladen"
+        }
+      }
     }
   }
 }
