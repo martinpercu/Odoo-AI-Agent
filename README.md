@@ -42,6 +42,8 @@ A modern, responsive interface that allows users to query and manage data from t
 - Refresh pinned charts to get updated data from Odoo
 - Flying pin animation with spring physics
 - Max 20 pins per chat with optimistic UI updates
+- **Global load:** all pins are fetched once on login (`GET /me/pins`) and merged across conversations; per-chat loads are skipped when already loaded
+- **Defensive validation:** malformed pins (e.g., chart pin missing `chart` payload) are filtered out before rendering to prevent runtime crashes
 
 **Notification System:**
 - Proactive alerts from Odoo (sales, stock, invoices) with severity levels
@@ -177,7 +179,7 @@ hooks/
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
   use-chat.ts                   # Chat state + SSE + image upload + action execution + clearChats (resets all chat state on logout)
   use-odoo-config.tsx           # Odoo config context (configs from backend; activeConfigId persisted in localStorage; isDemoMode flag)
-  use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear)
+  use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear/loadAllPins); defensive payload validation
   use-notifications.tsx         # Notification context (polling/read/dismiss/settings)
   use-limit-reached-modal.tsx   # 402 limit modal context (listens to auth:limit_reached event)
   use-audience-translations.ts  # `useAudienceT(ns)` → translator scoped to `Builder.<ns>` or `Client.<ns>` based on role
@@ -278,6 +280,7 @@ Compact card displayed in the pinned insights sidebar:
 - **File cards:** Red PDF icon, filename, download link, unpin button
 - **Excel cards:** Green Excel icon, filename, download link, unpin button
 - Refresh button (charts only) with spinning animation during API call
+- Refresh button is **hidden when the user is in demo mode or has no active Odoo config** — the backend can't re-query a non-existent data source, so the action is suppressed instead of failing with 410
 - Buttons revealed on hover with smooth opacity transition
 
 ### NotificationCard
@@ -481,6 +484,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `GET` | `/chat/{id}/history` | Load full message history for a conversation (query param: `config_id`) |
 | `GET` | `/chat/{id}/audit` | Action execution history (audit trail) |
 | `POST` | `/chat/{id}/search` | Odoo entity name_search (body: `{ model, query, config_id }`) |
+| `GET` | `/me/pins` | Fetch all pinned insights for the current user across every conversation |
 | `GET` | `/chat/{id}/pins` | Fetch all pinned insights for a chat |
 | `POST` | `/chat/{id}/pin` | Create a new pin (chart, file, or excel) |
 | `DELETE` | `/chat/{id}/pin/{pinId}` | Delete a specific pin |
