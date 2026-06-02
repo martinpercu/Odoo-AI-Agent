@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Bot, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { MarkB } from "@/components/AgentMark";
 import dynamic from "next/dynamic";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
@@ -39,7 +40,7 @@ export default function NewChatPage() {
             className="mb-10 text-center"
           >
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-md bg-accent-subtle">
-              <Bot size={32} strokeWidth={1.5} className="text-accent" />
+              <MarkB size={36} fg="currentColor" className="text-accent" />
             </div>
             <h2 className="mb-3 text-display">{t("heading")}</h2>
             <p className="text-body text-text-secondary">{t("subheading")}</p>
