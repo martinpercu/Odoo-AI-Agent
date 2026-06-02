@@ -39,10 +39,13 @@ A modern, responsive interface that allows users to query and manage data from t
 
 **Pinned Insights Dashboard:**
 - Pin charts, files, and exports to a collapsible right sidebar
-- Refresh pinned charts to get updated data from Odoo
+- Sidebar splits pins into **Live** (variable/refreshable charts, 2-col grid) and **Saved** (static/point-in-time charts + files + Excel, grouped below)
+- Refresh button shown only for **live** (`volatility: "variable"`) charts — static charts are point-in-time, refresh is suppressed
+- Static charts use Bookmark icons (save/saved) instead of Pin icons to convey point-in-time semantics
 - Flying pin animation with spring physics
-- Max 20 pins per chat with optimistic UI updates
+- Max 20 pins per user with optimistic UI updates
 - **Global load:** all pins are fetched once on login (`GET /me/pins`) and merged across conversations; per-chat loads are skipped when already loaded
+- **User-scoped clear:** `clearAll` calls `DELETE /me/pins` (removes all pins across every conversation for the user)
 - **Defensive validation:** malformed pins (e.g., chart pin missing `chart` payload) are filtered out before rendering to prevent runtime crashes
 
 **Notification System:**
@@ -276,11 +279,10 @@ Standalone Excel download card for explicit export requests:
 
 ### PinnedInsightMiniCard
 Compact card displayed in the pinned insights sidebar:
-- **Chart cards:** Icon by chart type (bar/pie/line), title, formatted total, refresh + unpin buttons
+- **Chart cards:** Icon by chart type (bar/pie/line) + live dot (variable) or "Histórico" badge (static), title, formatted total (`K`/`M` abbreviation for large currency values), refresh + unpin buttons in top-right hover area
 - **File cards:** Red PDF icon, filename, download link, unpin button
 - **Excel cards:** Green Excel icon, filename, download link, unpin button
-- Refresh button (charts only) with spinning animation during API call
-- Refresh button is **hidden when the user is in demo mode or has no active Odoo config** — the backend can't re-query a non-existent data source, so the action is suppressed instead of failing with 410
+- Refresh button appears only on **live** (`volatility: "variable"`) chart cards and only when not in demo mode and an active Odoo config exists — static charts never refresh
 - Buttons revealed on hover with smooth opacity transition
 
 ### NotificationCard
@@ -485,6 +487,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `GET` | `/chat/{id}/audit` | Action execution history (audit trail) |
 | `POST` | `/chat/{id}/search` | Odoo entity name_search (body: `{ model, query, config_id }`) |
 | `GET` | `/me/pins` | Fetch all pinned insights for the current user across every conversation |
+| `DELETE` | `/me/pins` | Clear all pins for the current user (user-scoped) |
 | `GET` | `/chat/{id}/pins` | Fetch all pinned insights for a chat |
 | `POST` | `/chat/{id}/pin` | Create a new pin (chart, file, or excel) |
 | `DELETE` | `/chat/{id}/pin/{pinId}` | Delete a specific pin |

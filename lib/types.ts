@@ -162,6 +162,17 @@ export interface ChartMeta {
   total: number;
 }
 
+export type PinVolatility = "variable" | "static";
+
+export interface PinQueryContext {
+  primary_model?: string;
+  dynamic_domain?: unknown[];
+  date_filter?: { start?: string; end?: string };
+  groupby_fields?: string[];
+  classified_areas?: string[];
+  volatility?: PinVolatility;
+}
+
 export interface ChartSSEEvent {
   type: "chart";
   chart_type: "bar" | "pie" | "line";
@@ -169,6 +180,7 @@ export interface ChartSSEEvent {
   data: ChartDataPoint[];
   meta: ChartMeta;
   export_url?: string;
+  query_context?: PinQueryContext;
 }
 
 export interface ExportSSEEvent {
@@ -195,6 +207,7 @@ export interface PinnedChart {
   messageId: string;
   chartIndex: number;
   chart: ChartSSEEvent;
+  query_context?: PinQueryContext;
 }
 
 export interface PinnedFile {

@@ -2,27 +2,37 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { Pin, PinOff } from "lucide-react";
+import { Pin, PinOff, Bookmark, BookmarkCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { emitFlyingPin } from "@/lib/pin-animation-events";
+import type { PinVolatility } from "@/lib/types";
 
 interface PinToggleButtonProps {
   pinned: boolean;
-  onToggle: () => string | null; // returns pinId if pinned, null if unpinned
+  onToggle: () => string | null;
+  volatility?: PinVolatility;
 }
 
-export function PinToggleButton({ pinned, onToggle }: PinToggleButtonProps) {
+export function PinToggleButton({ pinned, onToggle, volatility }: PinToggleButtonProps) {
   const t = useTranslations("PinnedInsights");
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const isStatic = volatility === "static";
 
   function handleClick() {
     const result = onToggle();
-    // If result is a string (pinId), it means we just pinned — trigger flying animation
     if (result && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       emitFlyingPin({ sourceRect: rect });
     }
   }
+
+  const label = isStatic
+    ? (pinned ? t("savedTooltip") : t("saveTooltip"))
+    : (pinned ? t("unpinTooltip") : t("pinTooltip"));
+
+  const Icon = isStatic
+    ? (pinned ? BookmarkCheck : Bookmark)
+    : (pinned ? PinOff : Pin);
 
   return (
     <motion.button
@@ -34,10 +44,10 @@ export function PinToggleButton({ pinned, onToggle }: PinToggleButtonProps) {
           ? "text-accent hover:bg-accent-subtle"
           : "text-text-secondary hover:bg-raised hover:text-foreground"
       }`}
-      title={pinned ? t("unpinTooltip") : t("pinTooltip")}
-      aria-label={pinned ? t("unpinTooltip") : t("pinTooltip")}
+      title={label}
+      aria-label={label}
     >
-      {pinned ? <PinOff size={14} strokeWidth={1.5} /> : <Pin size={14} strokeWidth={1.5} />}
+      <Icon size={14} strokeWidth={1.5} />
     </motion.button>
   );
 }
