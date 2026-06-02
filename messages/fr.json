@@ -380,7 +380,15 @@
     "pinnedCount": "{count} épinglés",
     "errorPin": "Erreur d'épinglage.",
     "errorUnpin": "Erreur de désépinglage.",
-    "errorClear": "Erreur d'effacement."
+    "errorClear": "Erreur d'effacement.",
+    "liveSection": "En direct",
+    "savedSection": "Enregistrés",
+    "saveTooltip": "Enregistrer l'insight",
+    "savedTooltip": "Enregistré",
+    "liveBadge": "En direct",
+    "historicBadge": "Historique",
+    "refreshTooltip": "Actualiser les données",
+    "downloadTooltip": "Télécharger"
   },
   "Notifications": {
     "title": "Alertes",

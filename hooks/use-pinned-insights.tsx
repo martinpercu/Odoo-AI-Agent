@@ -81,7 +81,13 @@ function buildPinPayload(pin: PinnedInsight): Record<string, unknown> {
   };
   switch (pin.kind) {
     case "chart":
-      return { ...base, title: pin.chart.title, chart_index: pin.chartIndex, payload: pin.chart };
+      return {
+        ...base,
+        title: pin.chart.title,
+        chart_index: pin.chartIndex,
+        payload: pin.chart,
+        ...(pin.query_context && { query_context: pin.query_context }),
+      };
     case "file":
       return { ...base, title: pin.metadata.filename, payload: pin.metadata };
     case "excel":
@@ -205,6 +211,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         messageId,
         chartIndex,
         chart,
+        ...(chart.query_context && { query_context: chart.query_context }),
       };
       optimisticAdd(pin);
     },
@@ -267,6 +274,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         messageId,
         chartIndex,
         chart,
+        ...(chart.query_context && { query_context: chart.query_context }),
       };
       optimisticAdd(pin);
       return id;
