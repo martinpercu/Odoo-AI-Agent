@@ -99,7 +99,8 @@
       "searching": "Search...",
       "fieldEdited": "Modified",
       "originalValue": "Original suggestion",
-      "validationError": "Please fix the highlighted fields and try again."
+      "validationError": "Please fix the highlighted fields and try again.",
+      "confirm": "Confirm action"
     },
     "audit": {
       "title": "Action History",
@@ -668,6 +669,22 @@
       "prev": "Previous",
       "next": "Next",
       "tenantNotes": "Tenant admin note"
+    }
+  },
+  "Builder": {
+    "Trace": {
+      "title": "LangGraph trace",
+      "expand": "Show traces",
+      "collapse": "Hide traces",
+      "empty": "No events yet. Traces appear while the agent processes."
+    },
+    "ChatMessages": {
+      "typingIndicator": "Executing · query"
+    }
+  },
+  "Client": {
+    "ChatMessages": {
+      "typingIndicator": "Looking up your info"
     }
   }
 }

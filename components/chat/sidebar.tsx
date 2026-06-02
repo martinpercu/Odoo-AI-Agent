@@ -22,9 +22,11 @@ import {
   Loader2,
 } from "lucide-react";
 import { MarkB, Wordmark } from "@/components/AgentMark";
+import { PoweredBy } from "@/components/ui/powered-by";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
+import { useIconSize } from "@/hooks/use-icon-size";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { InstanceSwitcher } from "@/components/chat/instance-switcher";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
@@ -57,6 +59,8 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const { unreadCount } = useNotifications();
   const { user, logout } = useAuth();
   const { meData } = useSession();
+  const iconBtn = useIconSize("button");
+  const iconInline = useIconSize("inline");
   const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
 
   const displayGroups = chatGroups;
@@ -101,7 +105,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           title={t("alerts")}
           aria-label={t("alerts")}
         >
-          <Bell size={20} strokeWidth={1.5} />
+          <Bell size={iconBtn} strokeWidth={1.5} />
           {unreadCount > 0 && (
             <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[9px] font-bold text-white">
               {unreadCount > 9 ? "9+" : unreadCount}
@@ -114,7 +118,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           aria-label={collapsed ? t("expand") : t("collapse")}
         >
           <ChevronLeft
-            size={20}
+            size={iconBtn}
             strokeWidth={1.5}
             className={`transition-transform ${collapsed ? "rotate-180" : ""}`}
           />
@@ -128,9 +132,9 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             onNewChat();
             setMobileOpen(false);
           }}
-          className="flex w-full items-center gap-3 rounded-md border border-sidebar-border px-3 py-2 text-body font-medium transition-colors hover:bg-sidebar-hover"
+          className="flex h-btn-md w-full items-center gap-3 rounded-btn border border-sidebar-border px-3 text-body font-medium transition-colors hover:bg-sidebar-hover"
         >
-          <SquarePen size={20} strokeWidth={1.5} />
+          <SquarePen size={iconBtn} strokeWidth={1.5} />
           {!collapsed && <span>{t("newChat")}</span>}
         </button>
       </div>
@@ -179,7 +183,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                       tabIndex={0}
                       onKeyDown={(e) => { if (e.key === "Enter") { onSelectChat(chat.id); setMobileOpen(false); } }}
                     >
-                      <MessageSquare size={16} strokeWidth={1.5} className="shrink-0 opacity-60" />
+                      <MessageSquare size={iconInline} strokeWidth={1.5} className="shrink-0 opacity-60" />
                       <span className="truncate flex-1 text-left">{chat.title || t("newConversation")}</span>
                       <button
                         type="button"
@@ -221,7 +225,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                       : "hover:bg-sidebar-hover"
                   }`}
                 >
-                  <MessageSquare size={16} strokeWidth={1.5} />
+                  <MessageSquare size={iconInline} strokeWidth={1.5} />
                 </button>
               ))
             )}
@@ -242,7 +246,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                   : "hover:bg-sidebar-hover"
               }`}
             >
-              <LogIn size={20} strokeWidth={1.5} />
+              <LogIn size={iconBtn} strokeWidth={1.5} />
               {!collapsed && <span>{t("login")}</span>}
             </Link>
           )}
@@ -256,7 +260,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                   : "hover:bg-sidebar-hover"
               }`}
             >
-              <CreditCard size={20} strokeWidth={1.5} />
+              <CreditCard size={iconBtn} strokeWidth={1.5} />
               {!collapsed && <span>{t("plans")}</span>}
             </Link>
           )} */}
@@ -270,7 +274,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                   : "hover:bg-sidebar-hover"
               }`}
             >
-              <Settings size={20} strokeWidth={1.5} />
+              <Settings size={iconBtn} strokeWidth={1.5} />
               {!collapsed && <span>{t("settings")}</span>}
             </Link>
           )}
@@ -284,7 +288,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                   : "hover:bg-sidebar-hover"
               }`}
             >
-              <Shield size={20} strokeWidth={1.5} />
+              <Shield size={iconBtn} strokeWidth={1.5} />
               {!collapsed && <span>{t("superAdmin")}</span>}
             </Link>
           )}
@@ -293,7 +297,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover"
             aria-label={isDark ? t("lightMode") : t("darkMode")}
           >
-            {isDark ? <Sun size={20} strokeWidth={1.5} /> : <Moon size={20} strokeWidth={1.5} />}
+            {isDark ? <Sun size={iconBtn} strokeWidth={1.5} /> : <Moon size={iconBtn} strokeWidth={1.5} />}
             {!collapsed && <span>{isDark ? t("lightMode") : t("darkMode")}</span>}
           </button>
           <InstanceSwitcher collapsed={collapsed} />
@@ -306,11 +310,17 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
               title={t("logout")}
               aria-label={t("logout")}
             >
-              <LogOut size={20} strokeWidth={1.5} />
+              <LogOut size={iconBtn} strokeWidth={1.5} />
               {!collapsed && <span>{t("logout")}</span>}
             </button>
           )}
         </nav>
+        {/* Powered by — Client only (Builder ya tiene la marca prominente arriba) */}
+        {meData?.user?.role !== "ADMIN" && meData?.user?.role !== "SUPERADMIN" && !collapsed && (
+          <div className="mt-3 border-t border-sidebar-border pt-3 flex justify-center">
+            <PoweredBy />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -322,7 +332,7 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
         onClick={() => setMobileOpen(true)}
         className="fixed left-4 top-4 z-50 rounded-md bg-surface p-2 shadow-sm lg:hidden"
       >
-        <Menu size={20} />
+        <Menu size={iconBtn} />
       </button>
 
       {/* Mobile overlay */}

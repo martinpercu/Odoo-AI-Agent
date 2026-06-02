@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { User, KeyRound, ArrowRight, Flag } from "lucide-react";
 import { MarkB, MarkI } from "@/components/AgentMark";
+import { useIconSize } from "@/hooks/use-icon-size";
+import { useAudienceT } from "@/hooks/use-audience-translations";
 import type { Message } from "@/lib/types";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
@@ -36,7 +38,7 @@ function NoCredentialsCard() {
         <p className="mt-0.5 text-small text-text-secondary">{t("noCredentials.desc")}</p>
         <Link
           href="/settings"
-          className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-small font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
+          className="mt-2 inline-flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
         >
           {t("noCredentials.cta")}
           <ArrowRight size={13} strokeWidth={1.5} />
@@ -47,7 +49,8 @@ function NoCredentialsCard() {
 }
 
 function TypingIndicator() {
-  const t = useTranslations("ChatMessages");
+  const t = useAudienceT("ChatMessages");
+  const avatarSize = useIconSize("inline");
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -56,7 +59,7 @@ function TypingIndicator() {
       className="flex items-start gap-4"
     >
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-subtle text-accent">
-        <MarkI size={18} fg="currentColor" className="animate-pulse" />
+        <MarkI size={avatarSize} fg="currentColor" className="animate-pulse" />
       </div>
       <div className="rounded-lg rounded-tl-sm bg-raised px-4 py-3">
         <div className="flex items-center gap-1.5">
@@ -77,6 +80,7 @@ function TypingIndicator() {
 export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("ChatMessages");
+  const avatarSize = useIconSize("inline");
   const { executeAction, sendMessage, currentChatId } = useChatContext();
   const { meData } = useSession();
   const { activeConfigId } = useOdooConfig();
@@ -123,7 +127,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                   : "bg-accent-subtle text-accent"
               }`}
             >
-              {isUser ? <User size={16} strokeWidth={1.5} /> : <MarkB size={18} fg="currentColor" />}
+              {isUser ? <User size={avatarSize} strokeWidth={1.5} /> : <MarkB size={avatarSize} fg="currentColor" />}
             </div>
             <div className={`max-w-[85%] ${!isUser ? "group relative" : ""}`}>
               <div
