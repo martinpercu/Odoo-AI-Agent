@@ -185,14 +185,14 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
                     <XAxis
                       type="number"
-                      tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                      tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                       tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                     />
                     <YAxis
                       dataKey="label"
                       type="category"
                       width={100}
-                      tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                      tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                       tickFormatter={(v) => truncateLabel(v, 12)}
                     />
                     <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
@@ -203,11 +203,11 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                     <XAxis
                       dataKey="label"
-                      tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                      tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                       tickFormatter={(v) => truncateLabel(v)}
                     />
                     <YAxis
-                      tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                      tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                       tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                     />
                     <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
@@ -225,11 +225,11 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis
                     dataKey="label"
-                    tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                    tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                     tickFormatter={(v) => truncateLabel(v)}
                   />
                   <YAxis
-                    tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                    tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                     tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                   />
                   <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
@@ -255,7 +255,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                     label={({ name, percent }) =>
                       `${truncateLabel(name ?? "", 10)} ${((percent ?? 0) * 100).toFixed(0)}%`
                     }
-                    labelLine={{ stroke: "var(--muted-foreground)", strokeWidth: 1 }}
+                    labelLine={{ stroke: "var(--color-text-secondary)", strokeWidth: 1 }}
                   >
                     {data.map((_, i) => (
                       <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />

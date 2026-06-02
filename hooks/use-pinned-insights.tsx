@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
 import type {
   PinnedInsight,
   PinnedChart,
@@ -13,6 +14,7 @@ import type {
 } from "@/lib/types";
 import {
   fetchPins as apiFetchPins,
+  fetchAllMyPins as apiFetchAllMyPins,
   createPin as apiCreatePin,
   deletePin as apiDeletePin,
   deleteAllPins as apiDeleteAllPins,
@@ -35,6 +37,7 @@ interface PinnedInsightsContextType {
   clearAll: (chatId?: string) => void;
   getPinId: (kind: string, identifier: string) => string | undefined;
   loadPins: (chatId: string) => void;
+  loadAllPins: () => Promise<void>;
   refreshPin: (pinId: string, chatId: string) => Promise<void>;
 }
 
@@ -90,7 +93,18 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
   const [pins, setPins] = useState<PinnedInsight[]>([]);
   const { showError } = useToast();
   const t = useTranslations("PinnedInsights");
+  const { activeConfigId } = useOdooConfig();
+  const locale = useLocale();
   const loadedChatsRef = useRef<Set<string>>(new Set());
+
+  // Defensive: skip pins with malformed/missing payload to avoid runtime crashes
+  // when the backend persisted broken entries (e.g. excel pin with no metadata).
+  const isValidPin = (p: PinnedInsight | undefined | null): p is PinnedInsight => {
+    if (!p || !p.kind) return false;
+    if (p.kind === "chart") return !!p.chart;
+    if (p.kind === "file" || p.kind === "excel") return !!p.metadata;
+    return false;
+  };
 
   // ---- Fetch pins from backend ----
   const loadPins = useCallback(
@@ -100,16 +114,29 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
 
       const result = await apiFetchPins(chatId);
       if (result.success && result.pins) {
+        const validPins = result.pins.filter(isValidPin);
         setPins((prev) => {
           // Merge: keep pins from other chats, replace pins for this chat
           const otherPins = prev.filter((p) => p.chatId !== chatId);
-          return [...result.pins!, ...otherPins].slice(0, MAX_PINS);
+          return [...validPins, ...otherPins].slice(0, MAX_PINS);
         });
       }
       // Silent fail on initial load — user doesn't need a toast here
     },
     []
   );
+
+  // Load all pins for the current user across every conversation.
+  // Called once on app shell mount when the user is authenticated.
+  const loadAllPins = useCallback(async () => {
+    const result = await apiFetchAllMyPins();
+    if (result.success && result.pins) {
+      const validPins = result.pins.filter(isValidPin);
+      setPins(validPins.slice(0, MAX_PINS));
+      // Mark every chatId seen as already loaded so per-chat loadPins becomes a no-op.
+      for (const p of validPins) loadedChatsRef.current.add(p.chatId);
+    }
+  }, []);
 
   // ---- Helpers ----
   const isPinned = useCallback(
@@ -295,7 +322,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
 
   const refreshPin = useCallback(
     async (pinId: string, chatId: string) => {
-      const result = await apiRefreshPin(chatId, pinId);
+      const result = await apiRefreshPin(chatId, pinId, activeConfigId ?? "", locale);
       if (!result.success) {
         showError(result.error || t("errorPin"));
         return;
@@ -310,7 +337,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         );
       }
     },
-    [showError, t]
+    [showError, t, activeConfigId, locale]
   );
 
   const clearAll = useCallback(
@@ -346,6 +373,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         clearAll,
         getPinId,
         loadPins,
+        loadAllPins,
         refreshPin,
       }}
     >
