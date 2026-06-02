@@ -157,6 +157,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
         <PinToggleButton
           pinned={chartPinned}
           onToggle={() => togglePinChart(chatId, messageId, chartIndex, chart)}
+          volatility={chart.query_context?.volatility}
         />
         {chart.export_url && (
           <a

@@ -380,7 +380,15 @@
     "pinnedCount": "{count} angepinnt",
     "errorPin": "Fehler beim Pinnen.",
     "errorUnpin": "Fehler beim Lösen.",
-    "errorClear": "Fehler beim Löschen."
+    "errorClear": "Fehler beim Löschen.",
+    "liveSection": "Live",
+    "savedSection": "Gespeichert",
+    "saveTooltip": "Insight speichern",
+    "savedTooltip": "Gespeichert",
+    "liveBadge": "Live",
+    "historicBadge": "Historisch",
+    "refreshTooltip": "Daten aktualisieren",
+    "downloadTooltip": "Herunterladen"
   },
   "Notifications": {
     "title": "Benachrichtigungen",
