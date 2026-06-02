@@ -9,6 +9,7 @@ import { useChat } from "@/hooks/use-chat";
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
+import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 
 type ChatContextType = ReturnType<typeof useChat>;
 
@@ -54,6 +55,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const { meData } = useSession();
   const chat = useChat(chatIdFromUrl, user?.id);
+  const { loadAllPins } = usePinnedInsights();
   const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
 
   // Stub LangGraph trace — TODO: replace with real SSE `trace` event when backend exposes it.
@@ -82,6 +84,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       chat.clearChats();
     } else {
       chat.loadServerConversations(0);
+      loadAllPins();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);

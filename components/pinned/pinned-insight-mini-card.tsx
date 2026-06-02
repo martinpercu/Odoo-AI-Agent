@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import type { PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
 
 interface PinnedInsightMiniCardProps {
   pin: PinnedInsight;
@@ -31,9 +32,15 @@ function formatTotal(total: number, format: string, symbol: string): string {
 export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   const t = useTranslations("PinnedInsights");
   const { unpin, refreshPin } = usePinnedInsights();
+  const { isDemoMode, activeConfig } = useOdooConfig();
   const [refreshing, setRefreshing] = useState(false);
 
+  // Refresh re-queries Odoo. Without a real config (demo or none), the backend can't resolve
+  // a data source and returns 410 "Pin's data source is no longer available" — hide the button.
+  const canRefresh = !isDemoMode && activeConfig !== null;
+
   if (pin.kind === "chart") {
+    if (!pin.chart) return null;
     const Icon = chartIcons[pin.chart.chart_type] ?? BarChart3;
     const total = formatTotal(pin.chart.meta.total, pin.chart.meta.value_format, pin.chart.meta.currency_symbol);
 
@@ -56,15 +63,17 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
         className="group relative rounded-md border border-border bg-surface p-3 transition-colors hover:bg-raised/50"
       >
         <div className="absolute right-1.5 top-1.5 flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="rounded-md p-1 text-text-secondary transition-colors hover:bg-accent-subtle hover:text-accent disabled:opacity-50"
-            title="Refresh"
-            aria-label="Refresh"
-          >
-            <RefreshCw size={12} strokeWidth={1.5} className={refreshing ? "animate-spin" : ""} />
-          </button>
+          {canRefresh && (
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="rounded-md p-1 text-text-secondary transition-colors hover:bg-accent-subtle hover:text-accent disabled:opacity-50"
+              title="Refresh"
+              aria-label="Refresh"
+            >
+              <RefreshCw size={12} strokeWidth={1.5} className={refreshing ? "animate-spin" : ""} />
+            </button>
+          )}
           <button
             onClick={() => unpin(pin.id)}
             className="rounded-md p-1 text-text-secondary transition-colors hover:bg-error-subtle hover:text-error"
@@ -88,6 +97,7 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   }
 
   if (pin.kind === "file") {
+    if (!pin.metadata) return null;
     const fullUrl = pin.metadata.file_url.startsWith("http")
       ? pin.metadata.file_url
       : `${API_BASE}${pin.metadata.file_url}`;
@@ -129,6 +139,7 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   }
 
   // excel
+  if (!pin.metadata) return null;
   const excelUrl = pin.metadata.export_url.startsWith("http")
     ? pin.metadata.export_url
     : `${API_BASE}${pin.metadata.export_url}`;

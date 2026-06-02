@@ -42,8 +42,10 @@ next-env.d.ts
 
 claude.md
 .claudeignore
-
 .claude/
+
+CLAUDE.md
+AGENTS.md
 
 DESIGN_GUIDELINES.md
 

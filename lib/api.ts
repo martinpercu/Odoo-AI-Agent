@@ -4,6 +4,8 @@ import type {
   ActionResult,
   PinnedInsight,
   ChartSSEEvent,
+  FileAttachmentMetadata,
+  ExcelExportMetadata,
   AppNotification,
   NotificationSettings,
   Message,
@@ -967,12 +969,104 @@ export interface FetchPinsResult {
   error?: string;
 }
 
+/**
+ * Backend stores pins in a raw shape (content_type, timestamp, payload, chat_id, ...).
+ * Normalize to the discriminated-union `PinnedInsight` the rest of the app consumes.
+ * Backward-compatible: if the row already arrives in the parsed shape (has `kind`), it's returned as-is.
+ * Defensive: rows that don't match any known content_type are dropped (returns null → filtered).
+ *
+ * `fallbackChatId` lets callers inject the chatId for endpoints where it's omitted in the response
+ * (e.g. `/chat/{chatId}/pins` — the backend skips it because the URL already carries it).
+ */
+function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+
+  // Already in the parsed shape — pass through.
+  if (typeof r.kind === "string") return raw as PinnedInsight;
+
+  const contentType = r.content_type as string | undefined;
+  const id = r.id as string | undefined;
+  const chatId =
+    (r.chat_id as string | undefined) ?? (r.chatId as string | undefined) ?? fallbackChatId;
+  const messageId = (r.message_id as string | undefined) ?? (r.messageId as string | undefined);
+  const pinnedAt =
+    (r.timestamp as string | undefined) ??
+    (r.pinnedAt as string | undefined) ??
+    new Date().toISOString();
+
+  if (!id || !chatId || !messageId || !contentType) return null;
+
+  const payload = r.payload;
+
+  if (contentType === "chart") {
+    if (!payload) return null;
+    const chartIndex =
+      (r.chart_index as number | undefined) ?? (r.chartIndex as number | undefined) ?? 0;
+    return {
+      kind: "chart",
+      id,
+      pinnedAt,
+      chatId,
+      messageId,
+      chartIndex,
+      chart: payload as ChartSSEEvent,
+    };
+  }
+
+  if (contentType === "file") {
+    if (!payload) return null;
+    return {
+      kind: "file",
+      id,
+      pinnedAt,
+      chatId,
+      messageId,
+      metadata: payload as FileAttachmentMetadata,
+    };
+  }
+
+  if (contentType === "excel") {
+    if (!payload) return null;
+    return {
+      kind: "excel",
+      id,
+      pinnedAt,
+      chatId,
+      messageId,
+      metadata: payload as ExcelExportMetadata,
+    };
+  }
+
+  return null;
+}
+
+function normalizePinList(raw: unknown, fallbackChatId?: string): PinnedInsight[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item) => normalizePin(item, fallbackChatId))
+    .filter((p): p is PinnedInsight => p !== null);
+}
+
 export async function fetchPins(chatId: string): Promise<FetchPinsResult> {
   try {
     const res = await authFetch(`${API_BASE}/chat/${chatId}/pins`);
     const data = await res.json();
-    if (res.ok) return { success: true, pins: data.pins ?? data };
-    return { success: false, error: data.detail || "Failed to fetch pins" };
+    // Backend omits chat_id in per-chat response (already in the URL) — inject it here.
+    if (res.ok) return { success: true, pins: normalizePinList(data.pins ?? data, chatId) };
+    return { success: false, error: extractError(data.detail, "Failed to fetch pins") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export async function fetchAllMyPins(): Promise<FetchPinsResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/pins`);
+    const data = await res.json();
+    if (res.ok) return { success: true, pins: normalizePinList(data.pins ?? data) };
+    return { success: false, error: extractError(data.detail, "Failed to fetch pins") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
@@ -997,7 +1091,7 @@ export async function createPin(
     });
     const data = await res.json();
     if (res.ok) return { success: true, pin: data.pin ?? data };
-    return { success: false, error: data.detail || "Failed to create pin" };
+    return { success: false, error: extractError(data.detail, "Failed to create pin") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
@@ -1014,9 +1108,10 @@ export async function deletePin(chatId: string, pinId: string): Promise<DeletePi
     const res = await authFetch(`${API_BASE}/chat/${chatId}/pin/${pinId}`, {
       method: "DELETE",
     });
-    if (res.ok) return { success: true };
+    // 404 = pin already gone (or stale pin from previous schema). End state is what we wanted.
+    if (res.ok || res.status === 404) return { success: true };
     const data = await res.json();
-    return { success: false, error: data.detail || "Failed to delete pin" };
+    return { success: false, error: extractError(data.detail, "Failed to delete pin") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
@@ -1030,7 +1125,7 @@ export async function deleteAllPins(chatId: string): Promise<DeletePinResult> {
     });
     if (res.ok) return { success: true };
     const data = await res.json();
-    return { success: false, error: data.detail || "Failed to clear pins" };
+    return { success: false, error: extractError(data.detail, "Failed to clear pins") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
@@ -1099,11 +1194,15 @@ export interface RefreshPinResult {
 
 export async function refreshPin(
   chatId: string,
-  pinId: string
+  pinId: string,
+  configId: string,
+  language: string
 ): Promise<RefreshPinResult> {
   try {
     const res = await authFetch(`${API_BASE}/chat/${chatId}/pin/${pinId}/refresh`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ config_id: configId, language }),
     });
 
     const data = await res.json();
@@ -1116,7 +1215,7 @@ export async function refreshPin(
       };
     }
 
-    return { success: false, error: data.detail || "Refresh failed" };
+    return { success: false, error: extractError(data.detail, "Refresh failed") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };

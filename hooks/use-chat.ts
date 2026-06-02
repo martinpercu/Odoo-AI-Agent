@@ -345,6 +345,40 @@ export function useChat(chatId?: string, userId?: string) {
         // Watermark: safe default = show (true). Updated by "watermark" SSE event.
         let showWatermark: boolean | undefined = undefined;
 
+        // Throttle state updates to once per animation frame to avoid
+        // triggering a React re-render + ReactMarkdown re-parse on every SSE chunk.
+        let pendingFlush = false;
+        let lastMetadata: MessageMetadata | undefined = undefined;
+
+        const flushToState = () => {
+          pendingFlush = false;
+          const snap = accumulated;
+          const meta = lastMetadata;
+          const chartSnap = charts;
+          const wm = showWatermark;
+          updateChat(targetId, (c) => ({
+            ...c,
+            messages: c.messages.map((m) =>
+              m.id === assistantId
+                ? {
+                    ...m,
+                    content: snap,
+                    ...(meta && { metadata: meta }),
+                    ...(chartSnap.length > 0 && { charts: chartSnap }),
+                    watermark: wm,
+                  }
+                : m
+            ),
+          }));
+        };
+
+        const scheduleFlush = () => {
+          if (!pendingFlush) {
+            pendingFlush = true;
+            requestAnimationFrame(flushToState);
+          }
+        };
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -418,6 +452,7 @@ export function useChat(chatId?: string, userId?: string) {
               }
 
               accumulated += text;
+              if (metadata) lastMetadata = metadata;
 
               // Detect NO_CREDENTIALS: prefix in streamed text
               if (accumulated.startsWith("NO_CREDENTIALS:")) {
@@ -435,22 +470,15 @@ export function useChat(chatId?: string, userId?: string) {
                 return;
               }
 
-              updateChat(targetId, (c) => ({
-                ...c,
-                messages: c.messages.map((m) =>
-                  m.id === assistantId
-                    ? {
-                        ...m,
-                        content: accumulated,
-                        ...(metadata && { metadata }),
-                        ...(charts.length > 0 && { charts }),
-                        watermark: showWatermark,
-                      }
-                    : m
-                ),
-              }));
+              scheduleFlush();
             }
           }
+        }
+
+        // Flush any remaining buffered content after the stream ends
+        if (pendingFlush) {
+          pendingFlush = false;
+          flushToState();
         }
       } catch (err) {
         if ((err as Error).name === "AbortError") {
