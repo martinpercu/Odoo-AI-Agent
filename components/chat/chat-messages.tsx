@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Bot, User, Database, KeyRound, ArrowRight, Flag } from "lucide-react";
+import { User, KeyRound, ArrowRight, Flag } from "lucide-react";
+import { MarkB, MarkI } from "@/components/AgentMark";
 import type { Message } from "@/lib/types";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
@@ -55,7 +56,7 @@ function TypingIndicator() {
       className="flex items-start gap-4"
     >
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-subtle text-accent">
-        <Database size={16} strokeWidth={1.5} />
+        <MarkI size={18} fg="currentColor" className="animate-pulse" />
       </div>
       <div className="rounded-lg rounded-tl-sm bg-raised px-4 py-3">
         <div className="flex items-center gap-1.5">
@@ -122,7 +123,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                   : "bg-accent-subtle text-accent"
               }`}
             >
-              {isUser ? <User size={16} strokeWidth={1.5} /> : <Bot size={16} strokeWidth={1.5} />}
+              {isUser ? <User size={16} strokeWidth={1.5} /> : <MarkB size={18} fg="currentColor" />}
             </div>
             <div className={`max-w-[85%] ${!isUser ? "group relative" : ""}`}>
               <div
