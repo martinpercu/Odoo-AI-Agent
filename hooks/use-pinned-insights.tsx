@@ -17,7 +17,7 @@ import {
   fetchAllMyPins as apiFetchAllMyPins,
   createPin as apiCreatePin,
   deletePin as apiDeletePin,
-  deleteAllPins as apiDeleteAllPins,
+  deleteAllMyPins as apiDeleteAllMyPins,
   refreshPin as apiRefreshPin,
 } from "@/lib/api";
 import { useToast } from "@/components/ui/error-toast";
@@ -341,19 +341,16 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
   );
 
   const clearAll = useCallback(
-    (chatId?: string) => {
+    (_chatId?: string) => {
       const snapshot = pins;
       setPins([]);
 
-      const targetChatId = chatId || pins[0]?.chatId || "";
-      if (targetChatId) {
-        apiDeleteAllPins(targetChatId).then((result) => {
-          if (!result.success) {
-            setPins(snapshot);
-            showError(result.error || t("errorClear"));
-          }
-        });
-      }
+      apiDeleteAllMyPins().then((result) => {
+        if (!result.success) {
+          setPins(snapshot);
+          showError(result.error || t("errorClear"));
+        }
+      });
     },
     [pins, showError, t]
   );
