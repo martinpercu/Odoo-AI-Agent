@@ -14,7 +14,13 @@ import { usePathname } from "@/i18n/navigation";
 import { PinnedInsightMiniCard } from "@/components/pinned/pinned-insight-mini-card";
 import { NotificationFeed } from "@/components/notifications/notification-feed";
 import { useRouter } from "@/i18n/navigation";
-import type { AppNotification } from "@/lib/types";
+import type { AppNotification, PinnedChart, PinnedInsight } from "@/lib/types";
+
+function isLivePin(pin: PinnedInsight): boolean {
+  if (pin.kind !== "chart") return false;
+  const volatility = (pin as PinnedChart).query_context?.volatility ?? "variable";
+  return volatility === "variable";
+}
 
 export function PinnedSidebar() {
   const [collapsed, setCollapsedState] = useState(true);
@@ -39,7 +45,6 @@ export function PinnedSidebar() {
     setActiveTab("pins");
     setCollapsed(true);
 
-    // Deep link: inject the chatPrompt into a chat
     if (currentChatId) {
       sendMessage(notification.chatPrompt);
     } else {
@@ -49,13 +54,15 @@ export function PinnedSidebar() {
     }
   }
 
-  // Only show on chat pages, for logged-in users who completed onboarding (have an org)
   const isOnChat = pathname.startsWith("/chat");
   if (!user || !meData?.org || !isOnChat) return null;
 
+  // Split pins into live (variable) and saved (static + files + excel)
+  const livePins = pins.filter(isLivePin);
+  const savedPins = pins.filter((p) => !isLivePin(p));
+
   // Collapsed state
   if (collapsed) {
-    const hasBadge = pins.length > 0 || unreadCount > 0;
     return (
       <motion.aside
         animate={{ width: 48 }}
@@ -172,7 +179,7 @@ export function PinnedSidebar() {
 
       {/* Content */}
       {activeTab === "pins" ? (
-        <div className="flex-1 overflow-y-auto px-2 py-2">
+        <div className="flex-1 overflow-y-auto px-2.5 py-3">
           {pins.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
               <Pin size={32} strokeWidth={1.5} className="mb-3 text-text-muted" />
@@ -180,12 +187,67 @@ export function PinnedSidebar() {
               <p className="mt-1 text-small text-text-muted">{tPins("emptyHint")}</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-2">
-              <AnimatePresence mode="popLayout">
-                {pins.map((pin) => (
-                  <PinnedInsightMiniCard key={pin.id} pin={pin} />
-                ))}
-              </AnimatePresence>
+            <div className="flex flex-col gap-4">
+              {/* En vivo — variable charts */}
+              {livePins.length > 0 && (
+                <section>
+                  <div className="mb-2 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success-solid" />
+                    <span className="text-micro font-medium uppercase tracking-wide text-text-secondary">
+                      {tPins("liveSection")}
+                    </span>
+                    <span className="ml-auto rounded-md bg-accent-subtle px-1.5 text-micro font-medium text-accent">
+                      {livePins.length}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <AnimatePresence mode="popLayout">
+                      {livePins.map((pin) => (
+                        <PinnedInsightMiniCard key={pin.id} pin={pin} />
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </section>
+              )}
+
+              {/* Guardados — static charts + files + excel */}
+              {savedPins.length > 0 && (
+                <section>
+                  <div className="mb-2 flex items-center gap-1.5">
+                    <span className="text-micro font-medium uppercase tracking-wide text-text-muted">
+                      {tPins("savedSection")}
+                    </span>
+                    <span className="ml-auto rounded-md bg-raised px-1.5 text-micro font-medium text-text-secondary">
+                      {savedPins.length}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {/* Static charts in 2-col grid */}
+                    {(() => {
+                      const staticCharts = savedPins.filter((p) => p.kind === "chart");
+                      const docs = savedPins.filter((p) => p.kind !== "chart");
+                      return (
+                        <>
+                          {staticCharts.length > 0 && (
+                            <div className="grid grid-cols-2 gap-2">
+                              <AnimatePresence mode="popLayout">
+                                {staticCharts.map((pin) => (
+                                  <PinnedInsightMiniCard key={pin.id} pin={pin} />
+                                ))}
+                              </AnimatePresence>
+                            </div>
+                          )}
+                          <AnimatePresence mode="popLayout">
+                            {docs.map((pin) => (
+                              <PinnedInsightMiniCard key={pin.id} pin={pin} />
+                            ))}
+                          </AnimatePresence>
+                        </>
+                      );
+                    })()}
+                  </div>
+                </section>
+              )}
             </div>
           )}
         </div>
@@ -196,5 +258,4 @@ export function PinnedSidebar() {
   );
 }
 
-/** Ref to sidebar header for flying animation target */
 export { PinnedSidebar as default };

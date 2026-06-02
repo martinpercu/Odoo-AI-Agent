@@ -380,7 +380,15 @@
     "pinnedCount": "{count} fixados",
     "errorPin": "Não foi possível fixar.",
     "errorUnpin": "Não foi possível desafixar.",
-    "errorClear": "Não foi possível limpar os itens."
+    "errorClear": "Não foi possível limpar os itens.",
+    "liveSection": "Ao vivo",
+    "savedSection": "Salvos",
+    "saveTooltip": "Salvar insight",
+    "savedTooltip": "Salvo",
+    "liveBadge": "Ao vivo",
+    "historicBadge": "Histórico",
+    "refreshTooltip": "Atualizar dados",
+    "downloadTooltip": "Baixar"
   },
   "Notifications": {
     "title": "Alertas",

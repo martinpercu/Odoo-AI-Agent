@@ -380,7 +380,15 @@
     "pinnedCount": "{count} pinned",
     "errorPin": "Could not pin this item. Please try again.",
     "errorUnpin": "Could not unpin this item. Please try again.",
-    "errorClear": "Could not clear pins. Please try again."
+    "errorClear": "Could not clear pins. Please try again.",
+    "liveSection": "Live",
+    "savedSection": "Saved",
+    "saveTooltip": "Save insight",
+    "savedTooltip": "Saved",
+    "liveBadge": "Live",
+    "historicBadge": "Historic",
+    "refreshTooltip": "Refresh data",
+    "downloadTooltip": "Download"
   },
   "Notifications": {
     "title": "Alerts",

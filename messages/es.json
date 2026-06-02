@@ -380,7 +380,15 @@
     "pinnedCount": "{count} fijados",
     "errorPin": "No se pudo fijar este elemento. Inténtalo de nuevo.",
     "errorUnpin": "No se pudo desfijar este elemento. Inténtalo de nuevo.",
-    "errorClear": "No se pudieron limpiar los pins. Inténtalo de nuevo."
+    "errorClear": "No se pudieron limpiar los pins. Inténtalo de nuevo.",
+    "liveSection": "En vivo",
+    "savedSection": "Guardados",
+    "saveTooltip": "Guardar insight",
+    "savedTooltip": "Guardado",
+    "liveBadge": "En vivo",
+    "historicBadge": "Histórico",
+    "refreshTooltip": "Actualizar datos",
+    "downloadTooltip": "Descargar"
   },
   "Notifications": {
     "title": "Alertas",

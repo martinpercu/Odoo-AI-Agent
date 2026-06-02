@@ -1003,6 +1003,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
     if (!payload) return null;
     const chartIndex =
       (r.chart_index as number | undefined) ?? (r.chartIndex as number | undefined) ?? 0;
+    const queryContext = r.query_context as import("@/lib/types").PinQueryContext | undefined;
     return {
       kind: "chart",
       id,
@@ -1011,6 +1012,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       messageId,
       chartIndex,
       chart: payload as ChartSSEEvent,
+      ...(queryContext && { query_context: queryContext }),
     };
   }
 
