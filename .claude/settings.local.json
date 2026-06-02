@@ -33,7 +33,9 @@
       "Bash(curl -s http://localhost:3000/es/chat?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /es/chat: %{http_code}\\\\n')",
       "Bash(grep -n \"^}$\" messages/es.json)",
       "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''messages/__TRACKED_VAR__.json'\\\\''\\)\\)')",
-      "Bash(curl -s http://localhost:3000/en/chat?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /en/chat: %{http_code}\\\\n')"
+      "Bash(curl -s http://localhost:3000/en/chat?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /en/chat: %{http_code}\\\\n')",
+      "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''/Users/mendez.martin/apps/agents/odoo/odoo-agent-front/messages/__TRACKED_VAR__.json'\\\\'','\\\\''utf8'\\\\''\\)\\); console.log\\('\\\\''OK'\\\\''\\)')",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('/Users/mendez.martin/apps/agents/odoo/odoo-agent-front/messages/gu.json','utf8'\\)\\); console.log\\('OK'\\)\")"
     ]
   }
 }

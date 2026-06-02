@@ -427,14 +427,14 @@
     "demoBannerConnectOdoo": "Modo Demo — conecte seu Odoo para usar seus dados reais.",
     "demoConnectOdoo": "Conectar meu Odoo",
     "devMode": "Modo de Desenvolvimento",
-    "devModeDesc": "Autenticação desativada.",
+    "devModeDesc": "Supabase não está configurado. A autenticação está desativada — todas as requisições são executadas sem token.",
     "devModeContinue": "Continuar sem login"
   },
   "Onboarding": {
     "step1Label": "Conexão Odoo",
     "step2Label": "Organização",
     "step1Title": "Conecte seu Odoo",
-    "step1Desc": "Adicione as credenciais para começar.",
+    "step1Desc": "Adicione as credenciais da sua instância Odoo para começar a conversar.",
     "connectedMessage": "Conectado com segurança à sua instância do Odoo",
     "step2Title": "Crie sua organização",
     "step2Desc": "Dê um nome à sua organização.",
@@ -487,7 +487,13 @@
     "en": "English",
     "fr": "Français",
     "de": "Deutsch",
-    "pt": "Português"
+    "pt": "Português",
+    "it": "Italiano",
+    "hi": "हिन्दी",
+    "gu": "ગુજરાતી",
+    "ta": "தமிழ்",
+    "kn": "ಕನ್ನಡ",
+    "mr": "मराठी"
   },
   "Feedback": {
     "title": "Reportar um problema",
