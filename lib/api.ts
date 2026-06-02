@@ -1132,6 +1132,20 @@ export async function deleteAllPins(chatId: string): Promise<DeletePinResult> {
   }
 }
 
+export async function deleteAllMyPins(): Promise<DeletePinResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/pins`, {
+      method: "DELETE",
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json();
+    return { success: false, error: extractError(data.detail, "Failed to clear all pins") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
 // ---- Image Upload API ----
 
 export interface UploadImageResult {
