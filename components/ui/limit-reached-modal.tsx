@@ -37,7 +37,7 @@ export function LimitReachedModal() {
 
         <button
           onClick={hideLimitModal}
-          className="mt-5 h-9 w-full rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+          className="mt-5 h-btn-md w-full rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
         >
           {t("cta")}
         </button>

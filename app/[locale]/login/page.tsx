@@ -67,7 +67,7 @@ function LoginContent() {
           </p>
           <button
             onClick={() => router.push(nextPath)}
-            className="h-9 w-full rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
+            className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors"
           >
             {t("devModeContinue")}
           </button>
@@ -118,7 +118,7 @@ function LoginContent() {
           <button
             type="submit"
             disabled={isSubmitting || authLoading}
-            className="mt-1 flex h-9 items-center justify-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
+            className="mt-1 flex h-btn-md items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
           >
             {isSubmitting && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
             {isSubmitting ? t("loggingIn") : t("loginCta")}
@@ -140,7 +140,7 @@ function LoginContent() {
             <button
               type="button"
               onClick={() => router.push(`/${locale}/chat`)}
-              className="flex h-9 w-full items-center justify-center gap-2 rounded-md border border-border px-4 py-2 text-body font-medium text-foreground hover:bg-raised transition-colors"
+              className="flex h-btn-md w-full items-center justify-center gap-2 rounded-btn border border-border px-4 text-body font-medium text-foreground hover:bg-raised transition-colors"
             >
               <Zap size={16} strokeWidth={1.5} className="text-warning-solid" />
               {t("tryDemo")}

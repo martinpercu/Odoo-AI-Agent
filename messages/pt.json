@@ -99,7 +99,8 @@
       "searching": "Buscando...",
       "fieldEdited": "Modificado",
       "originalValue": "Sugestão original",
-      "validationError": "Corrija os campos destacados e tente novamente."
+      "validationError": "Corrija os campos destacados e tente novamente.",
+      "confirm": "Confirmar ação"
     },
     "audit": {
       "title": "Histórico de Ações",
@@ -668,6 +669,22 @@
       "prev": "Anterior",
       "next": "Próximo",
       "tenantNotes": "Nota do admin do tenant"
+    }
+  },
+  "Builder": {
+    "Trace": {
+      "title": "LangGraph trace",
+      "expand": "Mostrar traces",
+      "collapse": "Ocultar traces",
+      "empty": "Sem eventos ainda. Os traces aparecem quando o agente processa."
+    },
+    "ChatMessages": {
+      "typingIndicator": "Executando · query"
+    }
+  },
+  "Client": {
+    "ChatMessages": {
+      "typingIndicator": "Buscando suas informações"
     }
   }
 }

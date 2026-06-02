@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { CheckCircle2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ActionSuccessMetadata } from "@/lib/types";
+import { DocNum } from "@/components/ui/doc-num";
+import { useSession } from "@/hooks/use-session";
 
 interface SuccessCardProps {
   metadata: ActionSuccessMetadata;
@@ -11,13 +13,15 @@ interface SuccessCardProps {
 
 export function SuccessCard({ metadata }: SuccessCardProps) {
   const t = useTranslations("ChatMessages.success");
+  const { meData } = useSession();
+  const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className="mt-2 rounded-lg border border-border bg-success-subtle p-4"
+      className="mt-2 rounded-card border border-border bg-success-subtle p-4"
     >
       <div className="flex items-start gap-3">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success-subtle">
@@ -30,11 +34,13 @@ export function SuccessCard({ metadata }: SuccessCardProps) {
               : t("title")}
           </p>
           {metadata.recordName && (
-            <p className="mt-1 text-body font-technical text-foreground">{metadata.recordName}</p>
+            <p className={`mt-1 text-body text-foreground ${isBuilder ? "font-technical" : ""}`}>
+              {metadata.recordName}
+            </p>
           )}
           <div className="mt-2 flex items-center gap-4 text-small text-text-muted">
-            <span className="font-technical">{t("recordId", { id: metadata.recordId })}</span>
-            {metadata.odooUrl && (
+            <DocNum>#{metadata.recordId}</DocNum>
+            {isBuilder && metadata.odooUrl && (
               <a
                 href={metadata.odooUrl}
                 target="_blank"

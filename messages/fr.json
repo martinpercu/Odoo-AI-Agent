@@ -99,7 +99,8 @@
       "searching": "Recherche...",
       "fieldEdited": "Modifié",
       "originalValue": "Suggestion originale",
-      "validationError": "Veuillez corriger les champs en rouge."
+      "validationError": "Veuillez corriger les champs en rouge.",
+      "confirm": "Confirmer l'action"
     },
     "audit": {
       "title": "Historique des actions",
@@ -668,6 +669,22 @@
       "prev": "Précédent",
       "next": "Suivant",
       "tenantNotes": "Note de l'admin tenant"
+    }
+  },
+  "Builder": {
+    "Trace": {
+      "title": "LangGraph trace",
+      "expand": "Afficher les traces",
+      "collapse": "Masquer les traces",
+      "empty": "Aucun événement. Les traces apparaissent pendant le traitement."
+    },
+    "ChatMessages": {
+      "typingIndicator": "Exécution · query"
+    }
+  },
+  "Client": {
+    "ChatMessages": {
+      "typingIndicator": "Je cherche vos informations"
     }
   }
 }

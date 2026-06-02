@@ -132,7 +132,7 @@ export default function OnboardingPage() {
               type="button"
               onClick={handleTestConnection}
               disabled={testStatus === "testing" || !canSubmit}
-              className="flex h-9 items-center justify-center gap-2 rounded-md border border-border px-4 py-2 text-body font-medium text-foreground hover:bg-raised transition-colors disabled:opacity-50"
+              className="flex h-btn-md items-center justify-center gap-2 rounded-btn border border-border px-4 text-body font-medium text-foreground hover:bg-raised transition-colors disabled:opacity-50"
             >
               {testStatus === "testing" && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
               {testStatus === "ok" && <CheckCircle size={16} strokeWidth={1.5} className="text-success-solid" />}
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
             <button
               type="submit"
               disabled={!canSubmit || isSubmitting}
-              className="mt-1 flex h-9 w-full items-center justify-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
+              className="mt-1 flex h-btn-md w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
             >
               {isSubmitting && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
               {t("step2Cta")}
