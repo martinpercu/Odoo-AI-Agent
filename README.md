@@ -70,8 +70,14 @@ A modern, responsive interface that allows users to query and manage data from t
 - Collapsible and responsive sidebar (mobile-friendly)
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
+**Builder vs Client (dual-voice UI):**
+- Audience-aware copy: ADMIN / SUPERADMIN see technical strings (e.g. `create · sale.order`, `#42`, raw Odoo model names); CLIENT_USER and anonymous visitors see natural concierge copy (e.g. `Confirmar pedido`, `Tu factura #42 quedó emitida.`). Mapping from Odoo model → document type lives in `lib/odoo-model-to-doctype.ts`; translation keys in `Builder.*` and `Client.*` namespaces.
+- Audience-aware density: icon sizes and button/input/card heights and radii scale up for Client (more spacious, larger tap targets) and stay compact for Builder, driven by CSS `--btn-h-*`, `--input-h`, `--*-radius` density tokens.
+- Custom brand mark (`AgentMark`) replaces the generic `Bot` icon across the sidebar, chat avatar and empty-chat hero. `Wordmark` in the sidebar header. Discreet "Powered by TheOdooAgent" lockup (`PoweredBy`) shown only to Client (white-label-friendly: implementer's brand wins, TheOdooAgent stays as credit).
+- LangGraph trace panel (`LangGraphTracePanel`): collapsible right-side dev panel showing node-level execution events, visible only to Builder. Currently a stub that emits synthetic `stream:start` / `stream:end` entries — wired to be replaced by the backend's SSE `trace` event when available.
+
 **Other:**
-- Plans and pricing page (Free, Starter $50/mo, Implementor from $100/mo) with Stripe checkout and billing portal integration; current plan highlighted; Implementor detail modal with tier comparison table
+- Plans and pricing page (Free, Starter $50/mo, Implementor from $100/mo) with Stripe checkout and billing portal integration; current plan highlighted; Implementor detail modal with tier comparison table. The "Plans" link in the sidebar is currently hidden (commented out)
 
 ## Architecture
 
@@ -119,7 +125,8 @@ app/
       pricing/page.tsx          # Subscription plans
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
-  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; renders shellless (no sidebar) for /invite
+  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles
+  AgentMark.tsx                 # Brand mark primitives: MarkB, MarkI, Wordmark, Lockup
   locale-switcher.tsx           # Language selector dropdown
   theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
   auth/
@@ -141,6 +148,7 @@ components/
     excel-export-card.tsx       # Standalone Excel download card
     audit-history-popover.tsx   # Action execution history timeline
     entity-autocomplete.tsx     # Odoo model search with debounced autocomplete
+    langgraph-trace-panel.tsx   # Builder-only collapsible right-side trace panel (stub; replace with SSE `trace` event when available)
   pinned/
     pinned-sidebar.tsx          # Collapsible right sidebar (pins + alerts tabs)
     pinned-insight-mini-card.tsx # Compact card with refresh (charts) + unpin
@@ -162,6 +170,8 @@ components/
     error-toast.tsx             # Toast notification provider + display
     limit-reached-modal.tsx     # 402 payment limit upgrade modal
     password-input.tsx          # Password field with show/hide toggle (Eye/EyeOff)
+    doc-num.tsx                 # Document number: `.docnum` pill for Client (only mono surface they see), `font-technical` plain for Builder
+    powered-by.tsx              # Discreet "Powered by TheOdooAgent" lockup (Client-only footer)
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
@@ -170,11 +180,14 @@ hooks/
   use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear)
   use-notifications.tsx         # Notification context (polling/read/dismiss/settings)
   use-limit-reached-modal.tsx   # 402 limit modal context (listens to auth:limit_reached event)
+  use-audience-translations.ts  # `useAudienceT(ns)` → translator scoped to `Builder.<ns>` or `Client.<ns>` based on role
+  use-icon-size.ts              # `useIconSize(slot)` → role-aware icon size (builder: 16/20/24, client: 18/22/28)
 lib/
   api.ts                        # Centralized API client (28+ endpoints, authFetch with 401/402)
   types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant)
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
   pin-animation-events.ts       # Pub-sub system for flying pin animations
+  odoo-model-to-doctype.ts      # Maps Odoo model (`account.move`, `sale.order`, …) → user-facing docType (`invoice`, `order`, …) for Client copy
 i18n/                           # Routing, request config, navigation (Link/Router wrappers)
 messages/                       # Translations (es, en, fr, de, pt)
 proxy.ts                        # Locale detection middleware
@@ -205,7 +218,7 @@ The interface uses specialized cards to handle different response types from the
 Displayed when the agent successfully performs a write operation:
 - Green card with CheckCircle icon
 - Shows record ID and name
-- Direct link to view the record in Odoo (opens in new tab)
+- **Dual-voice:** Builder sees technical headline + raw record name + `font-technical` `#id` + "View in Odoo" link. Client sees natural copy keyed by action × docType (e.g. `Tu factura #42 quedó emitida.`) via `Client.ActionSuccess.<action>.<docType>` translations; record id is wrapped in `<DocNum>` (warm-raised pill); Odoo link is hidden.
 
 ### ValidationPrompt
 Displayed when required fields are missing:
@@ -222,6 +235,7 @@ AI-proposed CRUD action with confirm/cancel flow:
 - User-edited field indicators (badge showing "Modified")
 - Confirm executes the action; cancel shows a translated cancellation message
 - Loading and completed states with visual feedback
+- **Dual-voice:** Builder header shows uppercase `action · model` and uses the backend-provided `action_btn` label verbatim. Client header shows neutral "Confirmar acción" and the CTA label comes from `Client.ActionProposal.verb.<action>.<docType>` (e.g. "Confirmar pedido", "Descargar") with a `.generic` fallback per action.
 
 ### OdooActionButton
 Interactive button for confirmable method calls:
@@ -292,6 +306,28 @@ Odoo model search with autocomplete:
 - Debounced search against backend (`/chat/{id}/search`)
 - Dropdown with matching records (id + name)
 - Used within ActionProposalButton field editor
+
+### AgentMark
+Brand-mark primitives used across the app instead of the generic `Bot` icon:
+- `MarkB` — block mark (used in sidebar header, chat AI avatar, empty-state hero)
+- `MarkI` — alternate mark (used in the typing indicator)
+- `Wordmark` — "TheOdooAgent" text mark used in the expanded sidebar header
+- `Lockup` — mark + wordmark lockup used by `PoweredBy`
+
+### LangGraphTracePanel
+Builder-only collapsible right-side trace panel for visualising LangGraph node execution:
+- Shown only when `meData?.user?.role` is `ADMIN` or `SUPERADMIN`
+- Collapsed by default as a floating pill with event count; expands to a fixed 320px aside
+- Each entry: timestamp, level (`ok` / `info` / `err` / `warn`), node, message
+- **Currently a stub** — entries are synthesized in `AppShell` on each `isStreaming` transition. Replace with the backend's SSE `trace` event when available.
+
+### DocNum
+Renders a document number with audience-aware styling:
+- Client (CLIENT_USER + anonymous): `.docnum` pill — Roboto Mono on a warm-raised background; the **only** mono surface the Client sees
+- Builder (ADMIN/SUPERADMIN): plain `.font-technical` — mono is already pervasive for them, no pill
+
+### PoweredBy
+Discreet "Powered by TheOdooAgent" lockup intended for the Client sidebar footer only — supports partial white-labelling (the implementer's brand stays visually dominant; TheOdooAgent stays as a credit).
 
 ## Authentication & User Flows
 
@@ -752,12 +788,49 @@ Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` 
 - Charts use Odoo purple palette
 - Notification severity: critical (`text-error`), warning (`text-warning-solid`), info (`text-info`), success (`text-success-solid`)
 
+### Density Tokens (Builder vs Client)
+
+Beyond color, the design system exposes density tokens in `app/globals.css` that scale button/input/card heights and radii. They map to Tailwind v4 utilities via `--spacing-*` and `--radius-*`:
+
+| CSS variable | Tailwind utility | Role |
+|--------------|------------------|------|
+| `--btn-h-sm`  | `h-btn-sm` / `w-btn-sm` | Small button (default 40px) |
+| `--btn-h-md`  | `h-btn-md` / `w-btn-md` | Default button height (44px) |
+| `--btn-h-lg`  | `h-btn-lg` / `w-btn-lg` | Large CTA (48px) |
+| `--input-h`   | `min-h-input` / `h-input` | Inputs / textareas (44px) |
+| `--btn-radius`   | `rounded-btn` | Button / input corner radius |
+| `--input-radius` | `rounded-input` | Input corner radius |
+| `--card-radius`  | `rounded-card` | Card / modal corner radius |
+| `--layout-gap`   | `gap-layout-gap` | Standard layout gap |
+
+The defaults baked into `:root` correspond to the **Client** density (larger, more spacious — appropriate for anonymous / demo visitors before `/me` resolves). Builder density is applied by swapping the variable values on a `.builder` / `.client` class scope.
+
+Pair these tokens with `useIconSize(slot)` for icons (slot `inline` | `button` | `heading`) so a single component stays visually consistent across audiences.
+
 ### Shape & Animation Conventions
 
-- Cards / modals: `rounded-lg` (was `rounded-2xl`)
-- Buttons / inputs / small elements: `rounded-md` (was `rounded-xl`/`rounded-lg`)
-- Icons: 20px size, `strokeWidth={1.5}` throughout
+- Cards / modals: `rounded-card` token (literal fallback: `rounded-lg`)
+- Buttons / inputs / small elements: `rounded-btn` token (literal fallback: `rounded-md`)
+- Button height: `h-btn-md` (use `h-btn-sm` / `h-btn-lg` for variants)
+- Icons: size via `useIconSize(...)` (or 20px literal in static surfaces), `strokeWidth={1.5}` throughout
 - Animations: `duration-0.15` + `ease: "easeOut"` (replaced spring physics)
+
+### Audience-Aware Strings & Icons
+
+User-facing copy and icon sizes split by audience (role):
+
+- **Builder** = `ADMIN` or `SUPERADMIN` — execution-oriented, mono-friendly, exposes Odoo internals (e.g. "EJECUTANDO · fetch_records", "ValidationError", `sale.order`).
+- **Client** = `CLIENT_USER` + anonymous — concierge style, no jargon, document numbers only (e.g. "Lista", "No pude conectarme con tu sistema").
+
+Read strings via `useAudienceT("<namespace>")` which resolves to `Builder.<namespace>` or `Client.<namespace>` automatically. Keys must exist under **both** roots in every `messages/*.json` — keep them in lockstep across all five locales.
+
+Read icon sizes via `useIconSize(slot)`:
+
+| Slot | Builder | Client |
+|------|--------:|-------:|
+| `inline`  | 16 | 18 |
+| `button`  | 20 | 22 |
+| `heading` | 24 | 28 |
 
 ## Supported Languages
 
@@ -792,3 +865,5 @@ Translations are located in `messages/[locale].json`.
 | `LimitReachedModal` | 402 payment limit message |
 | `Invite` | Invitation acceptance (loading, success, error, expired) |
 | `LocaleSwitcher` | Language names |
+| `Builder.*` | Builder-voice strings — read via `useAudienceT("<ns>")` when role is ADMIN/SUPERADMIN. Includes `Builder.Trace` (LangGraph panel) and `Builder.ChatMessages` (e.g. typing indicator: "Ejecutando · query"). |
+| `Client.*` | Client-voice strings — read via `useAudienceT("<ns>")` when role is CLIENT_USER or anonymous. Includes `Client.ChatMessages`, `Client.ActionSuccess.<action>.<docType>` (success card headlines) and `Client.ActionProposal.verb.<action>.<docType>` (confirm-button labels). Every entry must have a `.generic` fallback. |

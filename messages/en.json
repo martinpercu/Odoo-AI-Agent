@@ -685,6 +685,51 @@
   "Client": {
     "ChatMessages": {
       "typingIndicator": "Looking up your info"
+    },
+    "ActionSuccess": {
+      "create": {
+        "invoice": "Your invoice {docnum} has been issued.",
+        "order": "Your order {docnum} is confirmed.",
+        "purchase": "Purchase order {docnum} was created.",
+        "delivery": "Your shipment {docnum} is being prepared.",
+        "payment": "Your payment {docnum} was recorded.",
+        "contact": "Added to your contacts.",
+        "product": "Your product was created.",
+        "generic": "Done. Operation completed."
+      },
+      "update": {
+        "invoice": "Updated the details of invoice {docnum}.",
+        "order": "Updated order {docnum}.",
+        "generic": "Done. Changes saved."
+      },
+      "method_call": {
+        "generic": "Done. Operation completed."
+      },
+      "report": {
+        "invoice": "Your invoice {docnum} is ready to download.",
+        "order": "Your order {docnum} is ready to download.",
+        "generic": "Your document is ready to download."
+      }
+    },
+    "ActionProposal": {
+      "verb": {
+        "create": {
+          "invoice": "Confirm invoice",
+          "order": "Confirm order",
+          "purchase": "Confirm purchase order",
+          "payment": "Confirm payment",
+          "generic": "Confirm"
+        },
+        "update": {
+          "generic": "Save changes"
+        },
+        "method_call": {
+          "generic": "Confirm"
+        },
+        "report": {
+          "generic": "Download"
+        }
+      }
     }
   }
 }

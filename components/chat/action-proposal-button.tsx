@@ -9,6 +9,7 @@ import { EntityAutocomplete } from "./entity-autocomplete";
 import { AuditHistoryPopover } from "./audit-history-popover";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
+import { modelToDocType } from "@/lib/odoo-model-to-doctype";
 
 interface ActionProposalButtonProps {
   metadata: ActionProposalMetadata;
@@ -110,8 +111,21 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { currentChatId } = useChatContext();
   const t = useTranslations("ChatMessages");
+  const tClientVerb = useTranslations("Client.ActionProposal.verb");
   const { meData } = useSession();
   const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
+
+  function clientActionLabel(): string {
+    const docType = modelToDocType(metadata.action.model);
+    const specific = `${metadata.action.action}.${docType}`;
+    const fallback = `${metadata.action.action}.generic`;
+    const path = tClientVerb.has(specific) ? specific : fallback;
+    return tClientVerb.has(path) ? tClientVerb(path) : t("actionProposal.confirm");
+  }
+
+  const actionLabel = isBuilder
+    ? metadata.labels.action_btn
+    : clientActionLabel();
 
   // Immutable reference to original values from backend/OCR — never mutated
   const initialValsRef = useRef<Record<string, unknown>>({ ...metadata.action.vals });
@@ -381,7 +395,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
           className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
         >
           {loading && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
-          <span>{loading ? metadata.labels.confirm_btn : metadata.labels.action_btn}</span>
+          <span>{loading ? metadata.labels.confirm_btn : actionLabel}</span>
         </button>
         <button
           onClick={handleReject}
