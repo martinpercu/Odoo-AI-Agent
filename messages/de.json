@@ -354,7 +354,7 @@
       "testConnection": "Verbindung testen",
       "saveConfig": "Einstellungen speichern",
       "saved": "Gespeichert",
-      "statusTesting": "Verbindung wird getestet...",
+      "statusTesting": "Verbindung zu Odoo wird getestet...",
       "statusSuccess": "Verbindung erfolgreich.",
       "statusSuccessCompany": "Verbunden mit {company}",
       "statusError": "Verbindung fehlgeschlagen.",
@@ -427,7 +427,7 @@
     "demoBannerConnectOdoo": "Demo-Modus — verbinden Sie Ihr Odoo, um echte Daten zu nutzen.",
     "demoConnectOdoo": "Mein Odoo verbinden",
     "devMode": "Entwicklermodus",
-    "devModeDesc": "Auth deaktiviert.",
+    "devModeDesc": "Supabase ist nicht konfiguriert. Die Authentifizierung ist deaktiviert — alle Anfragen werden ohne Token ausgeführt.",
     "devModeContinue": "Ohne Login fortfahren"
   },
   "Onboarding": {
@@ -487,7 +487,13 @@
     "en": "English",
     "fr": "Français",
     "de": "Deutsch",
-    "pt": "Português"
+    "pt": "Português",
+    "it": "Italiano",
+    "hi": "हिन्दी",
+    "gu": "ગુજરાતી",
+    "ta": "தமிழ்",
+    "kn": "ಕನ್ನಡ",
+    "mr": "मराठी"
   },
   "Feedback": {
     "title": "Problem melden",
