@@ -70,7 +70,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Admin settings panel with 4 tabs (Org, Instances, Users, Feedback), each section rendered as a `CollapsibleCard` (animated accordion)
 - Credential UI is role-aware: `CLIENT_USER` sees a single-instance block with a status row (configured/not-configured + username inline) and an inline edit form that expands via a Pencil button (animated with `AnimatePresence`); `ADMIN` sees an accordion per config
 - Odoo connection configuration, validation, and instance inspection
-- Multi-language support (Spanish, English, French, German, Portuguese)
+- Multi-language support (Spanish, English, French, German, Portuguese, Italian, Hindi, Gujarati, Tamil, Kannada, Marathi)
 - Light / dark mode with preference persisted in `localStorage` (no flash on reload)
 - Collapsible and responsive sidebar (mobile-friendly)
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
@@ -105,7 +105,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - **Recharts** - Composable charting library (bar, area, pie)
 
 **Internationalization:**
-- **next-intl** - Locale-based routing, 5 supported languages
+- **next-intl** - Locale-based routing, 11 supported languages
 
 **Rendering:**
 - **react-markdown** - Markdown rendering for agent responses
@@ -194,7 +194,7 @@ lib/
   pin-animation-events.ts       # Pub-sub system for flying pin animations
   odoo-model-to-doctype.ts      # Maps Odoo model (`account.move`, `sale.order`, …) → user-facing docType (`invoice`, `order`, …) for Client copy
 i18n/                           # Routing, request config, navigation (Link/Router wrappers)
-messages/                       # Translations (es, en, fr, de, pt)
+messages/                       # Translations (es, en, fr, de, pt, it, hi, gu, ta, kn, mr)
 proxy.ts                        # Locale detection middleware
 ```
 
@@ -829,7 +829,7 @@ User-facing copy and icon sizes split by audience (role):
 - **Builder** = `ADMIN` or `SUPERADMIN` — execution-oriented, mono-friendly, exposes Odoo internals (e.g. "EJECUTANDO · fetch_records", "ValidationError", `sale.order`).
 - **Client** = `CLIENT_USER` + anonymous — concierge style, no jargon, document numbers only (e.g. "Lista", "No pude conectarme con tu sistema").
 
-Read strings via `useAudienceT("<namespace>")` which resolves to `Builder.<namespace>` or `Client.<namespace>` automatically. Keys must exist under **both** roots in every `messages/*.json` — keep them in lockstep across all five locales.
+Read strings via `useAudienceT("<namespace>")` which resolves to `Builder.<namespace>` or `Client.<namespace>` automatically. Keys must exist under **both** roots in every `messages/*.json` — keep them in lockstep across all eleven locales.
 
 Read icon sizes via `useIconSize(slot)`:
 
@@ -848,6 +848,12 @@ Read icon sizes via `useIconSize(slot)`:
 | `fr` | French |
 | `de` | German |
 | `pt` | Portuguese |
+| `it` | Italian |
+| `hi` | Hindi |
+| `gu` | Gujarati |
+| `ta` | Tamil |
+| `kn` | Kannada |
+| `mr` | Marathi |
 
 Translations are located in `messages/[locale].json`.
 
