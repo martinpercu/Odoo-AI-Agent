@@ -26,6 +26,18 @@
     "yes": "हाँ",
     "no": "नहीं"
   },
+  "UserMenu": {
+    "guest": "अतिथि",
+    "settings": "सेटिंग्स",
+    "superAdmin": "एडमिन पैनल",
+    "theme": "थीम",
+    "themeDark": "गहरा",
+    "themeLight": "हल्का",
+    "language": "भाषा",
+    "instance": "इंस्टेंस",
+    "login": "साइन इन करें",
+    "logout": "लॉग आउट"
+  },
   "ChatGroups": {
     "today": "आज",
     "yesterday": "कल",

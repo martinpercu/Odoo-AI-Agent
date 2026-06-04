@@ -26,6 +26,18 @@
     "yes": "હા",
     "no": "ના"
   },
+  "UserMenu": {
+    "guest": "મહેમાન",
+    "settings": "સેટિંગ્સ",
+    "superAdmin": "એડમિન પૅનલ",
+    "theme": "થીમ",
+    "themeDark": "ઘેરો",
+    "themeLight": "આછો",
+    "language": "ભાષા",
+    "instance": "ઇન્સ્ટન્સ",
+    "login": "સાઇન ઇન",
+    "logout": "લૉગ આઉટ"
+  },
   "ChatGroups": {
     "today": "આજે",
     "yesterday": "ગઈ કાલ",

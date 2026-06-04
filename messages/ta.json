@@ -26,6 +26,18 @@
     "yes": "ஆம்",
     "no": "இல்லை"
   },
+  "UserMenu": {
+    "guest": "விருந்தினர்",
+    "settings": "அமைப்புகள்",
+    "superAdmin": "நிர்வாக பலகம்",
+    "theme": "தீம்",
+    "themeDark": "இருண்ட",
+    "themeLight": "வெளிர்",
+    "language": "மொழி",
+    "instance": "நிகழ்வு",
+    "login": "உள்நுழைய",
+    "logout": "வெளியேறு"
+  },
   "ChatGroups": {
     "today": "இன்று",
     "yesterday": "நேற்று",
