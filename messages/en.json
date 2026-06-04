@@ -26,6 +26,18 @@
     "yes": "Yes",
     "no": "No"
   },
+  "UserMenu": {
+    "guest": "Guest",
+    "settings": "Settings",
+    "superAdmin": "Admin Panel",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "language": "Language",
+    "instance": "Instance",
+    "login": "Sign in",
+    "logout": "Log out"
+  },
   "ChatGroups": {
     "today": "Today",
     "yesterday": "Yesterday",

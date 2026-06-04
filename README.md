@@ -132,12 +132,12 @@ app/
 components/
   app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles
   AgentMark.tsx                 # Brand mark primitives: MarkB, MarkI, Wordmark, Lockup
-  locale-switcher.tsx           # Language selector dropdown
   theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
   auth/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history (paginated) + theme toggle (persisted in localStorage) + logout
+    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu
+    user-menu.tsx               # Popover menu (bottom of sidebar): avatar/initials, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu, login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
@@ -862,7 +862,8 @@ Translations are located in `messages/[locale].json`.
 | Namespace | Description |
 |-----------|-------------|
 | `Metadata` | Page title and description |
-| `Sidebar` | Navigation, theme toggle, logout, collapse/expand labels |
+| `Sidebar` | Collapse/expand labels, empty state |
+| `UserMenu` | Bottom sidebar popover: avatar, settings, theme, language, instance, login/logout |
 | `ChatGroups` | Date-based grouping labels |
 | `NewChat` | Welcome screen and suggestions |
 | `ChatInput` | Input placeholder, disclaimer, image attach/remove, send/stop aria labels |

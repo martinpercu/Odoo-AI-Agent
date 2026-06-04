@@ -26,6 +26,18 @@
     "yes": "Sì",
     "no": "No"
   },
+  "UserMenu": {
+    "guest": "Ospite",
+    "settings": "Impostazioni",
+    "superAdmin": "Pannello admin",
+    "theme": "Tema",
+    "themeDark": "Scuro",
+    "themeLight": "Chiaro",
+    "language": "Lingua",
+    "instance": "Istanza",
+    "login": "Accedi",
+    "logout": "Esci"
+  },
   "ChatGroups": {
     "today": "Oggi",
     "yesterday": "Ieri",

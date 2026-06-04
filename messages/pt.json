@@ -26,6 +26,18 @@
     "yes": "Sim",
     "no": "Não"
   },
+  "UserMenu": {
+    "guest": "Convidado",
+    "settings": "Configurações",
+    "superAdmin": "Painel Admin",
+    "theme": "Tema",
+    "themeDark": "Escuro",
+    "themeLight": "Claro",
+    "language": "Idioma",
+    "instance": "Instância",
+    "login": "Entrar",
+    "logout": "Sair"
+  },
   "ChatGroups": {
     "today": "Hoje",
     "yesterday": "Ontem",
