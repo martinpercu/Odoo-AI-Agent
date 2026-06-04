@@ -26,6 +26,18 @@
     "yes": "होय",
     "no": "नाही"
   },
+  "UserMenu": {
+    "guest": "पाहुणे",
+    "settings": "सेटिंग्ज",
+    "superAdmin": "प्रशासक पॅनल",
+    "theme": "थीम",
+    "themeDark": "गडद",
+    "themeLight": "फिकट",
+    "language": "भाषा",
+    "instance": "इन्स्टन्स",
+    "login": "साइन इन",
+    "logout": "लॉग आउट"
+  },
   "ChatGroups": {
     "today": "आज",
     "yesterday": "काल",

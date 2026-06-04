@@ -1,35 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   SquarePen,
-  Settings,
-  CreditCard,
   ChevronLeft,
   Menu,
   MessageSquare,
-  Sun,
-  Moon,
   Bell,
-  LogOut,
-  Shield,
-  LogIn,
   Trash2,
   AlertTriangle,
   Loader2,
 } from "lucide-react";
 import { MarkB, Wordmark } from "@/components/AgentMark";
-import { PoweredBy } from "@/components/ui/powered-by";
 import { useNotifications } from "@/hooks/use-notifications";
-import { useAuth } from "@/hooks/use-auth";
-import { useSession } from "@/hooks/use-session";
 import { useIconSize } from "@/hooks/use-icon-size";
-import { LocaleSwitcher } from "@/components/locale-switcher";
-import { InstanceSwitcher } from "@/components/chat/instance-switcher";
-import { IS_AUTH_ENABLED } from "@/lib/supabase";
+import { UserMenu } from "@/components/chat/user-menu";
 import type { ChatGroup } from "@/lib/types";
 
 interface SidebarProps {
@@ -46,22 +33,13 @@ interface SidebarProps {
 export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick, onLoadMore, hasMore, onDeleteChat }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setIsDark(document.documentElement.classList.contains("dark"));
-  }, [pathname]);
   const t = useTranslations("Sidebar");
   const tGroups = useTranslations("ChatGroups");
   const { unreadCount } = useNotifications();
-  const { user, logout } = useAuth();
-  const { meData } = useSession();
   const iconBtn = useIconSize("button");
   const iconInline = useIconSize("inline");
-  const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
 
   const displayGroups = chatGroups;
 
@@ -70,15 +48,6 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
     await onDeleteChat(id);
     setDeletingId(null);
     setConfirmDeleteId(null);
-  }
-
-  function toggleTheme() {
-    setIsDark((prev) => {
-      const next = !prev;
-      document.documentElement.classList.toggle("dark", next);
-      localStorage.setItem("theme", next ? "dark" : "light");
-      return next;
-    });
   }
 
   const sidebarContent = (
@@ -233,94 +202,9 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
         )}
       </div>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation — consolidated user menu */}
       <div className="border-t border-sidebar-border p-3">
-        <nav className="flex flex-col gap-1">
-          {!user && (
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
-                pathname === "/login"
-                  ? "bg-sidebar-active font-medium text-accent"
-                  : "hover:bg-sidebar-hover"
-              }`}
-            >
-              <LogIn size={iconBtn} strokeWidth={1.5} />
-              {!collapsed && <span>{t("login")}</span>}
-            </Link>
-          )}
-          {/* {meData?.user?.role !== "CLIENT_USER" && (
-            <Link
-              href="/pricing"
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
-                pathname === "/pricing"
-                  ? "bg-sidebar-active font-medium text-accent"
-                  : "hover:bg-sidebar-hover"
-              }`}
-            >
-              <CreditCard size={iconBtn} strokeWidth={1.5} />
-              {!collapsed && <span>{t("plans")}</span>}
-            </Link>
-          )} */}
-          {user && (
-            <Link
-              href={settingsHref}
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
-                pathname === "/settings" || pathname === "/onboarding"
-                  ? "bg-sidebar-active font-medium text-accent"
-                  : "hover:bg-sidebar-hover"
-              }`}
-            >
-              <Settings size={iconBtn} strokeWidth={1.5} />
-              {!collapsed && <span>{t("settings")}</span>}
-            </Link>
-          )}
-          {meData?.user?.role === "SUPERADMIN" && (
-            <Link
-              href="/superadmin"
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors ${
-                pathname === "/superadmin"
-                  ? "bg-sidebar-active font-medium text-accent"
-                  : "hover:bg-sidebar-hover"
-              }`}
-            >
-              <Shield size={iconBtn} strokeWidth={1.5} />
-              {!collapsed && <span>{t("superAdmin")}</span>}
-            </Link>
-          )}
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover"
-            aria-label={isDark ? t("lightMode") : t("darkMode")}
-          >
-            {isDark ? <Sun size={iconBtn} strokeWidth={1.5} /> : <Moon size={iconBtn} strokeWidth={1.5} />}
-            {!collapsed && <span>{isDark ? t("lightMode") : t("darkMode")}</span>}
-          </button>
-          <InstanceSwitcher collapsed={collapsed} />
-          <LocaleSwitcher collapsed={collapsed} />
-          {/* Logout — only shown when auth is enabled and user is logged in */}
-          {IS_AUTH_ENABLED && user && (
-            <button
-              onClick={logout}
-              className="flex items-center gap-3 rounded-md px-2.5 py-2 text-body transition-colors hover:bg-sidebar-hover text-text-secondary"
-              title={t("logout")}
-              aria-label={t("logout")}
-            >
-              <LogOut size={iconBtn} strokeWidth={1.5} />
-              {!collapsed && <span>{t("logout")}</span>}
-            </button>
-          )}
-        </nav>
-        {/* Powered by — Client only (Builder ya tiene la marca prominente arriba) */}
-        {meData?.user?.role !== "ADMIN" && meData?.user?.role !== "SUPERADMIN" && !collapsed && (
-          <div className="mt-3 border-t border-sidebar-border pt-3 flex justify-center">
-            <PoweredBy />
-          </div>
-        )}
+        <UserMenu collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
       </div>
     </div>
   );

@@ -26,6 +26,18 @@
     "yes": "ಹೌದು",
     "no": "ಇಲ್ಲ"
   },
+  "UserMenu": {
+    "guest": "ಅತಿಥಿ",
+    "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "superAdmin": "ನಿರ್ವಾಹಕ ಪ್ಯಾನಲ್",
+    "theme": "ಥೀಮ್",
+    "themeDark": "ಗಾಢ",
+    "themeLight": "ತಿಳಿ",
+    "language": "ಭಾಷೆ",
+    "instance": "ಇನ್‌ಸ್ಟನ್ಸ್",
+    "login": "ಸೈನ್ ಇನ್",
+    "logout": "ಲಾಗ್ ಔಟ್"
+  },
   "ChatGroups": {
     "today": "ಇಂದು",
     "yesterday": "ನಿನ್ನೆ",
