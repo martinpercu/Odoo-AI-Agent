@@ -161,23 +161,9 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="absolute bottom-full left-0 z-50 mb-2 w-full min-w-[240px] overflow-visible rounded-card border border-border bg-surface py-1 shadow-lg"
           >
-            {/* Header */}
-            <div className="flex items-center gap-3 px-3 py-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-small font-medium text-white">
-                {initials || <UserIcon size={iconInline} strokeWidth={1.5} />}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-body">{email ?? t("guest")}</span>
-                {secondaryLine && (
-                  <span className="block truncate text-micro text-text-muted">{secondaryLine}</span>
-                )}
-              </span>
-            </div>
-
             {/* Instance switcher */}
             {showInstance && (
               <>
-                <div className="my-1 border-t border-border" />
                 <div className="relative px-1">
                   <button
                     onClick={() => setSub((s) => (s === "instance" ? null : "instance"))}
@@ -227,11 +213,11 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                     )}
                   </AnimatePresence>
                 </div>
+                <div className="my-1 border-b border-border" />
               </>
             )}
 
             {/* Navigation links */}
-            {(user || isSuperAdmin) && <div className="my-1 border-t border-border" />}
             <div className="px-1">
               {user && (
                 <Link href={settingsHref} onClick={close} className={itemClass}>
