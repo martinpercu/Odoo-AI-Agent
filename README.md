@@ -616,6 +616,16 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
 }
 ```
 
+**Error (terminal — backend graph failed mid-stream):**
+```json
+{
+  "type": "error",
+  "detail": "Ocurrió un error procesando tu consulta. Por favor, intentá de nuevo."
+}
+```
+
+This event signals that the backend graph failed partway through the stream. The HTTP status stays `200` — the failure travels *inside* the stream, so `response.ok` is not enough to detect it. It is **terminal**: no useful events follow, and the frontend cancels the reader after handling it. `detail` arrives already localized (in the request `language`) and neutral (no model names or stack traces), so it is shown as-is. Any partial text already streamed is kept and the error is appended below it (`⚠️ {detail}`); if no text was streamed yet, the error message stands alone. Handled in `hooks/use-chat.ts`.
+
 The `labels` field in action proposals contains translated UI text based on the `language` sent in the request. The frontend uses these labels directly for button text and cancellation messages.
 
 ### Image Upload Response
