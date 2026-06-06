@@ -433,6 +433,33 @@ export function useChat(chatId?: string, userId?: string) {
                       // Watermark event comes at the start. show: false = paid client.
                       showWatermark = typeof parsed.show === "boolean" ? parsed.show : true;
                       continue;
+                    } else if (parsed.type === "error") {
+                      // Terminal error event: the backend graph failed mid-stream.
+                      // `detail` is already localized + neutral — show it as-is.
+                      // Status is still 200, so this is the only failure signal.
+                      const detail =
+                        typeof parsed.detail === "string" && parsed.detail
+                          ? parsed.detail
+                          : t("connectionError");
+                      // Keep any partial text already streamed, append the error below.
+                      const finalContent = accumulated
+                        ? `${accumulated}\n\n⚠️ ${detail}`
+                        : `⚠️ ${detail}`;
+                      updateChat(targetId, (c) => ({
+                        ...c,
+                        messages: c.messages.map((m) =>
+                          m.id === assistantId
+                            ? {
+                                ...m,
+                                content: finalContent,
+                                ...(charts.length > 0 && { charts }),
+                                watermark: showWatermark,
+                              }
+                            : m
+                        ),
+                      }));
+                      reader.cancel();
+                      return;
                     } else {
                       continue;
                     }
