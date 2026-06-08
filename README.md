@@ -1,26 +1,87 @@
-# Odoo Agent Front
+<div align="center">
 
-> Multi-tenant SaaS frontend for interacting with Odoo ERP through an AI agent
+# 🤖 The Odoo Agent — Frontend
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1-000000.svg)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2-61DAFB.svg)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4.svg)](https://tailwindcss.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth-3ECF8E.svg)](https://supabase.com/)
-[![next-intl](https://img.shields.io/badge/next--intl-4.8-blue.svg)](https://next-intl.dev/)
+**Talk to your Odoo ERP in natural language.**
 
-## Description
+[![Next.js](https://img.shields.io/badge/Next.js-16.1-000000.svg?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB.svg?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth-3ECF8E.svg?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-0055FF.svg?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
+
+A multi-tenant, **ChatGPT-style interface** that lets anyone query and manage their Odoo ERP — sales, invoices, inventory, contacts, HR — through an AI agent. Real-time **SSE streaming**, interactive **charts**, **action execution** with a confirmation gate, **document OCR upload**, a pinnable **insights dashboard**, proactive **notifications**, and a **dual-voice UI** that speaks differently to implementers and their end clients — in **11 languages**.
+
+</div>
+
+---
+
+> ## 🔗 Want to see how the AI actually works?
+>
+> **This repo is the frontend.** The conversational intelligence — a **21-node LangGraph agent**, keyword-first/LLM-last pipeline, computed-facts engine, multi-tenant auth, OCR and proactive monitoring — lives in a separate backend service (private repo).
+>
+> ### 👉 **[Read the Backend Architecture →](docs/BACKEND_ARCHITECTURE.md)**
+>
+> Agent flow diagram · node pipeline · query planning · multi-tenancy & RBAC · Stripe billing · OCR extraction · the full SSE event contract.
+
+---
+
+## 🎯 What's Inside
+
+This is a production-grade SaaS front end, not a toy chat box. At a glance:
+
+| Pillar | Highlights |
+|--------|-----------|
+| 💬 **Conversational core** | SSE streaming, Markdown responses, image upload (vision), rotating suggestion carousel, date-grouped history |
+| ⚡ **Action management** | AI-proposed CRUD with confirm/cancel, field editor + per-field validation, success/validation cards, ambiguity resolution, entity autocomplete, audit trail, auto-sequencing |
+| 📊 **Analytics & export** | Interactive bar/line/pie charts (Recharts), automatic Excel export, standalone Excel/PDF download cards |
+| 📌 **Insights dashboard** | Pin charts/files/exports to a right sidebar split into **Live** (refreshable) and **Saved** (point-in-time), flying-pin animation, optimistic updates |
+| 🔔 **Notifications** | Proactive Odoo alerts with severity, unread badges, deep-link into chat, 30s polling |
+| 🔐 **Auth & multi-tenancy** | Supabase auth + DEV MODE + Demo mode, org management, RBAC (SuperAdmin/Admin/Client), subscription tiers, team invitations, slot limits |
+| 🎭 **Dual-voice UI** | Audience-aware copy & density — technical for Builders, concierge for Clients — custom brand mark, white-label "Powered by", LangGraph trace panel |
+| 🌍 **i18n & theming** | 11 languages, light/dark mode with no-flash persistence, full design-token system, responsive collapsible layout |
+
+> 💡 If this already looks broad — it is. Keep scrolling for the complete reference: project structure, provider stack, every UI card, auth flows, the multi-tenancy model, the full endpoint table and the SSE protocol.
+
+### 🗺️ How a message flows
+
+```mermaid
+sequenceDiagram
+    participant U as 👤 User
+    participant FE as 🖥️ Frontend (Next.js)
+    participant BE as ⚡ Backend (FastAPI/SSE)
+    participant ODOO as 🟣 Odoo
+
+    U->>FE: "Total revenue by customer this month"
+    FE->>BE: POST /chat/{id}/stream<br/>{ message, config_id, language }
+    BE->>ODOO: XML-RPC read_group
+    ODOO-->>BE: aggregated rows
+    loop Stream (text/event-stream)
+        BE-->>FE: text chunk
+        FE-->>U: render token-by-token (throttled via rAF)
+    end
+    BE-->>FE: chart event (bar/pie/line + export_url)
+    FE-->>U: OdooChartCard + Excel + 📌 pin
+    Note over FE,BE: action_proposal → confirm → POST /chat/{id}/action<br/>selection_prompt · export · watermark · error · trace
+```
+
+---
+
+# 📖 Full Reference
+
+## 📝 Description
 
 A modern, responsive interface that allows users to query and manage data from their Odoo instance (inventory, invoices, sales, employees) using natural language through an AI-powered chat. Key features:
 
-**Core Chat:**
+**💬 Core Chat:**
 - Real-time chat with SSE streaming
 - Rich Markdown-formatted responses
 - Image upload with inline preview (vision-based AI interactions)
 - Rotating suggestion carousel: 4 random cards from a pool of 11 active suggestions, auto-rotates every 7s, pauses on hover
 - Conversation history grouped by date (today, yesterday, last 7 days)
 
-**Action Management:**
+**⚡ Action Management:**
 - AI-proposed CRUD actions with confirm/cancel flow (from text and vision sources)
 - Field editor modal with per-field validation (422 error handling)
 - Visual feedback for write operations (create, update, method calls)
@@ -31,13 +92,13 @@ A modern, responsive interface that allows users to query and manage data from t
 - Audit history popover for action execution trail
 - Auto-sequencing: `queue_next` triggers follow-up actions automatically
 
-**Analytics & Export:**
+**📊 Analytics & Export:**
 - Interactive charts (bar, line, pie) powered by Recharts
 - Automatic Excel export button on chart cards
 - Standalone Excel download cards for explicit export requests
 - PDF report download cards
 
-**Pinned Insights Dashboard:**
+**📌 Pinned Insights Dashboard:**
 - Pin charts, files, and exports to a collapsible right sidebar
 - Sidebar splits pins into **Live** (variable/refreshable charts, 2-col grid) and **Saved** (static/point-in-time charts + files + Excel, grouped below)
 - Refresh button shown only for **live** (`volatility: "variable"`) charts — static charts are point-in-time, refresh is suppressed
@@ -48,7 +109,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - **User-scoped clear:** `clearAll` calls `DELETE /me/pins` (removes all pins across every conversation for the user)
 - **Defensive validation:** malformed pins (e.g., chart pin missing `chart` payload) are filtered out before rendering to prevent runtime crashes
 
-**Notification System:**
+**🔔 Notification System:**
 - Proactive alerts from Odoo (sales, stock, invoices) with severity levels
 - Notification feed in right sidebar (Alerts tab) with unread badge
 - Mark as read (individual and bulk), dismiss
@@ -56,7 +117,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Configurable settings modal (toggle alerts by category, daily summary)
 - Auto-polling every 30 seconds
 
-**Authentication & Multi-Tenancy:**
+**🔐 Authentication & Multi-Tenancy:**
 - Supabase email/password authentication (DEV MODE bypass when unset)
 - Demo mode: unauthenticated access when backend sets `demo_available` (banner in chat + "Try Demo" button on login)
 - Organization management (name, slug, type)
@@ -66,7 +127,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - 2-step onboarding wizard (org creation + Odoo connection)
 - 402 payment limit modal (graceful degradation, no crash)
 
-**Configuration:**
+**⚙️ Configuration:**
 - Admin settings panel with 4 tabs (Org, Instances, Users, Feedback), each section rendered as a `CollapsibleCard` (animated accordion)
 - Credential UI is role-aware: `CLIENT_USER` sees a single-instance block with a status row (configured/not-configured + username inline) and an inline edit form that expands via a Pencil button (animated with `AnimatePresence`); `ADMIN` sees an accordion per config
 - Odoo connection configuration, validation, and instance inspection
@@ -75,18 +136,18 @@ A modern, responsive interface that allows users to query and manage data from t
 - Collapsible and responsive sidebar (mobile-friendly)
 - Accessibility: `aria-label` on all interactive icon buttons, `role="switch"` on toggles
 
-**Builder vs Client (dual-voice UI):**
+**🎭 Builder vs Client (dual-voice UI):**
 - Audience-aware copy: ADMIN / SUPERADMIN see technical strings (e.g. `create · sale.order`, `#42`, raw Odoo model names); CLIENT_USER and anonymous visitors see natural concierge copy (e.g. `Confirmar pedido`, `Tu factura #42 quedó emitida.`). Mapping from Odoo model → document type lives in `lib/odoo-model-to-doctype.ts`; translation keys in `Builder.*` and `Client.*` namespaces.
 - Audience-aware density: icon sizes and button/input/card heights and radii scale up for Client (more spacious, larger tap targets) and stay compact for Builder, driven by CSS `--btn-h-*`, `--input-h`, `--*-radius` density tokens.
 - Custom brand mark (`AgentMark`) replaces the generic `Bot` icon across the sidebar, chat avatar and empty-chat hero. `Wordmark` in the sidebar header. Discreet "Powered by TheOdooAgent" lockup (`PoweredBy`) shown only to Client (white-label-friendly: implementer's brand wins, TheOdooAgent stays as credit).
 - LangGraph trace panel (`LangGraphTracePanel`): collapsible right-side dev panel showing node-level execution events, visible only to Builder. Currently a stub that emits synthetic `stream:start` / `stream:end` entries — wired to be replaced by the backend's SSE `trace` event when available.
 
-**Other:**
+**✨ Other:**
 - Plans and pricing page (Free, Starter $50/mo, Implementor from $100/mo) with Stripe checkout and billing portal integration; current plan highlighted; Implementor detail modal with tier comparison table. The "Plans" link in the sidebar is currently hidden (commented out)
 
-## Architecture
+## 🏗️ Architecture
 
-### Tech Stack
+### 🧩 Tech Stack
 
 **Core:**
 - **Next.js 16** - React framework with App Router
@@ -110,7 +171,7 @@ A modern, responsive interface that allows users to query and manage data from t
 **Rendering:**
 - **react-markdown** - Markdown rendering for agent responses
 
-### Project Structure
+### 📁 Project Structure
 
 ```
 app/
@@ -198,7 +259,7 @@ messages/                       # Translations (es, en, fr, de, pt, it, hi, gu, 
 proxy.ts                        # Locale detection middleware
 ```
 
-### Provider Stack
+### 🧬 Provider Stack
 
 The root layout nests 9 context providers in this order:
 
@@ -215,23 +276,23 @@ NextIntlClientProvider
                   → AppShell (ChatContext + RightPanelContext)  ← only inside (app)/ route group
 ```
 
-## UI Components
+## 🧩 UI Components
 
 The interface uses specialized cards to handle different response types from the AI agent:
 
-### SuccessCard
+### ✅ SuccessCard
 Displayed when the agent successfully performs a write operation:
 - Green card with CheckCircle icon
 - Shows record ID and name
 - **Dual-voice:** Builder sees technical headline + raw record name + `font-technical` `#id` + "View in Odoo" link. Client sees natural copy keyed by action × docType (e.g. `Tu factura #42 quedó emitida.`) via `Client.ActionSuccess.<action>.<docType>` translations; record id is wrapped in `<DocNum>` (warm-raised pill); Odoo link is hidden.
 
-### ValidationPrompt
+### ⚠️ ValidationPrompt
 Displayed when required fields are missing:
 - Orange card with AlertCircle icon
 - Lists missing fields as bullet points
 - Guides user to provide complete information
 
-### ActionProposalButton
+### 🟣 ActionProposalButton
 AI-proposed CRUD action with confirm/cancel flow:
 - Purple button using Odoo brand color (#714B67)
 - Shows action summary (model, operation, data)
@@ -242,25 +303,25 @@ AI-proposed CRUD action with confirm/cancel flow:
 - Loading and completed states with visual feedback
 - **Dual-voice:** Builder header shows uppercase `action · model` and uses the backend-provided `action_btn` label verbatim. Client header shows neutral "Confirmar acción" and the CTA label comes from `Client.ActionProposal.verb.<action>.<docType>` (e.g. "Confirmar pedido", "Descargar") with a `.generic` fallback per action.
 
-### OdooActionButton
+### ⚡ OdooActionButton
 Interactive button for confirmable method calls:
 - Purple button using Odoo brand color
 - Loading state with spinner during execution
 - Completed state with checkmark
 - Example: "Confirm Quotation", "Approve Purchase Order"
 
-### SelectionCard
+### 🔀 SelectionCard
 Displayed when the agent needs to resolve ambiguity:
 - Lists matching records as selectable options
 - Clicking an option sends the selection back as a chat message
 
-### OdooFileCard
+### 📄 OdooFileCard
 PDF report download card:
 - Red-themed icon for PDF files
 - Shows filename and download button
 - Links to backend-served static file
 
-### OdooChartCard
+### 📊 OdooChartCard
 Interactive analytics visualization:
 - Supports bar, line (area), and pie charts via Recharts
 - Responsive layout with horizontal bars on narrow containers
@@ -271,13 +332,13 @@ Interactive analytics visualization:
 - **Excel export button** appears when `export_url` is present (ghost style, top-right)
 - **Pin button** to save chart to pinned insights sidebar
 
-### ExcelExportCard
+### 📥 ExcelExportCard
 Standalone Excel download card for explicit export requests:
 - Green Excel icon (#1D6F42) matching Microsoft Excel branding
 - Shows filename and "export ready" message
 - Download button with `download` attribute to force browser download
 
-### PinnedInsightMiniCard
+### 📌 PinnedInsightMiniCard
 Compact card displayed in the pinned insights sidebar:
 - **Chart cards:** Icon by chart type (bar/pie/line) + live dot (variable) or "Histórico" badge (static), title, formatted total (`K`/`M` abbreviation for large currency values), refresh + unpin buttons in top-right hover area
 - **File cards:** Red PDF icon, filename, download link, unpin button
@@ -285,58 +346,58 @@ Compact card displayed in the pinned insights sidebar:
 - Refresh button appears only on **live** (`volatility: "variable"`) chart cards and only when not in demo mode and an active Odoo config exists — static charts never refresh
 - Buttons revealed on hover with smooth opacity transition
 
-### NotificationCard
+### 🔔 NotificationCard
 Individual alert displayed in the notification feed:
 - Severity-based color coding (critical, warning, info, success)
 - Title, body, and relative timestamp ("5 min ago")
 - Read/unread visual state
 - Click to dismiss or deep-link into chat with prompt injection
 
-### ChatInput
+### ⌨️ ChatInput
 Auto-resizing textarea with image upload support:
 - Paperclip button opens native file picker (`accept="image/*"`)
 - Selected image shows as 64px thumbnail preview with X to remove
 - Supports sending text only, image only, or both together
 - Enter to send, Shift+Enter for newline
 
-### AuditHistoryPopover
+### 🕓 AuditHistoryPopover
 Action execution history timeline:
 - Shows all actions executed in the current conversation
 - Displays action type, model, record IDs, status
 - Highlights user-edited fields vs system values
 - Empty state when no actions have been executed
 
-### EntityAutocomplete
+### 🔍 EntityAutocomplete
 Odoo model search with autocomplete:
 - Debounced search against backend (`/chat/{id}/search`)
 - Dropdown with matching records (id + name)
 - Used within ActionProposalButton field editor
 
-### AgentMark
+### 🅰️ AgentMark
 Brand-mark primitives used across the app instead of the generic `Bot` icon:
 - `MarkB` — block mark (used in sidebar header, chat AI avatar, empty-state hero)
 - `MarkI` — alternate mark (used in the typing indicator)
 - `Wordmark` — "TheOdooAgent" text mark used in the expanded sidebar header
 - `Lockup` — mark + wordmark lockup used by `PoweredBy`
 
-### LangGraphTracePanel
+### 🪜 LangGraphTracePanel
 Builder-only collapsible right-side trace panel for visualising LangGraph node execution:
 - Shown only when `meData?.user?.role` is `ADMIN` or `SUPERADMIN`
 - Collapsed by default as a floating pill with event count; expands to a fixed 320px aside
 - Each entry: timestamp, level (`ok` / `info` / `err` / `warn`), node, message
 - **Currently a stub** — entries are synthesized in `AppShell` on each `isStreaming` transition. Replace with the backend's SSE `trace` event when available.
 
-### DocNum
+### #️⃣ DocNum
 Renders a document number with audience-aware styling:
 - Client (CLIENT_USER + anonymous): `.docnum` pill — Roboto Mono on a warm-raised background; the **only** mono surface the Client sees
 - Builder (ADMIN/SUPERADMIN): plain `.font-technical` — mono is already pervasive for them, no pill
 
-### PoweredBy
+### 🏷️ PoweredBy
 Discreet "Powered by TheOdooAgent" lockup intended for the Client sidebar footer only — supports partial white-labelling (the implementer's brand stays visually dominant; TheOdooAgent stays as a credit).
 
-## Authentication & User Flows
+## 🔐 Authentication & User Flows
 
-### Unauthenticated User
+### 👋 Unauthenticated User
 
 ```
 App loads → GET /me (no auth token)
@@ -350,7 +411,7 @@ App loads → GET /me (no auth token)
 
 > Demo Mode lets visitors interact with the AI using a read-only Odoo demo instance — no account required. Unauthenticated users always land on `/chat` first; a "Sign in" link is visible in the sidebar bottom nav.
 
-### Authenticated User (any role)
+### 🔑 Authenticated User (any role)
 
 ```
 App loads → AuthProvider restores Supabase session
@@ -362,7 +423,7 @@ App loads → AuthProvider restores Supabase session
          → 402 from any API call → show LimitReachedModal (no crash)
 ```
 
-### Admin User
+### 🛡️ Admin User
 
 Admins have access to `/settings` (4-tab panel, each section a `CollapsibleCard`) with full control over:
 
@@ -403,7 +464,7 @@ Role comparison:
 | Cross-org administration | — | — | ✓ |
 | Feedback dashboard + full triage | — | — | ✓ |
 
-### Invitation Flow
+### ✉️ Invitation Flow
 
 ```
 Admin sends invite (email) → POST /admin/orgs/{id}/invitations
@@ -428,7 +489,7 @@ Error states:
 
 > The invitation page handles registration inline — the invitee never needs to visit `/login` or `/register` separately.
 
-### DEV MODE
+### 🧪 DEV MODE
 
 When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 - `IS_AUTH_ENABLED = false`
@@ -436,7 +497,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 - Login page shows "Continue without login" bypass button
 - No token sent to backend (backend must also be in DEV MODE)
 
-## Multi-Tenancy Model
+## 🏢 Multi-Tenancy Model
 
 | Concept | Values | Description |
 |---------|--------|-------------|
@@ -454,7 +515,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 - Users: list, change role, toggle free/paid, remove (PARTNER); upgrade banner (SOLITARY)
 - Invitations: send by email, view status (pending/accepted/expired) — PARTNER only
 
-## Communication Flow
+## 🔌 Communication Flow
 
 ```
 ┌─────────────┐     POST /chat/{id}/stream      ┌─────────────────┐
@@ -529,7 +590,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `PATCH` | `/admin/feedback/{id}` | Update report (status, admin_notes, is_hidden) |
 | `DELETE` | `/admin/feedback/{id}` | Delete feedback report |
 
-### SSE Event Types
+### 📡 SSE Event Types
 
 The backend sends typed events in the SSE stream. Each event has an explicit `type` field:
 
@@ -616,9 +677,19 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
 }
 ```
 
+**Error (terminal — backend graph failed mid-stream):**
+```json
+{
+  "type": "error",
+  "detail": "Ocurrió un error procesando tu consulta. Por favor, intentá de nuevo."
+}
+```
+
+This event signals that the backend graph failed partway through the stream. The HTTP status stays `200` — the failure travels *inside* the stream, so `response.ok` is not enough to detect it. It is **terminal**: no useful events follow, and the frontend cancels the reader after handling it. `detail` arrives already localized (in the request `language`) and neutral (no model names or stack traces), so it is shown as-is. Any partial text already streamed is kept and the error is appended below it (`⚠️ {detail}`); if no text was streamed yet, the error message stands alone. Handled in `hooks/use-chat.ts`.
+
 The `labels` field in action proposals contains translated UI text based on the `language` sent in the request. The frontend uses these labels directly for button text and cancellation messages.
 
-### Image Upload Response
+### 🖼️ Image Upload Response
 
 The `/chat/{id}/upload` endpoint accepts `multipart/form-data` with `file`, `odoo_config` (JSON string), and `language` fields. It returns a regular JSON response (not SSE):
 
@@ -644,7 +715,7 @@ The `/chat/{id}/upload` endpoint accepts `multipart/form-data` with `file`, `odo
 
 The frontend renders the uploaded image in the user's message bubble and displays the action proposal below the assistant's response using the same `ActionProposalButton` component used for SSE-based proposals.
 
-### Pin Refresh Response
+### 🔃 Pin Refresh Response
 
 The `POST /chat/{id}/pin/{pinId}/refresh` endpoint re-queries Odoo and returns the updated chart data:
 
@@ -662,7 +733,7 @@ The `POST /chat/{id}/pin/{pinId}/refresh` endpoint re-queries Odoo and returns t
 }
 ```
 
-### Action Confirmation Responses
+### ✅ Action Confirmation Responses
 
 The `/chat/{id}/action` endpoint returns:
 
@@ -708,15 +779,15 @@ The parser still supports the old format without `type` field for gradual migrat
 {"content": "..."}
 ```
 
-## Setup
+## 🚀 Setup
 
-### Requirements
+### 📋 Requirements
 
 - **Node.js 18+**
 - Backend running at `http://localhost:8000` ([odoo-agent-back](../odoo-agent-back))
 - **Supabase project** (optional — leave unset for DEV MODE)
 
-### Environment Variables
+### 🔧 Environment Variables
 
 ```bash
 # Supabase Auth (leave empty for DEV MODE — no auth, no token)
@@ -727,7 +798,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
 NEXT_PUBLIC_API_BASE=http://localhost:8000
 ```
 
-### Installation
+### 📦 Installation
 
 ```bash
 # Install dependencies
@@ -739,7 +810,7 @@ npm run dev
 
 Open `http://localhost:3000` — it automatically redirects based on auth state.
 
-### Available Scripts
+### 🧰 Available Scripts
 
 | Command | Description |
 |---------|-------------|
@@ -748,13 +819,13 @@ Open `http://localhost:3000` — it automatically redirects based on auth state.
 | `npm run start` | Production server |
 | `npm run lint` | Linting with ESLint |
 
-## Themes and Design
+## 🎨 Themes and Design
 
 The color system supports **light and dark mode** with CSS variables defined in `app/globals.css` under `@theme`. Components use semantic utility tokens — never raw hex values.
 
 Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` | `"light"`). The `ThemeInitializer` component (mounted in `<body>` in `app/[locale]/layout.tsx`) applies the `.dark` class on every route change via `usePathname`, ensuring the correct theme is always active across navigations.
 
-### Design Token System
+### 🎟️ Design Token System
 
 | Token | Role | Example usage |
 |-------|------|---------------|
@@ -774,7 +845,7 @@ Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` 
 | `text-info` | Info color | info icons |
 | `border-border` | Default border | all card/input borders |
 
-### Typography Tokens
+### 🔠 Typography Tokens
 
 | Token | Usage |
 |-------|-------|
@@ -785,7 +856,7 @@ Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` 
 | `text-micro` | Captions, badges, timestamps |
 | `font-technical` | Monospaced/code values (slugs, URLs, IDs) |
 
-### Component Color Coding
+### 🌈 Component Color Coding
 
 - Success cards use `text-success-solid` / `bg-success-subtle`
 - Validation prompts use `text-warning-solid` / `bg-warning-subtle`
@@ -795,7 +866,7 @@ Theme preference is persisted in `localStorage` under the key `theme` (`"dark"` 
 - Charts use Odoo purple palette
 - Notification severity: critical (`text-error`), warning (`text-warning-solid`), info (`text-info`), success (`text-success-solid`)
 
-### Density Tokens (Builder vs Client)
+### 📐 Density Tokens (Builder vs Client)
 
 Beyond color, the design system exposes density tokens in `app/globals.css` that scale button/input/card heights and radii. They map to Tailwind v4 utilities via `--spacing-*` and `--radius-*`:
 
@@ -814,7 +885,7 @@ The defaults baked into `:root` correspond to the **Client** density (larger, mo
 
 Pair these tokens with `useIconSize(slot)` for icons (slot `inline` | `button` | `heading`) so a single component stays visually consistent across audiences.
 
-### Shape & Animation Conventions
+### 💫 Shape & Animation Conventions
 
 - Cards / modals: `rounded-card` token (literal fallback: `rounded-lg`)
 - Buttons / inputs / small elements: `rounded-btn` token (literal fallback: `rounded-md`)
@@ -822,7 +893,7 @@ Pair these tokens with `useIconSize(slot)` for icons (slot `inline` | `button` |
 - Icons: size via `useIconSize(...)` (or 20px literal in static surfaces), `strokeWidth={1.5}` throughout
 - Animations: `duration-0.15` + `ease: "easeOut"` (replaced spring physics)
 
-### Audience-Aware Strings & Icons
+### 🗣️ Audience-Aware Strings & Icons
 
 User-facing copy and icon sizes split by audience (role):
 
@@ -839,7 +910,7 @@ Read icon sizes via `useIconSize(slot)`:
 | `button`  | 20 | 22 |
 | `heading` | 24 | 28 |
 
-## Supported Languages
+## 🌍 Supported Languages
 
 | Code | Language |
 |------|----------|
@@ -857,7 +928,7 @@ Read icon sizes via `useIconSize(slot)`:
 
 Translations are located in `messages/[locale].json`.
 
-### Translation Key Namespaces
+### 🔑 Translation Key Namespaces
 
 | Namespace | Description |
 |-----------|-------------|
@@ -881,3 +952,17 @@ Translations are located in `messages/[locale].json`.
 | `LocaleSwitcher` | Language names |
 | `Builder.*` | Builder-voice strings — read via `useAudienceT("<ns>")` when role is ADMIN/SUPERADMIN. Includes `Builder.Trace` (LangGraph panel) and `Builder.ChatMessages` (e.g. typing indicator: "Ejecutando · query"). |
 | `Client.*` | Client-voice strings — read via `useAudienceT("<ns>")` when role is CLIENT_USER or anonymous. Includes `Client.ChatMessages`, `Client.ActionSuccess.<action>.<docType>` (success card headlines) and `Client.ActionProposal.verb.<action>.<docType>` (confirm-button labels). Every entry must have a `.generic` fallback. |
+
+---
+
+<div align="center">
+
+### 🧠 The intelligence behind the chat
+
+The agent that powers every response — its 21-node LangGraph pipeline, query planning, computed-facts engine, OCR and multi-tenancy — is documented separately.
+
+**[📖 Read the Backend Architecture →](docs/BACKEND_ARCHITECTURE.md)**
+
+Built with ❤️ using **Next.js 16 · React 19 · TypeScript · Tailwind CSS v4**
+
+</div>
