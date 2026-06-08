@@ -60,14 +60,9 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const [isDark, setIsDark] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
 
-  function toggleOpen() {
-    setOpen((v) => {
-      const next = !v;
-      if (next) setIsDark(document.documentElement.classList.contains("dark"));
-      else setSub(null);
-      return next;
-    });
-  }
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -120,12 +115,112 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
 
   const itemClass =
     "flex w-full items-center gap-3 rounded-btn px-2.5 py-2 text-body text-left transition-colors hover:bg-raised";
+  const sidebarItemClass =
+    "flex w-full items-center gap-3 rounded-btn px-2.5 py-2 text-body text-left transition-colors hover:bg-sidebar-hover";
 
+  // Anonymous / DEV mode — show items inline, no avatar trigger
+  const isAnonymous = !IS_AUTH_ENABLED || !user;
+
+  if (isAnonymous) {
+    return (
+      <div ref={ref} className="relative">
+        <div className="flex flex-col gap-0.5">
+          {/* Theme */}
+          <button
+            onClick={toggleTheme}
+            className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+          >
+            {isDark ? (
+              <Sun size={iconInline} strokeWidth={1.5} className="shrink-0" />
+            ) : (
+              <Moon size={iconInline} strokeWidth={1.5} className="shrink-0" />
+            )}
+            {!collapsed && (
+              <>
+                <span className="flex-1">{t("theme")}</span>
+                <span className="text-micro text-text-muted">
+                  {isDark ? t("themeDark") : t("themeLight")}
+                </span>
+              </>
+            )}
+          </button>
+
+          {/* Language */}
+          <div className="relative">
+            <button
+              onClick={() => setSub((s) => (s === "lang" ? null : "lang"))}
+              className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+            >
+              <Globe size={iconInline} strokeWidth={1.5} className="shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1">{t("language")}</span>
+                  <span className="text-micro text-text-muted">{tLocale(locale)}</span>
+                  <ChevronRight
+                    size={14}
+                    strokeWidth={1.5}
+                    className={`shrink-0 transition-transform ${sub === "lang" ? "rotate-90" : ""}`}
+                  />
+                </>
+              )}
+            </button>
+
+            <AnimatePresence>
+              {sub === "lang" && (
+                <motion.div
+                  initial={{ opacity: 0, x: -4 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -4 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute bottom-0 left-full z-50 ml-1 max-h-[60vh] w-44 overflow-y-auto rounded-card border border-border bg-surface py-1 shadow-lg"
+                >
+                  {routing.locales.map((loc) => (
+                    <button
+                      key={loc}
+                      onClick={() => switchLocale(loc)}
+                      className={`flex w-full items-center gap-2 px-3 py-2 text-left text-body transition-colors hover:bg-raised ${
+                        loc === locale ? "font-medium text-accent" : ""
+                      }`}
+                    >
+                      <span className="flex-1">{tLocale(loc)}</span>
+                      {loc === locale && (
+                        <Check size={14} strokeWidth={2} className="shrink-0 text-accent" />
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Login (only when auth is actually enabled) */}
+          {IS_AUTH_ENABLED && (
+            <Link
+              href="/login"
+              onClick={() => onNavigate?.()}
+              className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+            >
+              <LogIn size={iconInline} strokeWidth={1.5} className="shrink-0" />
+              {!collapsed && <span className="flex-1">{t("login")}</span>}
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Authenticated user — avatar trigger + popup
   return (
     <div ref={ref} className="relative">
       {/* Trigger: avatar button */}
       <button
-        onClick={toggleOpen}
+        onClick={() => {
+          setOpen((v) => {
+            const next = !v;
+            if (!next) setSub(null);
+            return next;
+          });
+        }}
         className={`flex w-full items-center gap-3 rounded-btn px-2 py-2 transition-colors hover:bg-sidebar-hover ${
           collapsed ? "justify-center" : ""
         }`}
@@ -295,23 +390,16 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             {/* Auth action */}
             <div className="my-1 border-t border-border" />
             <div className="px-1">
-              {IS_AUTH_ENABLED && user ? (
-                <button
-                  onClick={() => {
-                    logout();
-                    close();
-                  }}
-                  className={`${itemClass} text-text-secondary`}
-                >
-                  <LogOut size={iconInline} strokeWidth={1.5} className="shrink-0" />
-                  <span className="flex-1">{t("logout")}</span>
-                </button>
-              ) : !user ? (
-                <Link href="/login" onClick={close} className={itemClass}>
-                  <LogIn size={iconInline} strokeWidth={1.5} className="shrink-0" />
-                  <span className="flex-1">{t("login")}</span>
-                </Link>
-              ) : null}
+              <button
+                onClick={() => {
+                  logout();
+                  close();
+                }}
+                className={`${itemClass} text-text-secondary`}
+              >
+                <LogOut size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                <span className="flex-1">{t("logout")}</span>
+              </button>
             </div>
           </motion.div>
         )}
