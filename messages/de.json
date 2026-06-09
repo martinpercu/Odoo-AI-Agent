@@ -695,6 +695,33 @@
       "prev": "Zurück",
       "next": "Weiter",
       "tenantNotes": "Hinweis des Tenant-Admins"
+    },
+    "tabEvents": "Ereignisse",
+    "events": {
+      "statsTotal": "Ereignisse gesamt",
+      "stats24h": "Letzte 24 Std.",
+      "stats7d": "Letzte 7 Tage",
+      "statsSessions": "Eindeutige Sitzungen",
+      "funnel": "Funnel",
+      "byEvent": "Nach Ereignis",
+      "topPrompts": "Meistgeklickte Prompts",
+      "dismissals": "Schließungen nach Grund",
+      "byUtmSource": "Nach UTM-Quelle",
+      "viewAll": "Alle Ereignisse anzeigen",
+      "back": "Zurück zum Dashboard",
+      "total": "{count} Ereignisse",
+      "colWhen": "Wann",
+      "colEvent": "Ereignis",
+      "colSession": "Sitzung",
+      "colUtm": "UTM",
+      "colUser": "Benutzer",
+      "colProps": "Daten",
+      "filterAll": "Alle Ereignisse",
+      "anon": "Anonym",
+      "empty": "Noch keine Ereignisse",
+      "prev": "Zurück",
+      "next": "Weiter",
+      "errorLoad": "Ereignisse konnten nicht geladen werden"
     }
   },
   "Builder": {
@@ -756,6 +783,81 @@
           "generic": "Herunterladen"
         }
       }
+    }
+  },
+  "Intro": {
+    "modal": {
+      "title": "Du testest gerade TheOdooAgent",
+      "subtitle": "KI, die dein Odoo in natürlicher Sprache abfragt und bedient. Das ist eine Live-Demo mit Beispieldaten — frag, was du willst.",
+      "chips": {
+        "language": "Frag in deiner Sprache: Verkäufe, Rechnungen, Bestand",
+        "noInvent": "Erfindet keine Zahlen: Das System berechnet sie, nicht das Modell",
+        "anyOdoo": "Läuft auf jedem Odoo: 14 bis 20 und Community"
+      },
+      "tryThisLabel": "Probier das",
+      "tryThis": {
+        "overdue_invoices": "Wie viele überfällige Rechnungen gibt es diesen Monat?",
+        "top_customers": "Top 5 Kunden nach Umsatz",
+        "stock_check": "Ist Produkt X auf Lager?"
+      },
+      "ctaPrimary": "Loslegen",
+      "ctaSecondary": "Eigenes Odoo verbinden (kostenlos)",
+      "dontShowAgain": "Nicht mehr anzeigen",
+      "whatIsThis": "Was ist das?",
+      "madeBy": "Gemacht von Martin",
+      "close": "Schließen"
+    },
+    "sidebarItem": "Was ist TheOdooAgent?",
+    "panel": {
+      "title": "Was ist TheOdooAgent?",
+      "close": "Schließen",
+      "what": {
+        "heading": "Was es ist",
+        "body": "TheOdooAgent ist ein KI-Agent, der sich mit deinem Odoo verbindet und es dir erlaubt, in natürlicher Sprache abzufragen und zu handeln — ohne Odoo bedienen zu können, ohne durch Menüs zu navigieren. Du fragst, wie du mit einem Kollegen sprechen würdest, und bekommst echte Daten, Diagramme und Exporte."
+      },
+      "how": {
+        "heading": "Wie es funktioniert",
+        "intro": "Du fragst und es antwortet mit deinen echten Daten. Beispiele:",
+        "example1": "Zeig überfällige Rechnungen über 10.000 $",
+        "example2": "Verkäufe pro Verkäufer letzten Monat, als Diagramm",
+        "example3": "Erstelle einen Kontakt: María López, maria@acme.com",
+        "operates": "Es handelt auch: Kontakte anlegen, Aufträge bestätigen, Datensätze aktualisieren — immer mit deiner Bestätigung. Es handelt nie allein."
+      },
+      "trust": {
+        "heading": "Warum du ihm vertrauen kannst",
+        "item1": "Menschliche Bestätigung bei jedem Schreibvorgang: Der Agent schlägt vor, du genehmigst.",
+        "item2": "Es halluziniert keine Zahlen: Das System berechnet sie, das Modell formuliert sie nur.",
+        "item3": "Es respektiert deine Odoo-Berechtigungen: Es sieht dasselbe wie du.",
+        "item4": "Verschlüsselte Zugangsdaten."
+      },
+      "different": {
+        "heading": "Warum es anders ist",
+        "item1": "Läuft auf allen Odoo-Versionen (14–20) und Community — Odoos native KI erfordert Enterprise 18/19+.",
+        "item2": "Deterministische Architektur (Python-first): Deshalb sind die Kosten extrem niedrig."
+      },
+      "partner": {
+        "heading": "Bist du Odoo-Implementierer?",
+        "body": "Du kannst es deinen Kunden unter deiner eigenen Marke anbieten und weiterverkaufen: White-Label, mandantenfähig, ab ~1 $/Benutzer.",
+        "cta": "Wie man es weiterverkauft"
+      },
+      "founder": {
+        "heading": "Von mir gemacht",
+        "body": "Ich bin Martin. Ich habe TheOdooAgent allein gebaut, mit einer einfachen Idee: dass jeder in einem Unternehmen mit seinem Odoo sprechen kann, ohne sich mit Menüs herumzuschlagen. Hinter dem Ganzen steht kein Unternehmen mit einem Vertriebsteam — es gibt die Idee, den Code und mich. Wenn du es ausprobierst und etwas nicht funktioniert, schreib mir: Dein Feedback macht es buchstäblich besser.",
+        "email": "martin@theodooagent.com"
+      },
+      "faq": {
+        "heading": "Häufige Fragen",
+        "q1": "Ist es sicher?",
+        "a1": "Ja: menschliche Bestätigung, respektiert Berechtigungen, verschlüsselte Zugangsdaten.",
+        "q2": "Welche Versionen werden unterstützt?",
+        "a2": "Odoo 14 bis 20 und Community.",
+        "q3": "Installiert es etwas in meinem Odoo?",
+        "a3": "Nein. Es verbindet sich über einen Standard-API-Key (XML-RPC).",
+        "q4": "Was kostet es?",
+        "a4": "Kostenlos auf deinem eigenen Odoo. Beim Ausrollen an deine Kunden ab ~1 $/Benutzer."
+      },
+      "ctaDemo": "Demo ausprobieren",
+      "ctaConnect": "Dein Odoo verbinden (kostenlos)"
     }
   }
 }
