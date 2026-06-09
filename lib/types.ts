@@ -512,3 +512,38 @@ export interface FeedbackStats {
   by_category: Record<string, number>;
   top_orgs: Array<{ org_id: string; count: number }>;
 }
+
+// ---- Analytics events (landing funnel — superadmin view) ----
+
+export interface AnalyticsEvent {
+  id: string;
+  event: string;
+  props: Record<string, unknown>;
+  session_id: string | null;
+  user_id: string | null;
+  utm_source: string | null;
+  utm_campaign: string | null;
+  user_agent: string | null;
+  client_ts: string | null;
+  received_at: string;
+}
+
+export interface AnalyticsEventsListResponse {
+  items: AnalyticsEvent[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface AnalyticsEventsStats {
+  total: number;
+  last_24h: number;
+  last_7d: number;
+  unique_sessions: number;
+  by_event: Record<string, number>;
+  funnel: Record<string, number>;
+  by_utm_source: Array<{ source: string; count: number }>;
+  by_utm_campaign: Array<{ campaign: string; count: number }>;
+  top_example_prompts: Array<{ prompt_id: string; count: number }>;
+  dismissals_by_reason: Record<string, number>;
+}

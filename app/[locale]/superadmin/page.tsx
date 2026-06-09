@@ -33,6 +33,7 @@ import {
   Filter,
   MessageSquare,
   UserPlus,
+  LineChart,
 } from "lucide-react";
 import {
   superadminListOrgs,
@@ -51,6 +52,8 @@ import {
   fetchFeedbackReport,
   updateFeedbackReport,
   deleteFeedbackReport,
+  fetchAdminEvents,
+  fetchEventsStats,
   type UpdateOrgSubscriptionPayload,
 } from "@/lib/api";
 import type {
@@ -63,9 +66,11 @@ import type {
   FeedbackStats,
   FeedbackStatus,
   FeedbackCategory,
+  AnalyticsEvent,
+  AnalyticsEventsStats,
 } from "@/lib/types";
 
-type Tab = "orgs" | "users" | "activity" | "feedback";
+type Tab = "orgs" | "users" | "activity" | "feedback" | "events";
 
 const TIER_OPTIONS = [
   "FREE",
@@ -2028,6 +2033,324 @@ function FeedbackTab({ t }: { t: ReturnType<typeof useTranslations> }) {
   );
 }
 
+// ---- EventsTab (landing analytics) ----
+
+const FUNNEL_ORDER = [
+  "intro_modal_shown",
+  "demo_started",
+  "example_prompt_clicked",
+  "connect_own_odoo_clicked",
+] as const;
+
+type EventsView = "stats" | "list";
+
+function StatGrid({ entries, empty }: {
+  entries: Array<[string, number]>;
+  empty: string;
+}) {
+  if (entries.length === 0) {
+    return <p className="text-small text-text-muted">{empty}</p>;
+  }
+  return (
+    <div className="space-y-1.5">
+      {entries.map(([key, count]) => (
+        <div key={key} className="flex items-center justify-between gap-2">
+          <span className="truncate font-technical text-small text-foreground">{key}</span>
+          <span className="shrink-0 text-small font-medium text-foreground">{count}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EventsDashboard({ stats, onViewAll, t }: {
+  stats: AnalyticsEventsStats;
+  onViewAll: () => void;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const funnelMax = Math.max(1, ...Object.values(stats.funnel));
+  const byEvent = Object.entries(stats.by_event).sort((a, b) => b[1] - a[1]);
+
+  return (
+    <div className="space-y-5">
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          { label: t("events.statsTotal"), value: stats.total },
+          { label: t("events.stats24h"), value: stats.last_24h },
+          { label: t("events.stats7d"), value: stats.last_7d },
+          { label: t("events.statsSessions"), value: stats.unique_sessions },
+        ].map(({ label, value }) => (
+          <div key={label} className="rounded-lg border border-sidebar-border bg-surface p-4">
+            <p className="text-small text-text-secondary">{label}</p>
+            <p className="mt-1 text-heading font-semibold text-foreground">{value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Funnel */}
+      <div className="rounded-lg border border-sidebar-border bg-surface p-4">
+        <p className="mb-3 text-small font-medium text-text-secondary">{t("events.funnel")}</p>
+        <div className="space-y-2">
+          {FUNNEL_ORDER.map((ev) => {
+            const count = stats.funnel[ev] ?? 0;
+            const pct = Math.round((count / funnelMax) * 100);
+            return (
+              <div key={ev} className="flex items-center gap-3">
+                <span className="w-56 shrink-0 truncate font-technical text-small text-text-secondary">{ev}</span>
+                <div className="flex-1 overflow-hidden rounded-full bg-raised" style={{ height: 8 }}>
+                  <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${pct}%` }} />
+                </div>
+                <span className="w-10 shrink-0 text-right text-small font-medium text-foreground">{count}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* By event */}
+        <div className="rounded-lg border border-sidebar-border bg-surface p-4">
+          <p className="mb-3 text-small font-medium text-text-secondary">{t("events.byEvent")}</p>
+          <StatGrid entries={byEvent} empty="—" />
+        </div>
+
+        {/* Top prompts */}
+        <div className="rounded-lg border border-sidebar-border bg-surface p-4">
+          <p className="mb-3 text-small font-medium text-text-secondary">{t("events.topPrompts")}</p>
+          {stats.top_example_prompts.length === 0 ? (
+            <p className="text-small text-text-muted">—</p>
+          ) : (
+            <div className="space-y-1.5">
+              {stats.top_example_prompts.slice(0, 6).map((p, i) => (
+                <div key={p.prompt_id} className="flex items-center gap-3">
+                  <span className="w-4 shrink-0 text-small text-text-muted">#{i + 1}</span>
+                  <span className="flex-1 truncate font-technical text-small text-foreground">{p.prompt_id}</span>
+                  <span className="text-small font-medium text-foreground">{p.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* Dismissals by reason */}
+        <div className="rounded-lg border border-sidebar-border bg-surface p-4">
+          <p className="mb-3 text-small font-medium text-text-secondary">{t("events.dismissals")}</p>
+          <StatGrid entries={Object.entries(stats.dismissals_by_reason)} empty="—" />
+        </div>
+
+        {/* By UTM source */}
+        <div className="rounded-lg border border-sidebar-border bg-surface p-4">
+          <p className="mb-3 text-small font-medium text-text-secondary">{t("events.byUtmSource")}</p>
+          {stats.by_utm_source.length === 0 ? (
+            <p className="text-small text-text-muted">—</p>
+          ) : (
+            <div className="space-y-1.5">
+              {stats.by_utm_source.slice(0, 6).map((u) => (
+                <div key={u.source} className="flex items-center justify-between gap-2">
+                  <span className="truncate text-small text-foreground">{u.source || "—"}</span>
+                  <span className="shrink-0 text-small font-medium text-foreground">{u.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          onClick={onViewAll}
+          className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white hover:bg-accent-hover transition-colors"
+        >
+          <BarChart2 size={16} strokeWidth={1.5} />
+          {t("events.viewAll")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EventsList({ onBack, t }: {
+  onBack: () => void;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const [items, setItems] = useState<AnalyticsEvent[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [filterEvent, setFilterEvent] = useState("");
+  const LIMIT = 50;
+
+  const load = useCallback((off: number) => {
+    setLoading(true);
+    fetchAdminEvents({
+      event: filterEvent || undefined,
+      limit: LIMIT,
+      offset: off,
+    }).then((r) => {
+      if (r.success && r.data) {
+        setItems(r.data.items);
+        setTotal(r.data.total);
+      }
+      setLoading(false);
+    });
+  }, [filterEvent]);
+
+  useEffect(() => {
+    setOffset(0);
+    load(0);
+  }, [load]);
+
+  const eventOptions = [...FUNNEL_ORDER, "info_opened_from_panel", "partner_cta_clicked"];
+
+  return (
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-small text-text-secondary hover:bg-raised transition-colors"
+        >
+          <ArrowLeft size={14} strokeWidth={1.5} />
+          {t("events.back")}
+        </button>
+        <span className="text-small text-text-muted">{t("events.total", { count: total })}</span>
+
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          <Filter size={14} strokeWidth={1.5} className="text-text-muted" />
+          <select
+            value={filterEvent}
+            onChange={(e) => setFilterEvent(e.target.value)}
+            className="rounded-md border border-sidebar-border bg-base px-2 py-1 text-small text-foreground focus:border-accent focus:outline-none"
+          >
+            <option value="">{t("events.filterAll")}</option>
+            {eventOptions.map((ev) => (
+              <option key={ev} value={ev}>{ev}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 size={28} strokeWidth={1.5} className="animate-spin text-accent" />
+        </div>
+      ) : items.length === 0 ? (
+        <p className="py-8 text-center text-body text-text-muted">{t("events.empty")}</p>
+      ) : (
+        <>
+          <div className="overflow-x-auto rounded-lg border border-sidebar-border">
+            <table className="w-full text-small">
+              <thead>
+                <tr className="border-b border-sidebar-border bg-raised text-micro text-text-secondary">
+                  <th className="px-3 py-2 text-left">{t("events.colWhen")}</th>
+                  <th className="px-3 py-2 text-left">{t("events.colEvent")}</th>
+                  <th className="px-3 py-2 text-left">{t("events.colSession")}</th>
+                  <th className="px-3 py-2 text-left">{t("events.colUtm")}</th>
+                  <th className="px-3 py-2 text-left">{t("events.colUser")}</th>
+                  <th className="px-3 py-2 text-left">{t("events.colProps")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((ev) => {
+                  const propsText =
+                    ev.props && Object.keys(ev.props).length > 0
+                      ? JSON.stringify(ev.props)
+                      : "—";
+                  return (
+                    <tr key={ev.id} className="border-b border-sidebar-border last:border-0 hover:bg-raised transition-colors">
+                      <td className="px-3 py-2 whitespace-nowrap text-text-muted" title={new Date(ev.received_at).toLocaleString()}>
+                        {timeAgo(ev.received_at)}
+                      </td>
+                      <td className="px-3 py-2 font-technical text-micro text-foreground whitespace-nowrap">{ev.event}</td>
+                      <td className="px-3 py-2 max-w-[120px] truncate font-technical text-micro text-text-secondary" title={ev.session_id ?? ""}>
+                        {ev.session_id ? ev.session_id.slice(0, 8) + "…" : "—"}
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap text-text-secondary">
+                        {ev.utm_source || ev.utm_campaign
+                          ? [ev.utm_source, ev.utm_campaign].filter(Boolean).join(" / ")
+                          : "—"}
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        {ev.user_id ? (
+                          <span className="font-technical text-micro text-text-secondary" title={ev.user_id}>
+                            {ev.user_id.slice(0, 8) + "…"}
+                          </span>
+                        ) : (
+                          <span className="text-text-muted">{t("events.anon")}</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 max-w-[220px] truncate font-technical text-micro text-text-muted" title={propsText}>
+                        {propsText}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {total > LIMIT && (
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => { const o = Math.max(0, offset - LIMIT); setOffset(o); load(o); }}
+                disabled={offset === 0}
+                className="rounded-md px-3 py-1.5 text-small text-text-secondary hover:bg-raised disabled:opacity-40 transition-colors"
+              >
+                ← {t("events.prev")}
+              </button>
+              <span className="text-small text-text-muted">
+                {offset + 1}–{Math.min(offset + LIMIT, total)} / {total}
+              </span>
+              <button
+                onClick={() => { const o = offset + LIMIT; setOffset(o); load(o); }}
+                disabled={offset + LIMIT >= total}
+                className="rounded-md px-3 py-1.5 text-small text-text-secondary hover:bg-raised disabled:opacity-40 transition-colors"
+              >
+                {t("events.next")} →
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function EventsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
+  const [view, setView] = useState<EventsView>("stats");
+  const [stats, setStats] = useState<AnalyticsEventsStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEventsStats().then((r) => {
+      if (r.success && r.data) setStats(r.data);
+      setStatsLoading(false);
+    });
+  }, []);
+
+  if (statsLoading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 size={28} strokeWidth={1.5} className="animate-spin text-accent" />
+      </div>
+    );
+  }
+
+  if (view === "stats") {
+    return stats ? (
+      <EventsDashboard stats={stats} onViewAll={() => setView("list")} t={t} />
+    ) : (
+      <p className="py-8 text-center text-body text-text-muted">{t("events.errorLoad")}</p>
+    );
+  }
+
+  return <EventsList onBack={() => setView("stats")} t={t} />;
+}
+
 // ---- Header Actions (theme / locale / logout) ----
 
 function HeaderActions() {
@@ -2151,6 +2474,7 @@ export default function SuperAdminPage() {
     { key: "users", label: t("tabUsers"), icon: <Users size={16} strokeWidth={1.5} /> },
     { key: "activity", label: t("tabActivity"), icon: <Activity size={16} strokeWidth={1.5} /> },
     { key: "feedback", label: t("tabFeedback"), icon: <Flag size={16} strokeWidth={1.5} /> },
+    { key: "events", label: t("tabEvents"), icon: <LineChart size={16} strokeWidth={1.5} /> },
   ];
 
   return (
@@ -2193,6 +2517,7 @@ export default function SuperAdminPage() {
           {activeTab === "users" && <UsersTab t={t} />}
           {activeTab === "activity" && <ActivityTab t={t} />}
           {activeTab === "feedback" && <FeedbackTab t={t} />}
+          {activeTab === "events" && <EventsTab t={t} />}
         </motion.div>
       </div>
     </div>

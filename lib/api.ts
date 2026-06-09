@@ -29,6 +29,8 @@ import type {
   FeedbackStats,
   FeedbackCategory,
   FeedbackStatus,
+  AnalyticsEventsListResponse,
+  AnalyticsEventsStats,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -1795,6 +1797,84 @@ export async function fetchFeedbackStats(orgId?: string): Promise<FetchFeedbackS
     const data = await res.json();
     if (res.ok) return { success: true, data };
     return { success: false, error: data.detail || "Failed to fetch stats" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Analytics events (superadmin) ----
+
+export interface FetchEventsParams {
+  event?: string;
+  session_id?: string;
+  utm_source?: string;
+  utm_campaign?: string;
+  date_from?: string;
+  date_to?: string;
+  has_user?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export interface FetchEventsListResult {
+  success: boolean;
+  data?: AnalyticsEventsListResponse;
+  error?: string;
+}
+
+export async function fetchAdminEvents(
+  params?: FetchEventsParams
+): Promise<FetchEventsListResult> {
+  try {
+    const query = new URLSearchParams();
+    if (params?.event) query.set("event", params.event);
+    if (params?.session_id) query.set("session_id", params.session_id);
+    if (params?.utm_source) query.set("utm_source", params.utm_source);
+    if (params?.utm_campaign) query.set("utm_campaign", params.utm_campaign);
+    if (params?.date_from) query.set("date_from", params.date_from);
+    if (params?.date_to) query.set("date_to", params.date_to);
+    if (params?.has_user != null) query.set("has_user", String(params.has_user));
+    if (params?.limit != null) query.set("limit", String(params.limit));
+    if (params?.offset != null) query.set("offset", String(params.offset));
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    const res = await authFetch(`${API_BASE}/admin/events${qs}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: data.detail || "Failed to fetch events" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface FetchEventsStatsParams {
+  date_from?: string;
+  date_to?: string;
+  utm_source?: string;
+  utm_campaign?: string;
+}
+
+export interface FetchEventsStatsResult {
+  success: boolean;
+  data?: AnalyticsEventsStats;
+  error?: string;
+}
+
+export async function fetchEventsStats(
+  params?: FetchEventsStatsParams
+): Promise<FetchEventsStatsResult> {
+  try {
+    const query = new URLSearchParams();
+    if (params?.date_from) query.set("date_from", params.date_from);
+    if (params?.date_to) query.set("date_to", params.date_to);
+    if (params?.utm_source) query.set("utm_source", params.utm_source);
+    if (params?.utm_campaign) query.set("utm_campaign", params.utm_campaign);
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    const res = await authFetch(`${API_BASE}/admin/events/stats${qs}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, data };
+    return { success: false, error: data.detail || "Failed to fetch event stats" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
