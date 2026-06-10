@@ -49,7 +49,7 @@ function InviteContent() {
     setFormError(null);
     setStatus("submitting");
 
-    const regResult = await register(inviteEmail, password);
+    const regResult = await register(inviteEmail, password, locale);
     if (regResult.error) {
       setFormError(regResult.error);
       setStatus("register");

@@ -179,9 +179,11 @@ app/
   [locale]/
     layout.tsx                  # Root layout with provider stack (9 nested contexts)
     page.tsx                    # Auth-based redirector (no user→/chat, no org→onboarding, SUPERADMIN→/superadmin, else→chat)
-    login/page.tsx              # Supabase email/password login (+ DEV MODE bypass)
+    login/page.tsx              # Supabase email/password login (+ DEV MODE bypass; "Forgot password?" link)
     register/page.tsx           # Account signup → onboarding flow
     invite/page.tsx             # Accept team invitation by token
+    forgot-password/page.tsx    # Password recovery step 1: request a 6-digit OTP by email
+    reset-password/page.tsx     # Password recovery step 2: verify OTP + set new password
     superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
     (app)/
       layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
@@ -245,7 +247,7 @@ components/
     doc-num.tsx                 # Document number: `.docnum` pill for Client (only mono surface they see), `font-technical` plain for Builder
     powered-by.tsx              # Discreet "Powered by TheOdooAgent" lockup (Client-only footer)
 hooks/
-  use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub)
+  use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub; password recovery via OTP: requestPasswordReset/verifyRecoveryCode/updatePassword; updateUserLang persists UI lang to metadata for localized emails)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
   use-chat.ts                   # Chat state + SSE + image upload + action execution + clearChats (resets all chat state on logout)
   use-odoo-config.tsx           # Odoo config context (configs from backend; activeConfigId persisted in localStorage; isDemoMode flag)
@@ -429,6 +431,7 @@ App loads → AuthProvider restores Supabase session
          → No org yet      → /onboarding (Odoo connection form, inside AppShell)
          → Org exists      → /chat
          → 401 from any API call → check active Supabase session → if session exists: clear session → /login; if no session: ignore (unauthenticated user hitting protected endpoint)
+                                    (public paths exempt from redirect: /login, /register, /invite, /onboarding, /forgot-password, /reset-password)
          → 402 from any API call → show LimitReachedModal (no crash)
 ```
 
@@ -498,6 +501,28 @@ Error states:
 ```
 
 > The invitation page handles registration inline — the invitee never needs to visit `/login` or `/register` separately.
+
+### 🔁 Password Recovery Flow
+
+```
+Login page "Forgot password?" link → /forgot-password
+
+Step 1 (/forgot-password):
+  enter email → requestPasswordReset(email) → supabase.auth.resetPasswordForEmail(email)
+              → OTP flow (no redirectTo) → backend emails a 6-digit code
+              → anti-enumeration: a non-existent email does NOT error; always advance to step 2
+              → 429 → rateLimited message
+              → redirect /reset-password?email=...
+
+Step 2 (/reset-password):
+  enter 6-digit code + new password (×2) →
+     1. verifyRecoveryCode(email, code) → supabase.auth.verifyOtp({ type: "recovery" }) → opens session
+     2. updatePassword(newPassword)     → supabase.auth.updateUser({ password })
+     3. success screen → "Go to sign in"
+  resend code (with cooldown timer) → requestPasswordReset(email) again
+```
+
+> Transactional emails are localized via `user_metadata.lang`. `register(email, password, lang)` persists it on signup and `updateUserLang(lang)` (called from `UserMenu` on locale switch) keeps it in sync. Only locales the email templates support (`SUPPORTED_EMAIL_LANGS` in `lib/supabase.ts`: es/en/fr/de/pt/it) are stored — others fall back to the bilingual EN/ES email.
 
 ### 🧪 DEV MODE
 
