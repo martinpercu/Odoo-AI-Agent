@@ -114,7 +114,7 @@ export function Wordmark({ scale = 1, color = 'currentColor', className }: Wordm
         color,
         fontSize: 20 * scale,
         letterSpacing: '-0.015em',
-        lineHeight: 1,
+        lineHeight: 1.6,
         whiteSpace: 'nowrap',
         display: 'inline-flex',
         alignItems: 'baseline',

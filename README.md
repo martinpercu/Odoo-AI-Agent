@@ -203,8 +203,8 @@ components/
     intro-sidebar-item.tsx      # Sidebar entry point for the info panel; fires `info_opened_from_panel` analytics event
     a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring)
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; renders IntroSidebarItem below new-chat button
-    user-menu.tsx               # Popover menu (bottom of sidebar): avatar/initials, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu, login/logout, PoweredBy (Client only)
+    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; collapse uses PanelLeft/PanelLeftClose/PanelLeftOpen icons with hover-swap; collapsed body is clickeable to expand
+    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu, login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
