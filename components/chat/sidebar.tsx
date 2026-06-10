@@ -5,19 +5,18 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   SquarePen,
-  ChevronLeft,
   Menu,
   MessageSquare,
-  Bell,
+  PanelLeft,
+  PanelLeftClose,
+  PanelLeftOpen,
   Trash2,
   AlertTriangle,
   Loader2,
 } from "lucide-react";
 import { MarkB, Wordmark } from "@/components/AgentMark";
-import { useNotifications } from "@/hooks/use-notifications";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { UserMenu } from "@/components/chat/user-menu";
-import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
 import type { ChatGroup } from "@/lib/types";
 
 interface SidebarProps {
@@ -25,20 +24,18 @@ interface SidebarProps {
   currentChatId?: string;
   onNewChat: () => void;
   onSelectChat: (id: string) => void;
-  onBellClick: () => void;
   onLoadMore: () => void;
   hasMore: boolean;
   onDeleteChat: (id: string) => Promise<{ success: boolean }>;
 }
 
-export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onBellClick, onLoadMore, hasMore, onDeleteChat }: SidebarProps) {
+export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onLoadMore, hasMore, onDeleteChat }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const t = useTranslations("Sidebar");
   const tGroups = useTranslations("ChatGroups");
-  const { unreadCount } = useNotifications();
   const iconBtn = useIconSize("button");
   const iconInline = useIconSize("inline");
 
@@ -52,53 +49,60 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   }
 
   const sidebarContent = (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+    <div
+      className={`flex h-full flex-col bg-sidebar text-sidebar-foreground ${collapsed ? "cursor-(--cursor-expand-right)" : ""}`}
+      onClick={collapsed ? () => setCollapsed(false) : undefined}
+    >
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-sidebar-border p-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-white">
-          <MarkB size={22} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
+      <div className={`flex items-center border-b border-sidebar-border p-4 ${collapsed ? "justify-center" : ""}`}>
+        {/* Logo — when collapsed: hover swaps MarkB → PanelLeftOpen, click opens sidebar */}
+        <div
+          className={`group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-white ${collapsed ? "cursor-pointer" : ""}`}
+          onClick={collapsed ? (e) => { e.stopPropagation(); setCollapsed(false); } : undefined}
+          role={collapsed ? "button" : undefined}
+          tabIndex={collapsed ? 0 : undefined}
+          aria-label={collapsed ? t("expand") : undefined}
+          onKeyDown={collapsed ? (e) => { if (e.key === "Enter" || e.key === " ") setCollapsed(false); } : undefined}
+        >
+          <span className={`flex items-center justify-center ${collapsed ? "group-hover:hidden" : ""}`}>
+            <MarkB size={22} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
+          </span>
+          {collapsed && (
+            <PanelLeftOpen size={18} strokeWidth={1.5} className="absolute hidden text-white group-hover:block" />
+          )}
         </div>
+
+        {/* Wordmark — only when expanded */}
         {!collapsed && (
           <motion.div
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="overflow-hidden whitespace-nowrap"
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="ml-3 overflow-hidden whitespace-nowrap"
           >
             <Wordmark scale={0.9} />
           </motion.div>
         )}
-        <button
-          onClick={onBellClick}
-          className="ml-auto relative rounded-md p-1.5 hover:bg-sidebar-hover"
-          title={t("alerts")}
-          aria-label={t("alerts")}
-        >
-          <Bell size={iconBtn} strokeWidth={1.5} />
-          {unreadCount > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[9px] font-bold text-white">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hidden rounded-md p-1.5 hover:bg-sidebar-hover lg:flex"
-          aria-label={collapsed ? t("expand") : t("collapse")}
-        >
-          <ChevronLeft
-            size={iconBtn}
-            strokeWidth={1.5}
-            className={`transition-transform ${collapsed ? "rotate-180" : ""}`}
-          />
-        </button>
+
+        {/* Collapse button — only when expanded; PanelLeft → PanelLeftClose on hover */}
+        {!collapsed && (
+          <button
+            onClick={(e) => { e.stopPropagation(); setCollapsed(true); }}
+            className="group ml-auto hidden rounded-btn p-1.5 text-text-secondary transition-colors hover:bg-sidebar-hover hover:text-foreground lg:flex"
+            aria-label={t("collapse")}
+          >
+            <PanelLeft size={iconBtn} strokeWidth={1.5} className="block group-hover:hidden" />
+            <PanelLeftClose size={iconBtn} strokeWidth={1.5} className="hidden group-hover:block" />
+          </button>
+        )}
       </div>
 
       {/* New Chat Button */}
       <div className="p-3">
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             onNewChat();
             setMobileOpen(false);
           }}
@@ -107,9 +111,6 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           <SquarePen size={iconBtn} strokeWidth={1.5} />
           {!collapsed && <span>{t("newChat")}</span>}
         </button>
-        <div className="mt-1.5">
-          <IntroSidebarItem collapsed={collapsed} onOpened={() => setMobileOpen(false)} />
-        </div>
       </div>
 
       {/* Chat History */}
@@ -189,10 +190,10 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
               g.chats.map((chat) => (
                 <button
                   key={chat.id}
-                  onClick={() => onSelectChat(chat.id)}
+                  onClick={(e) => { e.stopPropagation(); onSelectChat(chat.id); }}
                   title={chat.title}
                   aria-label={chat.title}
-                  className={`rounded-md p-2 transition-colors ${
+                  className={`rounded-btn p-2 transition-colors cursor-pointer ${
                     currentChatId === chat.id
                       ? "bg-sidebar-active text-accent"
                       : "hover:bg-sidebar-hover"
@@ -207,7 +208,10 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
       </div>
 
       {/* Bottom Navigation — consolidated user menu */}
-      <div className="border-t border-sidebar-border p-3">
+      <div
+        className="border-t border-sidebar-border p-3"
+        onClick={(e) => e.stopPropagation()}
+      >
         <UserMenu collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
       </div>
     </div>

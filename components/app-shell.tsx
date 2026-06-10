@@ -6,7 +6,7 @@ import { PinnedSidebar } from "@/components/pinned/pinned-sidebar";
 import { FlyingPinPortal } from "@/components/pinned/flying-pin-animation";
 import { LangGraphTracePanel, type TraceEntry } from "@/components/chat/langgraph-trace-panel";
 import { useChat } from "@/hooks/use-chat";
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
@@ -103,10 +103,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     router.push(`/chat/${id}`);
   }
 
-  const handleBellClick = useCallback(() => {
-    setActiveTab("alerts");
-  }, []);
-
   // Capture utm_* from the landing URL once, to associate with a later signup.
   useEffect(() => {
     captureUtm();
@@ -126,7 +122,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               currentChatId={chat.currentChatId}
               onNewChat={handleNewChat}
               onSelectChat={handleSelectChat}
-              onBellClick={handleBellClick}
               onLoadMore={chat.loadMoreConversations}
               hasMore={chat.hasMore}
               onDeleteChat={chat.deleteChat}
