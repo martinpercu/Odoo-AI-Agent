@@ -51,7 +51,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { user, logout } = useAuth();
+  const { user, logout, updateUserLang } = useAuth();
   const { meData } = useSession();
   const { configs, activeConfigId, setActiveConfigId } = useOdooConfig();
   const iconInline = useIconSize("inline");
@@ -93,6 +93,8 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
 
   function switchLocale(next: string) {
     router.replace(pathname, { locale: next });
+    // Best-effort: keep the language used for transactional emails in sync.
+    if (user) void updateUserLang(next);
     close();
   }
 

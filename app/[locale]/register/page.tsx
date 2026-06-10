@@ -53,7 +53,7 @@ export default function RegisterPage() {
     setError(null);
     setIsSubmitting(true);
     try {
-      const result = await register(email, password);
+      const result = await register(email, password, locale);
       if (result.error) {
         setError(result.error);
         return;
