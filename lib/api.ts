@@ -702,6 +702,42 @@ export async function createInvitation(
   }
 }
 
+export interface SendInvitationEmailParams {
+  token: string;
+  email: string;
+  orgName: string;
+  role?: UserRole;
+  lang?: string;
+  expiresAt?: string;
+}
+
+/**
+ * Sends the localized invitation email via the Next.js route handler
+ * (app/api/send-invitation), which talks to Zoho SMTP server-side.
+ * Best-effort: the invitation already exists on the backend, so a failed
+ * email is non-fatal — the admin can still copy the link manually.
+ */
+export async function sendInvitationEmail(
+  params: SendInvitationEmailParams
+): Promise<BasicResult> {
+  try {
+    const authToken = await getAccessToken();
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+    const res = await fetch(`/api/send-invitation`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(params),
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json().catch(() => ({}));
+    return { success: false, error: extractError(data.error, "Failed to send invitation email") };
+  } catch {
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export async function cancelInvitation(
   orgId: string,
   invitationId: string
