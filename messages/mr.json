@@ -695,6 +695,33 @@
       "prev": "मागील",
       "next": "पुढील",
       "tenantNotes": "टेनंट प्रशासक नोट"
+    },
+    "tabEvents": "Events",
+    "events": {
+      "statsTotal": "Total events",
+      "stats24h": "Last 24h",
+      "stats7d": "Last 7 days",
+      "statsSessions": "Unique sessions",
+      "funnel": "Funnel",
+      "byEvent": "By event",
+      "topPrompts": "Most-clicked prompts",
+      "dismissals": "Dismissals by reason",
+      "byUtmSource": "By UTM source",
+      "viewAll": "View all events",
+      "back": "Back to dashboard",
+      "total": "{count} events",
+      "colWhen": "When",
+      "colEvent": "Event",
+      "colSession": "Session",
+      "colUtm": "UTM",
+      "colUser": "User",
+      "colProps": "Data",
+      "filterAll": "All events",
+      "anon": "Anonymous",
+      "empty": "No events yet",
+      "prev": "Previous",
+      "next": "Next",
+      "errorLoad": "Couldn't load events"
     }
   },
   "Builder": {
@@ -756,6 +783,81 @@
           "generic": "डाउनलोड करा"
         }
       }
+    }
+  },
+  "Intro": {
+    "modal": {
+      "title": "You're trying TheOdooAgent",
+      "subtitle": "AI that queries and operates your Odoo in natural language. This is a live demo on sample data — ask anything you want.",
+      "chips": {
+        "language": "Ask in your language: sales, invoices, stock",
+        "noInvent": "It doesn't make up numbers: the system computes them, not the model",
+        "anyOdoo": "Works on any Odoo: 14 to 20 and Community"
+      },
+      "tryThisLabel": "Try this",
+      "tryThis": {
+        "overdue_invoices": "How many overdue invoices are there this month?",
+        "top_customers": "Top 5 customers by revenue",
+        "stock_check": "Is product X in stock?"
+      },
+      "ctaPrimary": "Start exploring",
+      "ctaSecondary": "Connect your own Odoo (free)",
+      "dontShowAgain": "Don't show again",
+      "whatIsThis": "What is this?",
+      "madeBy": "Made by Martin",
+      "close": "Close"
+    },
+    "sidebarItem": "What is TheOdooAgent?",
+    "panel": {
+      "title": "What is TheOdooAgent?",
+      "close": "Close",
+      "what": {
+        "heading": "What it is",
+        "body": "TheOdooAgent is an AI agent that connects to your Odoo and lets you query and operate in natural language — without knowing how to use Odoo, without navigating menus. You ask the way you'd talk to a colleague and get real data, charts and exports."
+      },
+      "how": {
+        "heading": "How it works",
+        "intro": "You ask and it answers with your real data. Examples:",
+        "example1": "Show overdue invoices over $10,000",
+        "example2": "Sales by salesperson last month, as a chart",
+        "example3": "Create a contact: María López, maria@acme.com",
+        "operates": "It also operates: create contacts, confirm orders, update records — always with your confirmation. It never acts on its own."
+      },
+      "trust": {
+        "heading": "Why you can trust it",
+        "item1": "Human confirmation on every write: the agent proposes, you approve.",
+        "item2": "It doesn't hallucinate numbers: the system computes them, the model only writes them up.",
+        "item3": "It respects your Odoo permissions: it sees the same as you would.",
+        "item4": "Encrypted credentials."
+      },
+      "different": {
+        "heading": "Why it's different",
+        "item1": "Works on every Odoo version (14–20) and Community — Odoo's native AI requires Enterprise 18/19+.",
+        "item2": "Deterministic architecture (Python-first): that's why the cost is rock-bottom."
+      },
+      "partner": {
+        "heading": "Are you an Odoo implementer?",
+        "body": "You can offer it to your clients under your own brand and resell it: white-label, multi-client, from ~$1/user.",
+        "cta": "How to resell it"
+      },
+      "founder": {
+        "heading": "Made by me",
+        "body": "I'm Martin. I built TheOdooAgent on my own, with a simple idea: that anyone in a company could talk to their Odoo without fighting with menus. There's no company with a sales team behind this — it's the idea, the code, and me. If you try it and something doesn't work, write me: your feedback literally makes it better.",
+        "email": "martin@theodooagent.com"
+      },
+      "faq": {
+        "heading": "Frequently asked questions",
+        "q1": "Is it secure?",
+        "a1": "Yes: human confirmation, respects permissions, encrypted credentials.",
+        "q2": "Which versions does it support?",
+        "a2": "Odoo 14 to 20 and Community.",
+        "q3": "Does it install anything in my Odoo?",
+        "a3": "No. It connects via a standard API key (XML-RPC).",
+        "q4": "How much does it cost?",
+        "a4": "Free on your own Odoo. When you deploy it to your clients, from ~$1/user."
+      },
+      "ctaDemo": "Try the demo",
+      "ctaConnect": "Connect your Odoo (free)"
     }
   }
 }
