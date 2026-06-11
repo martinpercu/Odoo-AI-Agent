@@ -158,6 +158,9 @@ A modern, responsive interface that allows users to query and manage data from t
 **Auth:**
 - **Supabase** - Email/password authentication + session management
 
+**Email:**
+- **nodemailer** - Server-side SMTP (Zoho) for sending localized invitation emails from `app/api/send-invitation` (optional — disabled when SMTP env vars are unset)
+
 **Styling & UI:**
 - **Tailwind CSS v4** - CSS utilities (configured via `@theme`)
 - **Framer Motion** - Smooth animations and transitions
@@ -192,6 +195,8 @@ app/
       onboarding/page.tsx       # Odoo connection form (inside AppShell; no full-screen wrapper)
       settings/page.tsx         # Admin panel: org, Odoo configs, users, invitations
       pricing/page.tsx          # Subscription plans
+  api/
+    send-invitation/route.ts    # Server-side route handler: sends the localized invitation email via Zoho SMTP (nodemailer); SMTP secrets never reach the client; verifies caller via /me before sending
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
   app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles; wraps layout in IntroProvider; mounts IntroModal + IntroPanel; calls captureUtm() on mount
@@ -258,8 +263,9 @@ hooks/
   use-icon-size.ts              # `useIconSize(slot)` → role-aware icon size (builder: 16/20/24, client: 18/22/28)
   use-intro.tsx                 # IntroProvider + useIntro: shared state for intro modal + info panel (open/close, dismissal persisted in localStorage `toa_intro_dismissed`)
 lib/
-  api.ts                        # Centralized API client (28+ endpoints, authFetch with 401/402)
+  api.ts                        # Centralized API client (28+ endpoints, authFetch with 401/402); sendInvitationEmail() posts to the internal /api/send-invitation route
   types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics: AnalyticsEvent, AnalyticsEventsListResponse, AnalyticsEventsStats)
+  invitation-email.ts           # Localized copy + HTML/text builder for the invitation email (es/en/fr/de/pt/it); content only — transport lives in app/api/send-invitation/route.ts
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
   analytics.ts                  # First-party analytics: track(), captureUtm(), getSessionId() — fire-and-forget events to POST /events; captures utm_* on app mount and stitches them to later signup via session_id
   pin-animation-events.ts       # Pub-sub system for flying pin animations
@@ -450,7 +456,8 @@ Settings
 ├── Users tab
 │   ├── (PARTNER org) Users         → list members, change role, toggle free/paid slot, remove
 │   │                                 seats widget (paid X/limit · free X/limit) shown in section subheader
-│   │               Invite        → send invite by email (role fixed as CLIENT_USER); optional instance + credential pre-load
+│   │               Invite        → send invite by email (role fixed as CLIENT_USER); email-language selector (defaults to admin's UI locale); optional instance + credential pre-load
+│   │                                 on submit: creates invitation, then sends the localized email (best-effort) → shows "email sent" / "email failed, copy link" status
 │   │               Sent Invitations → view status (pending / accepted / expired), filter tabs
 │   │                                  pending invitations: "Show link" button + copy URL
 │   │                                  pending invitations can be cancelled (X button with inline confirmation; frees seat immediately)
@@ -480,8 +487,10 @@ Role comparison:
 ### ✉️ Invitation Flow
 
 ```
-Admin sends invite (email) → POST /admin/orgs/{id}/invitations
-                           → backend emails token link: /invite?token=...
+Admin sends invite (email) → POST /admin/orgs/{id}/invitations  (backend mints token only)
+                           → front sends localized email via POST /api/send-invitation (Zoho SMTP)
+                             best-effort: link stays copyable as fallback if the email fails
+                             accept link: /invite?token=...
 
 Invitee opens link → GET /admin/invitations/{token}/preview  (no auth)
                    → renders without app shell (no sidebar, no chat context)
@@ -834,6 +843,16 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
 
 # Backend API base URL (default: http://localhost:8000)
 NEXT_PUBLIC_API_BASE=http://localhost:8000
+
+# Invitation email transport — server-side only (leave unset to disable email;
+# the invitation still gets created and the admin can copy the link manually)
+ZOHO_SMTP_HOST=smtp.zoho.com           # default smtp.zoho.com
+ZOHO_SMTP_PORT=465                     # 465 (SSL) or 587 (STARTTLS); default 465
+ZOHO_SMTP_USER=martin@theodooagent.com # Zoho account
+ZOHO_SMTP_PASS=                        # Zoho app-specific password
+INVITE_EMAIL_FROM=TheOdooAgent <martin@theodooagent.com>  # default
+INVITE_EMAIL_REPLY_TO=                 # optional — replies routed here (e.g. when FROM is no-reply@)
+APP_BASE_URL=https://theodooagent.com  # used to build the accept link; default https://theodooagent.com
 ```
 
 ### 📦 Installation

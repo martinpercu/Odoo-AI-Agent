@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, FormEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Settings,
@@ -42,6 +42,7 @@ import {
   updateOrgUser,
   removeOrgUser,
   createInvitation,
+  sendInvitationEmail,
   listInvitations,
   cancelInvitation,
   savePendingCredential,
@@ -527,18 +528,27 @@ function UsersSection() {
 
 // ---- Invite Form Section ----
 
+const EMAIL_LANGS = ["es", "en", "fr", "de", "pt", "it"] as const;
+
 function InviteFormSection() {
   const t = useTranslations("Settings");
+  const locale = useLocale();
   const { meData } = useSession();
   const orgId = meData?.org?.id;
+  const orgName = meData?.org?.name ?? "";
   const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
 
   const [email, setEmail] = useState("");
   const role: UserRole = "CLIENT_USER";
+  // Email language of the invitee — defaults to the admin's UI locale (when supported).
+  const defaultLang = (EMAIL_LANGS as readonly string[]).includes(locale) ? locale : "en";
+  const [inviteLang, setInviteLang] = useState<string>(defaultLang);
   const [submitting, setSubmitting] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
+  // null = idle, true = email sent ok, false = invitation created but email failed
+  const [emailSent, setEmailSent] = useState<boolean | null>(null);
 
   // Pre-load credential fields (CLIENT_USER only)
   // If org has 1 config: credConfigId is fixed; if 2+ configs: starts empty (required)
@@ -558,6 +568,7 @@ function InviteFormSection() {
     setSubmitting(true);
     setInviteError(null);
     setInviteLink(null);
+    setEmailSent(null);
     const result = await createInvitation(orgId, email, role);
     if (result.success && result.invitation) {
       const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
@@ -569,6 +580,16 @@ function InviteFormSection() {
           odoo_api_key: credApiKey.trim(),
         });
       }
+      // Send the localized invitation email (best-effort — link stays as fallback).
+      const emailResult = await sendInvitationEmail({
+        token: result.invitation.token,
+        email,
+        orgName,
+        role,
+        lang: inviteLang,
+        expiresAt: result.invitation.expires_at,
+      });
+      setEmailSent(emailResult.success);
       setEmail("");
       setCredUsername("");
       setCredApiKey("");
@@ -607,6 +628,17 @@ function InviteFormSection() {
             placeholder={t("admin.inviteEmail")}
             className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
+          <select
+            value={inviteLang}
+            onChange={(e) => setInviteLang(e.target.value)}
+            aria-label={t("admin.inviteLang")}
+            title={t("admin.inviteLang")}
+            className="rounded-md border border-border bg-surface px-2 text-small uppercase outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
+          >
+            {EMAIL_LANGS.map((l) => (
+              <option key={l} value={l}>{l.toUpperCase()}</option>
+            ))}
+          </select>
           <button
             type="submit"
             disabled={submitting}
@@ -666,6 +698,20 @@ function InviteFormSection() {
                 {showCredKey ? <EyeOff size={14} strokeWidth={1.5} /> : <Eye size={14} strokeWidth={1.5} />}
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Email send status */}
+        {emailSent === true && (
+          <div className="flex items-center gap-2 rounded-md bg-success-subtle px-3 py-2 text-small text-success-solid">
+            <Check size={14} strokeWidth={1.5} className="shrink-0" />
+            <span>{t("admin.inviteEmailSent")}</span>
+          </div>
+        )}
+        {emailSent === false && (
+          <div className="flex items-start gap-2 rounded-md bg-warning-subtle px-3 py-2 text-small text-warning-solid">
+            <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+            <span>{t("admin.inviteEmailFailed")}</span>
           </div>
         )}
 
