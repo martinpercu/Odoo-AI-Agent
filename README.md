@@ -41,6 +41,7 @@ This is a production-grade SaaS front end, not a toy chat box. At a glance:
 | 🔐 **Auth & multi-tenancy** | Supabase auth + DEV MODE + Demo mode, org management, RBAC (SuperAdmin/Admin/Client), subscription tiers, team invitations, slot limits |
 | 🎭 **Dual-voice UI** | Audience-aware copy & density — technical for Builders, concierge for Clients — custom brand mark, white-label "Powered by", LangGraph trace panel |
 | 🌍 **i18n & theming** | 11 languages, light/dark mode with no-flash persistence, full design-token system, responsive collapsible layout |
+| 🚀 **Landing intro surfaces** | Welcome modal (auto-opens once on first demo visit, dismissal persisted), info panel drawer ("¿Qué es TheOdooAgent?") reachable from the sidebar any time, first-party funnel analytics (`track()`, UTM capture, session stitching) |
 
 > 💡 If this already looks broad — it is. Keep scrolling for the complete reference: project structure, provider stack, every UI card, auth flows, the multi-tenancy model, the full endpoint table and the SSE protocol.
 
@@ -191,13 +192,18 @@ app/
       pricing/page.tsx          # Subscription plans
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
-  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles
+  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles; wraps layout in IntroProvider; mounts IntroModal + IntroPanel; calls captureUtm() on mount
   AgentMark.tsx                 # Brand mark primitives: MarkB, MarkI, Wordmark, Lockup
   theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
   auth/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
+  intro/
+    intro-modal.tsx             # Welcome modal (auto-opens once on first demo visit; dismissed state persisted in localStorage `toa_intro_dismissed`)
+    intro-panel.tsx             # Info drawer panel — reachable any time from the sidebar "¿Qué es?" item
+    intro-sidebar-item.tsx      # Sidebar entry point for the info panel; fires `info_opened_from_panel` analytics event
+    a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring)
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu
+    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; renders IntroSidebarItem below new-chat button
     user-menu.tsx               # Popover menu (bottom of sidebar): avatar/initials, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu, login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
@@ -248,10 +254,12 @@ hooks/
   use-limit-reached-modal.tsx   # 402 limit modal context (listens to auth:limit_reached event)
   use-audience-translations.ts  # `useAudienceT(ns)` → translator scoped to `Builder.<ns>` or `Client.<ns>` based on role
   use-icon-size.ts              # `useIconSize(slot)` → role-aware icon size (builder: 16/20/24, client: 18/22/28)
+  use-intro.tsx                 # IntroProvider + useIntro: shared state for intro modal + info panel (open/close, dismissal persisted in localStorage `toa_intro_dismissed`)
 lib/
   api.ts                        # Centralized API client (28+ endpoints, authFetch with 401/402)
-  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant)
+  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics: AnalyticsEvent, AnalyticsEventsListResponse, AnalyticsEventsStats)
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
+  analytics.ts                  # First-party analytics: track(), captureUtm(), getSessionId() — fire-and-forget events to POST /events; captures utm_* on app mount and stitches them to later signup via session_id
   pin-animation-events.ts       # Pub-sub system for flying pin animations
   odoo-model-to-doctype.ts      # Maps Odoo model (`account.move`, `sale.order`, …) → user-facing docType (`invoice`, `order`, …) for Client copy
 i18n/                           # Routing, request config, navigation (Link/Router wrappers)
@@ -274,6 +282,7 @@ NextIntlClientProvider
               → PinnedInsightsProvider (pin state)
                 → [root layout ends here]
                   → AppShell (ChatContext + RightPanelContext)  ← only inside (app)/ route group
+                    → IntroProvider (intro modal + panel state)  ← inside AppShell
 ```
 
 ## 🧩 UI Components
@@ -463,6 +472,7 @@ Role comparison:
 | Edit organization | — | ✓ | ✓ |
 | Cross-org administration | — | — | ✓ |
 | Feedback dashboard + full triage | — | — | ✓ |
+| Landing analytics events tab | — | — | ✓ |
 
 ### ✉️ Invitation Flow
 
@@ -589,6 +599,9 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `GET` | `/admin/feedback/{id}` | Fetch single feedback report detail |
 | `PATCH` | `/admin/feedback/{id}` | Update report (status, admin_notes, is_hidden) |
 | `DELETE` | `/admin/feedback/{id}` | Delete feedback report |
+| `POST` | `/events` | Emit a landing funnel analytics event — body: `{ event, props, utm, session_id, ts }` (fire-and-forget, no auth required; auth token attached when available) |
+| `GET` | `/admin/events` | List analytics events (filterable by event, session_id, utm_source, utm_campaign, date range, has_user; paginated) — superadmin only |
+| `GET` | `/admin/events/stats` | Analytics stats dashboard: total, 24h, 7d, unique_sessions, by_event, funnel, by_utm_source, top_example_prompts, dismissals_by_reason — superadmin only |
 
 ### 📡 SSE Event Types
 
@@ -950,6 +963,7 @@ Translations are located in `messages/[locale].json`.
 | `LimitReachedModal` | 402 payment limit message |
 | `Invite` | Invitation acceptance (loading, success, error, expired) |
 | `LocaleSwitcher` | Language names |
+| `Intro` | Landing intro surfaces: `Intro.sidebarItem` (sidebar entry label), `Intro.modal.*` (welcome modal copy, example prompts, chips), `Intro.panel.*` (info drawer copy, sections, CTAs) |
 | `Builder.*` | Builder-voice strings — read via `useAudienceT("<ns>")` when role is ADMIN/SUPERADMIN. Includes `Builder.Trace` (LangGraph panel) and `Builder.ChatMessages` (e.g. typing indicator: "Ejecutando · query"). |
 | `Client.*` | Client-voice strings — read via `useAudienceT("<ns>")` when role is CLIENT_USER or anonymous. Includes `Client.ChatMessages`, `Client.ActionSuccess.<action>.<docType>` (success card headlines) and `Client.ActionProposal.verb.<action>.<docType>` (confirm-button labels). Every entry must have a `.generic` fallback. |
 

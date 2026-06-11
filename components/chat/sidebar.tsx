@@ -17,6 +17,7 @@ import { MarkB, Wordmark } from "@/components/AgentMark";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { UserMenu } from "@/components/chat/user-menu";
+import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
 import type { ChatGroup } from "@/lib/types";
 
 interface SidebarProps {
@@ -106,6 +107,9 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           <SquarePen size={iconBtn} strokeWidth={1.5} />
           {!collapsed && <span>{t("newChat")}</span>}
         </button>
+        <div className="mt-1.5">
+          <IntroSidebarItem collapsed={collapsed} onOpened={() => setMobileOpen(false)} />
+        </div>
       </div>
 
       {/* Chat History */}
