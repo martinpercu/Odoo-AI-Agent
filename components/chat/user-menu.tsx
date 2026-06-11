@@ -19,6 +19,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { PoweredBy } from "@/components/ui/powered-by";
+import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -125,6 +126,13 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
     return (
       <div ref={ref} className="relative">
         <div className="flex flex-col gap-0.5">
+          {/* What is TheOdooAgent? */}
+          <IntroSidebarItem
+            collapsed={collapsed}
+            onOpened={onNavigate}
+            className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+          />
+
           {/* Theme */}
           <button
             onClick={toggleTheme}
@@ -328,9 +336,11 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
               )}
             </div>
 
-            {/* Preferences: theme + language */}
+            {/* Preferences: intro + theme + language */}
             <div className="my-1 border-t border-border" />
             <div className="px-1">
+              <IntroSidebarItem onOpened={close} className={itemClass} />
+
               <button onClick={toggleTheme} className={itemClass}>
                 {isDark ? (
                   <Sun size={iconInline} strokeWidth={1.5} className="shrink-0" />
