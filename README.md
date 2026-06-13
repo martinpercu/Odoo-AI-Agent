@@ -515,6 +515,7 @@ Role comparison:
 | View org feedback reports | — | ✓ | ✓ |
 | Edit organization | — | ✓ | ✓ |
 | Cross-org administration | — | — | ✓ |
+| Delete a user completely (Postgres + Supabase auth) | — | — | ✓ |
 | Feedback dashboard + full triage | — | — | ✓ |
 | Landing analytics events tab | — | — | ✓ |
 
@@ -645,6 +646,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `PATCH` | `/admin/orgs/{id}` | Update organization (name, slug, type) |
 | `PATCH` | `/admin/orgs/{id}/type` | Change org type (`PARTNER` ↔ `SOLITARY`) — superadmin only |
 | `POST` | `/admin/superadmin/users/{id}/promote` | Create a new org for a user with no org (legacy accounts without auto-provisioning) — superadmin only |
+| `DELETE` | `/admin/superadmin/users/{id}` | Permanently delete a user from Postgres **and** Supabase auth (`superadminDeleteUser`); query `delete_empty_org` also collapses a SOLITARY org left empty. Returns per-table `deleted` counts + a `supabase_auth` status (`deleted`/`not_found`/`skipped_not_configured`/`failed`) — a `200` does not guarantee the Supabase side succeeded — superadmin only |
 | `GET` | `/admin/orgs/{id}/configs` | List Odoo connections (enriched with counts/seats/status) |
 | `GET` | `/admin/orgs/{id}/configs/{id}` | Instance detail (`fetchInstanceDetail`): users ∩ instance + pending invitations + counts/seats |
 | `POST` | `/admin/orgs/{id}/configs` | Create Odoo connection (optional creator creds; 422→errorCode, 409→solitaryBlocked) |

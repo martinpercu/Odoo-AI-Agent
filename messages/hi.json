@@ -666,7 +666,14 @@
       "btnPromote": "org असाइन करें",
       "promoteTooltip": "इस उपयोगकर्ता के लिए नई org बनाएं (ऑटो-प्रोविज़निंग के बिना लीगेसी खाता)।",
       "promoteSuccess": "{email} के लिए org बनाई।",
-      "promoteError": "org असाइन नहीं हो सकी।"
+      "promoteError": "org असाइन नहीं हो सकी।",
+      "btnDelete": "Delete",
+      "confirmDelete": "Permanently delete {email}? Erases all their data and login.",
+      "deleteOrgIfEmpty": "Also delete the org if empty",
+      "deleteSuccess": "{email} deleted completely.",
+      "deleteWarnPartial": "Data deleted, but the Supabase login remains. Remove it manually in the dashboard.",
+      "deleteWarnSkipped": "Data deleted. Remove the auth user manually in Supabase (service key not configured).",
+      "deleteError": "Could not delete user."
     },
     "activity": {
       "title": "संगठन के अनुसार गतिविधि",

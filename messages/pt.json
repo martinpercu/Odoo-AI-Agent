@@ -666,7 +666,14 @@
       "btnPromote": "Atribuir org",
       "promoteTooltip": "Criar uma nova org para este usuário (conta legacy sem auto-provisionamento).",
       "promoteSuccess": "Org criada para {email}.",
-      "promoteError": "Não foi possível atribuir a org."
+      "promoteError": "Não foi possível atribuir a org.",
+      "btnDelete": "Excluir",
+      "confirmDelete": "Excluir definitivamente {email}? Apaga todos os dados e o acesso.",
+      "deleteOrgIfEmpty": "Excluir também a org se ficar vazia",
+      "deleteSuccess": "{email} excluído por completo.",
+      "deleteWarnPartial": "Dados excluídos, mas o acesso no Supabase continua. Remova-o manualmente no painel.",
+      "deleteWarnSkipped": "Dados excluídos. Remova o usuário de auth manualmente no Supabase (service key não configurada).",
+      "deleteError": "Não foi possível excluir o usuário."
     },
     "activity": {
       "title": "Atividade por organização",

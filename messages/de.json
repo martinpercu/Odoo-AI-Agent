@@ -666,7 +666,14 @@
       "btnPromote": "Org zuweisen",
       "promoteTooltip": "Neue Org für diesen Benutzer erstellen (Legacy-Konto ohne Auto-Provisioning).",
       "promoteSuccess": "Org für {email} erstellt.",
-      "promoteError": "Org konnte nicht zugewiesen werden."
+      "promoteError": "Org konnte nicht zugewiesen werden.",
+      "btnDelete": "Löschen",
+      "confirmDelete": "{email} endgültig löschen? Löscht alle Daten und den Login.",
+      "deleteOrgIfEmpty": "Org löschen, wenn sie leer ist",
+      "deleteSuccess": "{email} vollständig gelöscht.",
+      "deleteWarnPartial": "Daten gelöscht, aber der Supabase-Login besteht weiter. Bitte manuell im Dashboard entfernen.",
+      "deleteWarnSkipped": "Daten gelöscht. Auth-Benutzer manuell in Supabase entfernen (kein Service-Key konfiguriert).",
+      "deleteError": "Benutzer konnte nicht gelöscht werden."
     },
     "activity": {
       "title": "Aktivität nach Organisation",
