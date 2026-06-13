@@ -9,7 +9,7 @@ import {
   ReactNode,
 } from "react";
 import type { User } from "@supabase/supabase-js";
-import { supabase, IS_AUTH_ENABLED } from "@/lib/supabase";
+import { supabase, IS_AUTH_ENABLED, normalizeEmailLang } from "@/lib/supabase";
 import { useRouter, usePathname } from "next/navigation";
 
 /** Stub user for DEV MODE (no Supabase configured). */
@@ -26,8 +26,20 @@ interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
   login(email: string, password: string): Promise<{ error?: string }>;
-  register(email: string, password: string): Promise<{ error?: string; accessToken?: string }>;
+  register(
+    email: string,
+    password: string,
+    lang?: string,
+  ): Promise<{ error?: string; accessToken?: string }>;
   logout(): void;
+  /** Step 1 of password recovery: email the user a 6-digit OTP. */
+  requestPasswordReset(email: string): Promise<{ error?: string; rateLimited?: boolean }>;
+  /** Step 2a: verify the recovery OTP — on success Supabase opens a session. */
+  verifyRecoveryCode(email: string, code: string): Promise<{ error?: string }>;
+  /** Step 2b: set a new password for the OTP-authenticated user. */
+  updatePassword(newPassword: string): Promise<{ error?: string }>;
+  /** Best-effort: persist the user's UI language in metadata (localizes emails). */
+  updateUserLang(lang: string): Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -44,6 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login: async () => ({}),
       register: async () => ({}),
       logout: () => {},
+      requestPasswordReset: async () => ({}),
+      verifyRecoveryCode: async () => ({}),
+      updatePassword: async () => ({}),
+      updateUserLang: async () => {},
     };
     return <AuthContext.Provider value={devValue}>{children}</AuthContext.Provider>;
   }
@@ -77,7 +93,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       supabase!.auth.getSession().then(({ data }) => {
         if (!data.session) return;
         const currentPath = window.location.pathname;
-        const publicPaths = ["/login", "/register", "/invite", "/onboarding"];
+        const publicPaths = [
+          "/login",
+          "/register",
+          "/invite",
+          "/onboarding",
+          "/forgot-password",
+          "/reset-password",
+        ];
         const withoutLocale = "/" + currentPath.split("/").slice(2).join("/");
         if (publicPaths.some((p) => withoutLocale.startsWith(p))) return;
         setUser(null);
@@ -102,10 +125,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   }, []);
 
-  const register = useCallback(async (email: string, password: string) => {
-    const { data, error } = await supabase!.auth.signUp({ email, password });
+  const register = useCallback(async (email: string, password: string, lang?: string) => {
+    const emailLang = normalizeEmailLang(lang);
+    const { data, error } = await supabase!.auth.signUp({
+      email,
+      password,
+      // Persist the chosen language so transactional emails arrive localized.
+      // Unsupported locales are dropped → email falls back to bilingual EN/ES.
+      options: emailLang ? { data: { lang: emailLang } } : undefined,
+    });
     if (error) return { error: error.message };
     return { accessToken: data.session?.access_token };
+  }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const requestPasswordReset = useCallback(async (email: string) => {
+    // OTP flow: do NOT pass { redirectTo } — that's for magic links.
+    const { error } = await supabase!.auth.resetPasswordForEmail(email);
+    if (error) {
+      // Anti-enumeration: a non-existent email does NOT error. Only surface
+      // real failures (rate limit). The caller always advances to step 2.
+      if (error.status === 429) return { error: error.message, rateLimited: true };
+      return { error: error.message };
+    }
+    return {};
+  }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const verifyRecoveryCode = useCallback(async (email: string, code: string) => {
+    const { error } = await supabase!.auth.verifyOtp({
+      email,
+      token: code,
+      type: "recovery",
+    });
+    if (error) return { error: error.message };
+    return {};
+  }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const updatePassword = useCallback(async (newPassword: string) => {
+    const { error } = await supabase!.auth.updateUser({ password: newPassword });
+    if (error) return { error: error.message };
+    return {};
+  }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const updateUserLang = useCallback(async (lang: string) => {
+    const emailLang = normalizeEmailLang(lang);
+    if (!emailLang) return; // unsupported locale → leave metadata untouched
+    try {
+      await supabase!.auth.updateUser({ data: { lang: emailLang } });
+    } catch {
+      // Best-effort — never block the UI on a metadata sync.
+    }
   }, []);
 
   const logout = useCallback(() => {
@@ -116,7 +188,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [getLocale, router]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        login,
+        register,
+        logout,
+        requestPasswordReset,
+        verifyRecoveryCode,
+        updatePassword,
+        updateUserLang,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
