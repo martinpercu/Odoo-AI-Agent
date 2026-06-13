@@ -99,9 +99,17 @@ function LoginContent() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-small font-medium text-text-secondary">
-              {t("password")}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-small font-medium text-text-secondary">
+                {t("password")}
+              </label>
+              <Link
+                href={`/${locale}/forgot-password`}
+                className="text-small font-medium text-accent hover:underline"
+              >
+                {t("forgotPasswordLink")}
+              </Link>
+            </div>
             <PasswordInput
               value={password}
               onChange={setPassword}
