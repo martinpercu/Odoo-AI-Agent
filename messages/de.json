@@ -36,7 +36,10 @@
     "language": "Sprache",
     "instance": "Instanz",
     "login": "Anmelden",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "instances": "Instanzen",
+    "myConnection": "Meine Verbindung",
+    "configureToChat": "Zum Chatten einrichten"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -298,7 +301,16 @@
       "paidToFreeError": "Überlauflimit für kostenlose Plätze erreicht. Es können keine weiteren Benutzer auf kostenlos umgestellt werden.",
       "solitaryBannerTitle": "Möchten Sie ein Team verwalten?",
       "solitaryBannerBody": "Ihr Konto ist im Einzelmodus. Kontaktieren Sie uns, um den Partner-Plan zu aktivieren und mehrere Benutzer und Instanzen zu verwalten.",
-      "solitaryBannerCta": "Kontaktieren"
+      "solitaryBannerCta": "Kontaktieren",
+      "movedInstancesTitle": "Instanzen verwalten",
+      "movedInstancesDesc": "Erstelle, validiere und konfiguriere deine Odoo-Instanzen auf der eigenen Seite.",
+      "movedInstancesCta": "Öffnen",
+      "movedInviteTitle": "Nutzer einladen",
+      "movedInviteDesc": "Einladungen erfolgen jetzt pro Instanz, mit Platz- und Zugangsdaten-Optionen.",
+      "movedInviteCta": "Öffnen",
+      "movedCredsTitle": "Deine Odoo-Verbindung",
+      "movedCredsDesc": "Lade und verwalte deinen Benutzernamen und API-Schlüssel.",
+      "movedCredsCta": "Öffnen"
     },
     "credentials": {
       "sectionTitle": "Meine Odoo-Anmeldedaten",
@@ -493,7 +505,22 @@
     "connectionError": "Verbindungsfehler.",
     "step2Cta": "Speichern & Starten",
     "configSaveError": "Speichern fehlgeschlagen.",
-    "back": "Zurück"
+    "back": "Zurück",
+    "blockInstanceTitle": "Instanzdaten",
+    "blockCredsTitle": "Deine Zugangsdaten für diese Instanz",
+    "validating": "Verbindung wird geprüft…",
+    "validated": "Verbindung bestätigt",
+    "errorUnreachable": "Diese URL ist nicht erreichbar. Bitte prüfen und erneut versuchen.",
+    "errorDbNotFound": "Datenbank nicht gefunden. Bitte den Namen prüfen.",
+    "errorAuthFailed": "Benutzername oder API-Schlüssel ungültig.",
+    "gateTitle": "Dein Odoo jetzt verbinden?",
+    "gateDesc": "Richte deine Instanz ein, um mit echten Daten zu chatten, oder bleib im Demo.",
+    "gateConfigure": "Ja, einrichten",
+    "gateDemo": "Im Demo weiter",
+    "tagShared": "Unternehmen",
+    "tagPersonal": "Persönlich",
+    "blockInstanceSub": "mit deinem Team geteilt",
+    "blockCredsSub": "nur deine"
   },
   "LimitReachedModal": {
     "title": "Benutzerlimit erreicht",
@@ -516,7 +543,8 @@
     "errorDesc": "Einladung konnte nicht akzeptiert werden.",
     "goHome": "Zur App",
     "registerTitle": "Registrierung abschließen",
-    "registerDesc": "Sie wurden eingeladen, {org} beizutreten. Erstellen Sie Ihr Passwort, um Ihr Konto zu aktivieren.",
+    "registerDescPre": "Sie wurden eingeladen,",
+    "registerDescPost": "beizutreten. Erstellen Sie Ihr Passwort, um Ihr Konto zu aktivieren.",
     "emailLabel": "E-Mail",
     "passwordLabel": "Passwort",
     "registering": "Konto wird erstellt...",
@@ -887,5 +915,145 @@
       "ctaDemo": "Demo ausprobieren",
       "ctaConnect": "Dein Odoo verbinden (kostenlos)"
     }
+  },
+  "Odoo": {
+    "apiKeyHelper": {
+      "title": "So erstellst du deinen API-Schlüssel in Odoo",
+      "step1": "Öffne in Odoo Einstellungen → Kontosicherheit.",
+      "step2": "Aktiviere den Entwicklermodus.",
+      "step3": "Erstelle unter „API-Schlüssel“ einen neuen Schlüssel.",
+      "step4": "Kopiere den Schlüssel und füge ihn hier ein."
+    }
+  },
+  "Instances": {
+    "title": "Instanzen",
+    "addInstance": "Instanz hinzufügen",
+    "addFirstInstance": "Erste Instanz hinzufügen",
+    "empty": "Noch keine Instanzen.",
+    "backToList": "Zurück zu Instanzen",
+    "notFound": "Instanz nicht gefunden.",
+    "solitaryTitle": "Einzelinstanz-Tarif",
+    "solitaryDesc": "Wechsle zu einem Partner-Tarif, um mehrere Instanzen zu verwalten.",
+    "status": {
+      "active": "Aktiv",
+      "unset": "Keine Zugangsdaten",
+      "invalid": "Ungültige Zugangsdaten",
+      "pending": "Eingeladen"
+    },
+    "health": {
+      "active": "aktiv",
+      "unset": "ohne Daten",
+      "invalid": "ungültig",
+      "pending": "ausstehend",
+      "seats": "von {total} Plätzen"
+    },
+    "seat": {
+      "paid": "Bezahlt",
+      "free": "Gratis"
+    },
+    "create": {
+      "title": "Neue Instanz",
+      "blockInstanceTitle": "Instanzdaten",
+      "blockCredsTitle": "Deine Zugangsdaten für diese Instanz",
+      "credsOptionalHint": "Du kannst sie jetzt oder später hinzufügen. Ohne sie kannst du nicht mit dieser Instanz chatten, aber du kannst trotzdem Nutzer einladen.",
+      "labelLabel": "Bezeichnung",
+      "optional": "optional",
+      "labelPlaceholder": "Produktion",
+      "urlLabel": "Odoo-URL",
+      "databaseLabel": "Datenbankname",
+      "usernameLabel": "Odoo-Benutzername",
+      "apiKeyLabel": "API-Schlüssel",
+      "validating": "Verbindung wird geprüft…",
+      "validated": "Verbindung bestätigt",
+      "submit": "Instanz erstellen",
+      "saveError": "Instanz konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "solitaryBlocked": "Dein Tarif erlaubt nur eine Instanz. Für mehr bitte upgraden.",
+      "errorUnreachable": "Diese URL ist nicht erreichbar. Bitte prüfen und erneut versuchen.",
+      "errorDbNotFound": "Datenbank nicht gefunden. Bitte den Namen prüfen.",
+      "errorAuthFailed": "Benutzername oder API-Schlüssel ungültig.",
+      "tagShared": "Unternehmen",
+      "tagPersonal": "Persönlich",
+      "blockInstanceSub": "mit deinem Team geteilt",
+      "blockCredsSub": "nur deine"
+    },
+    "credentials": {
+      "instanceLabel": "Instanz",
+      "usernameLabel": "Odoo-Benutzername",
+      "usernamePlaceholder": "admin",
+      "apiKeyLabel": "API-Schlüssel",
+      "apiKeyPlaceholder": "Dein Odoo-API-Schlüssel",
+      "apiKeyUpdatePlaceholder": "Neuen Schlüssel eingeben, um ihn zu ersetzen",
+      "hideKey": "Schlüssel verbergen",
+      "showKey": "Schlüssel anzeigen",
+      "configuredOn": "Konfiguriert am {date}",
+      "errorAuthFailed": "Benutzername oder API-Schlüssel ungültig.",
+      "networkError": "Netzwerkfehler. Bitte erneut versuchen.",
+      "saveError": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "saveSuccess": "Zugangsdaten gespeichert.",
+      "updateBtn": "Aktualisieren",
+      "saveBtn": "Speichern"
+    },
+    "users": {
+      "title": "Nutzer",
+      "empty": "Noch keine Nutzer auf dieser Instanz.",
+      "loadCreds": "Zugangsdaten laden",
+      "loadCredsHint": "Lade die Odoo-Zugangsdaten dieses Nutzers vor, damit er sofort chatten kann."
+    },
+    "invitations": {
+      "title": "Ausstehende Einladungen"
+    },
+    "invite": {
+      "button": "Nutzer einladen",
+      "emailPlaceholder": "E-Mail",
+      "langLabel": "E-Mail-Sprache",
+      "seatLabel": "Platz",
+      "seatsAvail": "{paidUsed}/{paidTotal} bezahlt · {freeUsed}/{freeTotal} gratis",
+      "seatPaid": "Bezahlt",
+      "seatFree": "Gratis",
+      "modeLabel": "Zugangsdaten",
+      "modeInviteOnly": "Nutzer gibt sie selbst ein",
+      "modePrecreds": "Ich lade sie vor",
+      "usernamePlaceholder": "Odoo-Benutzername",
+      "apiKeyPlaceholder": "API-Schlüssel",
+      "hideKey": "Schlüssel verbergen",
+      "showKey": "Schlüssel anzeigen",
+      "submit": "Einladung senden",
+      "emailHasAccount": "Diese E-Mail hat bereits ein Konto.",
+      "seatLimit": "Keine freien Plätze dieses Typs. Für mehr bitte upgraden.",
+      "error": "Einladung konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "emailSent": "Einladungs-E-Mail gesendet.",
+      "emailFailed": "Einladung erstellt, aber die E-Mail konnte nicht gesendet werden. Kopiere den Link unten.",
+      "copy": "Kopieren",
+      "copied": "Kopiert"
+    },
+    "edit": {
+      "button": "Bearbeiten",
+      "warning": "Das Ändern der URL oder Datenbank betrifft alle Nutzer dieser Instanz und erfordert eine erneute Validierung.",
+      "save": "Änderungen speichern",
+      "cancel": "Abbrechen",
+      "saveError": "Änderungen konnten nicht gespeichert werden. Bitte erneut versuchen.",
+      "labelLabel": "Bezeichnung",
+      "labelPlaceholder": "z. B. Produktion",
+      "labelSave": "Speichern"
+    }
+  },
+  "Connection": {
+    "invalidBanner": {
+      "title": "Deine Verbindung zu {company} funktioniert nicht mehr",
+      "desc": "Lade deinen API-Schlüssel neu, um weiterzuarbeiten.",
+      "cta": "API-Schlüssel neu laden",
+      "yourSystem": "deinem System"
+    },
+    "revalidate": "Neu validieren",
+    "unsetDesc": "Du hast noch keine Zugangsdaten, um {company} zu nutzen.",
+    "unsetCta": "Zugangsdaten hinzufügen",
+    "activeNote": "Verbunden",
+    "editCreds": "Zugangsdaten bearbeiten",
+    "myTitleClient": "Deine Odoo-Verbindung",
+    "myTitleAdmin": "Deine Odoo-Verbindungen",
+    "subtitleClient": "Gib deinen Benutzernamen und API-Schlüssel ein, um mit den Daten deines Unternehmens zu chatten.",
+    "subtitleAdmin": "Deine persönlichen Zugangsdaten für jede Instanz, mit der du chattest.",
+    "noInstance": "Noch keine Instanz zugewiesen.",
+    "backToSettings": "Zurück zu den Einstellungen"
   }
 }

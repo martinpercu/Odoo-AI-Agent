@@ -13,6 +13,7 @@ import type {
   MeResponse,
   ServerConversation,
   OdooConfigItem,
+  OdooConfigSummary,
   OrgUser,
   Invitation,
   UserRole,
@@ -31,6 +32,12 @@ import type {
   FeedbackStatus,
   AnalyticsEventsListResponse,
   AnalyticsEventsStats,
+  ValidateResult,
+  ValidateErrorCode,
+  InstanceDetail,
+  SeatType,
+  InvitationMode,
+  OdooConnectionStatus,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -261,7 +268,8 @@ export async function updateOrg(
 
 export interface OdooConfigsResult {
   success: boolean;
-  configs?: OdooConfigItem[];
+  /** Enriched on the instances-list endpoint (company_name, counts, seats, my_connection_status). */
+  configs?: OdooConfigSummary[];
   error?: string;
 }
 
@@ -269,6 +277,10 @@ export interface OdooConfigResult {
   success: boolean;
   config?: OdooConfigItem;
   error?: string;
+  /** Discriminated validation failure (422) when creating against Odoo. */
+  errorCode?: ValidateErrorCode;
+  /** True when a SOLITARY org tried to add a 2nd instance (409). */
+  solitaryBlocked?: boolean;
 }
 
 export async function listOdooConfigs(orgId: string): Promise<OdooConfigsResult> {
@@ -285,7 +297,14 @@ export async function listOdooConfigs(orgId: string): Promise<OdooConfigsResult>
 
 export async function createOdooConfig(
   orgId: string,
-  payload: { label?: string; url: string; db_name: string }
+  payload: {
+    label?: string;
+    url: string;
+    db_name: string;
+    // Optional creator credentials (spec §2.2). Required on the 1st instance, optional from the 2nd.
+    odoo_username?: string;
+    odoo_apikey?: string;
+  }
 ): Promise<OdooConfigResult> {
   try {
     const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/configs`, {
@@ -295,7 +314,44 @@ export async function createOdooConfig(
     });
     const data = await res.json();
     if (res.ok) return { success: true, config: data };
-    return { success: false, error: extractError(data.detail, "Failed to create config") };
+    // 422 → validation failed against Odoo (error_code discriminated). 409 → SOLITARY rejects instance N.
+    return {
+      success: false,
+      error: extractError(data.detail, "Failed to create config"),
+      errorCode: (data.error_code ?? data.detail?.error_code) as ValidateErrorCode | undefined,
+      solitaryBlocked: res.status === 409,
+    };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface InstanceDetailResult {
+  success: boolean;
+  detail?: InstanceDetail;
+  error?: string;
+}
+
+/** Instance detail with its users ∩ this instance + pending invitations (spec §2.4). */
+export async function fetchInstanceDetail(
+  orgId: string,
+  configId: string
+): Promise<InstanceDetailResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/configs/${configId}`);
+    const data = await res.json();
+    if (res.ok) {
+      // Backend may omit empty collections — guarantee the arrays/counts so the UI never hits undefined.
+      const detail: InstanceDetail = {
+        ...data,
+        users: data.users ?? [],
+        invitations: data.invitations ?? [],
+        counts: data.counts ?? { active: 0, unset: 0, invalid: 0, pending: 0 },
+      };
+      return { success: true, detail };
+    }
+    return { success: false, error: extractError(data.detail, "Failed to load instance") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -416,6 +472,8 @@ export interface CredentialResult {
   credential?: UserOdooCredential;
   error?: string;
   notFound?: boolean;
+  /** Set when the save was rejected by Odoo validation (422). Usually "auth_failed". */
+  errorCode?: ValidateErrorCode;
 }
 
 export interface AllCredentialsResult {
@@ -461,7 +519,32 @@ export async function saveMyCredential(
     });
     const data = await res.json();
     if (res.ok) return { success: true, credential: data.credential ?? data };
-    return { success: false, error: extractError(data.detail, "Failed to save credential") };
+    return {
+      success: false,
+      error: extractError(data.detail, "Failed to save credential"),
+      errorCode: (data.error_code ?? data.detail?.error_code) as ValidateErrorCode | undefined,
+    };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** Re-validate the current user's stored credential for a config (spec §2.6). */
+export async function revalidateMyCredential(configId: string): Promise<CredentialResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/odoo-credentials/${configId}/revalidate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true, credential: data.credential ?? data };
+    return {
+      success: false,
+      error: extractError(data.detail, "Failed to revalidate"),
+      errorCode: (data.error_code ?? data.detail?.error_code) as ValidateErrorCode | undefined,
+    };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -529,7 +612,35 @@ export async function saveUserCredential(
     );
     const data = await res.json();
     if (res.ok) return { success: true, credential: data.credential ?? data };
-    return { success: false, error: extractError(data.detail, "Failed to save credential") };
+    return {
+      success: false,
+      error: extractError(data.detail, "Failed to save credential"),
+      errorCode: (data.error_code ?? data.detail?.error_code) as ValidateErrorCode | undefined,
+    };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** Admin: re-validate a user's stored credential for a config (spec §2.6). */
+export async function revalidateUserCredential(
+  orgId: string,
+  userId: string,
+  configId: string
+): Promise<CredentialResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/users/${userId}/odoo-credentials/${configId}/revalidate`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, credential: data.credential ?? data };
+    return {
+      success: false,
+      error: extractError(data.detail, "Failed to revalidate"),
+      errorCode: (data.error_code ?? data.detail?.error_code) as ValidateErrorCode | undefined,
+    };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -672,28 +783,56 @@ export interface InvitationResult {
   success: boolean;
   invitation?: Invitation;
   error?: string;
+  /** 409 + error_code "seatLimitReached" — no free seat of the chosen type. */
   seatLimitReached?: boolean;
+  /** 409 + error_code "email_has_account" — the email already belongs to a user (spec §2.8, blocked). */
+  emailHasAccount?: boolean;
+}
+
+export interface CreateInvitationOptions {
+  role?: UserRole;
+  /** Instance the invitee is assigned to (spec §2.8). Required when the org has >1 instance. */
+  instance_id?: string;
+  seat_type?: SeatType;
+  mode?: InvitationMode;
+  /** Only for mode = "precreds" — admin pre-loads the invitee's Odoo credentials. */
+  prefilled_username?: string;
+  prefilled_apikey?: string;
 }
 
 export async function createInvitation(
   orgId: string,
   email: string,
-  role: UserRole = "CLIENT_USER"
+  roleOrOptions: UserRole | CreateInvitationOptions = "CLIENT_USER"
 ): Promise<InvitationResult> {
+  const opts: CreateInvitationOptions =
+    typeof roleOrOptions === "string" ? { role: roleOrOptions } : roleOrOptions;
+  const body: Record<string, unknown> = {
+    email,
+    role: opts.role ?? "CLIENT_USER",
+    seat_type: opts.seat_type ?? "paid",
+    mode: opts.mode ?? "invite_only",
+  };
+  if (opts.instance_id) body.instance_id = opts.instance_id;
+  if (opts.prefilled_username) body.prefilled_username = opts.prefilled_username;
+  if (opts.prefilled_apikey) body.prefilled_apikey = opts.prefilled_apikey;
+
   try {
     const res = await authFetch(
       `${API_BASE}/admin/orgs/${orgId}/invitations`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, role }),
+        body: JSON.stringify(body),
       }
     );
     const data = await res.json();
     if (res.ok) return { success: true, invitation: data.invitation ?? data };
+    const code = (data.error_code ?? data.detail?.error_code) as string | undefined;
     return {
       success: false,
-      seatLimitReached: res.status === 409,
+      seatLimitReached: code === "seatLimitReached" || (res.status === 409 && code !== "email_has_account"),
+      emailHasAccount: code === "email_has_account",
       error: extractError(data.detail, "Failed to create invitation"),
     };
   } catch (err) {
@@ -795,6 +934,10 @@ export interface AcceptInvitationResult {
   success: boolean;
   status?: number;
   error?: string;
+  /** The instance the new user was assigned to (spec §2.9). */
+  instanceId?: string | null;
+  /** Connection status after accept: "active" (precreds) or "unset" (invite_only). */
+  connectionStatus?: OdooConnectionStatus | null;
 }
 
 export async function acceptInvitation(
@@ -814,7 +957,14 @@ export async function acceptInvitation(
       body: JSON.stringify({ token }),
     });
 
-    if (res.ok) return { success: true };
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return {
+        success: true,
+        instanceId: data.instance_id ?? null,
+        connectionStatus: (data.connection_status ?? null) as OdooConnectionStatus | null,
+      };
+    }
     return { success: false, status: res.status };
   } catch {
     return { success: false, error: NETWORK_ERROR };
@@ -860,6 +1010,48 @@ export async function testOdooConnection(
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Discriminated connection validation (spec §7).
+ * - Without credentials → only checks the instance exists (reachable URL + DB found).
+ * - With credentials → also validates auth; `auth_failed` when the apikey is wrong.
+ * Backend accepts both field schemes (db/db_name, username/odoo_username, api_key/odoo_apikey).
+ */
+export async function validateConnection(payload: {
+  url: string;
+  db_name: string;
+  odoo_username?: string;
+  odoo_apikey?: string;
+}): Promise<ValidateResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/test-connection`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url: payload.url,
+        db_name: payload.db_name,
+        odoo_username: payload.odoo_username || undefined,
+        odoo_apikey: payload.odoo_apikey || undefined,
+      }),
+    });
+    const data = await res.json();
+    // New shape: { ok, company_name, odoo_version, error_code, field_errors }.
+    // Fall back to legacy keys (status/company/version) for resilience.
+    const ok = data.ok ?? data.status === "ok";
+    if (res.ok && ok) {
+      return {
+        ok: true,
+        company_name: data.company_name ?? data.company ?? null,
+        odoo_version: data.odoo_version ?? data.version ?? null,
+      };
+    }
+    const error_code = (data.error_code ?? "unreachable") as ValidateErrorCode;
+    return { ok: false, error_code, field_errors: data.field_errors };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { ok: false, error_code: "unreachable" };
   }
 }
 

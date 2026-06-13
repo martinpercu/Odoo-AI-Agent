@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
+import { resolvePostAuthPath } from "@/lib/post-auth";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -26,10 +27,10 @@ export default function RegisterPage() {
 
   // Redirect already-logged-in users
   useEffect(() => {
-    if (!authLoading && user) {
-      router.replace(meData?.org ? `/${locale}/chat` : `/${locale}/onboarding`);
+    if (!authLoading && user && meData) {
+      router.replace(`/${locale}/${resolvePostAuthPath(meData)}`);
     }
-  }, [authLoading, user, meData?.org, locale, router]);
+  }, [authLoading, user, meData, locale, router]);
 
   // Redirect in DEV MODE — register is not meaningful without Supabase
   if (!IS_AUTH_ENABLED) {
@@ -59,11 +60,7 @@ export default function RegisterPage() {
         return;
       }
       const me = await reload();
-      if (me?.org) {
-        router.push(`/${locale}/chat`);
-      } else {
-        router.push(`/${locale}/onboarding`);
-      }
+      router.push(`/${locale}/${me ? resolvePostAuthPath(me) : "onboarding"}`);
     } finally {
       setIsSubmitting(false);
     }

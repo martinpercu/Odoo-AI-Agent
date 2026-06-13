@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, FormEvent } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Settings,
   Shield,
   Building2,
-  Plug,
   Database,
   Users,
   UserPlus,
@@ -26,30 +26,24 @@ import {
   X,
   CheckCircle2,
   Zap,
+  ArrowRight,
   BookSearch,
 } from "lucide-react";
-import { ConnectionForm } from "@/components/odoo/connection-form";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
-import { UserCredentialsSection } from "@/components/settings/user-credentials-section";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
 import { AdminInvitationCredentialsModal } from "@/components/settings/admin-invitation-credentials-modal";
 import { useSession } from "@/hooks/use-session";
 import {
-  listOdooConfigs,
-  deleteOdooConfig,
   updateOrg,
   listOrgUsers,
   updateOrgUser,
   removeOrgUser,
-  createInvitation,
-  sendInvitationEmail,
   listInvitations,
   cancelInvitation,
-  savePendingCredential,
   fetchAdminFeedback,
   updateTenantNotes,
 } from "@/lib/api";
-import type { OdooConfigItem, OdooConfigSummary, OrgUser, Invitation, UserRole, FeedbackReport } from "@/lib/types";
+import type { OdooConfigSummary, OrgUser, Invitation, UserRole, FeedbackReport } from "@/lib/types";
 
 // ---- CollapsibleCard ----
 
@@ -113,6 +107,40 @@ function CollapsibleCard({ icon, title, defaultOpen = false, children, subheader
 }
 
 // ---- Org Section ----
+
+/** Pointer card to a route that now owns a flow previously embedded in Settings (tenant refactor). */
+function MovedToCard({
+  icon,
+  title,
+  desc,
+  cta,
+  href,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  cta: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-4 rounded-card border border-border bg-surface p-5 transition-colors hover:bg-raised/40"
+    >
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-accent-subtle text-accent">
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-subheading">{title}</p>
+        <p className="text-small text-text-secondary">{desc}</p>
+      </div>
+      <span className="flex shrink-0 items-center gap-1.5 text-small font-medium text-accent">
+        {cta}
+        <ArrowRight size={16} strokeWidth={1.5} />
+      </span>
+    </Link>
+  );
+}
 
 function OrgSection() {
   const t = useTranslations("Settings");
@@ -218,102 +246,6 @@ function OrgSection() {
             </button>
           </div>
         </form>
-      )}
-    </CollapsibleCard>
-  );
-}
-
-// ---- Odoo Configs Section ----
-
-function OdooConfigsSection() {
-  const t = useTranslations("Settings");
-
-  return (
-    <CollapsibleCard icon={<Plug size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.odooConfigsTitle")}>
-      <ConnectionForm />
-    </CollapsibleCard>
-  );
-}
-
-// ---- Saved Configs Section ----
-
-function SavedConfigsSection() {
-  const t = useTranslations("Settings");
-  const { meData } = useSession();
-  const orgId = meData?.org?.id;
-
-  const [configs, setConfigs] = useState<OdooConfigItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!orgId) return;
-    setLoading(true);
-    listOdooConfigs(orgId).then((r) => {
-      if (r.success) setConfigs(r.configs ?? []);
-      setLoading(false);
-    });
-  }, [orgId]);
-
-  async function handleDelete(id: string) {
-    if (!orgId) return;
-    setDeletingId(id);
-    await deleteOdooConfig(orgId, id);
-    setConfigs((prev) => prev.filter((c) => c.id !== id));
-    setDeletingId(null);
-    setConfirmDeleteId(null);
-  }
-
-  return (
-    <CollapsibleCard icon={<Database size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.savedConfigs")}>
-      {loading ? (
-        <div className="flex justify-center py-4">
-          <Loader2 size={18} strokeWidth={1.5} className="animate-spin text-text-secondary" />
-        </div>
-      ) : configs.length === 0 ? (
-        <p className="text-body text-text-secondary">{t("admin.noConfigs")}</p>
-      ) : (
-        <div className="space-y-2">
-          {configs.map((cfg) => (
-            <div
-              key={cfg.id}
-              className="flex items-center justify-between rounded-md border border-border px-3 py-2.5 text-body"
-            >
-              <div>
-                <p className="font-medium">{cfg.label}</p>
-                <p className="text-small text-text-muted font-technical">{cfg.url} · {cfg.db_name}</p>
-              </div>
-              {confirmDeleteId === cfg.id ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-small text-error">{t("admin.confirmDelete")}</span>
-                  <button
-                    onClick={() => handleDelete(cfg.id)}
-                    disabled={deletingId === cfg.id}
-                    className="rounded-md px-2 py-1 text-small bg-error text-white hover:opacity-90"
-                  >
-                    {deletingId === cfg.id ? <Loader2 size={12} strokeWidth={1.5} className="animate-spin" /> : t("admin.yes")}
-                  </button>
-                  <button
-                    onClick={() => setConfirmDeleteId(null)}
-                    className="rounded-md px-2 py-1 text-small border border-border hover:bg-raised"
-                  >
-                    {t("admin.no")}
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setConfirmDeleteId(cfg.id)}
-                  className="rounded-md p-1.5 text-text-secondary hover:text-error hover:bg-error-subtle transition-colors"
-                  title={t("admin.delete")}
-                  aria-label={t("admin.delete")}
-                >
-                  <Trash2 size={16} strokeWidth={1.5} />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
       )}
     </CollapsibleCard>
   );
@@ -523,214 +455,6 @@ function UsersSection() {
         />
       )}
     </>
-  );
-}
-
-// ---- Invite Form Section ----
-
-const EMAIL_LANGS = ["es", "en", "fr", "de", "pt", "it"] as const;
-
-function InviteFormSection() {
-  const t = useTranslations("Settings");
-  const locale = useLocale();
-  const { meData } = useSession();
-  const orgId = meData?.org?.id;
-  const orgName = meData?.org?.name ?? "";
-  const configs = (meData?.odoo_configs ?? []) as OdooConfigSummary[];
-
-  const [email, setEmail] = useState("");
-  const role: UserRole = "CLIENT_USER";
-  // Email language of the invitee — defaults to the admin's UI locale (when supported).
-  const defaultLang = (EMAIL_LANGS as readonly string[]).includes(locale) ? locale : "en";
-  const [inviteLang, setInviteLang] = useState<string>(defaultLang);
-  const [submitting, setSubmitting] = useState(false);
-  const [inviteLink, setInviteLink] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [inviteError, setInviteError] = useState<string | null>(null);
-  // null = idle, true = email sent ok, false = invitation created but email failed
-  const [emailSent, setEmailSent] = useState<boolean | null>(null);
-
-  // Pre-load credential fields (CLIENT_USER only)
-  // If org has 1 config: credConfigId is fixed; if 2+ configs: starts empty (required)
-  const [credConfigId, setCredConfigId] = useState<string>(configs.length === 1 ? (configs[0]?.id ?? "") : "");
-  const [credUsername, setCredUsername] = useState("");
-  const [credApiKey, setCredApiKey] = useState("");
-  const [showCredKey, setShowCredKey] = useState(false);
-
-  async function handleInvite(e: FormEvent) {
-    e.preventDefault();
-    if (!orgId) return;
-    // For CLIENT_USER with multiple configs, instance selection is required
-    if (role === "CLIENT_USER" && configs.length > 1 && !credConfigId) {
-      setInviteError(t("admin.preloadInstanceRequired"));
-      return;
-    }
-    setSubmitting(true);
-    setInviteError(null);
-    setInviteLink(null);
-    setEmailSent(null);
-    const result = await createInvitation(orgId, email, role);
-    if (result.success && result.invitation) {
-      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-      setInviteLink(`${baseUrl}/invite?token=${result.invitation.token}`);
-      // Pre-load credential for CLIENT_USER if credential fields were filled
-      if (credUsername.trim() && credApiKey.trim() && credConfigId) {
-        await savePendingCredential(orgId, result.invitation.id, credConfigId, {
-          odoo_username: credUsername.trim(),
-          odoo_api_key: credApiKey.trim(),
-        });
-      }
-      // Send the localized invitation email (best-effort — link stays as fallback).
-      const emailResult = await sendInvitationEmail({
-        token: result.invitation.token,
-        email,
-        orgName,
-        role,
-        lang: inviteLang,
-        expiresAt: result.invitation.expires_at,
-      });
-      setEmailSent(emailResult.success);
-      setEmail("");
-      setCredUsername("");
-      setCredApiKey("");
-      setCredConfigId(configs.length === 1 ? (configs[0]?.id ?? "") : "");
-    } else {
-      setInviteError(result.seatLimitReached ? t("admin.inviteSeatLimitReached") : (result.error ?? t("admin.inviteError")));
-    }
-    setSubmitting(false);
-  }
-
-  function handleCopy() {
-    if (!inviteLink) return;
-    navigator.clipboard.writeText(inviteLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  return (
-    <CollapsibleCard icon={<UserPlus size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.invitationsTitle")}>
-      {/* Invite error banner */}
-      {inviteError && (
-        <div className="mb-4 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
-          <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
-          <span>{inviteError}</span>
-        </div>
-      )}
-
-      {/* Invite form */}
-      <form onSubmit={handleInvite} className="flex flex-col gap-3">
-        <div className="flex gap-2">
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("admin.inviteEmail")}
-            className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
-          />
-          <select
-            value={inviteLang}
-            onChange={(e) => setInviteLang(e.target.value)}
-            aria-label={t("admin.inviteLang")}
-            title={t("admin.inviteLang")}
-            className="rounded-md border border-border bg-surface px-2 text-small uppercase outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
-          >
-            {EMAIL_LANGS.map((l) => (
-              <option key={l} value={l}>{l.toUpperCase()}</option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            disabled={submitting}
-            className="flex h-btn-md items-center gap-1.5 rounded-btn bg-accent px-3 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
-          >
-            {submitting ? <Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> : t("admin.invite")}
-          </button>
-        </div>
-
-        {/* Required instance selection for CLIENT_USER with multiple configs */}
-        {configs.length > 1 && (
-          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
-            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
-              {t("admin.preloadInstance")} <span className="text-error">*</span>
-            </p>
-            <select
-              value={credConfigId}
-              onChange={(e) => setCredConfigId(e.target.value)}
-              required
-              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
-            >
-              <option value="">{t("adminCredentials.selectInstance")}</option>
-              {configs.map((c) => (
-                <option key={c.id} value={c.id}>{c.label || c.url}</option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {/* Optional credential pre-load */}
-        {configs.length > 0 && (
-          <div className="rounded-md border border-border bg-raised/30 p-3 space-y-2">
-            <p className="text-micro font-medium text-text-secondary uppercase tracking-wide">
-              {t("admin.preloadCredentials")}
-            </p>
-            <input
-              type="text"
-              value={credUsername}
-              onChange={(e) => setCredUsername(e.target.value)}
-              placeholder={t("admin.preloadUsername")}
-              className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
-            />
-            <div className="relative">
-              <input
-                type={showCredKey ? "text" : "password"}
-                value={credApiKey}
-                onChange={(e) => setCredApiKey(e.target.value)}
-                placeholder={t("admin.preloadApiKey")}
-                className="w-full rounded-md border border-border bg-surface px-3 py-1.5 pr-9 text-small font-technical outline-none placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
-              />
-              <button
-                type="button"
-                onClick={() => setShowCredKey((v) => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
-                aria-label={showCredKey ? t("adminCredentials.hideKey") : t("adminCredentials.showKey")}
-              >
-                {showCredKey ? <EyeOff size={14} strokeWidth={1.5} /> : <Eye size={14} strokeWidth={1.5} />}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Email send status */}
-        {emailSent === true && (
-          <div className="flex items-center gap-2 rounded-md bg-success-subtle px-3 py-2 text-small text-success-solid">
-            <Check size={14} strokeWidth={1.5} className="shrink-0" />
-            <span>{t("admin.inviteEmailSent")}</span>
-          </div>
-        )}
-        {emailSent === false && (
-          <div className="flex items-start gap-2 rounded-md bg-warning-subtle px-3 py-2 text-small text-warning-solid">
-            <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
-            <span>{t("admin.inviteEmailFailed")}</span>
-          </div>
-        )}
-
-        {/* Generated link */}
-        {inviteLink && (
-          <div className="flex items-center gap-2 rounded-md bg-raised px-3 py-2">
-            <p className="flex-1 truncate text-small font-technical text-text-secondary">{inviteLink}</p>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="shrink-0 rounded-md p-1 hover:bg-border transition-colors"
-              aria-label={copied ? t("admin.copied") : t("admin.copy")}
-            >
-              {copied ? <Check size={14} strokeWidth={1.5} className="text-success-solid" /> : <Copy size={14} strokeWidth={1.5} />}
-            </button>
-          </div>
-        )}
-      </form>
-    </CollapsibleCard>
   );
 }
 
@@ -1252,7 +976,6 @@ export default function SettingsPage() {
   const isAdmin = roleUpper === "ADMIN";
   const isClientUser = roleUpper === "CLIENT_USER";
   const hasOrg = !!meData?.org;
-  const isPartner = meData?.org?.type === "PARTNER";
   const isSolitary = meData?.org?.type === "SOLITARY";
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("org");
@@ -1330,15 +1053,30 @@ export default function SettingsPage() {
             {(activeTab === "org" || !isAdmin) && (
               <>
                 {hasOrg && isAdmin && <OrgSection />}
-                {isClientUser && hasOrg && <UserCredentialsSection />}
+                {/* Client-user self-service credentials now live on /settings/odoo. */}
+                {isClientUser && hasOrg && (
+                  <MovedToCard
+                    icon={<KeyRound size={20} strokeWidth={1.5} />}
+                    title={t("admin.movedCredsTitle")}
+                    desc={t("admin.movedCredsDesc")}
+                    cta={t("admin.movedCredsCta")}
+                    href="/settings/odoo"
+                  />
+                )}
               </>
             )}
 
             {/* ---- TAB: Instancias ---- */}
             {activeTab === "instances" && isAdmin && (
               <>
-                {isPartner && <OdooConfigsSection />}
-                <SavedConfigsSection />
+                {/* Instance create/list moved to the dedicated /instances route (tenant refactor). */}
+                <MovedToCard
+                  icon={<Database size={20} strokeWidth={1.5} />}
+                  title={t("admin.movedInstancesTitle")}
+                  desc={t("admin.movedInstancesDesc")}
+                  cta={t("admin.movedInstancesCta")}
+                  href="/instances"
+                />
                 <CollapsibleCard icon={<BookSearch size={20} strokeWidth={1.5} className="text-accent" />} title={t("inspector.heading")}>
                   <InstanceInspector />
                 </CollapsibleCard>
@@ -1367,7 +1105,16 @@ export default function SettingsPage() {
               ) : (
                 <>
                   {hasOrg && <UsersSection />}
-                  {hasOrg && <InviteFormSection />}
+                  {/* Inviting now happens per-instance (with seat + mode) on the /instances route. */}
+                  {hasOrg && (
+                    <MovedToCard
+                      icon={<UserPlus size={20} strokeWidth={1.5} />}
+                      title={t("admin.movedInviteTitle")}
+                      desc={t("admin.movedInviteDesc")}
+                      cta={t("admin.movedInviteCta")}
+                      href="/instances"
+                    />
+                  )}
                   {hasOrg && <SentInvitationsSection />}
                 </>
               )

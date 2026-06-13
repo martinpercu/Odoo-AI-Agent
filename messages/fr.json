@@ -36,7 +36,10 @@
     "language": "Langue",
     "instance": "Instance",
     "login": "Se connecter",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "instances": "Instances",
+    "myConnection": "Ma connexion",
+    "configureToChat": "Configurer pour discuter"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -298,7 +301,16 @@
       "paidToFreeError": "Limite de débordement des places gratuites atteinte. Impossible de déplacer plus d'utilisateurs vers gratuit.",
       "solitaryBannerTitle": "Vous souhaitez gérer une équipe ?",
       "solitaryBannerBody": "Votre compte est en mode individuel. Contactez-nous pour activer le plan partenaire et gérer plusieurs utilisateurs et instances.",
-      "solitaryBannerCta": "Nous contacter"
+      "solitaryBannerCta": "Nous contacter",
+      "movedInstancesTitle": "Gérer les instances",
+      "movedInstancesDesc": "Créez, validez et configurez vos instances Odoo sur la page dédiée.",
+      "movedInstancesCta": "Ouvrir",
+      "movedInviteTitle": "Inviter des utilisateurs",
+      "movedInviteDesc": "Les invitations se font désormais par instance, avec options de siège et d'identifiants.",
+      "movedInviteCta": "Ouvrir",
+      "movedCredsTitle": "Votre connexion Odoo",
+      "movedCredsDesc": "Chargez et gérez votre nom d'utilisateur et votre clé API.",
+      "movedCredsCta": "Ouvrir"
     },
     "credentials": {
       "sectionTitle": "Mes identifiants Odoo",
@@ -493,7 +505,22 @@
     "connectionError": "Erreur de connexion.",
     "step2Cta": "Enregistrer et démarrer",
     "configSaveError": "Erreur d'enregistrement.",
-    "back": "Retour"
+    "back": "Retour",
+    "blockInstanceTitle": "Données de l'instance",
+    "blockCredsTitle": "Vos identifiants pour cette instance",
+    "validating": "Validation de la connexion…",
+    "validated": "Connexion validée",
+    "errorUnreachable": "Impossible de joindre cette URL. Vérifiez-la et réessayez.",
+    "errorDbNotFound": "Base de données introuvable. Vérifiez le nom.",
+    "errorAuthFailed": "Nom d'utilisateur ou clé API invalide.",
+    "gateTitle": "Connecter votre Odoo maintenant ?",
+    "gateDesc": "Configurez votre instance pour discuter avec des données réelles, ou continuez en démo.",
+    "gateConfigure": "Oui, configurer",
+    "gateDemo": "Continuer en démo",
+    "tagShared": "Entreprise",
+    "tagPersonal": "Personnel",
+    "blockInstanceSub": "partagé avec votre équipe",
+    "blockCredsSub": "uniquement les vôtres"
   },
   "LimitReachedModal": {
     "title": "Limite d'utilisateurs atteinte",
@@ -516,7 +543,8 @@
     "errorDesc": "Échec de l'acceptation.",
     "goHome": "Aller à l'application",
     "registerTitle": "Complétez votre inscription",
-    "registerDesc": "Vous avez été invité à rejoindre {org}. Créez votre mot de passe pour activer votre compte.",
+    "registerDescPre": "Vous avez été invité à rejoindre",
+    "registerDescPost": "Créez votre mot de passe pour activer votre compte.",
     "emailLabel": "Email",
     "passwordLabel": "Mot de passe",
     "registering": "Création du compte...",
@@ -887,5 +915,145 @@
       "ctaDemo": "Essayer la démo",
       "ctaConnect": "Connecter votre Odoo (gratuit)"
     }
+  },
+  "Odoo": {
+    "apiKeyHelper": {
+      "title": "Comment générer votre clé API dans Odoo",
+      "step1": "Dans Odoo, ouvrez Paramètres → Sécurité du compte.",
+      "step2": "Activez le mode développeur.",
+      "step3": "Sous « Clés API », créez une nouvelle clé.",
+      "step4": "Copiez la clé et collez-la ici."
+    }
+  },
+  "Instances": {
+    "title": "Instances",
+    "addInstance": "Ajouter une instance",
+    "addFirstInstance": "Ajouter votre première instance",
+    "empty": "Aucune instance pour le moment.",
+    "backToList": "Retour aux instances",
+    "notFound": "Instance introuvable.",
+    "solitaryTitle": "Forfait à instance unique",
+    "solitaryDesc": "Passez à un forfait Partner pour gérer plusieurs instances.",
+    "status": {
+      "active": "Active",
+      "unset": "Sans identifiants",
+      "invalid": "Identifiants invalides",
+      "pending": "Invité"
+    },
+    "health": {
+      "active": "actives",
+      "unset": "sans ident.",
+      "invalid": "invalides",
+      "pending": "en attente",
+      "seats": "sur {total} sièges"
+    },
+    "seat": {
+      "paid": "Payant",
+      "free": "Gratuit"
+    },
+    "create": {
+      "title": "Nouvelle instance",
+      "blockInstanceTitle": "Données de l'instance",
+      "blockCredsTitle": "Vos identifiants pour cette instance",
+      "credsOptionalHint": "Vous pouvez les ajouter maintenant ou plus tard. Sans eux, vous ne pourrez pas discuter avec cette instance, mais vous pourrez tout de même y inviter des utilisateurs.",
+      "labelLabel": "Libellé",
+      "optional": "facultatif",
+      "labelPlaceholder": "Production",
+      "urlLabel": "URL Odoo",
+      "databaseLabel": "Nom de la base de données",
+      "usernameLabel": "Nom d'utilisateur Odoo",
+      "apiKeyLabel": "Clé API",
+      "validating": "Validation de la connexion…",
+      "validated": "Connexion validée",
+      "submit": "Créer l'instance",
+      "saveError": "Impossible de créer l'instance. Réessayez.",
+      "solitaryBlocked": "Votre forfait n'autorise qu'une seule instance. Mettez à niveau pour en ajouter.",
+      "errorUnreachable": "Impossible de joindre cette URL. Vérifiez-la et réessayez.",
+      "errorDbNotFound": "Base de données introuvable. Vérifiez le nom.",
+      "errorAuthFailed": "Nom d'utilisateur ou clé API invalide.",
+      "tagShared": "Entreprise",
+      "tagPersonal": "Personnel",
+      "blockInstanceSub": "partagé avec votre équipe",
+      "blockCredsSub": "uniquement les vôtres"
+    },
+    "credentials": {
+      "instanceLabel": "Instance",
+      "usernameLabel": "Nom d'utilisateur Odoo",
+      "usernamePlaceholder": "admin",
+      "apiKeyLabel": "Clé API",
+      "apiKeyPlaceholder": "Votre clé API Odoo",
+      "apiKeyUpdatePlaceholder": "Saisissez une nouvelle clé pour la remplacer",
+      "hideKey": "Masquer la clé",
+      "showKey": "Afficher la clé",
+      "configuredOn": "Configurée le {date}",
+      "errorAuthFailed": "Nom d'utilisateur ou clé API invalide.",
+      "networkError": "Erreur réseau. Réessayez.",
+      "saveError": "Impossible d'enregistrer. Réessayez.",
+      "saveSuccess": "Identifiants enregistrés.",
+      "updateBtn": "Mettre à jour",
+      "saveBtn": "Enregistrer"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "empty": "Aucun utilisateur sur cette instance.",
+      "loadCreds": "Charger les identifiants",
+      "loadCredsHint": "Préchargez les identifiants Odoo de cet utilisateur pour qu'il puisse discuter immédiatement."
+    },
+    "invitations": {
+      "title": "Invitations en attente"
+    },
+    "invite": {
+      "button": "Inviter un utilisateur",
+      "emailPlaceholder": "E-mail",
+      "langLabel": "Langue de l'e-mail",
+      "seatLabel": "Siège",
+      "seatsAvail": "{paidUsed}/{paidTotal} payants · {freeUsed}/{freeTotal} gratuits",
+      "seatPaid": "Payant",
+      "seatFree": "Gratuit",
+      "modeLabel": "Identifiants",
+      "modeInviteOnly": "L'utilisateur les saisit",
+      "modePrecreds": "Je les précharge",
+      "usernamePlaceholder": "Nom d'utilisateur Odoo",
+      "apiKeyPlaceholder": "Clé API",
+      "hideKey": "Masquer la clé",
+      "showKey": "Afficher la clé",
+      "submit": "Envoyer l'invitation",
+      "emailHasAccount": "Cet e-mail a déjà un compte.",
+      "seatLimit": "Aucun siège libre de ce type. Mettez à niveau pour en ajouter.",
+      "error": "Impossible de créer l'invitation. Réessayez.",
+      "emailSent": "E-mail d'invitation envoyé.",
+      "emailFailed": "Invitation créée, mais l'e-mail n'a pas pu être envoyé. Copiez le lien ci-dessous.",
+      "copy": "Copier",
+      "copied": "Copié"
+    },
+    "edit": {
+      "button": "Modifier",
+      "warning": "Modifier l'URL ou la base de données affecte tous les utilisateurs de cette instance et nécessite une revalidation.",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "saveError": "Impossible d'enregistrer les modifications. Réessayez.",
+      "labelLabel": "Libellé",
+      "labelPlaceholder": "ex. Production",
+      "labelSave": "Enregistrer"
+    }
+  },
+  "Connection": {
+    "invalidBanner": {
+      "title": "Votre connexion à {company} ne fonctionne plus",
+      "desc": "Rechargez votre clé API pour continuer.",
+      "cta": "Recharger la clé API",
+      "yourSystem": "votre système"
+    },
+    "revalidate": "Revalider",
+    "unsetDesc": "Vous n'avez pas encore d'identifiants pour utiliser {company}.",
+    "unsetCta": "Ajouter des identifiants",
+    "activeNote": "Connecté",
+    "editCreds": "Modifier les identifiants",
+    "myTitleClient": "Votre connexion Odoo",
+    "myTitleAdmin": "Vos connexions Odoo",
+    "subtitleClient": "Saisissez votre nom d'utilisateur et votre clé API pour commencer à discuter avec les données de votre entreprise.",
+    "subtitleAdmin": "Vos identifiants personnels pour chaque instance avec laquelle vous discutez.",
+    "noInstance": "Aucune instance attribuée pour le moment.",
+    "backToSettings": "Retour aux paramètres"
   }
 }
