@@ -257,6 +257,17 @@ export interface NotificationSettings {
 
 export type UserRole = "ADMIN" | "CLIENT_USER" | "SUPERADMIN";
 export type OrgType = "PARTNER" | "SOLITARY";
+
+/**
+ * Lifecycle of a user's Odoo Connection (per instance), spec §4.
+ * - `unset`: row exists (user assigned to the instance) but no valid apikey yet → blocking.
+ * - `active`: apikey validated against Odoo OK.
+ * - `invalid`: a query failed by auth → backend marks it (isolated per user).
+ */
+export type OdooConnectionStatus = "unset" | "active" | "invalid";
+export type SeatType = "paid" | "free";
+export type InvitationMode = "invite_only" | "precreds";
+export type InvitationStatus = "pending" | "accepted" | "cancelled";
 export type SubscriptionTier =
   | "FREE"
   | "STARTER"
@@ -294,6 +305,22 @@ export interface SlotsUsed {
   free: number;
 }
 
+/** Per-instance status counts (spec §2.3 / §6 InstanceHealthSummary). */
+export interface InstanceCounts {
+  active: number;
+  unset: number;
+  invalid: number;
+  pending: number;
+}
+
+/** Org-level seat usage, surfaced alongside instances. */
+export interface InstanceSeats {
+  paid_used: number;
+  paid_total: number;
+  free_used: number;
+  free_total: number;
+}
+
 export interface OdooConfigSummary {
   id: string;
   label: string;
@@ -301,6 +328,16 @@ export interface OdooConfigSummary {
   db_name: string;
   is_active: boolean;
   has_credentials?: boolean;
+  // Instance metadata captured on validation (spec §2.1/§2.3).
+  company_name?: string | null;
+  odoo_version?: string | null;
+  // Status of the *caller's own* Connection on this instance (null = no Connection).
+  my_connection_status?: OdooConnectionStatus | null;
+  // CLIENT_USER variant of /me exposes connection_status directly.
+  connection_status?: OdooConnectionStatus | null;
+  // Present on the instance-list endpoint for ADMIN.
+  counts?: InstanceCounts;
+  seats?: InstanceSeats;
 }
 
 export interface UserOdooCredential {
@@ -310,12 +347,16 @@ export interface UserOdooCredential {
   odoo_username: string;
   created_at: string;
   updated_at: string;
+  status?: OdooConnectionStatus;
+  last_validated_at?: string | null;
 }
 
 /** Returned by GET /me/odoo-credentials — one entry per config that has credentials */
 export interface OdooCredentialSummary {
   config_id: string;
   odoo_username: string;
+  status?: OdooConnectionStatus;
+  last_validated_at?: string | null;
 }
 
 /** Returned by GET /admin/orgs/{orgId}/users/{userId}/odoo-credentials */
@@ -328,11 +369,58 @@ export interface AdminUserCredential {
   updated_at: string;
   config_label?: string;
   config_url?: string;
+  status?: OdooConnectionStatus;
+  last_validated_at?: string | null;
 }
 
 export interface OdooConfigSummaryWithCreds extends OdooConfigSummary {
   hasCredentials: boolean;
   odoo_username?: string;
+  connectionStatus?: OdooConnectionStatus | null;
+}
+
+// ---- Instance validation (spec §7) ----
+
+export type ValidateErrorCode = "unreachable" | "db_not_found" | "auth_failed";
+
+export type ValidateResult =
+  | { ok: true; company_name: string | null; odoo_version: string | null }
+  | { ok: false; error_code: ValidateErrorCode; field_errors?: Record<string, string> };
+
+// ---- Instance detail (spec §2.4 — GET /admin/orgs/{id}/configs/{id}) ----
+
+/** A user as seen from an instance's detail (users ∩ this instance). */
+export interface InstanceUser {
+  user_id: string;
+  email: string;
+  role: UserRole;
+  seat_type: SeatType;
+  connection_status: OdooConnectionStatus;
+  odoo_username: string | null;
+  last_validated_at: string | null;
+}
+
+/** A pending invitation scoped to an instance. */
+export interface InstanceInvitation {
+  id: string;
+  email: string;
+  seat_type: SeatType;
+  mode: InvitationMode;
+  status: InvitationStatus;
+  expires_at: string;
+}
+
+export interface InstanceDetail {
+  id: string;
+  label: string;
+  url: string;
+  db_name: string;
+  company_name: string | null;
+  odoo_version: string | null;
+  counts: InstanceCounts;
+  seats?: InstanceSeats;
+  users: InstanceUser[];
+  invitations: InstanceInvitation[];
 }
 
 export interface MeResponse {
@@ -375,6 +463,11 @@ export interface Invitation {
   token: string;
   accepted_at: string | null;
   expires_at: string;
+  // Tenant refactor (spec §2.8): which instance, seat and mode the invite carries.
+  instance_id?: string | null;
+  seat_type?: SeatType;
+  mode?: InvitationMode;
+  status?: InvitationStatus;
 }
 
 // ---- SuperAdmin ----

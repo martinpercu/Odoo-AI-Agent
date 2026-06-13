@@ -11,12 +11,14 @@ export function DemoBanner() {
   const { user } = useAuth();
   const { meData } = useSession();
 
-  // Logged-in user with no org yet → point to onboarding
-  const loggedInNoOrg = !!user && !meData?.org;
+  // A logged-in user seeing the demo banner has no active connection → point them to setup.
+  // No instance yet → onboarding gate (creates the first one); has an instance → load creds.
+  const loggedIn = !!user;
+  const hasInstance = (meData?.odoo_configs?.length ?? 0) > 0;
 
-  const ctaHref = loggedInNoOrg ? "/onboarding" : "/login";
-  const ctaText = loggedInNoOrg ? t("demoConnectOdoo") : t("demoSignUp");
-  const bannerText = loggedInNoOrg ? t("demoBannerConnectOdoo") : t("demoBanner");
+  const ctaHref = !loggedIn ? "/login" : hasInstance ? "/settings/odoo" : "/onboarding";
+  const ctaText = loggedIn ? t("demoConnectOdoo") : t("demoSignUp");
+  const bannerText = loggedIn ? t("demoBannerConnectOdoo") : t("demoBanner");
 
   return (
     <div className="flex items-center justify-between gap-3 border-b border-border bg-warning-subtle px-4 py-2 text-small text-warning-solid shrink-0">

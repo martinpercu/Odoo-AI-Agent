@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Settings,
   Shield,
+  Database,
+  KeyRound,
   Sun,
   Moon,
   Globe,
@@ -110,9 +112,19 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const isClient = role !== "ADMIN" && role !== "SUPERADMIN";
   const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
 
-  const configsWithCreds = configs.filter((c) => c.hasCredentials);
-  const showInstance = configsWithCreds.length > 1;
+  // A config is "chat-ready" when the caller's Connection is active (spec §6.2).
+  // Fall back to credential presence when the status field isn't populated.
+  const isChatReady = (c: (typeof configs)[number]) =>
+    c.connection_status ? c.connection_status === "active" : c.hasCredentials;
+  const showInstance = configs.length > 1;
   const activeConfig = configs.find((c) => c.id === activeConfigId);
+
+  function configureInstance(id: string) {
+    setActiveConfigId(id);
+    setSub(null);
+    router.push("/settings/odoo");
+    close();
+  }
 
   const secondaryLine = [meData?.org?.name].filter(Boolean).join(" · ");
 
@@ -295,25 +307,32 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                         transition={{ duration: 0.15, ease: "easeOut" }}
                         className="absolute bottom-0 left-full z-50 ml-1 max-h-[60vh] w-56 overflow-y-auto rounded-card border border-border bg-surface py-1 shadow-lg"
                       >
-                        {configsWithCreds.map((config) => (
-                          <button
-                            key={config.id}
-                            onClick={() => selectInstance(config.id)}
-                            className="flex w-full items-center gap-2 px-3 py-2 text-left text-body transition-colors hover:bg-raised"
-                          >
-                            <span className="min-w-0 flex-1 truncate">
-                              {config.label}
-                              {config.odoo_username && (
-                                <span className="block truncate text-micro text-text-muted">
-                                  {config.odoo_username}
-                                </span>
+                        {configs.map((config) => {
+                          const ready = isChatReady(config);
+                          return (
+                            <button
+                              key={config.id}
+                              onClick={() => (ready ? selectInstance(config.id) : configureInstance(config.id))}
+                              className="flex w-full items-center gap-2 px-3 py-2 text-left text-body transition-colors hover:bg-raised"
+                            >
+                              <span className="min-w-0 flex-1 truncate">
+                                {config.label}
+                                {ready && config.odoo_username ? (
+                                  <span className="block truncate text-micro text-text-muted">
+                                    {config.odoo_username}
+                                  </span>
+                                ) : !ready ? (
+                                  <span className="block truncate text-micro text-warning-solid">
+                                    {t("configureToChat")}
+                                  </span>
+                                ) : null}
+                              </span>
+                              {config.id === activeConfigId && (
+                                <Check size={14} strokeWidth={2} className="shrink-0 text-accent" />
                               )}
-                            </span>
-                            {config.id === activeConfigId && (
-                              <Check size={14} strokeWidth={2} className="shrink-0 text-accent" />
-                            )}
-                          </button>
-                        ))}
+                            </button>
+                          );
+                        })}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -324,6 +343,18 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
 
             {/* Navigation links */}
             <div className="px-1">
+              {user && role === "ADMIN" && meData?.org && (
+                <Link href="/instances" onClick={close} className={itemClass}>
+                  <Database size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("instances")}</span>
+                </Link>
+              )}
+              {user && meData?.org && configs.length > 0 && (
+                <Link href="/settings/odoo" onClick={close} className={itemClass}>
+                  <KeyRound size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("myConnection")}</span>
+                </Link>
+              )}
               {user && (
                 <Link href={settingsHref} onClick={close} className={itemClass}>
                   <Settings size={iconInline} strokeWidth={1.5} className="shrink-0" />
