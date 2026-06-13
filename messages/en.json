@@ -36,7 +36,10 @@
     "language": "Language",
     "instance": "Instance",
     "login": "Sign in",
-    "logout": "Log out"
+    "logout": "Log out",
+    "instances": "Instances",
+    "myConnection": "My connection",
+    "configureToChat": "Set up to chat"
   },
   "ChatGroups": {
     "today": "Today",
@@ -298,7 +301,16 @@
       "paidToFreeError": "Free seat overflow limit reached. Cannot move more users to free.",
       "solitaryBannerTitle": "Want to manage a team?",
       "solitaryBannerBody": "Your account is in individual mode. Contact us to activate the partner plan and manage multiple users and instances.",
-      "solitaryBannerCta": "Contact us"
+      "solitaryBannerCta": "Contact us",
+      "movedInstancesTitle": "Manage instances",
+      "movedInstancesDesc": "Create, validate and configure your Odoo instances on the dedicated page.",
+      "movedInstancesCta": "Open",
+      "movedInviteTitle": "Invite users",
+      "movedInviteDesc": "Invitations now happen per instance, with seat and credential options.",
+      "movedInviteCta": "Open",
+      "movedCredsTitle": "Your Odoo connection",
+      "movedCredsDesc": "Load and manage your username and API key.",
+      "movedCredsCta": "Open"
     },
     "credentials": {
       "sectionTitle": "My Odoo Credentials",
@@ -493,7 +505,22 @@
     "connectionError": "Could not connect. Check your credentials.",
     "step2Cta": "Save and start chatting",
     "configSaveError": "Could not save connection. Please try again.",
-    "back": "Back"
+    "back": "Back",
+    "blockInstanceTitle": "Instance data",
+    "blockCredsTitle": "Your credentials for this instance",
+    "validating": "Validating connection…",
+    "validated": "Connection validated",
+    "errorUnreachable": "We couldn't reach that URL. Check it and try again.",
+    "errorDbNotFound": "We couldn't find that database. Check the name.",
+    "errorAuthFailed": "Invalid username or API key.",
+    "gateTitle": "Connect your Odoo now?",
+    "gateDesc": "Set up your instance to chat with real data, or keep exploring in demo.",
+    "gateConfigure": "Yes, set it up",
+    "gateDemo": "Continue in demo",
+    "tagShared": "Company",
+    "tagPersonal": "Personal",
+    "blockInstanceSub": "shared with your team",
+    "blockCredsSub": "only yours"
   },
   "LimitReachedModal": {
     "title": "User limit reached",
@@ -516,7 +543,8 @@
     "errorDesc": "Could not accept the invitation. Please try again.",
     "goHome": "Go to app",
     "registerTitle": "Complete your registration",
-    "registerDesc": "You've been invited to join {org}. Create your password to activate your account.",
+    "registerDescPre": "You've been invited to join",
+    "registerDescPost": "Create your password to activate your account.",
     "emailLabel": "Email",
     "passwordLabel": "Password",
     "registering": "Creating account...",
@@ -887,5 +915,145 @@
       "ctaDemo": "Try the demo",
       "ctaConnect": "Connect your Odoo (free)"
     }
+  },
+  "Odoo": {
+    "apiKeyHelper": {
+      "title": "How to generate your API key in Odoo",
+      "step1": "In Odoo, open Settings → Account Security.",
+      "step2": "Enable developer mode.",
+      "step3": "Under \"API Keys\", create a new key.",
+      "step4": "Copy the key and paste it here."
+    }
+  },
+  "Instances": {
+    "title": "Instances",
+    "addInstance": "Add instance",
+    "addFirstInstance": "Add your first instance",
+    "empty": "No instances yet.",
+    "backToList": "Back to instances",
+    "notFound": "Instance not found.",
+    "solitaryTitle": "Single-instance plan",
+    "solitaryDesc": "Upgrade to a Partner plan to manage multiple instances.",
+    "status": {
+      "active": "Active",
+      "unset": "No credentials",
+      "invalid": "Invalid credentials",
+      "pending": "Invited"
+    },
+    "health": {
+      "active": "active",
+      "unset": "no creds",
+      "invalid": "invalid",
+      "pending": "pending",
+      "seats": "of {total} seats"
+    },
+    "seat": {
+      "paid": "Paid",
+      "free": "Free"
+    },
+    "create": {
+      "title": "New instance",
+      "blockInstanceTitle": "Instance data",
+      "blockCredsTitle": "Your credentials for this instance",
+      "credsOptionalHint": "You can add them now or later. Without them you won't be able to chat with this instance, but you can still invite users to it.",
+      "labelLabel": "Label",
+      "optional": "optional",
+      "labelPlaceholder": "Production",
+      "urlLabel": "Odoo URL",
+      "databaseLabel": "Database name",
+      "usernameLabel": "Odoo username",
+      "apiKeyLabel": "API key",
+      "validating": "Validating connection…",
+      "validated": "Connection validated",
+      "submit": "Create instance",
+      "saveError": "Could not create the instance. Please try again.",
+      "solitaryBlocked": "Your plan allows a single instance. Upgrade to add more.",
+      "errorUnreachable": "We couldn't reach that URL. Check it and try again.",
+      "errorDbNotFound": "We couldn't find that database. Check the name.",
+      "errorAuthFailed": "Invalid username or API key.",
+      "tagShared": "Company",
+      "tagPersonal": "Personal",
+      "blockInstanceSub": "shared with your team",
+      "blockCredsSub": "only yours"
+    },
+    "credentials": {
+      "instanceLabel": "Instance",
+      "usernameLabel": "Odoo username",
+      "usernamePlaceholder": "admin",
+      "apiKeyLabel": "API key",
+      "apiKeyPlaceholder": "Your Odoo API key",
+      "apiKeyUpdatePlaceholder": "Enter a new key to replace it",
+      "hideKey": "Hide key",
+      "showKey": "Show key",
+      "configuredOn": "Configured on {date}",
+      "errorAuthFailed": "Invalid username or API key.",
+      "networkError": "Network error. Please try again.",
+      "saveError": "Could not save. Please try again.",
+      "saveSuccess": "Credentials saved.",
+      "updateBtn": "Update credentials",
+      "saveBtn": "Save credentials"
+    },
+    "users": {
+      "title": "Users",
+      "empty": "No users on this instance yet.",
+      "loadCreds": "Load credentials",
+      "loadCredsHint": "Pre-load this user's Odoo credentials so they can start chatting right away."
+    },
+    "invitations": {
+      "title": "Pending invitations"
+    },
+    "invite": {
+      "button": "Invite user",
+      "emailPlaceholder": "Email",
+      "langLabel": "Email language",
+      "seatLabel": "Seat",
+      "seatsAvail": "{paidUsed}/{paidTotal} paid · {freeUsed}/{freeTotal} free",
+      "seatPaid": "Paid",
+      "seatFree": "Free",
+      "modeLabel": "Credentials",
+      "modeInviteOnly": "User loads their own",
+      "modePrecreds": "I pre-load them",
+      "usernamePlaceholder": "Odoo username",
+      "apiKeyPlaceholder": "API key",
+      "hideKey": "Hide key",
+      "showKey": "Show key",
+      "submit": "Send invitation",
+      "emailHasAccount": "That email already has an account.",
+      "seatLimit": "No free seats of that type. Upgrade to add more.",
+      "error": "Could not create the invitation. Please try again.",
+      "emailSent": "Invitation email sent.",
+      "emailFailed": "Invitation created, but the email couldn't be sent. Copy the link below.",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "edit": {
+      "button": "Edit",
+      "warning": "Changing the URL or database affects every user of this instance and requires re-validation.",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "saveError": "Could not save the changes. Please try again.",
+      "labelLabel": "Label",
+      "labelPlaceholder": "e.g. Production",
+      "labelSave": "Save"
+    }
+  },
+  "Connection": {
+    "invalidBanner": {
+      "title": "Your connection to {company} stopped working",
+      "desc": "Reload your API key to keep operating.",
+      "cta": "Reload API key",
+      "yourSystem": "your system"
+    },
+    "revalidate": "Revalidate",
+    "unsetDesc": "You don't have credentials to operate {company} yet.",
+    "unsetCta": "Add credentials",
+    "activeNote": "Connected",
+    "editCreds": "Edit credentials",
+    "myTitleClient": "Your Odoo connection",
+    "myTitleAdmin": "Your Odoo connections",
+    "subtitleClient": "Load your username and API key to start chatting with your company's data.",
+    "subtitleAdmin": "Your personal credentials for each instance you chat with.",
+    "noInstance": "No instance assigned yet.",
+    "backToSettings": "Back to settings"
   }
 }

@@ -60,7 +60,10 @@ function InviteContent() {
     if (accept.success) {
       await reload();
       setStatus("success");
-      setTimeout(() => router.push(`/${locale}/chat`), 2000);
+      // invite_only → land on the credentials home to load the API key (unset);
+      // precreds → straight to chat (already active). Spec §6.4.
+      const dest = accept.connectionStatus === "unset" ? "settings/odoo" : "chat";
+      setTimeout(() => router.push(`/${locale}/${dest}`), 2000);
       return;
     }
 
@@ -144,7 +147,9 @@ function InviteContent() {
         <h1 className="text-heading">{t("registerTitle")}</h1>
         {orgName && (
           <p className="text-center text-body text-text-secondary">
-            {t("registerDesc", { org: orgName })}
+            {t("registerDescPre")}<br />
+            <span className="font-medium text-foreground">{orgName}</span><br />
+            {t("registerDescPost")}
           </p>
         )}
         {role && (

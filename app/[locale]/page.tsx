@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
+import { resolvePostAuthPath } from "@/lib/post-auth";
 
 export default function RootPage() {
   const router = useRouter();
@@ -26,17 +27,9 @@ export default function RootPage() {
       return;
     }
 
-    if (meData.user?.role === "SUPERADMIN") {
-      router.push(`/${locale}/superadmin`);
-      return;
-    }
-
-    if (meData.org === null) {
-      router.push(`/${locale}/onboarding`);
-      return;
-    }
-
-    router.push(`/${locale}/chat`);
+    // Auto-provisioned admins have an org but no instance — resolvePostAuthPath sends
+    // them to the first-instance gate (unless they chose demo). SUPERADMIN handled inside.
+    router.push(`/${locale}/${resolvePostAuthPath(meData)}`);
   }, [authLoading, sessionLoading, user, meData, locale, router]);
 
   return null;

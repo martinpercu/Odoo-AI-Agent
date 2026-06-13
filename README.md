@@ -124,14 +124,16 @@ A modern, responsive interface that allows users to query and manage data from t
 - Organization management (name, slug, type)
 - Role-based access control (SuperAdmin, Admin, Client User)
 - Subscription tiers (Free, Starter, Implementor S/M/L/XL/XXL) with slot limits
-- Team management: invite users by email, toggle free/paid slots
-- 2-step onboarding wizard (org creation + Odoo connection)
+- Team management: invite users **per instance** (seat paid/free + mode invite_only/precreds), toggle free/paid slots
+- **Per-user Odoo Connection** lifecycle (`unset` / `active` / `invalid`) per instance — each user loads their own API key; blocking states surface a load/reload CTA
+- First-instance onboarding gate (configure now vs keep exploring in demo) + two-block connect form with discriminated validation (unreachable / db_not_found / auth_failed)
 - 402 payment limit modal (graceful degradation, no crash)
 
 **⚙️ Configuration:**
-- Admin settings panel with 4 tabs (Org, Instances, Users, Feedback), each section rendered as a `CollapsibleCard` (animated accordion)
-- Credential UI is role-aware: `CLIENT_USER` sees a single-instance block with a status row (configured/not-configured + username inline) and an inline edit form that expands via a Pencil button (animated with `AnimatePresence`); `ADMIN` sees an accordion per config
-- Odoo connection configuration, validation, and instance inspection
+- Dedicated **`/instances`** route (ADMIN): instance list with connection-status badges + health summary, instance detail with the users on each instance, per-instance invitations and edit (label vs url/db re-validation)
+- Dedicated **`/settings/odoo`** route: every user self-manages their own Odoo Connection per instance (load / edit / revalidate credentials)
+- Admin settings panel with 4 tabs (Org, Instances, Users, Feedback), each section a `CollapsibleCard`; the instance-create, invite and client-credential flows now live on the dedicated routes above, reached via `MovedToCard` pointers
+- Odoo connection configuration, discriminated validation (`useConnectionValidator`), and instance inspection
 - Multi-language support (Spanish, English, French, German, Portuguese, Italian, Hindi, Gujarati, Tamil, Kannada, Marathi)
 - Light / dark mode with preference persisted in `localStorage` (no flash on reload)
 - Collapsible and responsive sidebar (mobile-friendly)
@@ -181,10 +183,10 @@ A modern, responsive interface that allows users to query and manage data from t
 app/
   [locale]/
     layout.tsx                  # Root layout with provider stack (9 nested contexts)
-    page.tsx                    # Auth-based redirector (no user→/chat, no org→onboarding, SUPERADMIN→/superadmin, else→chat)
+    page.tsx                    # Auth-based redirector — delegates to resolvePostAuthPath (SUPERADMIN→/superadmin; ADMIN/no-org with 0 instances→/onboarding unless demo-skipped; else→chat)
     login/page.tsx              # Supabase email/password login (+ DEV MODE bypass; "Forgot password?" link)
-    register/page.tsx           # Account signup → onboarding flow
-    invite/page.tsx             # Accept team invitation by token
+    register/page.tsx           # Account signup → resolvePostAuthPath redirect
+    invite/page.tsx             # Accept team invitation by token (post-accept: connectionStatus "unset"→/settings/odoo, else→/chat)
     forgot-password/page.tsx    # Password recovery step 1: request a 6-digit OTP by email
     reset-password/page.tsx     # Password recovery step 2: verify OTP + set new password
     superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
@@ -192,8 +194,11 @@ app/
       layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
       chat/page.tsx             # New query (rotating carousel: 4 random suggestions from pool of 11 + input)
       chat/[id]/page.tsx        # Conversation with SSE streaming
-      onboarding/page.tsx       # Odoo connection form (inside AppShell; no full-screen wrapper)
-      settings/page.tsx         # Admin panel: org, Odoo configs, users, invitations
+      onboarding/page.tsx       # First-instance gate (configure now vs keep demo) + two-block connect form with discriminated validation
+      instances/page.tsx        # ADMIN-only: instance list (status badge + health summary) + add-instance form (1st always; 2nd+ PARTNER-only)
+      instances/[id]/page.tsx   # ADMIN-only: instance detail — users + per-user Connection status, pending invites, per-instance invite (seat + mode), edit
+      settings/odoo/page.tsx    # Self-service: the current user manages their own Odoo Connection per instance (load/edit/revalidate credentials)
+      settings/page.tsx         # Admin panel: org, users, feedback + MovedToCard pointers to /instances and /settings/odoo
       pricing/page.tsx          # Subscription plans
   api/
     send-invitation/route.ts    # Server-side route handler: sends the localized invitation email via Zoho SMTP (nodemailer); SMTP secrets never reach the client; verifies caller via /me before sending
@@ -211,11 +216,11 @@ components/
     a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring)
   chat/
     sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; collapse uses PanelLeft/PanelLeftClose/PanelLeftOpen icons with hover-swap; collapsed body is clickeable to expand
-    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu, login/logout, PoweredBy (Client only)
+    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, Instances (ADMIN) + My connection links, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
-    demo-banner.tsx             # Banner shown in demo mode (unauthenticated or no org)
+    demo-banner.tsx             # Banner shown in demo mode; CTA routes to /onboarding (0 instances) or /settings/odoo (has instance, no active Connection), else /login
     odoo-config-selector.tsx    # Dropdown to switch active Odoo config + credential status indicator
     success-card.tsx            # Green card for successful actions
     validation-prompt.tsx       # Orange card for missing fields
@@ -242,8 +247,16 @@ components/
     admin-user-credentials-modal.tsx  # Admin modal to manage credentials for any org user; CLIENT_USER: single block with instance switcher + pencil edit; ADMIN: accordion per config
     admin-invitation-credentials-modal.tsx  # Admin modal to pre-load credentials for a pending invitation; CLIENT_USER: single block (ClientPendingCredentialBlock); ADMIN: accordion (PendingConfigPanel)
   odoo/
-    connection-form.tsx         # Odoo connection form (saves via POST /admin/orgs/{id}/configs, not localStorage)
+    connection-form.tsx         # Legacy Odoo connection form (saves via POST /admin/orgs/{id}/configs)
     instance-inspector.tsx      # View installed Odoo modules
+    connection-status-badge.tsx # unset/active/invalid/pending pill (icon + label, never color-only)
+    connection-invalid-banner.tsx # Per-user "connection down" notice + reload-API-key CTA
+    credential-blocks.tsx       # Two-block "instance data vs your credentials" form scaffolding
+    credential-form.tsx         # Shared credential editor (url+db read-only, user+apikey editable; validates on save)
+    instance-create-form.tsx    # Create instance N (creator credentials optional from the 2nd)
+    instance-health-summary.tsx # Active/unset/invalid/pending counts + seat usage at a glance
+    invite-user-form.tsx        # Per-instance invite (seat paid/free + mode invite_only/precreds; blocks existing accounts)
+    odoo-apikey-helper.tsx      # Collapsible "how to generate your Odoo API key" steps
   pricing/pricing-cards.tsx     # Plan cards (Free, Starter, Implementor); accepts currentTier prop; Stripe checkout/portal CTAs; Implementor detail modal
   ui/
     error-toast.tsx             # Toast notification provider + display
@@ -255,7 +268,8 @@ hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub; password recovery via OTP: requestPasswordReset/verifyRecoveryCode/updatePassword; updateUserLang persists UI lang to metadata for localized emails)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
   use-chat.ts                   # Chat state + SSE + image upload + action execution + clearChats (resets all chat state on logout)
-  use-odoo-config.tsx           # Odoo config context (configs from backend; activeConfigId persisted in localStorage; isDemoMode flag)
+  use-odoo-config.tsx           # Odoo config context; selection driven by per-user `connection_status === "active"` (chat-ready); activeConfigId persisted in localStorage; isDemoMode flag
+  use-connection-validator.ts   # Wraps validateConnection with UI state (OK: company + version | discriminated error_code + per-field errors)
   use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear/loadAllPins); defensive payload validation
   use-notifications.tsx         # Notification context (polling/read/dismiss/settings)
   use-limit-reached-modal.tsx   # 402 limit modal context (listens to auth:limit_reached event)
@@ -263,8 +277,9 @@ hooks/
   use-icon-size.ts              # `useIconSize(slot)` → role-aware icon size (builder: 16/20/24, client: 18/22/28)
   use-intro.tsx                 # IntroProvider + useIntro: shared state for intro modal + info panel (open/close, dismissal persisted in localStorage `toa_intro_dismissed`)
 lib/
-  api.ts                        # Centralized API client (28+ endpoints, authFetch with 401/402); sendInvitationEmail() posts to the internal /api/send-invitation route
-  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics: AnalyticsEvent, AnalyticsEventsListResponse, AnalyticsEventsStats)
+  api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route
+  post-auth.ts                  # resolvePostAuthPath(meData) + onboarding-skip flag helpers (localStorage `toa_onboarding_skipped`)
+  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats)
   invitation-email.ts           # Localized copy + HTML/text builder for the invitation email (es/en/fr/de/pt/it); content only — transport lives in app/api/send-invitation/route.ts
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
   analytics.ts                  # First-party analytics: track(), captureUtm(), getSessionId() — fire-and-forget events to POST /events; captures utm_* on app mount and stitches them to later signup via session_id
@@ -412,6 +427,17 @@ Renders a document number with audience-aware styling:
 ### 🏷️ PoweredBy
 Discreet "Powered by TheOdooAgent" lockup intended for the Client sidebar footer only — supports partial white-labelling (the implementer's brand stays visually dominant; TheOdooAgent stays as a credit).
 
+### 🔌 Tenant & Connection components (`components/odoo/`)
+A family of components introduced by the onboarding/tenant refactor:
+- **ConnectionStatusBadge** — `unset` / `active` / `invalid` / `pending` pill; status is always icon **and** label (never color alone)
+- **ConnectionInvalidBanner** — per-user "connection down" notice with a reload-API-key CTA; isolated to the user whose Connection went `invalid`
+- **CredentialForm** — shared credential editor: inherited url+db shown read-only, username+API key editable; validates on save (`auth_failed`), API key never re-shown
+- **CredentialBlocks** — the two-block "instance data (shared) vs your credentials (personal)" form scaffolding used by onboarding and instance creation
+- **InstanceCreateForm** — create instance N; creator credentials optional from the 2nd instance onward
+- **InstanceHealthSummary** — at-a-glance active / unset / invalid / pending counts + seat usage
+- **InviteUserForm** — per-instance invite with seat (paid/free) and mode (invite_only / precreds); blocks an email that already has an account
+- **OdooApiKeyHelper** — collapsible "how to generate your API key in Odoo" steps shown next to API-key fields
+
 ## 🔐 Authentication & User Flows
 
 ### 👋 Unauthenticated User
@@ -433,9 +459,11 @@ App loads → GET /me (no auth token)
 ```
 App loads → AuthProvider restores Supabase session
          → SessionProvider calls GET /me
-         → SUPERADMIN      → /superadmin (standalone panel, no app shell)
-         → No org yet      → /onboarding (Odoo connection form, inside AppShell)
-         → Org exists      → /chat
+         → resolvePostAuthPath(meData) decides the landing route:
+            → SUPERADMIN                          → /superadmin (standalone panel, no app shell)
+            → ADMIN / no-org with 0 instances     → /onboarding (first-instance gate, inside AppShell) — unless demo-skipped
+            → otherwise                           → /chat
+            (a fresh signup already has an auto-provisioned SOLITARY org but no instance, so the gate keys on instance count, not org presence)
          → 401 from any API call → check active Supabase session → if session exists: clear session → /login; if no session: ignore (unauthenticated user hitting protected endpoint)
                                     (public paths exempt from redirect: /login, /register, /invite, /onboarding, /forgot-password, /reset-password)
          → 402 from any API call → show LimitReachedModal (no crash)
@@ -443,29 +471,35 @@ App loads → AuthProvider restores Supabase session
 
 ### 🛡️ Admin User
 
-Admins have access to `/settings` (4-tab panel, each section a `CollapsibleCard`) with full control over:
+Admins have access to `/settings` (4-tab panel, each section a `CollapsibleCard`). After the tenant refactor, the instance, invite and self-credential flows moved to dedicated routes — Settings shows `MovedToCard` pointers to them:
 
 ```
 Settings
 ├── Org tab
-│   └── Organization  → edit name, slug, org type
+│   ├── Organization  → edit name, slug, org type
+│   └── (CLIENT_USER) → "Your Odoo connection" card → /settings/odoo
 ├── Instances tab
-│   ├── Add Connection  → form to create a new Odoo config
-│   ├── Saved Configs   → list of existing connections (test, delete)
-│   └── Inspector       → inspect installed Odoo modules
+│   ├── Manage instances card → /instances  (create, validate, configure)
+│   └── Inspector             → inspect installed Odoo modules
 ├── Users tab
-│   ├── (PARTNER org) Users         → list members, change role, toggle free/paid slot, remove
-│   │                                 seats widget (paid X/limit · free X/limit) shown in section subheader
-│   │               Invite        → send invite by email (role fixed as CLIENT_USER); email-language selector (defaults to admin's UI locale); optional instance + credential pre-load
-│   │                                 on submit: creates invitation, then sends the localized email (best-effort) → shows "email sent" / "email failed, copy link" status
-│   │               Sent Invitations → view status (pending / accepted / expired), filter tabs
-│   │                                  pending invitations: "Show link" button + copy URL
-│   │                                  pending invitations can be cancelled (X button with inline confirmation; frees seat immediately)
-│   └── (SOLITARY org) → upgrade banner with contact CTA (no team management UI)
+│   ├── Users           → list members, change role, toggle free/paid slot, remove
+│   │                      seats widget (paid X/limit · free X/limit) in section subheader
+│   ├── Invite users card → /instances  (inviting is now per-instance, with seat + mode)
+│   ├── Sent Invitations → status (pending / accepted / expired), show/copy link, cancel (frees seat)
+│   └── (SOLITARY org)  → upgrade banner with contact CTA
 └── Feedback tab
     └── Feedback      → list of feedback reports submitted by org users; expandable rows with 3 tabs:
                         Data (category, comment, expected response, admin_notes), Messages (conversation snapshot),
                         Note (tenant_notes: internal note editable by admin)
+
+/instances (ADMIN-only route)
+├── Instance list   → status badge + health summary per instance; add (1st always; 2nd+ PARTNER-only)
+└── Instance detail → users on this instance (per-user Connection status + inline load-creds for unset/invalid),
+                      pending invitations, per-instance invite (seat paid/free + mode invite_only/precreds),
+                      edit (label · url/db with re-validation warning)
+
+/settings/odoo (any user)
+└── My Odoo Connection → load / edit / revalidate your own credentials per instance (unset → CTA, invalid → reload, active → edit)
 ```
 
 Role comparison:
@@ -500,8 +534,9 @@ Invitee opens link → GET /admin/invitations/{token}/preview  (no auth)
                       password field (with show/hide toggle)
                    → submit:
                       1. POST Supabase signUp  → gets accessToken
-                      2. POST /admin/invitations/accept  (Bearer accessToken)
-                      3. reload /me → redirect /chat
+                      2. POST /admin/invitations/accept  (Bearer accessToken) → { instanceId, connectionStatus }
+                      3. reload /me → redirect: connectionStatus "unset" (invite_only) → /settings/odoo (load API key)
+                                                connectionStatus "active" (precreds)   → /chat
 
 Error states:
   token missing / invalid → "Invitation not found"
@@ -549,15 +584,18 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Org Types** | `PARTNER`, `SOLITARY` | Multi-client vs single company |
 | **Subscriptions** | `FREE`, `STARTER`, `IMPLEMENTOR_S`, `IMPLEMENTOR_M`, `IMPLEMENTOR_L`, `IMPLEMENTOR_XL`, `IMPLEMENTOR_XXL` | Tier with slot limits |
 | **Slots** | `paid_slots_limit`, `free_slots_limit` | Max users per org by type |
-| **Odoo Configs** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; active one selected via `activeConfigId`; enriched with per-user credentials (`hasCredentials`, `odoo_username`) |
-| **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"` |
+| **Odoo Configs (Instances)** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; carry instance metadata (`company_name`, `odoo_version`) + the caller's own `connection_status`; selection driven by `connection_status === "active"` |
+| **Odoo Connection** | `OdooConnectionStatus` = `unset` / `active` / `invalid` | Per-user, per-instance credential lifecycle (spec §4). `unset` = assigned but no valid key (blocking); `active` = validated; `invalid` = auth failed, flagged per user |
+| **Seats / Invitations** | `SeatType` (`paid`/`free`), `InvitationMode` (`invite_only`/`precreds`) | Invitations are per instance: pick a seat + whether the invitee loads their own key (invite_only) or the admin pre-loads it (precreds → active on accept) |
+| **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"`. Authed users with no active Connection also fall back to demo (banner CTA → setup) |
 | **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over the **last AI message** only. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`), comment, and expected response. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
 
-**Settings page** (`/settings`) provides admin controls for:
-- Organization name/slug/type editing
-- Odoo connections: create (PARTNER only), update, delete (multiple per org)
-- Users: list, change role, toggle free/paid, remove (PARTNER); upgrade banner (SOLITARY)
-- Invitations: send by email, view status (pending/accepted/expired) — PARTNER only
+**Admin controls** are split across `/settings` and the dedicated routes:
+- Organization name/slug/type editing (`/settings`)
+- Odoo instances: list, create (1st always; 2nd+ PARTNER only), edit, configure per-user connections (`/instances`, `/instances/[id]`)
+- Users: list, change role, toggle free/paid, remove (`/settings`); SOLITARY shows an upgrade banner
+- Invitations: created per instance with seat + mode (`/instances/[id]`); status list + cancel in `/settings`
+- Self-service: any user loads/edits/revalidates their own Odoo credentials (`/settings/odoo`)
 
 ## 🔌 Communication Flow
 
@@ -601,28 +639,31 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `GET` | `/chat/{id}/notifications` | Fetch notification list (filterable) |
 | `PATCH` | `/chat/{id}/notifications/{id}/read` | Mark notification as read |
 | `PATCH` | `/chat/{id}/notifications/read-all` | Mark all notifications as read |
-| `POST` | `/test-connection` | Validate Odoo credentials |
+| `POST` | `/test-connection` | Discriminated connection validation (`validateConnection`) → `{ ok, company_name, odoo_version }` or `{ ok:false, error_code, field_errors }` |
 | `POST` | `/inspect-instance` | Fetch installed Odoo modules |
 | `POST` | `/admin/orgs` | Create organization |
 | `PATCH` | `/admin/orgs/{id}` | Update organization (name, slug, type) |
 | `PATCH` | `/admin/orgs/{id}/type` | Change org type (`PARTNER` ↔ `SOLITARY`) — superadmin only |
 | `POST` | `/admin/superadmin/users/{id}/promote` | Create a new org for a user with no org (legacy accounts without auto-provisioning) — superadmin only |
-| `GET` | `/admin/orgs/{id}/configs` | List Odoo connections |
-| `POST` | `/admin/orgs/{id}/configs` | Create Odoo connection |
-| `PATCH` | `/admin/orgs/{id}/configs/{id}` | Update Odoo connection |
+| `GET` | `/admin/orgs/{id}/configs` | List Odoo connections (enriched with counts/seats/status) |
+| `GET` | `/admin/orgs/{id}/configs/{id}` | Instance detail (`fetchInstanceDetail`): users ∩ instance + pending invitations + counts/seats |
+| `POST` | `/admin/orgs/{id}/configs` | Create Odoo connection (optional creator creds; 422→errorCode, 409→solitaryBlocked) |
+| `PATCH` | `/admin/orgs/{id}/configs/{id}` | Update Odoo connection (label, or url/db with re-validation) |
 | `DELETE` | `/admin/orgs/{id}/configs/{id}` | Delete Odoo connection |
 | `GET` | `/admin/orgs/{id}/users` | List organization users |
 | `PATCH` | `/admin/orgs/{id}/users/{id}` | Update user (role, is_free_license, allow_feedback) |
 | `DELETE` | `/admin/orgs/{id}/users/{id}` | Remove user from organization |
-| `POST` | `/admin/orgs/{id}/invitations` | Send invitation by email |
+| `POST` | `/admin/orgs/{id}/invitations` | Create invitation (per instance: `instance_id`, `seat_type`, `mode`, optional prefilled creds; 409→seatLimitReached/emailHasAccount) |
 | `GET` | `/admin/orgs/{id}/invitations` | List invitations |
 | `DELETE` | `/admin/orgs/{id}/invitations/{invId}` | Cancel a pending invitation (frees seat immediately) |
-| `POST` | `/admin/invitations/accept` | Accept invitation by token |
+| `POST` | `/admin/invitations/accept` | Accept invitation by token → `{ instanceId, connectionStatus }` (drives post-accept redirect) |
 | `GET` | `/me/odoo-credentials` | List current user's saved credentials (one per config) |
-| `PUT` | `/me/odoo-credentials/{configId}` | Save/update current user's credentials for a config |
+| `PUT` | `/me/odoo-credentials/{configId}` | Save/update current user's credentials for a config (422→errorCode `auth_failed`) |
+| `POST` | `/me/odoo-credentials/{configId}/revalidate` | Re-validate the current user's stored credential (`revalidateMyCredential`) |
 | `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials` | Admin: list all credentials for a user (returns `AdminUserCredential[]`) |
 | `GET` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: get a user's credentials for a specific config |
 | `PUT` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: save/update a user's credentials for a config (empty strings = assign instance without credentials) |
+| `POST` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}/revalidate` | Admin: re-validate a user's stored credential (`revalidateUserCredential`) |
 | `DELETE` | `/admin/orgs/{id}/users/{userId}/odoo-credentials/{configId}` | Admin: delete a user's credentials for a config |
 | `POST` | `/billing/checkout` | Create Stripe checkout session for a given tier |
 | `POST` | `/billing/portal` | Create Stripe billing portal session |
@@ -991,7 +1032,7 @@ Translations are located in `messages/[locale].json`.
 |-----------|-------------|
 | `Metadata` | Page title and description |
 | `Sidebar` | Collapse/expand labels, empty state |
-| `UserMenu` | Bottom sidebar popover: avatar, settings, theme, language, instance, login/logout |
+| `UserMenu` | Bottom sidebar popover: avatar, settings, instances, my connection, theme, language, instance switcher, login/logout |
 | `ChatGroups` | Date-based grouping labels |
 | `NewChat` | Welcome screen and suggestions |
 | `ChatInput` | Input placeholder, disclaimer, image attach/remove, send/stop aria labels |
@@ -999,11 +1040,14 @@ Translations are located in `messages/[locale].json`.
 | `Feedback` | Feedback modal: title, categories, comment, submit/cancel, success toast |
 | `ChatHistory` | Loading states |
 | `Pricing` | Plans, features, and CTAs |
-| `Settings` | Connection form, inspector, security, admin panel (org, configs, users, invitations, feedback reports) |
+| `Settings` | Inspector, security, admin panel (org, users, invitations, feedback reports) + `MovedToCard` pointers (instances / invite / your connection) |
+| `Instances` | Instance list/detail: title, add/edit, status labels, users, seats, invitations |
+| `Connection` | Self-service Odoo Connection page + invalid-connection banner (`{company}` interpolated) |
+| `Odoo` | `Odoo.apiKeyHelper.*` — "how to generate your API key in Odoo" steps |
 | `PinnedInsights` | Pin/unpin tooltips, empty state, error messages |
 | `Notifications` | Alert feed, settings, time labels |
 | `Auth` | Login, register, DEV MODE bypass |
-| `Onboarding` | 2-step wizard (org + Odoo connection) |
+| `Onboarding` | First-instance gate (configure now / keep demo) + two-block connect form, validation errors |
 | `LimitReachedModal` | 402 payment limit message |
 | `Invite` | Invitation acceptance (loading, success, error, expired) |
 | `LocaleSwitcher` | Language names |
