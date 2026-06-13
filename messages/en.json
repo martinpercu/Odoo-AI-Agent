@@ -666,7 +666,14 @@
       "btnPromote": "Assign org",
       "promoteTooltip": "Create a new org for this user (legacy account without auto-provisioning).",
       "promoteSuccess": "Org created for {email}.",
-      "promoteError": "Could not assign org."
+      "promoteError": "Could not assign org.",
+      "btnDelete": "Delete",
+      "confirmDelete": "Permanently delete {email}? Erases all their data and login.",
+      "deleteOrgIfEmpty": "Also delete the org if empty",
+      "deleteSuccess": "{email} deleted completely.",
+      "deleteWarnPartial": "Data deleted, but the Supabase login remains. Remove it manually in the dashboard.",
+      "deleteWarnSkipped": "Data deleted. Remove the auth user manually in Supabase (service key not configured).",
+      "deleteError": "Could not delete user."
     },
     "activity": {
       "title": "Activity by organization",

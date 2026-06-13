@@ -666,7 +666,14 @@
       "btnPromote": "ಸಂಸ್ಥೆ ನಿಯೋಜಿಸಿ",
       "promoteTooltip": "ಈ ಬಳಕೆದಾರರಿಗೆ ಹೊಸ ಸಂಸ್ಥೆ ರಚಿಸಿ (ಸ್ವಯಂ-ನಿಯೋಜನೆ ಇಲ್ಲದ ಹಳೆಯ ಖಾತೆ).",
       "promoteSuccess": "{email} ಗಾಗಿ ಸಂಸ್ಥೆ ರಚಿಸಲಾಗಿದೆ.",
-      "promoteError": "ಸಂಸ್ಥೆ ನಿಯೋಜಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
+      "promoteError": "ಸಂಸ್ಥೆ ನಿಯೋಜಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.",
+      "btnDelete": "Delete",
+      "confirmDelete": "Permanently delete {email}? Erases all their data and login.",
+      "deleteOrgIfEmpty": "Also delete the org if empty",
+      "deleteSuccess": "{email} deleted completely.",
+      "deleteWarnPartial": "Data deleted, but the Supabase login remains. Remove it manually in the dashboard.",
+      "deleteWarnSkipped": "Data deleted. Remove the auth user manually in Supabase (service key not configured).",
+      "deleteError": "Could not delete user."
     },
     "activity": {
       "title": "ಸಂಸ್ಥೆಯ ಪ್ರಕಾರ ಚಟುವಟಿಕೆ",

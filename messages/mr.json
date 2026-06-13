@@ -666,7 +666,14 @@
       "btnPromote": "संस्था असाइन करा",
       "promoteTooltip": "या वापरकर्त्यासाठी नवीन संस्था तयार करा (ऑटो-प्रोव्हिजनिंगशिवाय लेगसी खाते).",
       "promoteSuccess": "{email} साठी संस्था तयार केली.",
-      "promoteError": "संस्था असाइन करता आली नाही."
+      "promoteError": "संस्था असाइन करता आली नाही.",
+      "btnDelete": "Delete",
+      "confirmDelete": "Permanently delete {email}? Erases all their data and login.",
+      "deleteOrgIfEmpty": "Also delete the org if empty",
+      "deleteSuccess": "{email} deleted completely.",
+      "deleteWarnPartial": "Data deleted, but the Supabase login remains. Remove it manually in the dashboard.",
+      "deleteWarnSkipped": "Data deleted. Remove the auth user manually in Supabase (service key not configured).",
+      "deleteError": "Could not delete user."
     },
     "activity": {
       "title": "संस्थेनुसार क्रियाकलाप",
