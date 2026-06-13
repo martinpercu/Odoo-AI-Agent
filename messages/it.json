@@ -36,7 +36,10 @@
     "language": "Lingua",
     "instance": "Istanza",
     "login": "Accedi",
-    "logout": "Esci"
+    "logout": "Esci",
+    "instances": "Istanze",
+    "myConnection": "La mia connessione",
+    "configureToChat": "Configura per chattare"
   },
   "ChatGroups": {
     "today": "Oggi",
@@ -298,7 +301,16 @@
       "paidToFreeError": "Limite di posti gratuiti raggiunto. Impossibile spostare altri utenti al gratuito.",
       "solitaryBannerTitle": "Vuoi gestire un team?",
       "solitaryBannerBody": "Il tuo account è in modalità individuale. Contattaci per attivare il piano partner e gestire più utenti e istanze.",
-      "solitaryBannerCta": "Contattaci"
+      "solitaryBannerCta": "Contattaci",
+      "movedInstancesTitle": "Gestisci istanze",
+      "movedInstancesDesc": "Crea, valida e configura le tue istanze Odoo nella pagina dedicata.",
+      "movedInstancesCta": "Apri",
+      "movedInviteTitle": "Invita utenti",
+      "movedInviteDesc": "Gli inviti ora avvengono per istanza, con opzioni di posto e credenziali.",
+      "movedInviteCta": "Apri",
+      "movedCredsTitle": "La tua connessione Odoo",
+      "movedCredsDesc": "Carica e gestisci il tuo nome utente e la chiave API.",
+      "movedCredsCta": "Apri"
     },
     "credentials": {
       "sectionTitle": "Le mie credenziali Odoo",
@@ -493,7 +505,22 @@
     "connectionError": "Impossibile connettersi. Verifica le credenziali.",
     "step2Cta": "Salva e inizia a chattare",
     "configSaveError": "Impossibile salvare la connessione. Riprova.",
-    "back": "Indietro"
+    "back": "Indietro",
+    "blockInstanceTitle": "Dati dell'istanza",
+    "blockCredsTitle": "Le tue credenziali per questa istanza",
+    "validating": "Validazione connessione…",
+    "validated": "Connessione validata",
+    "errorUnreachable": "Impossibile raggiungere questo URL. Controllalo e riprova.",
+    "errorDbNotFound": "Database non trovato. Controlla il nome.",
+    "errorAuthFailed": "Nome utente o chiave API non validi.",
+    "gateTitle": "Collegare il tuo Odoo ora?",
+    "gateDesc": "Configura la tua istanza per chattare con dati reali, o continua in demo.",
+    "gateConfigure": "Sì, configura",
+    "gateDemo": "Continua in demo",
+    "tagShared": "Azienda",
+    "tagPersonal": "Personale",
+    "blockInstanceSub": "condiviso con il tuo team",
+    "blockCredsSub": "solo tue"
   },
   "LimitReachedModal": {
     "title": "Limite utenti raggiunto",
@@ -516,7 +543,8 @@
     "errorDesc": "Impossibile accettare l'invito. Riprova.",
     "goHome": "Vai all'app",
     "registerTitle": "Completa la registrazione",
-    "registerDesc": "Sei stato invitato a unirti a {org}. Crea la tua password per attivare l'account.",
+    "registerDescPre": "Sei stato invitato a unirti a",
+    "registerDescPost": "Crea la tua password per attivare l'account.",
     "emailLabel": "Email",
     "passwordLabel": "Password",
     "registering": "Creazione account...",
@@ -887,5 +915,145 @@
       "ctaDemo": "Prova la demo",
       "ctaConnect": "Collega il tuo Odoo (gratis)"
     }
+  },
+  "Odoo": {
+    "apiKeyHelper": {
+      "title": "Come generare la tua chiave API in Odoo",
+      "step1": "In Odoo, apri Impostazioni → Sicurezza dell'account.",
+      "step2": "Attiva la modalità sviluppatore.",
+      "step3": "In \"Chiavi API\", crea una nuova chiave.",
+      "step4": "Copia la chiave e incollala qui."
+    }
+  },
+  "Instances": {
+    "title": "Istanze",
+    "addInstance": "Aggiungi istanza",
+    "addFirstInstance": "Aggiungi la tua prima istanza",
+    "empty": "Nessuna istanza ancora.",
+    "backToList": "Torna alle istanze",
+    "notFound": "Istanza non trovata.",
+    "solitaryTitle": "Piano a istanza singola",
+    "solitaryDesc": "Passa a un piano Partner per gestire più istanze.",
+    "status": {
+      "active": "Attiva",
+      "unset": "Senza credenziali",
+      "invalid": "Credenziali non valide",
+      "pending": "Invitato"
+    },
+    "health": {
+      "active": "attive",
+      "unset": "senza cred.",
+      "invalid": "non valide",
+      "pending": "in attesa",
+      "seats": "di {total} posti"
+    },
+    "seat": {
+      "paid": "A pagamento",
+      "free": "Gratis"
+    },
+    "create": {
+      "title": "Nuova istanza",
+      "blockInstanceTitle": "Dati dell'istanza",
+      "blockCredsTitle": "Le tue credenziali per questa istanza",
+      "credsOptionalHint": "Puoi aggiungerle ora o dopo. Senza, non potrai chattare con questa istanza, ma potrai comunque invitare utenti.",
+      "labelLabel": "Etichetta",
+      "optional": "facoltativo",
+      "labelPlaceholder": "Produzione",
+      "urlLabel": "URL Odoo",
+      "databaseLabel": "Nome del database",
+      "usernameLabel": "Nome utente Odoo",
+      "apiKeyLabel": "Chiave API",
+      "validating": "Validazione connessione…",
+      "validated": "Connessione validata",
+      "submit": "Crea istanza",
+      "saveError": "Impossibile creare l'istanza. Riprova.",
+      "solitaryBlocked": "Il tuo piano consente una sola istanza. Esegui l'upgrade per aggiungerne altre.",
+      "errorUnreachable": "Impossibile raggiungere questo URL. Controllalo e riprova.",
+      "errorDbNotFound": "Database non trovato. Controlla il nome.",
+      "errorAuthFailed": "Nome utente o chiave API non validi.",
+      "tagShared": "Azienda",
+      "tagPersonal": "Personale",
+      "blockInstanceSub": "condiviso con il tuo team",
+      "blockCredsSub": "solo tue"
+    },
+    "credentials": {
+      "instanceLabel": "Istanza",
+      "usernameLabel": "Nome utente Odoo",
+      "usernamePlaceholder": "admin",
+      "apiKeyLabel": "Chiave API",
+      "apiKeyPlaceholder": "La tua chiave API Odoo",
+      "apiKeyUpdatePlaceholder": "Inserisci una nuova chiave per sostituirla",
+      "hideKey": "Nascondi chiave",
+      "showKey": "Mostra chiave",
+      "configuredOn": "Configurata il {date}",
+      "errorAuthFailed": "Nome utente o chiave API non validi.",
+      "networkError": "Errore di rete. Riprova.",
+      "saveError": "Impossibile salvare. Riprova.",
+      "saveSuccess": "Credenziali salvate.",
+      "updateBtn": "Aggiorna credenziali",
+      "saveBtn": "Salva credenziali"
+    },
+    "users": {
+      "title": "Utenti",
+      "empty": "Nessun utente su questa istanza.",
+      "loadCreds": "Carica credenziali",
+      "loadCredsHint": "Pre-carica le credenziali Odoo di questo utente così può iniziare subito a chattare."
+    },
+    "invitations": {
+      "title": "Inviti in sospeso"
+    },
+    "invite": {
+      "button": "Invita utente",
+      "emailPlaceholder": "E-mail",
+      "langLabel": "Lingua dell'e-mail",
+      "seatLabel": "Posto",
+      "seatsAvail": "{paidUsed}/{paidTotal} a pagamento · {freeUsed}/{freeTotal} gratis",
+      "seatPaid": "A pagamento",
+      "seatFree": "Gratis",
+      "modeLabel": "Credenziali",
+      "modeInviteOnly": "Le inserisce l'utente",
+      "modePrecreds": "Le pre-carico io",
+      "usernamePlaceholder": "Nome utente Odoo",
+      "apiKeyPlaceholder": "Chiave API",
+      "hideKey": "Nascondi chiave",
+      "showKey": "Mostra chiave",
+      "submit": "Invia invito",
+      "emailHasAccount": "Questa e-mail ha già un account.",
+      "seatLimit": "Nessun posto libero di quel tipo. Esegui l'upgrade per aggiungerne.",
+      "error": "Impossibile creare l'invito. Riprova.",
+      "emailSent": "E-mail di invito inviata.",
+      "emailFailed": "Invito creato, ma non è stato possibile inviare l'e-mail. Copia il link qui sotto.",
+      "copy": "Copia",
+      "copied": "Copiato"
+    },
+    "edit": {
+      "button": "Modifica",
+      "warning": "Modificare l'URL o il database influisce su tutti gli utenti di questa istanza e richiede una nuova convalida.",
+      "save": "Salva modifiche",
+      "cancel": "Annulla",
+      "saveError": "Impossibile salvare le modifiche. Riprova.",
+      "labelLabel": "Etichetta",
+      "labelPlaceholder": "es. Produzione",
+      "labelSave": "Salva"
+    }
+  },
+  "Connection": {
+    "invalidBanner": {
+      "title": "La tua connessione a {company} ha smesso di funzionare",
+      "desc": "Ricarica la tua chiave API per continuare a operare.",
+      "cta": "Ricarica chiave API",
+      "yourSystem": "il tuo sistema"
+    },
+    "revalidate": "Riconvalida",
+    "unsetDesc": "Non hai ancora le credenziali per operare su {company}.",
+    "unsetCta": "Aggiungi credenziali",
+    "activeNote": "Connesso",
+    "editCreds": "Modifica credenziali",
+    "myTitleClient": "La tua connessione Odoo",
+    "myTitleAdmin": "Le tue connessioni Odoo",
+    "subtitleClient": "Inserisci nome utente e chiave API per iniziare a chattare con i dati della tua azienda.",
+    "subtitleAdmin": "Le tue credenziali personali per ogni istanza con cui chatti.",
+    "noInstance": "Nessuna istanza assegnata ancora.",
+    "backToSettings": "Torna alle impostazioni"
   }
 }

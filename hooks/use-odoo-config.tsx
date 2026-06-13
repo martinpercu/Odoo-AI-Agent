@@ -38,36 +38,34 @@ function enrichConfigs(
 export function OdooConfigProvider({ children }: { children: React.ReactNode }) {
   const { meData } = useSession();
   const rawConfigs = meData?.odoo_configs ?? [];
+  const isClientUser = meData?.user?.role === "CLIENT_USER";
 
   const [credentials, setCredentials] = useState<OdooCredentialSummary[]>([]);
   const [activeConfigId, setActiveConfigIdState] = useState<string | null>(null);
 
-  // Load credentials once when the user session is available
+  // A config is "chat-ready" only when the caller's own Connection is active
+  // (a complete instance: url + db + username + apikey). Authoritative + synchronous from /me.
+  const usableConfigs = rawConfigs.filter((c) => c.connection_status === "active");
+  // Signature so selection re-runs when configs OR their connection status change.
+  const configsSig = rawConfigs.map((c) => `${c.id}:${c.connection_status ?? ""}`).join(",");
+
+  // Load credentials once for username display / enrichment (not for selection).
   useEffect(() => {
     if (!meData?.user) return;
     fetchAllMyCredentials().then((result) => {
-      if (result.success && result.credentials) {
-        setCredentials(result.credentials);
-
-        // If the currently active config has no credentials but there is exactly
-        // one config that does, auto-switch to it so the user is never stuck.
-        setActiveConfigIdState((current) => {
-          const creds = result.credentials!;
-          const currentHasCreds = creds.some((cr) => cr.config_id === current);
-          if (!currentHasCreds && creds.length === 1) {
-            try { localStorage.setItem("odoo_active_config_id", creds[0].config_id); } catch { /* ignore */ }
-            return creds[0].config_id;
-          }
-          return current;
-        });
-      }
+      if (result.success && result.credentials) setCredentials(result.credentials);
     });
   }, [meData?.user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // On mount / when configs load, restore or default to first active (or "demo" if none)
+  // Choose the active config. No complete instance → stay in demo (admins/anonymous);
+  // a CLIENT_USER with a non-active config keeps it so they see the load-creds / invalid state.
   useEffect(() => {
-    if (rawConfigs.length === 0) {
-      setActiveConfigIdState("demo");
+    if (usableConfigs.length === 0) {
+      if (!isClientUser || rawConfigs.length === 0) {
+        setActiveConfigIdState("demo");
+      } else {
+        setActiveConfigIdState(rawConfigs[0].id);
+      }
       return;
     }
 
@@ -75,13 +73,14 @@ export function OdooConfigProvider({ children }: { children: React.ReactNode }) 
       ? localStorage.getItem("odoo_active_config_id")
       : null;
 
-    if (stored && (stored === "demo" || rawConfigs.find((c) => c.id === stored))) {
+    // Honor a stored choice only if it still points to a usable config; otherwise
+    // fall to the first usable one (ignores a stale "demo" once a real instance exists).
+    if (stored && usableConfigs.some((c) => c.id === stored)) {
       setActiveConfigIdState(stored);
     } else {
-      const first = rawConfigs.find((c) => c.is_active) ?? rawConfigs[0];
-      setActiveConfigIdState(first.id);
+      setActiveConfigIdState(usableConfigs[0].id);
     }
-  }, [rawConfigs.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [configsSig, isClientUser]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setActiveConfigId = useCallback((id: string) => {
     setActiveConfigIdState(id);
