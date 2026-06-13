@@ -666,7 +666,14 @@
       "btnPromote": "સંસ્થા સોંપો",
       "promoteTooltip": "આ વપરાશકર્તા માટે નવી સંસ્થા બનાવો (ઑટો-પ્રોવિઝનિંગ વિના લેગસી ખાતું).",
       "promoteSuccess": "{email} માટે સંસ્થા બની.",
-      "promoteError": "સંસ્થા સોંપી શક્યા નહીં."
+      "promoteError": "સંસ્થા સોંપી શક્યા નહીં.",
+      "btnDelete": "Delete",
+      "confirmDelete": "Permanently delete {email}? Erases all their data and login.",
+      "deleteOrgIfEmpty": "Also delete the org if empty",
+      "deleteSuccess": "{email} deleted completely.",
+      "deleteWarnPartial": "Data deleted, but the Supabase login remains. Remove it manually in the dashboard.",
+      "deleteWarnSkipped": "Data deleted. Remove the auth user manually in Supabase (service key not configured).",
+      "deleteError": "Could not delete user."
     },
     "activity": {
       "title": "સંસ્થા પ્રમાણે પ્રવૃત્તિ",

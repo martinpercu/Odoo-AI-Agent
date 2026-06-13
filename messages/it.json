@@ -666,7 +666,14 @@
       "btnPromote": "Assegna org",
       "promoteTooltip": "Crea una nuova org per questo utente (account legacy senza provisioning automatico).",
       "promoteSuccess": "Org creata per {email}.",
-      "promoteError": "Impossibile assegnare l'org."
+      "promoteError": "Impossibile assegnare l'org.",
+      "btnDelete": "Elimina",
+      "confirmDelete": "Eliminare definitivamente {email}? Cancella tutti i dati e l'accesso.",
+      "deleteOrgIfEmpty": "Elimina anche l'org se rimane vuota",
+      "deleteSuccess": "{email} eliminato completamente.",
+      "deleteWarnPartial": "Dati eliminati, ma l'accesso Supabase resta attivo. Rimuovilo manualmente dalla dashboard.",
+      "deleteWarnSkipped": "Dati eliminati. Rimuovi l'utente auth manualmente in Supabase (service key non configurata).",
+      "deleteError": "Impossibile eliminare l'utente."
     },
     "activity": {
       "title": "Attività per organizzazione",

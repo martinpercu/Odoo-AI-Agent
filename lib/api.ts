@@ -1874,6 +1874,46 @@ export async function superadminPromoteUser(userId: string): Promise<PromoteUser
   }
 }
 
+export interface DeleteUserResult {
+  status: "ok";
+  user_id: string;
+  email: string | null;
+  tenant_existed: boolean;
+  deleted: {
+    tenant_user: boolean;
+    conversations: number;
+    user_odoo_credentials: number;
+    pinned_insights: number;
+    notifications: number;
+    audit_logs: number;
+    checkpoints: number;
+    feedback_reports: number;
+    analytics_events: number;
+  };
+  org_deleted: string | null;
+  supabase_auth: "deleted" | "not_found" | "skipped_not_configured" | "failed";
+  supabase_error: string | null;
+}
+
+export async function superadminDeleteUser(
+  userId: string,
+  opts: { deleteEmptyOrg?: boolean } = {}
+): Promise<{ success: boolean; data?: DeleteUserResult; error?: string }> {
+  try {
+    const qs = opts.deleteEmptyOrg ? "?delete_empty_org=true" : "";
+    const res = await authFetch(
+      `${API_BASE}/admin/superadmin/users/${userId}${qs}`,
+      { method: "DELETE" }
+    );
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, data: data as DeleteUserResult };
+    return { success: false, error: extractError(data.detail, "Failed to delete user") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 export async function superadminUpdateOrgType(
   orgId: string,
   type: OrgType

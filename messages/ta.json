@@ -666,7 +666,14 @@
       "btnPromote": "நிறுவனம் ஒதுக்கவும்",
       "promoteTooltip": "இந்த பயனருக்கு புதிய நிறுவனம் உருவாக்கவும் (தானியங்கி ஒதுக்கீடு இல்லாத பழைய கணக்கு).",
       "promoteSuccess": "{email}-க்கு நிறுவனம் உருவாக்கப்பட்டது.",
-      "promoteError": "நிறுவனம் ஒதுக்க முடியவில்லை."
+      "promoteError": "நிறுவனம் ஒதுக்க முடியவில்லை.",
+      "btnDelete": "Delete",
+      "confirmDelete": "Permanently delete {email}? Erases all their data and login.",
+      "deleteOrgIfEmpty": "Also delete the org if empty",
+      "deleteSuccess": "{email} deleted completely.",
+      "deleteWarnPartial": "Data deleted, but the Supabase login remains. Remove it manually in the dashboard.",
+      "deleteWarnSkipped": "Data deleted. Remove the auth user manually in Supabase (service key not configured).",
+      "deleteError": "Could not delete user."
     },
     "activity": {
       "title": "நிறுவனவாரியாக செயல்பாடு",
