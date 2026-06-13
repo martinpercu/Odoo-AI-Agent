@@ -47,6 +47,7 @@ import {
   superadminActivateUser,
   superadminUpdateUser,
   superadminPromoteUser,
+  superadminDeleteUser,
   fetchAdminFeedback,
   fetchFeedbackStats,
   fetchFeedbackReport,
@@ -773,6 +774,12 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
   } | null>(null);
   const [roleDropdown, setRoleDropdown] = useState<string | null>(null);
   const [promotingId, setPromotingId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    userId: string;
+    userEmail: string;
+    deleteEmptyOrg: boolean;
+  } | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -841,6 +848,29 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
       await load();
     } else {
       setToast({ msg: res.error ?? t("users.promoteError"), type: "error" });
+    }
+  }
+
+  async function handleDelete() {
+    if (!deleteConfirm) return;
+    const { userId, userEmail, deleteEmptyOrg } = deleteConfirm;
+    setDeletingId(userId);
+    const res = await superadminDeleteUser(userId, { deleteEmptyOrg });
+    setDeletingId(null);
+    setDeleteConfirm(null);
+    if (res.success && res.data) {
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      setCount((c) => Math.max(0, c - 1));
+      const sa = res.data.supabase_auth;
+      if (sa === "failed") {
+        setToast({ msg: t("users.deleteWarnPartial"), type: "error" });
+      } else if (sa === "skipped_not_configured") {
+        setToast({ msg: t("users.deleteWarnSkipped"), type: "error" });
+      } else {
+        setToast({ msg: t("users.deleteSuccess", { email: userEmail }), type: "success" });
+      }
+    } else {
+      setToast({ msg: res.error ?? t("users.deleteError"), type: "error" });
     }
   }
 
@@ -1022,34 +1052,93 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                   {new Date(user.created_at).toLocaleDateString()}
                 </td>
                 <td className="px-3 py-2">
-                  <div className="flex items-center gap-1">
-                    {!user.org && (
+                  {deleteConfirm?.userId === user.id ? (
+                    <div className="flex w-64 flex-col gap-1.5 rounded-md bg-error-subtle p-2">
+                      <div className="flex items-start gap-1.5">
+                        <AlertTriangle size={13} strokeWidth={1.5} className="mt-0.5 shrink-0 text-error" />
+                        <span className="text-small text-error">
+                          {t("users.confirmDelete", { email: user.email })}
+                        </span>
+                      </div>
+                      <label className="flex cursor-pointer items-center gap-1.5 text-small text-text-secondary">
+                        <input
+                          type="checkbox"
+                          checked={deleteConfirm.deleteEmptyOrg}
+                          onChange={(e) =>
+                            setDeleteConfirm((prev) =>
+                              prev ? { ...prev, deleteEmptyOrg: e.target.checked } : prev
+                            )
+                          }
+                          className="rounded"
+                        />
+                        {t("users.deleteOrgIfEmpty")}
+                      </label>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={handleDelete}
+                          disabled={deletingId === user.id}
+                          className="flex items-center gap-1 rounded px-2 py-0.5 text-small font-medium text-white bg-error hover:opacity-90 disabled:opacity-50"
+                        >
+                          {deletingId === user.id && (
+                            <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />
+                          )}
+                          Sí
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteConfirm(null)}
+                          disabled={deletingId === user.id}
+                          className="rounded border border-sidebar-border px-2 py-0.5 text-small hover:bg-raised disabled:opacity-50"
+                        >
+                          No
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      {!user.org && (
+                        <button
+                          onClick={() => handlePromote(user)}
+                          disabled={promotingId === user.id}
+                          className="flex items-center gap-1 rounded-md px-2 py-1 text-small font-medium text-accent hover:bg-accent-subtle disabled:opacity-50"
+                          title={t("users.promoteTooltip")}
+                          aria-label={t("users.btnPromote")}
+                        >
+                          {promotingId === user.id ? (
+                            <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+                          ) : (
+                            <UserPlus size={14} strokeWidth={1.5} />
+                          )}
+                          {t("users.btnPromote")}
+                        </button>
+                      )}
                       <button
-                        onClick={() => handlePromote(user)}
-                        disabled={promotingId === user.id}
-                        className="flex items-center gap-1 rounded-md px-2 py-1 text-small font-medium text-accent hover:bg-accent-subtle disabled:opacity-50"
-                        title={t("users.promoteTooltip")}
-                        aria-label={t("users.btnPromote")}
+                        onClick={() => handleToggle(user)}
+                        className={`rounded-md px-2 py-1 text-small font-medium ${
+                          user.is_active
+                            ? "text-error hover:bg-error-subtle"
+                            : "text-success-solid hover:bg-success-subtle"
+                        }`}
                       >
-                        {promotingId === user.id ? (
-                          <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
-                        ) : (
-                          <UserPlus size={14} strokeWidth={1.5} />
-                        )}
-                        {t("users.btnPromote")}
+                        {user.is_active ? t("users.btnSuspend") : t("users.btnActivate")}
                       </button>
-                    )}
-                    <button
-                      onClick={() => handleToggle(user)}
-                      className={`rounded-md px-2 py-1 text-small font-medium ${
-                        user.is_active
-                          ? "text-error hover:bg-error-subtle"
-                          : "text-success-solid hover:bg-success-subtle"
-                      }`}
-                    >
-                      {user.is_active ? t("users.btnSuspend") : t("users.btnActivate")}
-                    </button>
-                  </div>
+                      <button
+                        onClick={() =>
+                          setDeleteConfirm({
+                            userId: user.id,
+                            userEmail: user.email,
+                            deleteEmptyOrg: true,
+                          })
+                        }
+                        className="rounded-md p-1.5 text-text-secondary hover:bg-error-subtle hover:text-error"
+                        title={t("users.btnDelete")}
+                        aria-label={t("users.btnDelete")}
+                      >
+                        <Trash2 size={14} strokeWidth={1.5} />
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
