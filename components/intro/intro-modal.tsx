@@ -77,9 +77,10 @@ export function IntroModal() {
       onClose={() => handleClose("backdrop")}
       labelledBy={titleId}
       describedBy={descId}
-      className="mx-0 w-full max-w-lg sm:mx-4"
+      containerClassName="items-stretch sm:items-center"
+      className="mx-0 h-full w-full max-w-lg sm:mx-4 sm:h-auto"
     >
-      <div className="max-h-[90vh] overflow-y-auto rounded-t-card bg-surface shadow-lg sm:rounded-card">
+      <div className="h-full max-h-none overflow-y-auto rounded-none bg-surface shadow-lg sm:h-auto sm:max-h-[90vh] sm:rounded-card">
         {/* Close */}
         <button
           onClick={() => handleClose("x")}
@@ -99,7 +100,10 @@ export function IntroModal() {
               <h2 id={titleId} className="text-heading">
                 {t("title")}
               </h2>
-              <p id={descId} className="mt-1.5 text-body text-text-secondary">
+              <p
+                id={descId}
+                className="mt-1.5 hidden whitespace-pre-line text-body text-text-secondary sm:block"
+              >
                 {t("subtitle")}
               </p>
             </div>
@@ -145,13 +149,13 @@ export function IntroModal() {
           <div className="flex flex-col gap-2.5 sm:flex-row">
             <button
               onClick={handleStart}
-              className="h-btn-md flex-1 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+              className="h-btn-md flex-1 whitespace-nowrap rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
             >
               {t("ctaPrimary")}
             </button>
             <button
               onClick={handleConnect}
-              className="h-btn-md flex-1 rounded-btn border border-border px-4 text-body font-medium text-foreground transition-colors hover:bg-raised"
+              className="h-btn-md flex-1 whitespace-nowrap rounded-btn border border-border px-3 text-body font-medium text-foreground transition-colors hover:bg-raised"
             >
               {t("ctaSecondary")}
             </button>

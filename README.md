@@ -41,7 +41,7 @@ This is a production-grade SaaS front end, not a toy chat box. At a glance:
 | 🔐 **Auth & multi-tenancy** | Supabase auth + DEV MODE + Demo mode, org management, RBAC (SuperAdmin/Admin/Client), subscription tiers, team invitations, slot limits |
 | 🎭 **Dual-voice UI** | Audience-aware copy & density — technical for Builders, concierge for Clients — custom brand mark, white-label "Powered by", LangGraph trace panel |
 | 🌍 **i18n & theming** | 11 languages, light/dark mode with no-flash persistence, full design-token system, responsive collapsible layout |
-| 🚀 **Landing intro surfaces** | Welcome modal (auto-opens once on first demo visit, dismissal persisted), info panel drawer ("¿Qué es TheOdooAgent?") reachable from the sidebar any time, first-party funnel analytics (`track()`, UTM capture, session stitching) |
+| 🚀 **Landing intro surfaces** | Welcome modal (auto-opens once on first demo visit, dismissal persisted), info panel drawer ("¿Qué es TheOdooAgent?") reachable from the sidebar any time, in-flow **partner reframe nudge** (auto-expands after the 2nd successful demo response, minimizes to a persistent pill), first-party funnel analytics (`track()`, UTM capture, session stitching) |
 
 > 💡 If this already looks broad — it is. Keep scrolling for the complete reference: project structure, provider stack, every UI card, auth flows, the multi-tenancy model, the full endpoint table and the SSE protocol.
 
@@ -204,23 +204,24 @@ app/
     send-invitation/route.ts    # Server-side route handler: sends the localized invitation email via Zoho SMTP (nodemailer); SMTP secrets never reach the client; verifies caller via /me before sending
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
-  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles; wraps layout in IntroProvider; mounts IntroModal + IntroPanel; calls captureUtm() on mount
+  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles; wraps layout in IntroProvider + PartnerNudgeProvider; mounts IntroModal + IntroPanel; calls captureUtm() on mount
   AgentMark.tsx                 # Brand mark primitives: MarkB, MarkI, Wordmark, Lockup
-  theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change
+  theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change (default theme is light unless `theme==='dark'`)
   auth/
     auth-guard.tsx              # Login redirect HOC (checks auth, shows spinner)
   intro/
     intro-modal.tsx             # Welcome modal (auto-opens once on first demo visit; dismissed state persisted in localStorage `toa_intro_dismissed`)
     intro-panel.tsx             # Info drawer panel — reachable any time from the sidebar "¿Qué es?" item
     intro-sidebar-item.tsx      # Sidebar entry point for the info panel; fires `info_opened_from_panel` analytics event
-    a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring)
+    partner-nudge.tsx           # Surface C — in-flow demo nudge (expanded ↔ pill) pushing the partner/reseller reframe; rendered in both chat pages when isDemoMode
+    a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring; `containerClassName` controls anchoring — full-screen on mobile)
   chat/
     sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; collapse uses PanelLeft/PanelLeftClose/PanelLeftOpen icons with hover-swap; collapsed body is clickeable to expand
     user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, Instances (ADMIN) + My connection links, settings, superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
-    demo-banner.tsx             # Banner shown in demo mode; CTA routes to /onboarding (0 instances) or /settings/odoo (has instance, no active Connection), else /login
+    demo-banner.tsx             # Banner shown in demo mode (short "Demo Mode" text on mobile); CTA routes to /onboarding (0 instances) or /settings/odoo (has instance, no active Connection), else /register (logged-out)
     odoo-config-selector.tsx    # Dropdown to switch active Odoo config + credential status indicator
     success-card.tsx            # Green card for successful actions
     validation-prompt.tsx       # Orange card for missing fields
@@ -276,6 +277,7 @@ hooks/
   use-audience-translations.ts  # `useAudienceT(ns)` → translator scoped to `Builder.<ns>` or `Client.<ns>` based on role
   use-icon-size.ts              # `useIconSize(slot)` → role-aware icon size (builder: 16/20/24, client: 18/22/28)
   use-intro.tsx                 # IntroProvider + useIntro: shared state for intro modal + info panel (open/close, dismissal persisted in localStorage `toa_intro_dismissed`)
+  use-partner-nudge.tsx         # PartnerNudgeProvider + usePartnerNudge: event-driven nudge state machine (hidden → expanded after 2nd demo success → pill on minimize); dismissal persisted in localStorage `toa_partner_nudge_dismissed`
 lib/
   api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route
   post-auth.ts                  # resolvePostAuthPath(meData) + onboarding-skip flag helpers (localStorage `toa_onboarding_skipped`)
@@ -306,6 +308,7 @@ NextIntlClientProvider
                 → [root layout ends here]
                   → AppShell (ChatContext + RightPanelContext)  ← only inside (app)/ route group
                     → IntroProvider (intro modal + panel state)  ← inside AppShell
+                      → PartnerNudgeProvider (partner reframe nudge state)
 ```
 
 ## 🧩 UI Components
@@ -1053,7 +1056,7 @@ Translations are located in `messages/[locale].json`.
 | `LimitReachedModal` | 402 payment limit message |
 | `Invite` | Invitation acceptance (loading, success, error, expired) |
 | `LocaleSwitcher` | Language names |
-| `Intro` | Landing intro surfaces: `Intro.sidebarItem` (sidebar entry label), `Intro.modal.*` (welcome modal copy, example prompts, chips), `Intro.panel.*` (info drawer copy, sections, CTAs) |
+| `Intro` | Landing intro surfaces: `Intro.sidebarItem` (sidebar entry label), `Intro.modal.*` (welcome modal copy, example prompts, chips), `Intro.panel.*` (info drawer copy, sections, CTAs), `Intro.nudge.*` (partner reframe nudge: eyebrow, title, body, CTAs, pill/minimize labels) |
 | `Builder.*` | Builder-voice strings — read via `useAudienceT("<ns>")` when role is ADMIN/SUPERADMIN. Includes `Builder.Trace` (LangGraph panel) and `Builder.ChatMessages` (e.g. typing indicator: "Ejecutando · query"). |
 | `Client.*` | Client-voice strings — read via `useAudienceT("<ns>")` when role is CLIENT_USER or anonymous. Includes `Client.ChatMessages`, `Client.ActionSuccess.<action>.<docType>` (success card headlines) and `Client.ActionProposal.verb.<action>.<docType>` (confirm-button labels). Every entry must have a `.generic` fallback. |
 

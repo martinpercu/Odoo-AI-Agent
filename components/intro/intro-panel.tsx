@@ -1,17 +1,34 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Check, Sparkles, Store, Mail, ShieldCheck } from "lucide-react";
+import {
+  X,
+  Boxes,
+  Tag,
+  Calculator,
+  Building2,
+  Plug,
+  Check,
+  Lock,
+  ShieldCheck,
+  Store,
+  Mail,
+  ChevronDown,
+  ArrowRight,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { MarkB } from "@/components/AgentMark";
 import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
+import { useChatContext } from "@/components/app-shell";
 import { track } from "@/lib/analytics";
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])';
 
+/** Section wrapper with a top divider (first one has none). */
 function Section({
   heading,
   children,
@@ -21,9 +38,78 @@ function Section({
 }) {
   return (
     <section className="border-t border-border py-5 first:border-t-0 first:pt-0">
-      <h3 className="mb-2 text-subheading">{heading}</h3>
+      <h3 className="mb-3 text-subheading">{heading}</h3>
       {children}
     </section>
+  );
+}
+
+/** Icon + short label + short line — used in "distinto" and "implementás". */
+function FeatureRow({
+  icon: Icon,
+  label,
+  body,
+}: {
+  icon: LucideIcon;
+  label: string;
+  body: string;
+}) {
+  return (
+    <li className="flex items-start gap-3">
+      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-btn bg-accent-subtle text-accent">
+        <Icon size={18} strokeWidth={1.5} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-body font-medium text-foreground">{label}</p>
+        <p className="text-small text-text-secondary">{body}</p>
+      </div>
+    </li>
+  );
+}
+
+/** A single collapsible row (FAQ / founder). Collapsed by default. */
+function Collapsible({
+  question,
+  children,
+}: {
+  question: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const contentId = useId();
+  return (
+    <div className="border-b border-border last:border-b-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="flex w-full items-center justify-between gap-3 py-3 text-left text-body font-medium text-foreground transition-colors hover:text-accent"
+      >
+        <span>{question}</span>
+        <ChevronDown
+          size={18}
+          strokeWidth={1.5}
+          className={`shrink-0 text-text-muted transition-transform duration-150 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            id={contentId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="pb-3 text-small text-text-secondary">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -31,7 +117,9 @@ export function IntroPanel() {
   const t = useTranslations("Intro.panel");
   const router = useRouter();
   const { isPanelOpen, closePanel } = useIntro();
+  const { createChat, sendMessage } = useChatContext();
   const panelRef = useRef<HTMLDivElement>(null);
+  const partnerRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const titleId = useId();
 
@@ -79,7 +167,7 @@ export function IntroPanel() {
   function handleConnect() {
     track("connect_own_odoo_clicked", { source: "panel" });
     closePanel();
-    router.push("/login");
+    router.push("/register");
   }
 
   function handlePartner() {
@@ -89,13 +177,55 @@ export function IntroPanel() {
     )}`;
   }
 
-  const trustItems = ["item1", "item2", "item3", "item4"] as const;
-  const diffItems = ["item1", "item2"] as const;
+  function handleChip(promptId: string, text: string) {
+    track("example_prompt_clicked", { prompt_id: promptId, source: "panel" });
+    closePanel();
+    const id = createChat(text);
+    router.push(`/chat/${id}`);
+    sendMessage(text, id);
+  }
+
+  function scrollToPartner() {
+    partnerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // 2 · Qué hace — interactive example chips.
+  const chips = [
+    { id: "overdue_invoices", text: t("what.chip1") },
+    { id: "sales_by_rep", text: t("what.chip2") },
+    { id: "create_contact", text: t("what.chip3") },
+  ] as const;
+
+  // 3 · Por qué es distinto.
+  const diffRows = [
+    { icon: Boxes, label: t("different.item1Label"), body: t("different.item1Body") },
+    { icon: Tag, label: t("different.item2Label"), body: t("different.item2Body") },
+    { icon: Calculator, label: t("different.item3Label"), body: t("different.item3Body") },
+  ] as const;
+
+  // 4 · ¿Implementás Odoo?
+  const partnerRows = [
+    { icon: Tag, label: t("partner.item1Label"), body: t("partner.item1Body") },
+    { icon: Building2, label: t("partner.item2Label"), body: t("partner.item2Body") },
+    { icon: Plug, label: t("partner.item3Label"), body: t("partner.item3Body") },
+  ] as const;
+
+  // 5 · Seguro por diseño — compact, icon + short label only.
+  const secureItems = [
+    { icon: Check, label: t("secure.item1") },
+    { icon: Lock, label: t("secure.item2") },
+    { icon: Calculator, label: t("secure.item3") },
+    { icon: ShieldCheck, label: t("secure.item4") },
+  ] as const;
+
+  // 6 · FAQ accordion.
   const faqItems = [
-    { q: "q1", a: "a1" },
-    { q: "q2", a: "a2" },
-    { q: "q3", a: "a3" },
-    { q: "q4", a: "a4" },
+    { q: t("faq.q1"), a: t("faq.a1") },
+    { q: t("faq.q2"), a: t("faq.a2") },
+    { q: t("faq.q3"), a: t("faq.a3") },
+    { q: t("faq.q4"), a: t("faq.a4") },
+    { q: t("faq.q5"), a: t("faq.a5") },
+    { q: t("faq.q6"), a: t("faq.a6") },
   ] as const;
 
   return (
@@ -146,122 +276,129 @@ export function IntroPanel() {
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-5">
               <div className="py-4">
-                {/* 1 · Qué es */}
+                {/* 1 · Hook */}
+                <Section heading={t("hook.title")}>
+                  <p className="text-body text-text-secondary">{t("hook.line")}</p>
+                  <button
+                    type="button"
+                    onClick={scrollToPartner}
+                    className="mt-3 inline-flex items-center gap-1 text-small font-medium text-accent transition-colors hover:underline"
+                  >
+                    {t("hook.partnerTag")}
+                    <ArrowRight size={14} strokeWidth={1.5} />
+                  </button>
+                </Section>
+
+                {/* 2 · Qué hace */}
                 <Section heading={t("what.heading")}>
-                  <p className="text-body text-text-secondary">{t("what.body")}</p>
-                </Section>
-
-                {/* 2 · Cómo funciona */}
-                <Section heading={t("how.heading")}>
-                  <p className="mb-3 text-body text-text-secondary">{t("how.intro")}</p>
-                  <ul className="mb-3 space-y-2">
-                    {["example1", "example2", "example3"].map((k) => (
-                      <li
-                        key={k}
-                        className="rounded-btn border border-border bg-base px-3 py-2 text-small text-text-secondary"
+                  <p className="mb-3 text-body text-text-secondary">{t("what.line")}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {chips.map((chip) => (
+                      <button
+                        key={chip.id}
+                        type="button"
+                        onClick={() => handleChip(chip.id, chip.text)}
+                        className="rounded-btn border border-border bg-base px-3 py-1.5 text-small text-text-secondary transition-colors hover:border-accent/30 hover:bg-raised hover:text-foreground"
                       >
-                        “{t(`how.${k}`)}”
-                      </li>
+                        {chip.text}
+                      </button>
                     ))}
-                  </ul>
-                  <p className="text-body text-text-secondary">{t("how.operates")}</p>
-                </Section>
-
-                {/* 3 · Por qué confiar */}
-                <Section heading={t("trust.heading")}>
-                  <ul className="space-y-2.5">
-                    {trustItems.map((k) => (
-                      <li key={k} className="flex items-start gap-2.5 text-body">
-                        <Check
-                          size={18}
-                          strokeWidth={1.5}
-                          className="mt-0.5 shrink-0 text-success-solid"
-                        />
-                        <span className="text-text-secondary">{t(`trust.${k}`)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-
-                {/* 4 · Por qué es distinto */}
-                <Section heading={t("different.heading")}>
-                  <ul className="space-y-2.5">
-                    {diffItems.map((k) => (
-                      <li key={k} className="flex items-start gap-2.5 text-body">
-                        <Sparkles
-                          size={18}
-                          strokeWidth={1.5}
-                          className="mt-0.5 shrink-0 text-accent"
-                        />
-                        <span className="text-text-secondary">{t(`different.${k}`)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-
-                {/* 5 · Partner */}
-                <Section heading={t("partner.heading")}>
-                  <div className="rounded-card border border-accent/20 bg-accent-subtle p-4">
-                    <div className="mb-2 flex items-center gap-2 text-accent">
-                      <Store size={18} strokeWidth={1.5} />
-                      <span className="text-small font-medium">{t("partner.heading")}</span>
-                    </div>
-                    <p className="mb-3 text-body text-text-secondary">{t("partner.body")}</p>
-                    <button
-                      onClick={handlePartner}
-                      className="h-btn-sm rounded-btn bg-accent px-4 text-small font-medium text-white transition-colors hover:bg-accent-hover"
-                    >
-                      {t("partner.cta")}
-                    </button>
                   </div>
                 </Section>
 
-                {/* 6 · Hecho por mí */}
-                <Section heading={t("founder.heading")}>
-                  <p className="mb-3 text-body text-text-secondary">{t("founder.body")}</p>
-                  <a
-                    href={`mailto:${t("founder.email")}`}
-                    className="inline-flex items-center gap-2 text-small font-medium text-accent hover:underline"
-                  >
-                    <Mail size={16} strokeWidth={1.5} />
-                    {t("founder.email")}
-                  </a>
+                {/* 3 · Por qué es distinto */}
+                <Section heading={t("different.heading")}>
+                  <ul className="space-y-3">
+                    {diffRows.map((row) => (
+                      <FeatureRow
+                        key={row.label}
+                        icon={row.icon}
+                        label={row.label}
+                        body={row.body}
+                      />
+                    ))}
+                  </ul>
                 </Section>
 
-                {/* 7 · FAQ */}
-                <Section heading={t("faq.heading")}>
-                  <dl className="space-y-3">
-                    {faqItems.map(({ q, a }) => (
-                      <div key={q}>
-                        <dt className="flex items-center gap-2 text-body font-medium text-foreground">
-                          <ShieldCheck
-                            size={16}
-                            strokeWidth={1.5}
-                            className="shrink-0 text-text-muted"
-                          />
-                          {t(`faq.${q}`)}
-                        </dt>
-                        <dd className="ml-6 mt-0.5 text-small text-text-secondary">
-                          {t(`faq.${a}`)}
-                        </dd>
+                {/* 4 · ¿Implementás Odoo? */}
+                <div ref={partnerRef} className="scroll-mt-4">
+                  <Section heading={t("partner.heading")}>
+                    <div className="rounded-card border border-accent/20 bg-accent-subtle p-4">
+                      <div className="mb-3 flex items-center gap-2 text-accent">
+                        <Store size={18} strokeWidth={1.5} />
+                        <span className="text-small font-medium">{t("partner.line")}</span>
                       </div>
+                      <ul className="mb-4 space-y-3">
+                        {partnerRows.map((row) => (
+                          <FeatureRow
+                            key={row.label}
+                            icon={row.icon}
+                            label={row.label}
+                            body={row.body}
+                          />
+                        ))}
+                      </ul>
+                      <button
+                        onClick={handlePartner}
+                        className="h-btn-sm rounded-btn bg-accent px-4 text-small font-medium text-white transition-colors hover:bg-accent-hover"
+                      >
+                        {t("partner.cta")}
+                      </button>
+                    </div>
+                  </Section>
+                </div>
+
+                {/* 5 · Seguro por diseño */}
+                <Section heading={t("secure.heading")}>
+                  <ul className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-4">
+                    {secureItems.map((item) => (
+                      <li
+                        key={item.label}
+                        className="flex items-center gap-2 text-small text-text-secondary"
+                      >
+                        <item.icon
+                          size={16}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-success-solid"
+                        />
+                        {item.label}
+                      </li>
                     ))}
-                  </dl>
+                  </ul>
                 </Section>
+
+                {/* 6 · FAQ (accordion, collapsed) */}
+                <Section heading={t("faq.heading")}>
+                  <div>
+                    {faqItems.map((item) => (
+                      <Collapsible key={item.q} question={item.q}>
+                        {item.a}
+                      </Collapsible>
+                    ))}
+                  </div>
+                </Section>
+
+                {/* 7 · Hecho por Martin (collapsed) */}
+                <section className="border-t border-border py-2">
+                  <Collapsible question={t("founder.heading")}>
+                    <p className="mb-3">{t("founder.body")}</p>
+                    <a
+                      href={`mailto:${t("founder.email")}`}
+                      className="inline-flex items-center gap-2 font-medium text-accent hover:underline"
+                    >
+                      <Mail size={16} strokeWidth={1.5} />
+                      {t("founder.email")}
+                    </a>
+                  </Collapsible>
+                </section>
               </div>
             </div>
 
-            {/* Footer CTAs */}
-            <div className="flex flex-col gap-2.5 border-t border-border p-4 sm:flex-row">
-              <button
-                onClick={closePanel}
-                className="h-btn-md flex-1 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
-              >
-                {t("ctaDemo")}
-              </button>
+            {/* Footer CTA */}
+            <div className="border-t border-border p-4">
               <button
                 onClick={handleConnect}
-                className="h-btn-md flex-1 rounded-btn border border-border px-4 text-body font-medium text-foreground transition-colors hover:bg-raised"
+                className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
               >
                 {t("ctaConnect")}
               </button>
