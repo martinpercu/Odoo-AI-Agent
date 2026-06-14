@@ -57,7 +57,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var h=document.documentElement;var t=localStorage.getItem('theme');if(t==='light'){h.classList.remove('dark')}else{h.classList.add('dark')};var a=localStorage.getItem('audience');if(a==='builder'){h.classList.remove('client');h.classList.add('builder')}else{h.classList.remove('builder');h.classList.add('client')}})()`,
+            __html: `(function(){var h=document.documentElement;var t=localStorage.getItem('theme');if(t==='dark'){h.classList.add('dark')}else{h.classList.remove('dark')};var a=localStorage.getItem('audience');if(a==='builder'){h.classList.remove('client');h.classList.add('builder')}else{h.classList.remove('builder');h.classList.add('client')}})()`,
           }}
         />
       </head>

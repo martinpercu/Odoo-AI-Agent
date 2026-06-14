@@ -16,7 +16,7 @@ export function DemoBanner() {
   const loggedIn = !!user;
   const hasInstance = (meData?.odoo_configs?.length ?? 0) > 0;
 
-  const ctaHref = !loggedIn ? "/login" : hasInstance ? "/settings/odoo" : "/onboarding";
+  const ctaHref = !loggedIn ? "/register" : hasInstance ? "/settings/odoo" : "/onboarding";
   const ctaText = loggedIn ? t("demoConnectOdoo") : t("demoSignUp");
   const bannerText = loggedIn ? t("demoBannerConnectOdoo") : t("demoBanner");
 
@@ -24,7 +24,8 @@ export function DemoBanner() {
     <div className="flex items-center justify-between gap-3 border-b border-border bg-warning-subtle px-4 py-2 text-small text-warning-solid shrink-0">
       <div className="flex items-center gap-2">
         <Zap size={16} strokeWidth={1.5} className="shrink-0" />
-        <span>{bannerText}</span>
+        <span className="sm:hidden">{t("demoBannerShort")}</span>
+        <span className="hidden sm:inline">{bannerText}</span>
       </div>
       <Link href={ctaHref} className="shrink-0 font-medium underline underline-offset-2 hover:no-underline">
         {ctaText}
