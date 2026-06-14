@@ -25,6 +25,12 @@ interface A11yModalProps {
   children: React.ReactNode;
   /** Extra classes for the centered panel wrapper (positioning/width). */
   className?: string;
+  /**
+   * Alignment classes for the outer flex container. Override to change how the
+   * panel is anchored (e.g. full-height from the top on mobile). Defaults to a
+   * bottom sheet on mobile, centered on desktop.
+   */
+  containerClassName?: string;
 }
 
 export function A11yModal({
@@ -34,6 +40,7 @@ export function A11yModal({
   describedBy,
   children,
   className = "",
+  containerClassName = "items-end sm:items-center",
 }: A11yModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -96,7 +103,7 @@ export function A11yModal({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
+        <div className={`fixed inset-0 z-[60] flex justify-center ${containerClassName}`}>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}

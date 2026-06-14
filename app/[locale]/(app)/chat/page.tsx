@@ -10,6 +10,7 @@ import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useRouter } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
+import { PartnerNudge } from "@/components/intro/partner-nudge";
 
 const SuggestionCarousel = dynamic(
   () => import("@/components/chat/suggestion-carousel").then((m) => m.SuggestionCarousel),
@@ -31,6 +32,7 @@ export default function NewChatPage() {
   return (
     <div className="flex flex-1 flex-col">
       {isDemoMode && <DemoBanner />}
+      {isDemoMode && <PartnerNudge />}
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-2xl">
           <motion.div
