@@ -480,7 +480,8 @@
     "missingEmail": "E-mail manquant. Veuillez recommencer.",
     "resetSuccessTitle": "Mot de passe mis à jour !",
     "resetSuccessDesc": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
-    "goToLogin": "Aller à la connexion"
+    "goToLogin": "Aller à la connexion",
+    "demoBannerShort": "Mode Démo"
   },
   "Onboarding": {
     "step1Label": "Connexion Odoo",
@@ -851,11 +852,11 @@
   "Intro": {
     "modal": {
       "title": "Vous testez TheOdooAgent",
-      "subtitle": "Une IA qui interroge et pilote votre Odoo en langage naturel. Ceci est une démo en direct sur des données d'exemple — demandez ce que vous voulez.",
+      "subtitle": "Un agent qui interroge et pilote votre Odoo.\nCeci est une démo sur des données d'exemple.",
       "chips": {
         "language": "Demandez dans votre langue : ventes, factures, stock",
         "noInvent": "Elle n'invente pas les chiffres : c'est le système qui les calcule, pas le modèle",
-        "anyOdoo": "Fonctionne sur n'importe quel Odoo : 14 à 20 et Community"
+        "anyOdoo": "Fonctionne sur n'importe quel Odoo : 14 à 19 et Community"
       },
       "tryThisLabel": "Essayez ceci",
       "tryThis": {
@@ -864,7 +865,7 @@
         "stock_check": "Le produit X est-il en stock ?"
       },
       "ctaPrimary": "Commencer à tester",
-      "ctaSecondary": "Connectez votre propre Odoo (gratuit)",
+      "ctaSecondary": "Connectez votre Odoo (gratuit)",
       "dontShowAgain": "Ne plus afficher",
       "whatIsThis": "Qu'est-ce que c'est ?",
       "madeBy": "Fait par Martin",
@@ -874,53 +875,76 @@
     "panel": {
       "title": "Qu'est-ce que TheOdooAgent ?",
       "close": "Fermer",
+      "hook": {
+        "title": "TheOdooAgent",
+        "line": "Parlez à votre Odoo en langage naturel. Interrogez et pilotez votre ERP comme vous parleriez à un collègue — données réelles, graphiques et exports, sans naviguer dans les menus.",
+        "partnerTag": "Vous implémentez Odoo ?"
+      },
       "what": {
-        "heading": "Ce que c'est",
-        "body": "TheOdooAgent est un agent IA qui se connecte à votre Odoo et vous permet d'interroger et d'agir en langage naturel — sans savoir utiliser Odoo, sans naviguer dans les menus. Vous demandez comme vous parleriez à un collègue et vous recevez des données réelles, des graphiques et des exports."
-      },
-      "how": {
-        "heading": "Comment ça marche",
-        "intro": "Vous demandez et il répond avec vos données réelles. Exemples :",
-        "example1": "Montre les factures en retard de plus de 10 000 $",
-        "example2": "Ventes par commercial le mois dernier, en graphique",
-        "example3": "Crée un contact : María López, maria@acme.com",
-        "operates": "Il agit aussi : créer des contacts, confirmer des commandes, mettre à jour des enregistrements — toujours avec votre confirmation. Il n'agit jamais seul."
-      },
-      "trust": {
-        "heading": "Pourquoi lui faire confiance",
-        "item1": "Confirmation humaine sur chaque écriture : l'agent propose, vous validez.",
-        "item2": "Il n'hallucine pas les chiffres : le système les calcule, le modèle se contente de les rédiger.",
-        "item3": "Il respecte vos permissions Odoo : il voit la même chose que vous.",
-        "item4": "Identifiants chiffrés."
+        "heading": "Demandez, et il répond avec vos données réelles",
+        "line": "Il interprète votre question, interroge votre Odoo et répond instantanément. Il agit aussi —créer, confirmer, mettre à jour— toujours avec votre confirmation.",
+        "chip1": "Factures échues de plus de 10 000 $",
+        "chip2": "Ventes par commercial le mois dernier, en graphique",
+        "chip3": "Créer un contact : María López"
       },
       "different": {
-        "heading": "Pourquoi c'est différent",
-        "item1": "Fonctionne sur toutes les versions d'Odoo (14–20) et Community — l'IA native d'Odoo exige Enterprise 18/19+.",
-        "item2": "Architecture déterministe (Python-first) : c'est pourquoi le coût est minime."
+        "heading": "Ce que l'IA native d'Odoo ne vous offre pas",
+        "item1Label": "Fonctionne sur Community et les versions 14–19",
+        "item1Body": "L'IA d'Odoo est réservée à Enterprise. Ceci fonctionne là où vous êtes déjà.",
+        "item2Label": "~1 $ par utilisateur",
+        "item2Body": "Enterprise facture ~25–60 $ par utilisateur/mois, et pour tous les utilisateurs.",
+        "item3Label": "Il n'invente pas de chiffres",
+        "item3Body": "Les chiffres sont calculés par le système ; le modèle ne fait que les rédiger. C'est pourquoi c'est exact et économique."
       },
       "partner": {
-        "heading": "Vous êtes intégrateur Odoo ?",
-        "body": "Vous pouvez le proposer à vos clients sous votre marque et le revendre : marque blanche, multi-clients, à partir de ~1 $/utilisateur.",
+        "heading": "Vous implémentez Odoo ?",
+        "line": "Proposez-le à vos clients sous votre marque et revendez-le.",
+        "item1Label": "Marque blanche et revente",
+        "item1Body": "à partir de ~1 $/utilisateur",
+        "item2Label": "Multi-client",
+        "item2Body": "gérez toutes vos entreprises depuis un seul compte",
+        "item3Label": "N'installe rien dans l'Odoo du client",
+        "item3Body": "rien ne casse lors des mises à jour, zéro maintenance",
         "cta": "Comment le revendre"
       },
-      "founder": {
-        "heading": "Fait par moi",
-        "body": "Je suis Martin. J'ai construit TheOdooAgent seul, avec une idée simple : que n'importe qui dans une entreprise puisse parler à son Odoo sans se battre avec les menus. Il n'y a pas d'entreprise avec une équipe commerciale derrière — il y a l'idée, le code et moi. Si vous l'essayez et que quelque chose ne va pas, écrivez-moi : votre retour l'améliore littéralement.",
-        "email": "martin@theodooagent.com"
+      "secure": {
+        "heading": "Sécurisé par conception",
+        "item1": "Confirmation humaine sur chaque écriture",
+        "item2": "Respecte vos permissions Odoo",
+        "item3": "N'hallucine pas de chiffres",
+        "item4": "Identifiants chiffrés"
       },
       "faq": {
         "heading": "Questions fréquentes",
-        "q1": "Est-ce sécurisé ?",
-        "a1": "Oui : confirmation humaine, respect des permissions, identifiants chiffrés.",
-        "q2": "Quelles versions sont prises en charge ?",
-        "a2": "Odoo 14 à 20 et Community.",
-        "q3": "Est-ce que ça installe quelque chose dans mon Odoo ?",
-        "a3": "Non. Il se connecte via une clé API standard (XML-RPC).",
-        "q4": "Combien ça coûte ?",
-        "a4": "Gratuit sur votre propre Odoo. En le déployant chez vos clients, à partir de ~1 $/utilisateur."
+        "q1": "Est-ce sûr ?",
+        "a1": "Oui : confirmation humaine sur chaque écriture, respect de vos permissions Odoo et identifiants chiffrés.",
+        "q2": "Mes données servent-elles à l'entraînement ?",
+        "a2": "TODO (Martin) : à compléter — à quel fournisseur de LLM les données sont envoyées, rétention, et si elles servent à l'entraînement. Ne pas publier avant de l'avoir complété.",
+        "q3": "Quelles versions sont prises en charge ?",
+        "a3": "Odoo 14 à 19, et Community.",
+        "q4": "Installe-t-il quelque chose dans mon Odoo ?",
+        "a4": "Non. Il se connecte via une clé API standard (XML-RPC).",
+        "q5": "Puis-je y mettre ma marque ?",
+        "a5": "Oui : marque blanche pour revendre à vos clients sous votre identité.",
+        "q6": "Combien ça coûte ?",
+        "a6": "Gratuit sur votre propre Odoo. Pour le déployer chez vos clients, à partir de ~1 $/utilisateur."
       },
-      "ctaDemo": "Essayer la démo",
-      "ctaConnect": "Connecter votre Odoo (gratuit)"
+      "founder": {
+        "heading": "Fait par Martin",
+        "body": "Je l'ai construit seul, avec une idée simple : que n'importe qui dans une entreprise puisse parler à son Odoo sans se battre avec les menus. Développement actif et support direct avec moi — si vous l'essayez et que quelque chose cloche, écrivez-moi : votre retour l'améliore littéralement.",
+        "email": "martin@theodooagent.com"
+      },
+      "ctaConnect": "Connectez votre Odoo (gratuit)"
+    },
+    "nudge": {
+      "eyebrow": "POUR LES INTÉGRATEURS ODOO",
+      "title": "Ce que vous testez, vous pouvez le revendre sous votre marque.",
+      "body": "Connectez-le à l'Odoo de vos clients, avec votre identité. Gratuit jusqu'à ce qu'un de vos clients l'utilise.",
+      "ctaPrimary": "Commencer gratuitement",
+      "ctaSecondary": "Comment ça marche pour les partenaires",
+      "pill": "Pour les intégrateurs",
+      "minimize": "Réduire",
+      "expand": "Voir plus"
     }
   },
   "Odoo": {

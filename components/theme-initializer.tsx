@@ -10,10 +10,10 @@ export function ThemeInitializer() {
   useEffect(() => {
     const h = document.documentElement;
     const stored = localStorage.getItem("theme");
-    if (stored === "light") {
-      h.classList.remove("dark");
-    } else {
+    if (stored === "dark") {
       h.classList.add("dark");
+    } else {
+      h.classList.remove("dark");
     }
   }, []);
 

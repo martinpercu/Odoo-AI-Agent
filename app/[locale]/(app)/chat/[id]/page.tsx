@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { ChatInput } from "@/components/chat/chat-input";
 import { DemoBanner } from "@/components/chat/demo-banner";
+import { PartnerNudge } from "@/components/intro/partner-nudge";
 import { useChatContext } from "@/components/app-shell";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -37,6 +38,7 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {isDemoMode && <DemoBanner />}
+      {isDemoMode && <PartnerNudge />}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl">
           {isLoadingHistory && !hasMessages && (

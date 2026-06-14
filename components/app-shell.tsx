@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { IntroProvider } from "@/hooks/use-intro";
+import { PartnerNudgeProvider } from "@/hooks/use-partner-nudge";
 import { IntroModal } from "@/components/intro/intro-modal";
 import { IntroPanel } from "@/components/intro/intro-panel";
 import { captureUtm } from "@/lib/analytics";
@@ -116,23 +117,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <ChatContext.Provider value={chat}>
       <RightPanelContext.Provider value={{ activeTab, setActiveTab }}>
         <IntroProvider>
-          <div className="flex h-screen overflow-hidden bg-base">
-            <Sidebar
-              chatGroups={chat.chatGroups}
-              currentChatId={chat.currentChatId}
-              onNewChat={handleNewChat}
-              onSelectChat={handleSelectChat}
-              onLoadMore={chat.loadMoreConversations}
-              hasMore={chat.hasMore}
-              onDeleteChat={chat.deleteChat}
-            />
-            <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
-            <PinnedSidebar />
-            <FlyingPinPortal />
-            {isBuilder && <LangGraphTracePanel entries={traceEntries} />}
-          </div>
-          <IntroModal />
-          <IntroPanel />
+          <PartnerNudgeProvider>
+            <div className="flex h-screen overflow-hidden bg-base">
+              <Sidebar
+                chatGroups={chat.chatGroups}
+                currentChatId={chat.currentChatId}
+                onNewChat={handleNewChat}
+                onSelectChat={handleSelectChat}
+                onLoadMore={chat.loadMoreConversations}
+                hasMore={chat.hasMore}
+                onDeleteChat={chat.deleteChat}
+              />
+              <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
+              <PinnedSidebar />
+              <FlyingPinPortal />
+              {isBuilder && <LangGraphTracePanel entries={traceEntries} />}
+            </div>
+            <IntroModal />
+            <IntroPanel />
+          </PartnerNudgeProvider>
         </IntroProvider>
       </RightPanelContext.Provider>
     </ChatContext.Provider>
