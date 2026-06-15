@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { MarkB, Wordmark } from "@/components/AgentMark";
+import { FoundingPartnerBadge } from "@/components/ui/founding-partner-badge";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { UserMenu } from "@/components/chat/user-menu";
 import type { ChatGroup } from "@/lib/types";
@@ -79,9 +80,11 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="ml-3 overflow-hidden whitespace-nowrap"
+            className="ml-3 flex flex-col gap-1 overflow-hidden whitespace-nowrap"
           >
             <Wordmark scale={0.9} />
+            {/* Founding Partner badge — Builder-only (white-label gated inside the component) */}
+            <FoundingPartnerBadge />
           </motion.div>
         )}
 
