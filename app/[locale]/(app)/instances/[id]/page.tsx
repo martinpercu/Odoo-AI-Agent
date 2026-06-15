@@ -254,6 +254,10 @@ export default function InstanceDetailPage() {
   const orgId = meData?.org?.id;
   const role = meData?.user?.role;
   const orgName = meData?.org?.name ?? "";
+  // Invites & client management unlock only once the org is `partner` — the
+  // backend flips solitary→partner when the partner validates its own instance
+  // (spec §4). The front just reads org.type and gates accordingly.
+  const isPartner = meData?.org?.type === "PARTNER";
 
   const [detail, setDetail] = useState<InstanceDetail | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -370,18 +374,20 @@ export default function InstanceDetailPage() {
       <section className="mb-6">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-subheading">{t("users.title")}</h2>
-          <button
-            type="button"
-            onClick={() => setInviting((v) => !v)}
-            className="flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
-          >
-            <UserPlus size={16} strokeWidth={1.5} />
-            {t("invite.button")}
-          </button>
+          {isPartner && (
+            <button
+              type="button"
+              onClick={() => setInviting((v) => !v)}
+              className="flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+            >
+              <UserPlus size={16} strokeWidth={1.5} />
+              {t("invite.button")}
+            </button>
+          )}
         </div>
 
         <AnimatePresence>
-          {inviting && (
+          {isPartner && inviting && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}

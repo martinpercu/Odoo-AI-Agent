@@ -69,9 +69,15 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-base">
       <div className="w-full max-w-sm rounded-lg border border-border bg-surface p-8 shadow-lg">
-        <h1 className="mb-6 text-heading">
-          {t("registerTitle")}
-        </h1>
+        {/* Founding Partners framing (Fase 0, spec §2) — sits above the existing form */}
+        <div className="mb-6">
+          <h1 className="mb-3 text-heading">{t("foundingTitle")}</h1>
+          <p className="mb-2 text-small text-text-secondary">{t("foundingLine1")}</p>
+          <p className="text-small text-text-secondary">{t("foundingLine2")}</p>
+          <p className="mt-3 text-micro font-medium uppercase tracking-wide text-accent">
+            {t("foundingScarcity")}
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">

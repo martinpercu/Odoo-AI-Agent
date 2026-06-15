@@ -9,6 +9,7 @@ import {
   Shield,
   Database,
   KeyRound,
+  Tag,
   Sun,
   Moon,
   Globe,
@@ -359,6 +360,13 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                 <Link href={settingsHref} onClick={close} className={itemClass}>
                   <Settings size={iconInline} strokeWidth={1.5} className="shrink-0" />
                   <span className="flex-1">{t("settings")}</span>
+                </Link>
+              )}
+              {/* Pricing — Builder-only (founder pricing must never reach Client white-label) */}
+              {user && !isClient && (
+                <Link href="/pricing" onClick={close} className={itemClass}>
+                  <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("pricing")}</span>
                 </Link>
               )}
               {isSuperAdmin && (
