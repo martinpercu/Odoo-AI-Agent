@@ -471,7 +471,7 @@ export interface BillingState {
   phase: BillingPhase;
   /** List/anchor price per user (e.g. 7). */
   price_anchor: number;
-  /** Locked-in founder rate per user (e.g. 1.40). */
+  /** Locked-in founder rate per user (e.g. 1). */
   founder_rate: number;
   /** True during beta — usage is $0. */
   beta_free: boolean;
