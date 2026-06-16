@@ -11,6 +11,12 @@
  *
  * Copy says "Founding Partner" (never "Beta") — status & belonging, not
  * an unfinished-product signal.
+ *
+ * Shown only for a *real* founder: one who has created their account **and**
+ * connected + validated their first Odoo instance. That promotion moment is
+ * exactly when the backend stamps `founder_since` (and flips the org to
+ * PARTNER + grants the free-beta seats), so we gate on `founder_since` being
+ * set rather than on the mere `is_founding_partner` identity flag.
  */
 
 import { useTranslations } from "next-intl";
@@ -30,10 +36,14 @@ export function FoundingPartnerBadge({ className = "" }: FoundingPartnerBadgePro
   // White-label: never render outside Builder mode.
   if (!isBuilder) return null;
 
-  // Founder identity (orthogonal to org.type). Default-true semantics: absent
-  // on older payloads → shown during beta; only an explicit `false` (a
+  // Founder identity (orthogonal to org.type). An explicit `false` (a
   // non-founder org created post-graduation) hides it.
   if (meData?.org?.is_founding_partner === false) return null;
+
+  // Real founder only: the clock starts when they connect + validate their
+  // first instance (promotion). Before that, `founder_since` is null and the
+  // badge stays hidden — a freshly-registered account isn't a founder "yet".
+  if (!meData?.org?.founder_since) return null;
 
   return (
     <span

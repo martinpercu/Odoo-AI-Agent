@@ -164,18 +164,3 @@ Cada fase es un PR chico y testeable. Respetar: tokens de diseño (no hex), `use
 
 
 
-
-
-
-
-Al llegar usuario sin cuenta esta en demo mode - OK
-Al crear cuenta sale de demo mode y hoy UI no puede asignar instancia. Se bloquea y no sirve nada.
-1 - Luego de Crear cuenta Debe aparecer opcion "Quieres setear tu instancia ahora?" 2 botones "Sí, configurar" | "Continuar en Demo"
-
-Va 
-
-/instances 
-y
-/settings/odoo
-Si tiene muchas cards de instancias o conexiones no scrolea para abajo y se pierden las ultimas.
-

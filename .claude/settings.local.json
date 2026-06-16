@@ -35,7 +35,9 @@
       "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''messages/__TRACKED_VAR__.json'\\\\''\\)\\)')",
       "Bash(curl -s http://localhost:3000/en/chat?bust=__TRACKED_VAR__ -o /dev/null -w 'GET /en/chat: %{http_code}\\\\n')",
       "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''/Users/mendez.martin/apps/agents/odoo/odoo-agent-front/messages/__TRACKED_VAR__.json'\\\\'','\\\\''utf8'\\\\''\\)\\); console.log\\('\\\\''OK'\\\\''\\)')",
-      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('/Users/mendez.martin/apps/agents/odoo/odoo-agent-front/messages/gu.json','utf8'\\)\\); console.log\\('OK'\\)\")"
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('/Users/mendez.martin/apps/agents/odoo/odoo-agent-front/messages/gu.json','utf8'\\)\\); console.log\\('OK'\\)\")",
+      "Bash(cd /Users/mendez.martin/apps/agents/odoo/odoo-agent-back && grep -rn \"extend-beta\\\\|extend_beta\\\\|founder_since\\\\|beta_ends_at\\\\|days_left\\\\|is_founding_partner\\\\|founder_rate_locked\" src/api/*.py | head -60)",
+      "Read(//Users/mendez.martin/apps/agents/odoo/odoo-agent-back/**)"
     ]
   }
 }

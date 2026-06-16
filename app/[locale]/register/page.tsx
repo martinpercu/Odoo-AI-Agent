@@ -10,6 +10,7 @@ import { resolvePostAuthPath } from "@/lib/post-auth";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
@@ -71,11 +72,29 @@ export default function RegisterPage() {
       <div className="w-full max-w-sm rounded-lg border border-border bg-surface p-8 shadow-lg">
         {/* Founding Partners framing (Fase 0, spec §2) — sits above the existing form */}
         <div className="mb-6">
-          <h1 className="mb-3 text-heading">{t("foundingTitle")}</h1>
-          <p className="mb-2 text-small text-text-secondary">{t("foundingLine1")}</p>
-          <p className="text-small text-text-secondary">{t("foundingLine2")}</p>
+          <h1 className="mb-5 text-center text-heading leading-relaxed">
+            {t.rich("foundingTitle", {
+              br: () => <br />,
+            })}
+          </h1>
+          <p className="mb-2 text-small text-text-secondary">
+            {t.rich("foundingLine1", {
+              prog: (chunks) => (
+                <InfoTooltip text={t("programTooltip")}>{chunks}</InfoTooltip>
+              ),
+            })}
+          </p>
+          <p className="text-small text-text-secondary">
+            {t.rich("foundingLine2", {
+              prog: (chunks) => (
+                <InfoTooltip text={t("programTooltip")}>{chunks}</InfoTooltip>
+              ),
+            })}
+          </p>
           <p className="mt-3 text-micro font-medium uppercase tracking-wide text-accent">
-            {t("foundingScarcity")}
+            <InfoTooltip text={t("scarcityTooltip")} className="text-accent">
+              {t("foundingScarcity")}
+            </InfoTooltip>
           </p>
         </div>
 

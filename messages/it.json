@@ -517,10 +517,12 @@
     "resetSuccessDesc": "Ora puoi accedere con la tua nuova password.",
     "goToLogin": "Vai all'accesso",
     "demoBannerShort": "Modalità demo",
-    "foundingTitle": "Sei tra i primi — benvenuto nel programma Founding Partners",
-    "foundingLine1": "Stai entrando come founding partner di TheOdooAgent. Durante la beta è tutto gratis: il tuo utilizzo e quello dei clienti che porti a provare.",
-    "foundingLine2": "Il tuo feedback definisce la roadmap e, quando usciremo dalla beta, ti resta una tariffa da fondatore bloccata per sempre: 1,40 $/utente (80% di sconto sul prezzo di listino di 7 $).",
-    "foundingScarcity": "Posti limitati."
+    "foundingTitle": "Benvenuto nel<br></br>programma Founding Partners",
+    "foundingLine1": "Stai entrando come founding partner di TheOdooAgent. Durante il <prog>programma</prog>, il tuo utilizzo e quello dei tuoi clienti è 100% gratis.",
+    "foundingLine2": "Il tuo feedback definisce la nostra roadmap. Al termine del <prog>programma</prog>, mantieni la tariffa da founder partner a vita: 1,40 $/utente.",
+    "foundingScarcity": "Posti limitati",
+    "programTooltip": "Il vantaggio del programma Founding Partners dura almeno 2 mesi, estendibile in base al tuo livello di collaborazione.",
+    "scarcityTooltip": "Per ragioni di costo, manteniamo un numero limitato di founding partners."
   },
   "Onboarding": {
     "step1Label": "Connessione Odoo",
@@ -676,7 +678,18 @@
       "typeToggleConfirmPartner": "Promuovere l'org {name} a PARTNER? Questo abilita la UI completa per i suoi utenti.",
       "typeToggleConfirmSolitary": "Riportare l'org {name} a SOLITARY? La UI tenant verrà semplificata.",
       "typeToggleSuccess": "Tipo organizzazione aggiornato.",
-      "typeToggleError": "Impossibile cambiare il tipo. Riprova."
+      "typeToggleError": "Impossibile cambiare il tipo. Riprova.",
+      "colFounder": "Founder",
+      "founderDaysLeft": "{days}g rimasti",
+      "founderNotStarted": "Non connesso",
+      "founderCurrentDays": "Attualmente {days} giorni rimanenti",
+      "founderExtendTitle": "Estendi beta",
+      "founderExtendDesc": "Aggiungi o rimuovi giorni di beta gratuita per {name}.",
+      "founderExtendDays": "Giorni da aggiungere",
+      "founderExtendHint": "I valori negativi accorciano la finestra.",
+      "founderExtendConfirm": "Applica",
+      "founderExtendSuccess": "Finestra beta aggiornata",
+      "founderExtendError": "Impossibile aggiornare la finestra beta"
     },
     "users": {
       "statsTotal": "Utenti totali",
@@ -895,7 +908,7 @@
       "chips": {
         "language": "Chiedi nella tua lingua: vendite, fatture, magazzino",
         "noInvent": "Non inventa cifre: le calcola il sistema, non il modello",
-        "anyOdoo": "Funziona su qualsiasi Odoo: dalla 14 alla 19 e Community"
+        "anyOdoo": "Funziona su Enterprise e Community v12–v19"
       },
       "tryThisLabel": "Prova questo",
       "tryThis": {
@@ -927,19 +940,21 @@
         "chip3": "Crea un contatto: María López"
       },
       "different": {
-        "heading": "Ciò che l'IA nativa di Odoo non ti dà",
-        "item1Label": "Funziona su Community e sulle versioni 14–19",
-        "item1Body": "L'IA di Odoo è solo Enterprise. Questo funziona dove sei già.",
-        "item2Label": "~1 $ per utente",
-        "item2Body": "Enterprise costa ~25–60 $ per utente/mese, e per tutti gli utenti.",
-        "item3Label": "Non inventa cifre",
-        "item3Body": "I numeri li calcola il sistema; il modello li mette solo per iscritto. Per questo è esatto ed economico."
+        "heading": "Cosa Odoo AI e gli MCP non ti danno",
+        "item1Label": "Community ed Enterprise v12–v19",
+        "item1Body": "Funziona dove si trova oggi il tuo cliente.",
+        "item2Label": "Costo dell'IA incluso",
+        "item2Body": "Senza token LLM. L'IA è già coperta.",
+        "item3Label": "White-label reale",
+        "item3Body": "I tuoi clienti vedono il tuo marchio. Odoo e i server MCP, no.",
+        "item4Label": "Non inventa numeri",
+        "item4Body": "Il sistema calcola; l'LLM redige. Nessuna allucinazione."
       },
       "partner": {
         "heading": "Implementi Odoo?",
         "line": "Offrilo ai tuoi clienti con il tuo marchio e rivendilo.",
         "item1Label": "White-label e rivendita",
-        "item1Body": "da ~1 $/utente",
+        "item1Body": "Il tuo marchio, i tuoi prezzi.",
         "item2Label": "Multi-cliente",
         "item2Body": "gestisci tutte le tue aziende da un unico account",
         "item3Label": "Non installa nulla nell'Odoo del cliente",
@@ -958,15 +973,15 @@
         "q1": "È sicuro?",
         "a1": "Sì: conferma umana su ogni scrittura, rispetta i tuoi permessi di Odoo e le credenziali sono cifrate.",
         "q2": "I miei dati vengono usati per l'addestramento?",
-        "a2": "TODO (Martin): completare — a quale provider di LLM vengono inviati i dati, conservazione e se vengono usati per l'addestramento. Non pubblicare finché non è completa.",
+        "a2": "I tuoi dati non sono usati per addestrare. OpenAI con Zero Data Retention attivato non memorizza il contenuto delle chiamate API né lo usa per addestrare.",
         "q3": "Quali versioni sono supportate?",
-        "a3": "Odoo da 14 a 19, e Community.",
+        "a3": "Odoo da 12 a 19, Enterprise e Community.",
         "q4": "Installa qualcosa nel mio Odoo?",
         "a4": "No. Si connette tramite una chiave API standard (XML-RPC).",
         "q5": "Posso aggiungere il mio marchio?",
         "a5": "Sì: white-label per rivendere ai tuoi clienti con la tua identità.",
         "q6": "Quanto costa?",
-        "a6": "Gratis sul tuo Odoo. Per distribuirlo ai tuoi clienti, da ~1 $/utente."
+        "a6": "Gratis sul tuo Odoo. Per distribuirlo ai tuoi clienti, da 7 $/utente."
       },
       "founder": {
         "heading": "Fatto da Martin",
@@ -1127,6 +1142,9 @@
     "backToSettings": "Torna alle impostazioni"
   },
   "FoundingPartner": {
-    "badge": "Founding Partner"
+    "badge": "Founding Partner",
+    "clockDaysLeft": "{days} giorni rimanenti",
+    "clockExpired": "Beta terminata",
+    "clockTooltip": "Giorni rimanenti del programma Founding Partner"
   }
 }
