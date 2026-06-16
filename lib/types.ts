@@ -300,6 +300,16 @@ export interface MeOrg {
   is_founding_partner?: boolean;
   /** Mirror of `BillingState.founder_rate_locked` (set true at graduation). */
   founder_rate_locked?: boolean;
+  /**
+   * Founder free-beta clock (Fase 0). Per-org window that starts when the
+   * founder connects + validates their first instance (the promotion moment).
+   * `null` before they connect — the clock hasn't started. Mirror of
+   * `/billing/state`; same values.
+   */
+  founder_since?: string | null;
+  beta_ends_at?: string | null;
+  /** Whole days left in the free-beta window (0 if expired, null if no clock). */
+  days_left?: number | null;
 }
 
 export interface MeSubscription {
@@ -471,6 +481,10 @@ export interface BillingState {
   active_seats?: number | null;
   seat_limit?: number | null;
   payment_status?: string;
+  /** Founder free-beta clock — when it started (ISO) / when it ends / days left. */
+  founder_since?: string | null;
+  beta_ends_at?: string | null;
+  days_left?: number | null;
 }
 
 export interface ServerConversation {
@@ -530,6 +544,15 @@ export interface SuperAdminOrg {
   created_at: string;
   subscription: SuperAdminSubscription;
   user_count: number;
+  /**
+   * Founder identity + free-beta clock (Fase 0). Surfaced so the superadmin can
+   * see who's a founding partner and how many beta days remain. Absent on older
+   * backend payloads — the front degrades gracefully (no founder column data).
+   */
+  is_founding_partner?: boolean;
+  founder_since?: string | null;
+  beta_ends_at?: string | null;
+  days_left?: number | null;
 }
 
 export interface SuperAdminOrgsResponse {

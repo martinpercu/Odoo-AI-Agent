@@ -1963,6 +1963,46 @@ export async function superadminUpdateOrgType(
   }
 }
 
+/**
+ * SUPERADMIN: extend (or shorten) a founder org's free-beta window (Fase 0).
+ * `days` > 0 adds days, < 0 removes them. Returns the updated clock + the
+ * recomputed `days_left` so the caller can refresh its row without a reload.
+ * Endpoint: POST /admin/orgs/{orgId}/founder/extend-beta  body: { days }
+ */
+export interface ExtendBetaResult {
+  success: boolean;
+  error?: string;
+  founder_since?: string | null;
+  beta_ends_at?: string | null;
+  days_left?: number | null;
+}
+
+export async function superadminExtendFounderBeta(
+  orgId: string,
+  days: number
+): Promise<ExtendBetaResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/founder/extend-beta`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ days }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
+      return {
+        success: true,
+        founder_since: data.founder_since ?? null,
+        beta_ends_at: data.beta_ends_at ?? null,
+        days_left: typeof data.days_left === "number" ? data.days_left : null,
+      };
+    }
+    return { success: false, error: extractError(data.detail, "Failed to extend beta window") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
 // ---- Feedback API ----
 
 export interface SubmitFeedbackPayload {

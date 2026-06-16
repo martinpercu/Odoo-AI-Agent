@@ -30,6 +30,7 @@ import {
   BookSearch,
 } from "lucide-react";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
+import { FounderClockPill } from "@/components/ui/founder-clock-pill";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
 import { AdminInvitationCredentialsModal } from "@/components/settings/admin-invitation-credentials-modal";
 import { useSession } from "@/hooks/use-session";
@@ -986,7 +987,14 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("org");
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="relative flex-1 overflow-y-auto">
+      {/* Founder free-beta clock — subtle, always-visible floating pill (top-left) */}
+      <div className="pointer-events-none sticky top-0 z-10 h-0">
+        <div className="pointer-events-auto absolute left-4 top-4 sm:left-6">
+          <FounderClockPill />
+        </div>
+      </div>
+
       <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
 
         {/* Header — centrado */}

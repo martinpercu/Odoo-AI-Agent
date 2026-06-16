@@ -148,6 +148,17 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
           />
 
+          {/* Pricing */}
+          <Link
+            href="/pricing"
+            onClick={() => onNavigate?.()}
+            className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+            aria-label={collapsed ? t("pricing") : undefined}
+          >
+            <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
+            {!collapsed && <span className="flex-1">{t("pricing")}</span>}
+          </Link>
+
           {/* Theme */}
           <button
             onClick={toggleTheme}
@@ -362,13 +373,6 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                   <span className="flex-1">{t("settings")}</span>
                 </Link>
               )}
-              {/* Pricing — Builder-only (founder pricing must never reach Client white-label) */}
-              {user && !isClient && (
-                <Link href="/pricing" onClick={close} className={itemClass}>
-                  <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
-                  <span className="flex-1">{t("pricing")}</span>
-                </Link>
-              )}
               {isSuperAdmin && (
                 <Link href="/superadmin" onClick={close} className={itemClass}>
                   <Shield size={iconInline} strokeWidth={1.5} className="shrink-0" />
@@ -381,6 +385,13 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             <div className="my-1 border-t border-border" />
             <div className="px-1">
               <IntroSidebarItem onOpened={close} className={itemClass} />
+
+              {!isClient && (
+                <Link href="/pricing" onClick={close} className={itemClass}>
+                  <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("pricing")}</span>
+                </Link>
+              )}
 
               <button onClick={toggleTheme} className={itemClass}>
                 {isDark ? (
