@@ -34,6 +34,8 @@ import {
   MessageSquare,
   UserPlus,
   LineChart,
+  Star,
+  Clock,
 } from "lucide-react";
 import {
   superadminListOrgs,
@@ -43,6 +45,7 @@ import {
   superadminActivateOrg,
   superadminUpdateSubscription,
   superadminUpdateOrgType,
+  superadminExtendFounderBeta,
   superadminSuspendUser,
   superadminActivateUser,
   superadminUpdateUser,
@@ -147,6 +150,151 @@ function TypeBadge({ type }: { type: OrgType }) {
     >
       {type}
     </span>
+  );
+}
+
+// ---- Founder (Fase 0) ----
+
+/** Days-left pill, color-coded by urgency. Shared with the floating settings pill. */
+function DaysLeftPill({
+  days,
+  label,
+  className = "",
+}: {
+  days: number;
+  label: string;
+  className?: string;
+}) {
+  const tone =
+    days <= 0
+      ? "bg-error-subtle text-error"
+      : days <= 7
+        ? "bg-warning-subtle text-warning-solid"
+        : "bg-accent-subtle text-accent";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-btn px-2 py-0.5 text-micro font-medium ${tone} ${className}`}
+    >
+      <Clock size={11} strokeWidth={1.5} className="shrink-0" />
+      {label}
+    </span>
+  );
+}
+
+/** Founder column cell: identity + free-beta clock state. */
+function FounderCell({
+  org,
+  t,
+}: {
+  org: SuperAdminOrg;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  // Explicit non-founder (post-graduation org).
+  if (org.is_founding_partner === false) {
+    return <span className="text-small text-text-muted">—</span>;
+  }
+  // Founder, but the clock hasn't started (no instance connected yet).
+  if (org.days_left == null) {
+    return (
+      <span className="inline-flex items-center gap-1 text-small text-text-secondary">
+        <Star size={12} strokeWidth={1.5} className="text-accent shrink-0" />
+        {t("orgs.founderNotStarted")}
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Star size={12} strokeWidth={1.5} className="text-accent shrink-0" />
+      <DaysLeftPill days={org.days_left} label={t("orgs.founderDaysLeft", { days: org.days_left })} />
+    </span>
+  );
+}
+
+// ---- Extend Beta Modal ----
+
+function ExtendBetaModal({
+  org,
+  onClose,
+  onConfirm,
+  t,
+}: {
+  org: SuperAdminOrg;
+  onClose: () => void;
+  onConfirm: (days: number) => void | Promise<void>;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const [days, setDays] = useState(30);
+  const [saving, setSaving] = useState(false);
+
+  async function submit() {
+    if (!days) return;
+    setSaving(true);
+    await onConfirm(days);
+    setSaving(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+        <div className="mb-1 flex items-center gap-2">
+          <Clock size={18} strokeWidth={1.5} className="text-accent" />
+          <h3 className="text-body font-medium text-foreground">{t("orgs.founderExtendTitle")}</h3>
+        </div>
+        <p className="mb-4 text-small text-text-secondary">
+          {t("orgs.founderExtendDesc", { name: org.name })}
+        </p>
+
+        <div className="mb-4 rounded-md bg-raised px-3 py-2 text-small text-text-secondary">
+          {org.days_left == null
+            ? t("orgs.founderNotStarted")
+            : t("orgs.founderCurrentDays", { days: org.days_left })}
+        </div>
+
+        <label className="mb-1 block text-small text-text-secondary">
+          {t("orgs.founderExtendDays")}
+        </label>
+        <div className="mb-1 flex items-center gap-2">
+          {[7, 30, 90].map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => setDays(preset)}
+              className={`rounded-btn px-2.5 py-1 text-small font-medium ${
+                days === preset
+                  ? "bg-accent text-white"
+                  : "bg-raised text-text-secondary hover:text-foreground"
+              }`}
+            >
+              +{preset}
+            </button>
+          ))}
+        </div>
+        <input
+          type="number"
+          value={days}
+          onChange={(e) => setDays(parseInt(e.target.value, 10) || 0)}
+          className="mb-1 w-full rounded-btn border border-border bg-base px-3 py-2 text-body text-foreground focus:border-accent focus:outline-none"
+        />
+        <p className="mb-4 text-micro text-text-muted">{t("orgs.founderExtendHint")}</p>
+
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="rounded-md px-4 py-2 text-body text-text-secondary hover:bg-raised"
+          >
+            {t("orgs.editCancel")}
+          </button>
+          <button
+            onClick={submit}
+            disabled={saving || !days}
+            className="flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-body font-medium text-white hover:bg-accent-hover disabled:opacity-50"
+          >
+            {saving && <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />}
+            {t("orgs.founderExtendConfirm")}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -446,6 +594,7 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
     orgName: string;
     newType: OrgType;
   } | null>(null);
+  const [extendBetaOrg, setExtendBetaOrg] = useState<SuperAdminOrg | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -532,6 +681,30 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
       );
     } else {
       setToast({ msg: res.error ?? t("orgs.typeToggleError"), type: "error" });
+    }
+  }
+
+  async function handleExtendBeta(days: number) {
+    if (!extendBetaOrg) return;
+    const orgId = extendBetaOrg.id;
+    const res = await superadminExtendFounderBeta(orgId, days);
+    if (res.success) {
+      setToast({ msg: t("orgs.founderExtendSuccess"), type: "success" });
+      setOrgs((prev) =>
+        prev.map((o) =>
+          o.id === orgId
+            ? {
+                ...o,
+                founder_since: res.founder_since ?? o.founder_since,
+                beta_ends_at: res.beta_ends_at ?? o.beta_ends_at,
+                days_left: res.days_left ?? o.days_left,
+              }
+            : o
+        )
+      );
+      setExtendBetaOrg(null);
+    } else {
+      setToast({ msg: res.error ?? t("orgs.founderExtendError"), type: "error" });
     }
   }
 
@@ -642,6 +815,15 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
         />
       )}
 
+      {extendBetaOrg && (
+        <ExtendBetaModal
+          org={extendBetaOrg}
+          onClose={() => setExtendBetaOrg(null)}
+          onConfirm={handleExtendBeta}
+          t={t}
+        />
+      )}
+
       {/* Stats */}
       <div className="mb-4 flex flex-wrap gap-4 text-small text-text-secondary">
         <span>
@@ -664,6 +846,7 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
               <th className="px-3 py-2 text-left">{t("orgs.colName")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colSlug")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colType")}</th>
+              <th className="px-3 py-2 text-left">{t("orgs.colFounder")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colPlan")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colSlots")}</th>
               <th className="px-3 py-2 text-center">{t("orgs.colWatermark")}</th>
@@ -689,6 +872,9 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                 <td className="px-3 py-2 font-technical text-text-secondary">{org.slug}</td>
                 <td className="px-3 py-2">
                   <TypeBadge type={org.type} />
+                </td>
+                <td className="px-3 py-2">
+                  <FounderCell org={org} t={t} />
                 </td>
                 <td className="px-3 py-2">
                   <TierBadge tier={org.subscription.tier} />
@@ -738,6 +924,16 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                         ? t("orgs.typeToggleToSolitary")
                         : t("orgs.typeToggleToPartner")}
                     </button>
+                    {org.is_founding_partner !== false && (
+                      <button
+                        onClick={() => setExtendBetaOrg(org)}
+                        className="rounded-md p-1.5 text-text-secondary hover:bg-raised hover:text-accent"
+                        aria-label={t("orgs.founderExtendTitle")}
+                        title={t("orgs.founderExtendTitle")}
+                      >
+                        <Clock size={14} strokeWidth={1.5} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleToggle(org)}
                       className={`rounded-md px-2 py-1 text-small font-medium ${

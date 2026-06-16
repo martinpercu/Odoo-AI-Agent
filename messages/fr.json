@@ -517,10 +517,12 @@
     "resetSuccessDesc": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
     "goToLogin": "Aller à la connexion",
     "demoBannerShort": "Mode Démo",
-    "foundingTitle": "Vous faites partie des premiers — bienvenue dans le programme Founding Partners",
-    "foundingLine1": "Vous rejoignez TheOdooAgent en tant que founding partner. Pendant la bêta, tout est gratuit : votre utilisation et celle des clients que vous amenez à tester.",
-    "foundingLine2": "Vos retours définissent la feuille de route, et à la sortie de la bêta vous conservez un tarif de fondateur bloqué à vie : 1,40 $/utilisateur (80 % de remise sur le prix catalogue de 7 $).",
-    "foundingScarcity": "Places limitées."
+    "foundingTitle": "Bienvenue dans le<br></br>programme Founding Partners",
+    "foundingLine1": "Vous rejoignez TheOdooAgent en tant que founding partner. Pendant le <prog>programme</prog>, votre utilisation et celle de vos clients sont 100 % gratuites.",
+    "foundingLine2": "Vos retours définissent notre feuille de route. À la fin du <prog>programme</prog>, vous conservez le tarif founder partner à vie : 1,40 $/utilisateur.",
+    "foundingScarcity": "Places limitées",
+    "programTooltip": "L'avantage du programme Founding Partners dure au moins 2 mois, prolongeable selon votre niveau de collaboration.",
+    "scarcityTooltip": "Pour des raisons de coûts, nous gardons un nombre limité de founding partners."
   },
   "Onboarding": {
     "step1Label": "Connexion Odoo",
@@ -676,7 +678,18 @@
       "typeToggleConfirmPartner": "Promouvoir l'org {name} en PARTNER ? Cela active l'interface complète pour ses utilisateurs.",
       "typeToggleConfirmSolitary": "Rétrograder l'org {name} en SOLITARY ? L'interface du tenant sera simplifiée.",
       "typeToggleSuccess": "Type d'organisation mis à jour.",
-      "typeToggleError": "Impossible de changer le type. Réessayez."
+      "typeToggleError": "Impossible de changer le type. Réessayez.",
+      "colFounder": "Founder",
+      "founderDaysLeft": "{days}j restants",
+      "founderNotStarted": "Non connecté",
+      "founderCurrentDays": "Actuellement {days} jours restants",
+      "founderExtendTitle": "Prolonger la bêta",
+      "founderExtendDesc": "Ajoutez ou retirez des jours de bêta gratuite pour {name}.",
+      "founderExtendDays": "Jours à ajouter",
+      "founderExtendHint": "Les valeurs négatives raccourcissent la fenêtre.",
+      "founderExtendConfirm": "Appliquer",
+      "founderExtendSuccess": "Fenêtre bêta mise à jour",
+      "founderExtendError": "Impossible de mettre à jour la fenêtre bêta"
     },
     "users": {
       "statsTotal": "Total utilisateurs",
@@ -895,7 +908,7 @@
       "chips": {
         "language": "Demandez dans votre langue : ventes, factures, stock",
         "noInvent": "Elle n'invente pas les chiffres : c'est le système qui les calcule, pas le modèle",
-        "anyOdoo": "Fonctionne sur n'importe quel Odoo : 14 à 19 et Community"
+        "anyOdoo": "Fonctionne sur Enterprise et Community v12–v19"
       },
       "tryThisLabel": "Essayez ceci",
       "tryThis": {
@@ -927,19 +940,21 @@
         "chip3": "Créer un contact : María López"
       },
       "different": {
-        "heading": "Ce que l'IA native d'Odoo ne vous offre pas",
-        "item1Label": "Fonctionne sur Community et les versions 14–19",
-        "item1Body": "L'IA d'Odoo est réservée à Enterprise. Ceci fonctionne là où vous êtes déjà.",
-        "item2Label": "~1 $ par utilisateur",
-        "item2Body": "Enterprise facture ~25–60 $ par utilisateur/mois, et pour tous les utilisateurs.",
-        "item3Label": "Il n'invente pas de chiffres",
-        "item3Body": "Les chiffres sont calculés par le système ; le modèle ne fait que les rédiger. C'est pourquoi c'est exact et économique."
+        "heading": "Ce qu'Odoo AI et les MCP ne vous donnent pas",
+        "item1Label": "Community et Enterprise v12–v19",
+        "item1Body": "Marche là où votre client est déjà.",
+        "item2Label": "Coût de l'IA inclus",
+        "item2Body": "Pas de tokens LLM. L'IA est déjà couverte.",
+        "item3Label": "White-label réel",
+        "item3Body": "Vos clients voient votre marque. Odoo et les serveurs MCP, non.",
+        "item4Label": "N'invente pas les chiffres",
+        "item4Body": "Le système calcule ; le LLM rédige. Pas d'hallucinations."
       },
       "partner": {
         "heading": "Vous implémentez Odoo ?",
         "line": "Proposez-le à vos clients sous votre marque et revendez-le.",
         "item1Label": "Marque blanche et revente",
-        "item1Body": "à partir de ~1 $/utilisateur",
+        "item1Body": "Votre marque, vos prix.",
         "item2Label": "Multi-client",
         "item2Body": "gérez toutes vos entreprises depuis un seul compte",
         "item3Label": "N'installe rien dans l'Odoo du client",
@@ -958,15 +973,15 @@
         "q1": "Est-ce sûr ?",
         "a1": "Oui : confirmation humaine sur chaque écriture, respect de vos permissions Odoo et identifiants chiffrés.",
         "q2": "Mes données servent-elles à l'entraînement ?",
-        "a2": "TODO (Martin) : à compléter — à quel fournisseur de LLM les données sont envoyées, rétention, et si elles servent à l'entraînement. Ne pas publier avant de l'avoir complété.",
+        "a2": "Vos données ne sont pas utilisées pour entraîner. OpenAI avec Zero Data Retention activé : le contenu des appels API n'est ni stocké ni utilisé pour entraîner un modèle.",
         "q3": "Quelles versions sont prises en charge ?",
-        "a3": "Odoo 14 à 19, et Community.",
+        "a3": "Odoo 12 à 19, Enterprise et Community.",
         "q4": "Installe-t-il quelque chose dans mon Odoo ?",
         "a4": "Non. Il se connecte via une clé API standard (XML-RPC).",
         "q5": "Puis-je y mettre ma marque ?",
         "a5": "Oui : marque blanche pour revendre à vos clients sous votre identité.",
         "q6": "Combien ça coûte ?",
-        "a6": "Gratuit sur votre propre Odoo. Pour le déployer chez vos clients, à partir de ~1 $/utilisateur."
+        "a6": "Gratuit sur votre propre Odoo. Pour le déployer chez vos clients, à partir de 7 $/utilisateur."
       },
       "founder": {
         "heading": "Fait par Martin",
@@ -1127,6 +1142,9 @@
     "backToSettings": "Retour aux paramètres"
   },
   "FoundingPartner": {
-    "badge": "Founding Partner"
+    "badge": "Founding Partner",
+    "clockDaysLeft": "{days} jours restants",
+    "clockExpired": "Bêta terminée",
+    "clockTooltip": "Jours restants du programme Founding Partner"
   }
 }
