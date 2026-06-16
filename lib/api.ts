@@ -974,46 +974,6 @@ export async function acceptInvitation(
 
 // ---- Connection Test ----
 
-export interface TestConnectionResult {
-  success: boolean;
-  company?: string;
-  version?: string;
-  uid?: number;
-  error?: string;
-}
-
-export async function testOdooConnection(
-  config: OdooConfig
-): Promise<TestConnectionResult> {
-  try {
-    const res = await authFetch(`${API_BASE}/test-connection`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(toBackendConfig(config)),
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.status === "ok") {
-      return {
-        success: true,
-        company: data.company,
-        version: data.version,
-        uid: data.uid,
-      };
-    }
-
-    const detail = data.detail || data.msg;
-    return {
-      success: false,
-      error: detail ? (typeof detail === "object" ? JSON.stringify(detail) : detail) : undefined,
-    };
-  } catch (err) {
-    if (err instanceof LimitReachedError) throw err;
-    return { success: false, error: NETWORK_ERROR };
-  }
-}
-
 /**
  * Discriminated connection validation (spec §7).
  * - Without credentials → only checks the instance exists (reachable URL + DB found).
@@ -1089,26 +1049,6 @@ export async function inspectInstance(
       success: false,
       error: data.detail || data.error || undefined,
     };
-  } catch (err) {
-    if (err instanceof LimitReachedError) throw err;
-    return { success: false, error: NETWORK_ERROR };
-  }
-}
-
-export async function testSavedOdooConfig(
-  orgId: string,
-  configId: string
-): Promise<TestConnectionResult> {
-  try {
-    const res = await authFetch(
-      `${API_BASE}/admin/orgs/${orgId}/configs/${configId}/test-connection`,
-      { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }
-    );
-    const data = await res.json();
-    if (res.ok && data.status === "ok") {
-      return { success: true, company: data.company, version: data.version, uid: data.uid };
-    }
-    return { success: false, error: data.detail || data.error || undefined };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
