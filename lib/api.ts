@@ -22,6 +22,7 @@ import type {
   OdooCredentialSummary,
   AdminUserCredential,
   SubscriptionTier,
+  BillingState,
   SuperAdminOrgsResponse,
   SuperAdminUsersResponse,
   SuperAdminOrgDetail,
@@ -1658,6 +1659,35 @@ export async function createBillingCheckout(
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Beta defaults for the Founding Partners phase (spec §0). Used as a fallback
+ * when `GET /billing/state` is unavailable so the front degrades gracefully —
+ * the numbers still come from a single source, never sprinkled across the UI.
+ */
+export const BETA_BILLING_DEFAULTS: BillingState = {
+  phase: "beta_founder",
+  price_anchor: 7,
+  founder_rate: 1.4,
+  beta_free: true,
+  founder_rate_locked: false,
+};
+
+/**
+ * Render-only billing/founder context (Surface I, spec §5/§6). Returns the
+ * backend state, or `BETA_BILLING_DEFAULTS` if the endpoint is missing/errors —
+ * during beta everyone is a founding partner, so a safe default is correct.
+ */
+export async function getBillingState(): Promise<BillingState> {
+  try {
+    const res = await authFetch(`${API_BASE}/billing/state`);
+    if (!res.ok) return BETA_BILLING_DEFAULTS;
+    const data = await res.json();
+    return { ...BETA_BILLING_DEFAULTS, ...data } as BillingState;
+  } catch {
+    return BETA_BILLING_DEFAULTS;
   }
 }
 

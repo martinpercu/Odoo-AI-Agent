@@ -316,13 +316,18 @@ function UsersSection() {
   const seatsWidget = subscription ? (
     <div className="inline-flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
       <span className="text-text-secondary font-medium">{t("admin.seatsWidget")}</span>
-      <span className={`font-technical ${paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
+      <span className={`font-technical ${paidLimit > 0 && paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
         {t("admin.seatsPaid")}: {paidUsed}/{paidLimit}
       </span>
-      <span className="text-border">·</span>
-      <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
-        {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
-      </span>
+      {/* Hide the free bucket entirely on plans with no free seats (e.g. founder = 6 paid / 0 free) */}
+      {freeLimit > 0 && (
+        <>
+          <span className="text-border">·</span>
+          <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
+            {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
+          </span>
+        </>
+      )}
     </div>
   ) : undefined;
 

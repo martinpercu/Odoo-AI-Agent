@@ -39,7 +39,8 @@
     "logout": "लॉग आउट",
     "instances": "Instances",
     "myConnection": "My connection",
-    "configureToChat": "Set up to chat"
+    "configureToChat": "Set up to chat",
+    "pricing": "Pricing"
   },
   "ChatGroups": {
     "today": "आज",
@@ -194,6 +195,40 @@
       "freeSlots": "मुफ़्त सीट",
       "price": "मूल्य",
       "freeSlotNote": "मुफ़्त सीट हमेशा वॉटरमार्क दिखाती हैं और उपयोग की सीमाएं होती हैं। भुगतान सीट में पूर्ण असीमित पहुंच है।"
+    },
+    "founding": {
+      "name": "Founding Partner",
+      "yourPlan": "Your plan",
+      "betaFree": "$0 during beta",
+      "founderRate": "{rate}/user — forever",
+      "founderRateNote": "80% founder discount",
+      "anchor": "{anchor}/user (list price)",
+      "features": {
+        "freeBeta": "Free access during beta (your usage + the clients you bring to test)",
+        "lockedRate": "Founder rate locked in for life",
+        "feedback": "Your feedback shapes the roadmap",
+        "firstInMarket": "First in your market offering AI on Odoo"
+      },
+      "honestNote": "{rate} barely covers what it costs to run it — you pay (almost) my cost, not my price.",
+      "standard": {
+        "name": "Standard",
+        "price": "{anchor} / user / month",
+        "soon": "Coming soon"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "desc": "More than 20 seats · custom pricing",
+        "soon": "Coming soon"
+      },
+      "modal": {
+        "title": "Not yet — we're in beta",
+        "body": "For now TheOdooAgent is open only to founding partners. The Standard and Enterprise plans activate when we leave beta. You're already in as a founding partner, so enjoy the beta for free.",
+        "cta": "Got it"
+      },
+      "indicator": {
+        "status": "Founding Partner · free during beta",
+        "note": "When we leave beta, your founder rate stays locked: {rate}/user forever."
+      }
     }
   },
   "Settings": {
@@ -481,7 +516,11 @@
     "resetSuccessTitle": "पासवर्ड अपडेट हो गया!",
     "resetSuccessDesc": "अब आप अपने नए पासवर्ड से साइन इन कर सकते हैं।",
     "goToLogin": "साइन इन पर जाएं",
-    "demoBannerShort": "डेमो मोड"
+    "demoBannerShort": "डेमो मोड",
+    "foundingTitle": "You're one of the first — welcome to the Founding Partners program",
+    "foundingLine1": "You're joining as a founding partner of TheOdooAgent. During the beta everything is free: your usage and that of the clients you bring in to test.",
+    "foundingLine2": "Your feedback shapes the roadmap, and when we leave beta you keep a founder rate locked in forever: $1.40/user (80% off the $7 list price).",
+    "foundingScarcity": "Limited spots."
   },
   "Onboarding": {
     "step1Label": "Odoo Connection",
@@ -1086,5 +1125,8 @@
     "subtitleAdmin": "Your personal credentials for each instance you chat with.",
     "noInstance": "No instance assigned yet.",
     "backToSettings": "Back to settings"
+  },
+  "FoundingPartner": {
+    "badge": "Founding Partner"
   }
 }

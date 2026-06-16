@@ -45,6 +45,10 @@ export function InviteUserForm({
 
   const [email, setEmail] = useState("");
   const [seatType, setSeatType] = useState<SeatType>("paid");
+  // Plans with no free seats (e.g. founder = 6 paid / 0 free) hide the free
+  // option — picking it could only ever 409. When seats aren't loaded yet, show
+  // both (backwards-compatible).
+  const hasFreeSeats = !seats || seats.free_total > 0;
   const [mode, setMode] = useState<InvitationMode>("invite_only");
   const [username, setUsername] = useState("");
   const [apiKey, setApiKey] = useState("");
@@ -161,9 +165,11 @@ export function InviteUserForm({
           <button type="button" onClick={() => setSeatType("paid")} className={segBtn(seatType === "paid")}>
             {t("seatPaid")}
           </button>
-          <button type="button" onClick={() => setSeatType("free")} className={segBtn(seatType === "free")}>
-            {t("seatFree")}
-          </button>
+          {hasFreeSeats && (
+            <button type="button" onClick={() => setSeatType("free")} className={segBtn(seatType === "free")}>
+              {t("seatFree")}
+            </button>
+          )}
         </div>
       </div>
 

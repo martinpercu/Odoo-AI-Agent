@@ -39,7 +39,8 @@
     "logout": "Déconnexion",
     "instances": "Instances",
     "myConnection": "Ma connexion",
-    "configureToChat": "Configurer pour discuter"
+    "configureToChat": "Configurer pour discuter",
+    "pricing": "Tarifs"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -194,6 +195,40 @@
       "freeSlots": "Sièges gratuits",
       "price": "Prix",
       "freeSlotNote": "Les sièges gratuits affichent toujours un filigrane et ont des limites d'utilisation. Les sièges payants ont un accès complet sans restrictions."
+    },
+    "founding": {
+      "name": "Founding Partner",
+      "yourPlan": "Votre plan",
+      "betaFree": "0 $ pendant la bêta",
+      "founderRate": "{rate}/utilisateur — à vie",
+      "founderRateNote": "80 % de remise fondateur",
+      "anchor": "{anchor}/utilisateur (prix catalogue)",
+      "features": {
+        "freeBeta": "Accès gratuit pendant la bêta (votre utilisation + les clients que vous amenez à tester)",
+        "lockedRate": "Tarif de fondateur bloqué à vie",
+        "feedback": "Vos retours définissent la feuille de route",
+        "firstInMarket": "Premier sur votre marché à proposer l'IA sur Odoo"
+      },
+      "honestNote": "{rate} couvre à peine le coût d'exploitation — vous payez (presque) mon coût, pas mon prix.",
+      "standard": {
+        "name": "Standard",
+        "price": "{anchor} / utilisateur / mois",
+        "soon": "Bientôt"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "desc": "Plus de 20 sièges · tarif sur mesure",
+        "soon": "Bientôt"
+      },
+      "modal": {
+        "title": "Pas encore — nous sommes en bêta",
+        "body": "Pour l'instant, TheOdooAgent est ouvert uniquement aux founding partners. Les plans Standard et Enterprise s'activeront à la sortie de la bêta. Vous êtes déjà dedans en tant que founding partner, alors profitez de la bêta gratuitement.",
+        "cta": "Compris"
+      },
+      "indicator": {
+        "status": "Founding Partner · gratuit pendant la bêta",
+        "note": "À la sortie de la bêta, votre tarif de fondateur reste bloqué : {rate}/utilisateur à vie."
+      }
     }
   },
   "Settings": {
@@ -481,7 +516,11 @@
     "resetSuccessTitle": "Mot de passe mis à jour !",
     "resetSuccessDesc": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
     "goToLogin": "Aller à la connexion",
-    "demoBannerShort": "Mode Démo"
+    "demoBannerShort": "Mode Démo",
+    "foundingTitle": "Vous faites partie des premiers — bienvenue dans le programme Founding Partners",
+    "foundingLine1": "Vous rejoignez TheOdooAgent en tant que founding partner. Pendant la bêta, tout est gratuit : votre utilisation et celle des clients que vous amenez à tester.",
+    "foundingLine2": "Vos retours définissent la feuille de route, et à la sortie de la bêta vous conservez un tarif de fondateur bloqué à vie : 1,40 $/utilisateur (80 % de remise sur le prix catalogue de 7 $).",
+    "foundingScarcity": "Places limitées."
   },
   "Onboarding": {
     "step1Label": "Connexion Odoo",
@@ -1086,5 +1125,8 @@
     "subtitleAdmin": "Vos identifiants personnels pour chaque instance avec laquelle vous discutez.",
     "noInstance": "Aucune instance attribuée pour le moment.",
     "backToSettings": "Retour aux paramètres"
+  },
+  "FoundingPartner": {
+    "badge": "Founding Partner"
   }
 }
