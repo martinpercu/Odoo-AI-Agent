@@ -14,7 +14,7 @@ Estamos en **beta, founder-led**. No hay cobro automatizado todavía. Todo el qu
 
 Números de pricing (para el copy):
 - **Ancla / precio de lista:** $7 / usuario.
-- **Tarifa de fundador:** $1.40 / usuario, **para siempre** (80% off), se activa al salir de beta.
+- **Tarifa de fundador:** $1 / usuario, **para siempre** (86% off), se activa al salir de beta.
 - **Durante la beta:** $0.
 
 ---
@@ -35,7 +35,7 @@ Se inserta en el momento de registro existente (Surface E, cuando el lead viene 
 **Copy (listo):**
 - Título: **Sos de los primeros — bienvenido al programa Founding Partners**
 - Línea 1: *Estás entrando como founding partner de TheOdooAgent. Durante la beta es todo gratis: tu uso y el de los clientes que traigas a probar.*
-- Línea 2: *Tu feedback define el roadmap, y cuando salgamos de beta te queda una **tarifa de fundador bloqueada para siempre**: $1.40/usuario (80% off del precio de lista de $7).*
+- Línea 2: *Tu feedback define el roadmap, y cuando salgamos de beta te queda una **tarifa de fundador bloqueada para siempre**: $1/usuario (86% off del precio de lista de $7).*
 - Microcopy de cierre, opcional: *Cupos contados.*
 - Debajo: el formulario existente (email + contraseña).
 
@@ -50,14 +50,14 @@ Accesible desde el menú / settings. Muestra **3 cards**:
 ### Card A — Founding Partner (activa, es el plan del usuario)
 - Badge: **Tu plan** / "Founding Partner"
 - Precio destacado: **$0 durante la beta**
-- Debajo: **$1.40 / usuario — para siempre** · *80% off de fundador*
+- Debajo: **$1 / usuario — para siempre** · *86% off de fundador*
 - Ancla tachada: ~~$7 / usuario (precio de lista)~~
 - Bullets:
   - Acceso gratis en beta (tu uso + los clientes que traigas a testear)
   - Tarifa de fundador bloqueada de por vida
   - Tu feedback define el roadmap
   - Primero en tu mercado ofreciendo IA sobre Odoo
-- Línea honesta al pie: *$1.40 apenas cubre lo que cuesta operarlo — pagás (casi) mi costo, no mi precio.*
+- Línea honesta al pie: *$1 apenas cubre lo que cuesta operarlo — pagás (casi) mi costo, no mi precio.*
 - **Sin CTA de compra:** el usuario ya está adentro como founder. Estado visual de "activo / es tu plan".
 
 ### Card B — Estándar (griseada / deshabilitada)
@@ -103,7 +103,7 @@ El mecanismo de invitación, los estados del ciclo de vida (invitado → registr
 
 El indicador render-only debe reflejar la beta:
 - Estado: *Founding Partner · gratis en beta*
-- Nota: *Cuando salgamos de beta, tu tarifa de fundador queda bloqueada: $1.40/usuario para siempre.*
+- Nota: *Cuando salgamos de beta, tu tarifa de fundador queda bloqueada: $1/usuario para siempre.*
 - No mostrar conteos de cobro como si se estuviera facturando. El "vas a empezar a pagar cuando un cliente se active" del baseline **no aplica en beta** (en beta es $0); se reactiva al graduar.
 - La fuente de verdad sigue siendo el backend (`GET /billing/state`).
 
@@ -111,7 +111,7 @@ El indicador render-only debe reflejar la beta:
 
 ## 6. Contratos de datos (nuevos / cambios)
 
-- `GET /billing/state` — extender para devolver el contexto de beta/fundador, ej: `{ phase: 'beta_founder', price_anchor: 7, founder_rate: 1.40, beta_free: true, founder_rate_locked: bool, ... }`. El front renderiza; no calcula.
+- `GET /billing/state` — extender para devolver el contexto de beta/fundador, ej: `{ phase: 'beta_founder', price_anchor: 7, founder_rate: 1, beta_free: true, founder_rate_locked: bool, ... }`. El front renderiza; no calcula.
 - Tipo de org (`solitary` / `partner`) disponible en el contexto de la org para gatear invites y panel de gestión (la transición la marca el backend al validar la instancia).
 - **No se agrega** ningún endpoint de captura de interés (cards B/C son informativas).
 - El resto de los contratos del baseline no cambian.
@@ -133,7 +133,7 @@ El indicador render-only debe reflejar la beta:
 
 - [ ] Badge dice **"Founding Partner"** (no "Beta"), visible solo en modo Builder y **nunca** en modo Client (white-label intacto).
 - [ ] El registro muestra el encabezado de founding partner (copy §2) sobre el formulario existente.
-- [ ] Pantalla de pricing con 3 cards: A activa (con $0 beta / $1.40 fundador / ancla $7 tachada), B y C griseadas.
+- [ ] Pantalla de pricing con 3 cards: A activa (con $0 beta / $1 fundador / ancla $7 tachada), B y C griseadas.
 - [ ] Click en B o C abre el **modal informativo** (§3.1); CTA único "Entendido"; sin captura de datos.
 - [ ] Org nace `solitary`; al conectar y validar la instancia propia pasa a `partner` y recién ahí aparecen seats + invitar clientes + panel de gestión.
 - [ ] Indicador de cobro refleja "founding partner · gratis en beta" y la promesa de tarifa bloqueada; sin lenguaje de facturación activa.
