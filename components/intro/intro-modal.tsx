@@ -62,7 +62,7 @@ export function IntroModal() {
   function handleConnect() {
     track("connect_own_odoo_clicked", { source: "modal" });
     closeModal(dontShowAgain);
-    router.push("/login");
+    router.push("/register");
   }
 
   function handleWhatIsThis() {
@@ -77,10 +77,10 @@ export function IntroModal() {
       onClose={() => handleClose("backdrop")}
       labelledBy={titleId}
       describedBy={descId}
-      containerClassName="items-stretch sm:items-center"
-      className="mx-0 h-full w-full max-w-lg sm:mx-4 sm:h-auto"
+      containerClassName="items-center"
+      className="mx-4 w-full max-w-lg"
     >
-      <div className="h-full max-h-none overflow-y-auto rounded-none bg-surface shadow-lg sm:h-auto sm:max-h-[90vh] sm:rounded-card">
+      <div className="max-h-[90vh] overflow-y-auto rounded-card bg-surface shadow-lg">
         {/* Close */}
         <button
           onClick={() => handleClose("x")}
@@ -102,7 +102,7 @@ export function IntroModal() {
               </h2>
               <p
                 id={descId}
-                className="mt-1.5 hidden whitespace-pre-line text-body text-text-secondary sm:block"
+                className="mt-1.5 whitespace-pre-line text-body text-text-secondary"
               >
                 {t("subtitle")}
               </p>

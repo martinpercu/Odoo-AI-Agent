@@ -92,7 +92,7 @@ export default function RegisterPage() {
             })}
           </p>
           <p className="mt-3 text-micro font-medium uppercase tracking-wide text-accent">
-            <InfoTooltip text={t("scarcityTooltip")} className="text-accent">
+            <InfoTooltip text={t("scarcityTooltip")} className="text-accent uppercase">
               {t("foundingScarcity")}
             </InfoTooltip>
           </p>

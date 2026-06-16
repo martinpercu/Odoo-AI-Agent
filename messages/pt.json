@@ -521,7 +521,7 @@
     "foundingLine1": "Você está entrando como founding partner do TheOdooAgent. Durante o <prog>programa</prog>, o seu uso e o dos seus clientes é 100% grátis.",
     "foundingLine2": "Seu feedback define o nosso roadmap. Ao terminar o <prog>programa</prog>, você fica com a tarifa de founder partner para sempre: US$ 1/usuário.",
     "foundingScarcity": "Vagas limitadas",
-    "programTooltip": "O benefício do programa Founding Partners dura no mínimo 2 meses, extensível conforme o seu nível de colaboração.",
+    "programTooltip": "O benefício do programa Founding Partners dura no mínimo 2 meses, extensível conforme colaboração.",
     "scarcityTooltip": "Por questões de custo, mantemos um número limitado de founding partners."
   },
   "Onboarding": {
@@ -936,7 +936,7 @@
         "heading": "Pergunte, e responde com os seus dados reais",
         "line": "Interpreta a sua pergunta, consulta o seu Odoo e responde na hora. Também opera —criar, confirmar, atualizar— sempre com a sua confirmação.",
         "chip1": "Faturas vencidas acima de $10.000",
-        "chip2": "Vendas por vendedor no mês passado, em gráfico",
+        "chip2": "Vendas por vendedor no mês passado",
         "chip3": "Criar um contato: María López"
       },
       "different": {
