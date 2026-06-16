@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Store,
   Mail,
+  CircleDollarSign,
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
@@ -37,7 +38,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-t border-border py-5 first:border-t-0 first:pt-0">
+    <section className="border-t border-border py-5 first:border-t-0 first:pt-0 last:pb-0">
       <h3 className="mb-3 text-subheading">{heading}</h3>
       {children}
     </section>
@@ -199,8 +200,9 @@ export function IntroPanel() {
   // 3 · Por qué es distinto.
   const diffRows = [
     { icon: Boxes, label: t("different.item1Label"), body: t("different.item1Body") },
-    { icon: Tag, label: t("different.item2Label"), body: t("different.item2Body") },
-    { icon: Calculator, label: t("different.item3Label"), body: t("different.item3Body") },
+    { icon: CircleDollarSign, label: t("different.item2Label"), body: t("different.item2Body") },
+    { icon: Tag, label: t("different.item3Label"), body: t("different.item3Body") },
+    { icon: Calculator, label: t("different.item4Label"), body: t("different.item4Body") },
   ] as const;
 
   // 4 · ¿Implementás Odoo?
@@ -367,7 +369,7 @@ export function IntroPanel() {
                   </ul>
                 </Section>
 
-                {/* 6 · FAQ (accordion, collapsed) */}
+                {/* 6 · FAQ + Hecho por Martin (accordion, collapsed) */}
                 <Section heading={t("faq.heading")}>
                   <div>
                     {faqItems.map((item) => (
@@ -375,22 +377,18 @@ export function IntroPanel() {
                         {item.a}
                       </Collapsible>
                     ))}
+                    <Collapsible question={t("founder.heading")}>
+                      <p className="mb-3">{t("founder.body")}</p>
+                      <a
+                        href={`mailto:${t("founder.email")}`}
+                        className="inline-flex items-center gap-2 font-medium text-accent hover:underline"
+                      >
+                        <Mail size={16} strokeWidth={1.5} />
+                        {t("founder.email")}
+                      </a>
+                    </Collapsible>
                   </div>
                 </Section>
-
-                {/* 7 · Hecho por Martin (collapsed) */}
-                <section className="border-t border-border py-2">
-                  <Collapsible question={t("founder.heading")}>
-                    <p className="mb-3">{t("founder.body")}</p>
-                    <a
-                      href={`mailto:${t("founder.email")}`}
-                      className="inline-flex items-center gap-2 font-medium text-accent hover:underline"
-                    >
-                      <Mail size={16} strokeWidth={1.5} />
-                      {t("founder.email")}
-                    </a>
-                  </Collapsible>
-                </section>
               </div>
             </div>
 

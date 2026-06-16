@@ -146,7 +146,8 @@ A modern, responsive interface that allows users to query and manage data from t
 - LangGraph trace panel (`LangGraphTracePanel`): collapsible right-side dev panel showing node-level execution events, visible only to Builder. Currently a stub that emits synthetic `stream:start` / `stream:end` entries — wired to be replaced by the backend's SSE `trace` event when available.
 
 **✨ Other:**
-- Pricing page — **Builder-only** (Client users are bounced to `/chat`). In beta (`phase === "beta_founder"`) renders `FoundingPartnerPricing` (active Founding Partner card + Standard/Enterprise "coming soon" cards + informative-only `A11yModal` + billing indicator block); otherwise shows `PricingCards` (Free, Starter, Implementor tiers with Stripe checkout/portal). Prices come from `GET /billing/state` via `getBillingState()` and fall back to `BETA_BILLING_DEFAULTS` if unavailable — nothing is hardcoded. Accessible via the **Pricing** entry in the user menu (Builder-only, `Tag` icon)
+- Pricing page — bounces real `CLIENT_USER`s to `/chat`; Builder roles and anonymous/DEV-mode visitors can view it. In beta (`phase === "beta_founder"`) renders `FoundingPartnerPricing` (active Founding Partner card + Standard/Enterprise "coming soon" cards + informative-only `A11yModal` + billing indicator block); otherwise shows `PricingCards` (Free, Starter, Implementor tiers with Stripe checkout/portal). Prices come from `GET /billing/state` via `getBillingState()` and fall back to `BETA_BILLING_DEFAULTS` if unavailable — nothing is hardcoded. Accessible via the **Pricing** entry in the user menu (`Tag` icon)
+- Founder free-beta clock (Fase 0) — a per-org window (`founder_since` / `beta_ends_at` / `days_left` on `MeOrg`/`BillingState`/`SuperAdminOrg`) that starts the moment a founder connects + validates their first instance. `FounderClockPill` floats a subtle "X days left" pill at the top of `/settings` (Builder-only, real-founder-only); informative, not enforcement — hitting 0 days doesn't cut access. Superadmin's Orgs tab shows a "Founder" column with days left and an "Extend beta" action (`±days`, presets 7/30/90) via `superadminExtendFounderBeta()`
 
 ## 🏗️ Architecture
 
@@ -217,7 +218,7 @@ components/
     a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring; `containerClassName` controls anchoring — full-screen on mobile)
   chat/
     sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; collapse uses PanelLeft/PanelLeftClose/PanelLeftOpen icons with hover-swap; collapsed body is clickeable to expand; mounts FoundingPartnerBadge below Wordmark in expanded header
-    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, Instances (ADMIN) + My connection links, settings, Pricing link (Builder-only, Tag icon), superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
+    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, Instances (ADMIN) + My connection links, settings, Pricing link (Tag icon — shown to Builder and to anonymous/DEV-mode users; hidden for CLIENT_USER), superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
     chat-input.tsx              # Auto-resizing input with image upload + send/stop
@@ -267,7 +268,9 @@ components/
     password-input.tsx          # Password field with show/hide toggle (Eye/EyeOff)
     doc-num.tsx                 # Document number: `.docnum` pill for Client (only mono surface they see), `font-technical` plain for Builder
     powered-by.tsx              # Discreet "Powered by TheOdooAgent" lockup (Client-only footer)
-    founding-partner-badge.tsx  # "Founding Partner" badge — shown in expanded sidebar header below Wordmark; Builder-only by architecture (returns null for Client); gated on org.is_founding_partner !== false
+    founding-partner-badge.tsx  # "Founding Partner" badge — shown in expanded sidebar header below Wordmark; Builder-only by architecture (returns null for Client); gated on org.is_founding_partner !== false AND org.founder_since being set (real founder = connected + validated their first instance)
+    founder-clock-pill.tsx      # Floating "X days left" free-beta pill (Fase 0); Builder-only + real-founder gating (same as badge); mounted top-left of /settings
+    info-tooltip.tsx            # Inline hover/tap help tooltip (audience-neutral); used for the Founding Partners program/scarcity copy on /register
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub; password recovery via OTP: requestPasswordReset/verifyRecoveryCode/updatePassword; updateUserLang persists UI lang to metadata for localized emails)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
@@ -651,6 +654,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `POST` | `/admin/orgs` | Create organization |
 | `PATCH` | `/admin/orgs/{id}` | Update organization (name, slug, type) |
 | `PATCH` | `/admin/orgs/{id}/type` | Change org type (`PARTNER` ↔ `SOLITARY`) — superadmin only |
+| `POST` | `/admin/orgs/{id}/founder/extend-beta` | Extend (or shorten, negative `days`) a founder org's free-beta window (Fase 0) — superadmin only; returns the updated `founder_since`/`beta_ends_at`/`days_left` |
 | `POST` | `/admin/superadmin/users/{id}/promote` | Create a new org for a user with no org (legacy accounts without auto-provisioning) — superadmin only |
 | `DELETE` | `/admin/superadmin/users/{id}` | Permanently delete a user from Postgres **and** Supabase auth (`superadminDeleteUser`); query `delete_empty_org` also collapses a SOLITARY org left empty. Returns per-table `deleted` counts + a `supabase_auth` status (`deleted`/`not_found`/`skipped_not_configured`/`failed`) — a `200` does not guarantee the Supabase side succeeded — superadmin only |
 | `GET` | `/admin/orgs/{id}/configs` | List Odoo connections (enriched with counts/seats/status) |
@@ -1062,7 +1066,7 @@ Translations are located in `messages/[locale].json`.
 | `Intro` | Landing intro surfaces: `Intro.sidebarItem` (sidebar entry label), `Intro.modal.*` (welcome modal copy, example prompts, chips), `Intro.panel.*` (info drawer copy, sections, CTAs), `Intro.nudge.*` (partner reframe nudge: eyebrow, title, body, CTAs, pill/minimize labels) |
 | `Builder.*` | Builder-voice strings — read via `useAudienceT("<ns>")` when role is ADMIN/SUPERADMIN. Includes `Builder.Trace` (LangGraph panel) and `Builder.ChatMessages` (e.g. typing indicator: "Ejecutando · query"). |
 | `Client.*` | Client-voice strings — read via `useAudienceT("<ns>")` when role is CLIENT_USER or anonymous. Includes `Client.ChatMessages`, `Client.ActionSuccess.<action>.<docType>` (success card headlines) and `Client.ActionProposal.verb.<action>.<docType>` (confirm-button labels). Every entry must have a `.generic` fallback. |
-| `FoundingPartner` | Badge label shown in the sidebar header for founding-partner orgs (`FoundingPartner.badge`). Implementer-facing — hi/gu/ta/kn/mr carry English text. |
+| `FoundingPartner` | Badge label shown in the sidebar header for founding-partner orgs (`FoundingPartner.badge`) + free-beta clock copy (`clockDaysLeft`, `clockExpired`, `clockTooltip`) for `FounderClockPill`. Implementer-facing — hi/gu/ta/kn/mr carry English text. |
 
 ---
 

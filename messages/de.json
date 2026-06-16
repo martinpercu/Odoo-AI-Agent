@@ -517,10 +517,12 @@
     "resetSuccessDesc": "Du kannst dich jetzt mit deinem neuen Passwort anmelden.",
     "goToLogin": "Zur Anmeldung",
     "demoBannerShort": "Demo-Modus",
-    "foundingTitle": "Sie gehören zu den Ersten — willkommen im Founding-Partners-Programm",
-    "foundingLine1": "Sie steigen als Founding Partner von TheOdooAgent ein. Während der Beta ist alles kostenlos: Ihre Nutzung und die der Kunden, die Sie zum Testen mitbringen.",
-    "foundingLine2": "Ihr Feedback bestimmt die Roadmap, und beim Verlassen der Beta bleibt Ihnen ein dauerhaft gesicherter Gründertarif: 1,40 $/Nutzer (80 % Rabatt auf den Listenpreis von 7 $).",
-    "foundingScarcity": "Begrenzte Plätze."
+    "foundingTitle": "Willkommen im<br></br>Founding-Partners-Programm",
+    "foundingLine1": "Sie steigen als Founding Partner von TheOdooAgent ein. Während des <prog>Programms</prog> ist Ihre Nutzung und die Ihrer Kunden zu 100 % kostenlos.",
+    "foundingLine2": "Ihr Feedback bestimmt unsere Roadmap. Zum Ende des <prog>Programms</prog> behalten Sie den Founder-Partner-Tarif auf Lebenszeit: 1,40 $/Nutzer.",
+    "foundingScarcity": "Begrenzte Plätze",
+    "programTooltip": "Der Vorteil des Founding-Partners-Programms gilt mindestens 2 Monate und ist je nach Zusammenarbeit verlängerbar.",
+    "scarcityTooltip": "Aus Kostengründen halten wir die Zahl der Founding Partner begrenzt."
   },
   "Onboarding": {
     "step1Label": "Odoo-Verbindung",
@@ -676,7 +678,18 @@
       "typeToggleConfirmPartner": "Org {name} zu PARTNER befördern? Dies aktiviert die vollständige Benutzeroberfläche für alle Benutzer.",
       "typeToggleConfirmSolitary": "Org {name} zu SOLITARY zurücksetzen? Die Benutzeroberfläche des Tenants wird vereinfacht.",
       "typeToggleSuccess": "Organisationstyp aktualisiert.",
-      "typeToggleError": "Typ konnte nicht geändert werden. Bitte erneut versuchen."
+      "typeToggleError": "Typ konnte nicht geändert werden. Bitte erneut versuchen.",
+      "colFounder": "Founder",
+      "founderDaysLeft": "{days} T übrig",
+      "founderNotStarted": "Nicht verbunden",
+      "founderCurrentDays": "Derzeit noch {days} Tage",
+      "founderExtendTitle": "Beta verlängern",
+      "founderExtendDesc": "Kostenlose Beta-Tage für {name} hinzufügen oder entfernen.",
+      "founderExtendDays": "Hinzuzufügende Tage",
+      "founderExtendHint": "Negative Werte verkürzen den Zeitraum.",
+      "founderExtendConfirm": "Anwenden",
+      "founderExtendSuccess": "Beta-Zeitraum aktualisiert",
+      "founderExtendError": "Beta-Zeitraum konnte nicht aktualisiert werden"
     },
     "users": {
       "statsTotal": "Benutzer gesamt",
@@ -895,7 +908,7 @@
       "chips": {
         "language": "Frag in deiner Sprache: Verkäufe, Rechnungen, Bestand",
         "noInvent": "Erfindet keine Zahlen: Das System berechnet sie, nicht das Modell",
-        "anyOdoo": "Läuft auf jedem Odoo: 14 bis 19 und Community"
+        "anyOdoo": "Läuft auf Enterprise und Community v12–v19"
       },
       "tryThisLabel": "Probier das",
       "tryThis": {
@@ -927,19 +940,21 @@
         "chip3": "Lege einen Kontakt an: María López"
       },
       "different": {
-        "heading": "Was dir die native KI von Odoo nicht gibt",
-        "item1Label": "Läuft auf Community und den Versionen 14–19",
-        "item1Body": "Die KI von Odoo gibt es nur in Enterprise. Das hier funktioniert dort, wo du schon bist.",
-        "item2Label": "~1 $ pro Nutzer",
-        "item2Body": "Enterprise berechnet ~25–60 $ pro Nutzer/Monat, und für alle Nutzer.",
-        "item3Label": "Es erfindet keine Zahlen",
-        "item3Body": "Die Zahlen berechnet das System; das Modell formuliert sie nur. Deshalb ist es exakt und günstig."
+        "heading": "Was Odoo AI und MCPs Ihnen nicht bieten",
+        "item1Label": "Community und Enterprise v12–v19",
+        "item1Body": "Funktioniert dort, wo Ihr Kunde heute ist.",
+        "item2Label": "KI-Kosten inklusive",
+        "item2Body": "Keine LLM-Tokens. Die KI ist bereits abgedeckt.",
+        "item3Label": "Echtes White-Label",
+        "item3Body": "Ihre Kunden sehen Ihre Marke. Odoo und MCP-Server nicht.",
+        "item4Label": "Keine erfundenen Zahlen",
+        "item4Body": "Das System rechnet; das LLM formuliert. Keine Halluzinationen."
       },
       "partner": {
         "heading": "Implementierst du Odoo?",
         "line": "Biete es deinen Kunden unter deiner Marke an und verkaufe es weiter.",
         "item1Label": "White-Label und Weiterverkauf",
-        "item1Body": "ab ~1 $/Nutzer",
+        "item1Body": "Ihre Marke, Ihre Preise.",
         "item2Label": "Multi-Mandant",
         "item2Body": "verwalte alle deine Unternehmen über ein einziges Konto",
         "item3Label": "Installiert nichts im Odoo des Kunden",
@@ -958,15 +973,15 @@
         "q1": "Ist es sicher?",
         "a1": "Ja: menschliche Bestätigung bei jedem Schreibvorgang, es respektiert deine Odoo-Berechtigungen und Zugangsdaten werden verschlüsselt.",
         "q2": "Werden meine Daten für das Training verwendet?",
-        "a2": "TODO (Martin): ergänzen — an welchen LLM-Anbieter die Daten gesendet werden, Aufbewahrung und ob sie für das Training verwendet werden. Nicht veröffentlichen, bis es vollständig ist.",
+        "a2": "Ihre Daten werden nicht zum Training verwendet. OpenAI mit aktivierter Zero Data Retention: API-Aufrufinhalte werden weder gespeichert noch zum Training verwendet.",
         "q3": "Welche Versionen werden unterstützt?",
-        "a3": "Odoo 14 bis 19, und Community.",
+        "a3": "Odoo 12 bis 19, Enterprise und Community.",
         "q4": "Installiert es etwas in meinem Odoo?",
         "a4": "Nein. Es verbindet sich über einen Standard-API-Key (XML-RPC).",
         "q5": "Kann ich meine eigene Marke verwenden?",
         "a5": "Ja: White-Label, um es deinen Kunden unter deiner Identität weiterzuverkaufen.",
         "q6": "Was kostet es?",
-        "a6": "Kostenlos auf deinem eigenen Odoo. Für den Einsatz bei deinen Kunden ab ~1 $/Nutzer."
+        "a6": "Kostenlos auf deinem eigenen Odoo. Für den Einsatz bei deinen Kunden ab 7 $/Nutzer."
       },
       "founder": {
         "heading": "Gemacht von Martin",
@@ -1127,6 +1142,9 @@
     "backToSettings": "Zurück zu den Einstellungen"
   },
   "FoundingPartner": {
-    "badge": "Founding Partner"
+    "badge": "Founding Partner",
+    "clockDaysLeft": "Noch {days} Tage",
+    "clockExpired": "Beta beendet",
+    "clockTooltip": "Verbleibende Tage im Founding-Partner-Programm"
   }
 }
