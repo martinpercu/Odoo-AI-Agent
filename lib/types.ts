@@ -289,7 +289,17 @@ export interface MeOrg {
   id: string;
   name: string;
   slug: string;
+  /** Capability axis — gates invites & client management (PARTNER only). */
   type: OrgType;
+  /**
+   * Identity axis — whether this org joined as a founding partner (Fase 0).
+   * Convenience mirror of `/billing/state`; pricing's source of truth stays
+   * `getBillingState()`. Stamped at org creation from the global phase, then
+   * immutable. Absent on older payloads → treated as founder during beta.
+   */
+  is_founding_partner?: boolean;
+  /** Mirror of `BillingState.founder_rate_locked` (set true at graduation). */
+  founder_rate_locked?: boolean;
 }
 
 export interface MeSubscription {
@@ -430,6 +440,37 @@ export interface MeResponse {
   slots_used: SlotsUsed | null;
   odoo_configs: OdooConfigSummary[];
   demo_available?: boolean;
+}
+
+// ---- Billing state (Fase 0 — Founding Partners, spec §5/§6) ----
+
+/**
+ * Lifecycle phase of the product's commercial model.
+ * - `beta_founder`: current — everyone is a founding partner, free during beta.
+ * - `scale`: post-graduation — paid tiers active (founder rate locked in).
+ * Kept open-ended so the backend can introduce new phases without a front release.
+ */
+export type BillingPhase = "beta_founder" | "scale" | (string & {});
+
+/**
+ * Render-only billing context (Surface I). The front renders these values; it
+ * never computes pricing. Source of truth is `GET /billing/state`. When the
+ * endpoint is unavailable, the front falls back to `BETA_BILLING_DEFAULTS`.
+ */
+export interface BillingState {
+  phase: BillingPhase;
+  /** List/anchor price per user (e.g. 7). */
+  price_anchor: number;
+  /** Locked-in founder rate per user (e.g. 1.40). */
+  founder_rate: number;
+  /** True during beta — usage is $0. */
+  beta_free: boolean;
+  /** Whether the founder rate is already locked for this org. */
+  founder_rate_locked?: boolean;
+  /** Active billable seats (render-only). `null` in dev / when there's no org yet. */
+  active_seats?: number | null;
+  seat_limit?: number | null;
+  payment_status?: string;
 }
 
 export interface ServerConversation {
