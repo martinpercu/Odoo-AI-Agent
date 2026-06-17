@@ -937,7 +937,7 @@
         "line": "Interpreta tu pregunta, consulta tu Odoo y responde al instante. También opera —crear, confirmar, actualizar— siempre con tu confirmación.",
         "chip1": "Facturas vencidas de más de $10.000",
         "chip2": "Ventas por vendedor del mes pasado",
-        "chip3": "Creá un contacto: María López"
+        "chip3": "Crea un contacto: María López, maria@acme.com"
       },
       "different": {
         "heading": "Lo que Odoo AI y los MCP no te dan",
