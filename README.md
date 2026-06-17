@@ -143,7 +143,7 @@ A modern, responsive interface that allows users to query and manage data from t
 - Audience-aware copy: ADMIN / SUPERADMIN see technical strings (e.g. `create · sale.order`, `#42`, raw Odoo model names); CLIENT_USER and anonymous visitors see natural concierge copy (e.g. `Confirmar pedido`, `Tu factura #42 quedó emitida.`). Mapping from Odoo model → document type lives in `lib/odoo-model-to-doctype.ts`; translation keys in `Builder.*` and `Client.*` namespaces.
 - Audience-aware density: icon sizes and button/input/card heights and radii scale up for Client (more spacious, larger tap targets) and stay compact for Builder, driven by CSS `--btn-h-*`, `--input-h`, `--*-radius` density tokens.
 - Custom brand mark (`AgentMark`) replaces the generic `Bot` icon across the sidebar, chat avatar and empty-chat hero. `Wordmark` in the sidebar header. Discreet "Powered by TheOdooAgent" lockup (`PoweredBy`) shown only to Client (white-label-friendly: implementer's brand wins, TheOdooAgent stays as credit).
-- LangGraph trace panel (`LangGraphTracePanel`): collapsible right-side dev panel showing node-level execution events, visible only to Builder. Currently a stub that emits synthetic `stream:start` / `stream:end` entries — wired to be replaced by the backend's SSE `trace` event when available.
+- LangGraph trace panel (`LangGraphTracePanel`): collapsible right-side dev panel showing node-level execution events, visible only to an authenticated Builder (mounted on `user && isBuilder`). Currently a stub that emits synthetic `stream:start` / `stream:end` entries — wired to be replaced by the backend's SSE `trace` event when available.
 
 **✨ Other:**
 - Pricing page — bounces real `CLIENT_USER`s to `/chat`; Builder roles and anonymous/DEV-mode visitors can view it. In beta (`phase === "beta_founder"`) renders `FoundingPartnerPricing` (active Founding Partner card + Standard/Enterprise "coming soon" cards + informative-only `A11yModal` + billing indicator block); otherwise shows `PricingCards` (Free, Starter, Implementor tiers with Stripe checkout/portal). Prices come from `GET /billing/state` via `getBillingState()` and fall back to `BETA_BILLING_DEFAULTS` if unavailable — nothing is hardcoded. Accessible via the **Pricing** entry in the user menu (`Tag` icon)
@@ -423,7 +423,7 @@ Brand-mark primitives used across the app instead of the generic `Bot` icon:
 
 ### 🪜 LangGraphTracePanel
 Builder-only collapsible right-side trace panel for visualising LangGraph node execution:
-- Shown only when `meData?.user?.role` is `ADMIN` or `SUPERADMIN`
+- Shown only when there is an authenticated `user` **and** `meData?.user?.role` is `ADMIN` or `SUPERADMIN`
 - Collapsed by default as a floating pill with event count; expands to a fixed 320px aside
 - Each entry: timestamp, level (`ok` / `info` / `err` / `warn`), node, message
 - **Currently a stub** — entries are synthesized in `AppShell` on each `isStreaming` transition. Replace with the backend's SSE `trace` event when available.

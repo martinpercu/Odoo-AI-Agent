@@ -277,7 +277,7 @@ export function IntroPanel() {
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-5">
-              <div className="py-4">
+              <div className="pt-4">
                 {/* 1 · Hook */}
                 <Section heading={t("hook.title")}>
                   <p className="text-body text-text-secondary">{t("hook.line")}</p>
