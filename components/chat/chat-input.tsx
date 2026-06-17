@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Square, Paperclip, X } from "lucide-react";
+import { Send, Square, /* Paperclip, */ X } from "lucide-react";
 import { useIconSize } from "@/hooks/use-icon-size";
 
 interface ChatInputProps {
@@ -106,7 +106,8 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
           </AnimatePresence>
 
           <div className="flex items-end gap-2 p-2">
-            {/* Clip button */}
+            {/* Clip button — temporalmente oculto, dejar a tiro para futuro */}
+            {/*
             <input
               ref={fileInputRef}
               type="file"
@@ -123,6 +124,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
             >
               <Paperclip size={iconBtn} strokeWidth={1.5} />
             </button>
+            */}
 
             <textarea
               ref={textareaRef}

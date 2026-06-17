@@ -1,5 +1,6 @@
 import {
   Package,
+  PackageSearch,
   FileText,
   Users,
   Receipt,
@@ -22,8 +23,9 @@ export interface Suggestion {
 
 // Active suggestions — shown in the rotating carousel
 export const ACTIVE_SUGGESTIONS: Suggestion[] = [
-  { key: "inventory",           icon: Package,      color: "text-info" },
-  { key: "invoices",            icon: FileText,     color: "text-warning-solid" },
+  { key: "inventory",           icon: Package,       color: "text-info" },
+  { key: "inventoryCheck",      icon: PackageSearch, color: "text-success-solid" },
+  { key: "invoices",            icon: FileText,      color: "text-warning-solid" },
   { key: "employees",           icon: Users,        color: "text-success-solid" },
   { key: "billingByClient",     icon: Receipt,      color: "text-accent" },
   { key: "topProducts",         icon: TrendingUp,   color: "text-accent" },
