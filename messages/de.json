@@ -936,7 +936,7 @@
         "heading": "Frag, und es antwortet mit deinen echten Daten",
         "line": "Es interpretiert deine Frage, fragt dein Odoo ab und antwortet sofort. Es führt auch Aktionen aus —anlegen, bestätigen, aktualisieren— immer mit deiner Bestätigung.",
         "chip1": "Überfällige Rechnungen über 10.000 $",
-        "chip2": "Umsatz pro Vertriebler letzten Monat, als Diagramm",
+        "chip2": "Umsatz pro Vertriebler letzten Monat",
         "chip3": "Lege einen Kontakt an: María López"
       },
       "different": {

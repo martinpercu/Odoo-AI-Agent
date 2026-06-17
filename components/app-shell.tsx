@@ -131,7 +131,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
               <PinnedSidebar />
               <FlyingPinPortal />
-              {isBuilder && <LangGraphTracePanel entries={traceEntries} />}
+              {user && isBuilder && <LangGraphTracePanel entries={traceEntries} />}
             </div>
             <IntroModal />
             <IntroPanel />
