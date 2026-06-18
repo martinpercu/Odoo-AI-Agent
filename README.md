@@ -33,7 +33,7 @@ This is a production-grade SaaS front end, not a toy chat box. At a glance:
 
 | Pillar | Highlights |
 |--------|-----------|
-| 💬 **Conversational core** | SSE streaming, Markdown responses, image upload (vision), rotating suggestion carousel, date-grouped history |
+| 💬 **Conversational core** | SSE streaming, Markdown responses, image upload (vision — UI temporarily hidden), rotating suggestion carousel, date-grouped history |
 | ⚡ **Action management** | AI-proposed CRUD with confirm/cancel, field editor + per-field validation, success/validation cards, ambiguity resolution, entity autocomplete, audit trail, auto-sequencing |
 | 📊 **Analytics & export** | Interactive bar/line/pie charts (Recharts), automatic Excel export, standalone Excel/PDF download cards |
 | 📌 **Insights dashboard** | Pin charts/files/exports to a right sidebar split into **Live** (refreshable) and **Saved** (point-in-time), flying-pin animation, optimistic updates |
@@ -78,8 +78,8 @@ A modern, responsive interface that allows users to query and manage data from t
 **💬 Core Chat:**
 - Real-time chat with SSE streaming
 - Rich Markdown-formatted responses
-- Image upload with inline preview (vision-based AI interactions)
-- Rotating suggestion carousel: 4 random cards from a pool of 11 active suggestions, auto-rotates every 7s, pauses on hover
+- Image upload with inline preview (vision-based AI interactions) — UI temporarily hidden (logic preserved)
+- Rotating suggestion carousel: 4 random cards from a pool of 12 active suggestions, auto-rotates every 7s, pauses on hover
 - Conversation history grouped by date (today, yesterday, last 7 days)
 
 **⚡ Action Management:**
@@ -193,7 +193,7 @@ app/
     superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
     (app)/
       layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
-      chat/page.tsx             # New query (rotating carousel: 4 random suggestions from pool of 11 + input)
+      chat/page.tsx             # New query (rotating carousel: 4 random suggestions from pool of 12 + input)
       chat/[id]/page.tsx        # Conversation with SSE streaming
       onboarding/page.tsx       # First-instance gate (configure now vs keep demo) + two-block connect form with discriminated validation
       instances/page.tsx        # ADMIN-only: instance list (status badge + health summary) + add-instance form (1st always; 2nd+ PARTNER-only)
@@ -221,7 +221,7 @@ components/
     user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, Instances (ADMIN) + My connection links, settings, Pricing link (Tag icon — shown to Builder and to anonymous/DEV-mode users; hidden for CLIENT_USER), superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
-    chat-input.tsx              # Auto-resizing input with image upload + send/stop
+    chat-input.tsx              # Auto-resizing input with image upload (UI temporarily hidden) + send/stop
     demo-banner.tsx             # Banner shown in demo mode (short "Demo Mode" text on mobile); CTA routes to /onboarding (0 instances) or /settings/odoo (has instance, no active Connection), else /register (logged-out)
     odoo-config-selector.tsx    # Dropdown to switch active Odoo config + credential status indicator
     success-card.tsx            # Green card for successful actions
@@ -396,7 +396,7 @@ Individual alert displayed in the notification feed:
 
 ### ⌨️ ChatInput
 Auto-resizing textarea with image upload support:
-- Paperclip button opens native file picker (`accept="image/*"`)
+- Paperclip button + file picker (`accept="image/*"`) are **temporarily hidden** (commented out, kept for future re-enable); the upload logic is preserved
 - Selected image shows as 64px thumbnail preview with X to remove
 - Supports sending text only, image only, or both together
 - Enter to send, Shift+Enter for newline
