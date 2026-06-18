@@ -55,7 +55,8 @@ function chartIdentifier(chatId: string, messageId: string, chartIndex: number) 
 }
 
 function fileIdentifier(metadata: FileAttachmentMetadata) {
-  return metadata.file_url;
+  // Legacy file pins keyed by URL; PDFs are no longer pinnable.
+  return metadata.file_url ?? "";
 }
 
 function excelIdentifier(metadata: ExcelExportMetadata) {

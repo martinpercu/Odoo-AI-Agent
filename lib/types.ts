@@ -28,13 +28,15 @@ export interface ActionPromptMetadata {
 
 // Backend action proposal format (from SSE)
 export interface ActionContext {
-  action: "create" | "update" | "method_call" | "report";
+  action: "create" | "update" | "method_call" | "report" | "report_combined";
   model: string;
   vals: Record<string, unknown>;
   target_ids: number[] | null;
   method: string | null;
   canonical_verb: string | null;
   status: "pending_confirmation";
+  // report_combined carries `sections` — re-forwarded to /action verbatim.
+  sections?: unknown;
 }
 
 export interface ActionLabels {
@@ -57,6 +59,7 @@ export interface SelectionOption {
   name: string;
 }
 
+// Entity-disambiguation variant (no `kind` field).
 export interface SelectionPromptMetadata {
   type: "selection_prompt";
   field: string;
@@ -64,11 +67,28 @@ export interface SelectionPromptMetadata {
   options: SelectionOption[];
 }
 
-// File attachment for PDF reports (from action response)
+// Report-type disambiguation variant (`kind: "report_type"`). The user clicks a
+// button → the `value` is sent as a normal chat message to /chat/{id}/stream.
+export interface ReportTypeOption {
+  value: string;
+  label: string;
+}
+
+export interface ReportTypeSelectionMetadata {
+  type: "selection_prompt";
+  kind: "report_type";
+  options: ReportTypeOption[];
+}
+
+// File attachment for PDF reports (from action response).
+// The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
+// "al aire" via a Blob — see downloadActionReport in odoo-file-card.tsx.
 export interface FileAttachmentMetadata {
   type: "file_attachment";
-  file_url: string;
   filename: string;
+  pdf_base64?: string; // new: the whole PDF, base64 (live download)
+  mimetype?: string; // new: e.g. "application/pdf"
+  file_url?: string; // legacy: static /static/reports/<id>.pdf (pre-base64 pins only)
 }
 
 // Action response result types
@@ -76,7 +96,8 @@ export type ActionResult =
   | { action: "create"; model: string; id: number }
   | { action: "update"; model: string; ids: number[]; success: boolean }
   | { action: "method_call"; model: string; method: string; ids: number[]; method_result: unknown }
-  | { action: "report"; model: string; ids: number[]; file_url: string; filename: string };
+  | { action: "report"; model: string; ids: number[]; pdf_base64: string; filename: string; mimetype: string }
+  | { action: "report_combined"; model?: string; ids?: number[]; pdf_base64: string; filename: string; mimetype: string };
 
 export interface ExcelExportMetadata {
   type: "excel_export";
@@ -95,6 +116,7 @@ export type MessageMetadata =
   | ActionPromptMetadata
   | ActionProposalMetadata
   | SelectionPromptMetadata
+  | ReportTypeSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
