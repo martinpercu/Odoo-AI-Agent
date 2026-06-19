@@ -4,18 +4,18 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { ReportTypeSelectionMetadata } from "@/lib/types";
+import type { KindedSelectionMetadata } from "@/lib/types";
 
 interface ReportTypeCardProps {
-  metadata: ReportTypeSelectionMetadata;
+  metadata: KindedSelectionMetadata;
   onSelect: (value: string) => void;
 }
 
 /**
- * Report-type disambiguation buttons (`selection_prompt` with `kind: "report_type"`).
+ * Disambiguation buttons for `selection_prompt` variants that carry a `kind` field:
+ * `report_type`, `partner_filter`, `salesperson_type`.
  * Labels arrive already localized from the backend. Clicking a button sends its
- * `value` as a normal chat message — the backend resumes the prior turn's period
- * and proposes the report (a regular `action_proposal` follows).
+ * `value` as a normal chat message to /chat/{id}/stream.
  */
 export function ReportTypeCard({ metadata, onSelect }: ReportTypeCardProps) {
   const [selected, setSelected] = useState<string | null>(null);
@@ -38,6 +38,7 @@ export function ReportTypeCard({ metadata, onSelect }: ReportTypeCardProps) {
         {metadata.options.map((option) => {
           const isSelected = selected === option.value;
           const isDisabled = selected !== null && !isSelected;
+          const isSecondary = option.value === "todos";
 
           return (
             <button
@@ -49,10 +50,12 @@ export function ReportTypeCard({ metadata, onSelect }: ReportTypeCardProps) {
                   ? "border border-accent/30 bg-accent-subtle text-accent"
                   : isDisabled
                     ? "opacity-40"
-                    : "hover:bg-raised"
+                    : isSecondary
+                      ? "text-text-secondary hover:bg-raised"
+                      : "hover:bg-raised"
               }`}
             >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border">
+              <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border ${isSecondary && !isSelected ? "opacity-60" : ""}`}>
                 {isSelected ? (
                   <Check size={14} strokeWidth={1.5} />
                 ) : (
