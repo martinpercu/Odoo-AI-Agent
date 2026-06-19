@@ -123,7 +123,8 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   }
 
   if (pin.kind === "file") {
-    if (!pin.metadata) return null;
+    // Legacy file pins only — PDFs are no longer pinnable (in-memory base64).
+    if (!pin.metadata?.file_url) return null;
     const fullUrl = pin.metadata.file_url.startsWith("http")
       ? pin.metadata.file_url
       : `${API_BASE}${pin.metadata.file_url}`;

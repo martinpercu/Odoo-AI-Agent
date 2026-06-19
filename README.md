@@ -97,11 +97,11 @@ A modern, responsive interface that allows users to query and manage data from t
 - Interactive charts (bar, line, pie) powered by Recharts
 - Automatic Excel export button on chart cards
 - Standalone Excel download cards for explicit export requests
-- PDF report download cards
+- PDF report download cards (in-memory base64 Blob download — no persisted URL)
 
 **📌 Pinned Insights Dashboard:**
-- Pin charts, files, and exports to a collapsible right sidebar
-- Sidebar splits pins into **Live** (variable/refreshable charts, 2-col grid) and **Saved** (static/point-in-time charts + files + Excel, grouped below)
+- Pin charts and exports to a collapsible right sidebar (PDFs are no longer pinnable — only legacy file pins persist)
+- Sidebar splits pins into **Live** (variable/refreshable charts, 2-col grid) and **Saved** (static/point-in-time charts + Excel docs, grouped below)
 - Refresh button shown only for **live** (`volatility: "variable"`) charts — static charts are point-in-time, refresh is suppressed
 - Static charts use Bookmark icons (save/saved) instead of Pin icons to convey point-in-time semantics
 - Flying pin animation with spring physics
@@ -229,7 +229,8 @@ components/
     odoo-action-button.tsx      # Purple action confirmation button
     action-proposal-button.tsx  # AI-proposed CRUD action confirm/cancel with field editor
     selection-card.tsx          # Multi-option selector for ambiguity resolution
-    odoo-file-card.tsx          # PDF report download card
+    report-type-card.tsx        # Report-type disambiguation selector (kind: "report_type")
+    odoo-file-card.tsx          # PDF report download card (in-memory base64 Blob download)
     odoo-chart-card.tsx         # Interactive charts (bar/line/pie) + Excel export + pin
     excel-export-card.tsx       # Standalone Excel download card
     audit-history-popover.tsx   # Action execution history timeline
@@ -287,7 +288,7 @@ hooks/
 lib/
   api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route; getBillingState() fetches render-only billing context (falls back to BETA_BILLING_DEFAULTS)
   post-auth.ts                  # resolvePostAuthPath(meData) + onboarding-skip flag helpers (localStorage `toa_onboarding_skipped`)
-  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?)
+  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?; report-01: ReportTypeSelectionMetadata, report_combined action, FileAttachmentMetadata with pdf_base64)
   invitation-email.ts           # Localized copy + HTML/text builder for the invitation email (es/en/fr/de/pt/it); content only — transport lives in app/api/send-invitation/route.ts
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
   analytics.ts                  # First-party analytics: track(), captureUtm(), getSessionId() — fire-and-forget events to POST /events; captures utm_* on app mount and stitches them to later signup via session_id
@@ -355,12 +356,14 @@ Interactive button for confirmable method calls:
 Displayed when the agent needs to resolve ambiguity:
 - Lists matching records as selectable options
 - Clicking an option sends the selection back as a chat message
+- **Report-type variant** (`kind: "report_type"`): rendered by `ReportTypeCard` — user picks a report format, the value is sent as a normal chat message to `/chat/{id}/stream`
 
 ### 📄 OdooFileCard
 PDF report download card:
 - Red-themed icon for PDF files
 - Shows filename and download button
-- Links to backend-served static file
+- PDF arrives in-memory as base64 from the action response — downloaded via a Blob URL ("al aire"), no backend-served static file
+- No pin button (PDFs are no longer pinnable)
 
 ### 📊 OdooChartCard
 Interactive analytics visualization:
@@ -382,7 +385,7 @@ Standalone Excel download card for explicit export requests:
 ### 📌 PinnedInsightMiniCard
 Compact card displayed in the pinned insights sidebar:
 - **Chart cards:** Icon by chart type (bar/pie/line) + live dot (variable) or "Histórico" badge (static), title, formatted total (`K`/`M` abbreviation for large currency values), refresh + unpin buttons in top-right hover area
-- **File cards:** Red PDF icon, filename, download link, unpin button
+- **File cards (legacy only):** Red PDF icon, filename, download link, unpin button — only shown for pre-base64 pins that still carry a `file_url`; new PDFs are no longer pinnable
 - **Excel cards:** Green Excel icon, filename, download link, unpin button
 - Refresh button appears only on **live** (`volatility: "variable"`) chart cards and only when not in demo mode and an active Odoo config exists — static charts never refresh
 - Buttons revealed on hover with smooth opacity transition
@@ -735,6 +738,18 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
 }
 ```
 
+**Selection Prompt — Report Type variant** (`kind: "report_type"`, rendered by `ReportTypeCard`):
+```json
+{
+  "type": "selection_prompt",
+  "kind": "report_type",
+  "options": [
+    { "value": "detailed", "label": "Reporte detallado" },
+    { "value": "summary", "label": "Resumen ejecutivo" }
+  ]
+}
+```
+
 **Chart (analytics visualization):**
 ```json
 {
@@ -860,7 +875,16 @@ The `/chat/{id}/action` endpoint returns:
 {
   "status": "ok",
   "message": "Report generated successfully",
-  "result": { "action": "report", "model": "account.move", "ids": [1], "file_url": "/static/reports/invoice.pdf", "filename": "INV-2026-001.pdf" }
+  "result": { "action": "report", "model": "account.move", "ids": [1], "pdf_base64": "JVBERi0xLjQK...", "filename": "INV-2026-001.pdf", "mimetype": "application/pdf" }
+}
+```
+
+**Success (200 - Report Combined):**
+```json
+{
+  "status": "ok",
+  "message": "Combined report generated successfully",
+  "result": { "action": "report_combined", "pdf_base64": "JVBERi0xLjQK...", "filename": "combined-report.pdf", "mimetype": "application/pdf" }
 }
 ```
 

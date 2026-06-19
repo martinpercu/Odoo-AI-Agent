@@ -18,6 +18,7 @@ import { ValidationPrompt } from "./validation-prompt";
 import { OdooActionButton } from "./odoo-action-button";
 import { ActionProposalButton } from "./action-proposal-button";
 import { SelectionCard } from "./selection-card";
+import { ReportTypeCard } from "./report-type-card";
 import { OdooFileCard } from "./odoo-file-card";
 import { OdooChartCard } from "./odoo-chart-card";
 import { ExcelExportCard } from "./excel-export-card";
@@ -175,12 +176,18 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                             onAction={executeAction}
                           />
                         )}
-                        {message.metadata.type === "selection_prompt" && (
-                          <SelectionCard
-                            metadata={message.metadata}
-                            onSelect={(value) => sendMessage(value)}
-                          />
-                        )}
+                        {message.metadata.type === "selection_prompt" &&
+                          ("kind" in message.metadata ? (
+                            <ReportTypeCard
+                              metadata={message.metadata}
+                              onSelect={(value) => sendMessage(value)}
+                            />
+                          ) : (
+                            <SelectionCard
+                              metadata={message.metadata}
+                              onSelect={(value) => sendMessage(value)}
+                            />
+                          ))}
                         {message.metadata.type === "file_attachment" && (
                           <OdooFileCard metadata={message.metadata} messageId={message.id} />
                         )}

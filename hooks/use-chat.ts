@@ -569,12 +569,17 @@ export function useChat(chatId?: string, userId?: string) {
       // Build success metadata
       let metadata: ActionSuccessMetadata | FileAttachmentMetadata | undefined;
 
-      if (result.result?.action === "report") {
-        // Report: show file card
+      if (
+        result.result?.action === "report" ||
+        result.result?.action === "report_combined"
+      ) {
+        // Report (single or combined): show file card. The PDF arrives in-memory
+        // as base64 and is downloaded "al aire" — same path for both actions.
         metadata = {
           type: "file_attachment",
-          file_url: result.result.file_url,
+          pdf_base64: result.result.pdf_base64,
           filename: result.result.filename,
+          mimetype: result.result.mimetype,
         } satisfies FileAttachmentMetadata;
       } else if (result.result) {
         // CRUD / method_call success
