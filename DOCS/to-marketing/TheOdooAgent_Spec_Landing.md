@@ -72,7 +72,7 @@ TheOdooAgent es un agente de IA que se conecta a tu Odoo y te deja consultar y o
 **2 · Cómo funciona** (con ejemplos)
 Preguntás y responde con tus datos reales. Ejemplos:
 - "Mostrá las facturas vencidas de más de $10.000"
-- "Ventas por vendedor del mes pasado, en un gráfico"
+- "Ventas por vendedor del mes pasado"
 - "Creá un contacto: María López, maria@acme.com"
 
 También **opera**: crear contactos, confirmar pedidos, actualizar registros — **siempre con tu confirmación**. Nunca actúa solo.

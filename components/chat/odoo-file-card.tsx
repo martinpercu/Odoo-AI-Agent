@@ -4,23 +4,29 @@ import { FileText, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { FileAttachmentMetadata } from "@/lib/types";
-import { API_BASE } from "@/lib/api";
-import { usePinnedInsights } from "@/hooks/use-pinned-insights";
-import { useChatContext } from "@/components/app-shell";
-import { PinToggleButton } from "@/components/pinned/pin-toggle-button";
 
 interface OdooFileCardProps {
   metadata: FileAttachmentMetadata;
   messageId: string;
 }
 
-export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
+/** Build a Blob from the in-memory base64 PDF and trigger an "al aire" download. */
+function downloadActionReport(metadata: FileAttachmentMetadata) {
+  if (!metadata.pdf_base64) return;
+  const bytes = Uint8Array.from(atob(metadata.pdf_base64), (c) => c.charCodeAt(0));
+  const blob = new Blob([bytes], { type: metadata.mimetype || "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = metadata.filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+export function OdooFileCard({ metadata }: OdooFileCardProps) {
   const t = useTranslations("ChatMessages");
-  const fullUrl = `${API_BASE}${metadata.file_url}`;
-  const { currentChatId } = useChatContext();
-  const { isPinned, togglePinFile } = usePinnedInsights();
-  const chatId = currentChatId ?? "";
-  const filePinned = isPinned("file", metadata.file_url);
 
   return (
     <motion.div
@@ -37,19 +43,14 @@ export function OdooFileCard({ metadata, messageId }: OdooFileCardProps) {
           <p className="truncate text-body font-medium">{metadata.filename}</p>
           <p className="text-small text-text-muted font-technical">PDF</p>
         </div>
-        <PinToggleButton
-          pinned={filePinned}
-          onToggle={() => togglePinFile(chatId, messageId, metadata)}
-        />
-        <a
-          href={fullUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={() => downloadActionReport(metadata)}
           className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
         >
           <Download size={16} strokeWidth={1.5} />
           <span>{t("fileCard.downloadPdf")}</span>
-        </a>
+        </button>
       </div>
     </motion.div>
   );
