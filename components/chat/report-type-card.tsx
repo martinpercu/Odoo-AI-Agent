@@ -13,7 +13,7 @@ interface ReportTypeCardProps {
 
 /**
  * Disambiguation buttons for `selection_prompt` variants that carry a `kind` field:
- * `report_type`, `partner_filter`, `salesperson_type`.
+ * `report_type`, `partner_filter`, `salesperson_type`, `contact_type`.
  * Labels arrive already localized from the backend. Clicking a button sends its
  * `value` as a normal chat message to /chat/{id}/stream.
  */
