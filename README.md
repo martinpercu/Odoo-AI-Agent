@@ -229,7 +229,7 @@ components/
     odoo-action-button.tsx      # Purple action confirmation button
     action-proposal-button.tsx  # AI-proposed CRUD action confirm/cancel with field editor
     selection-card.tsx          # Multi-option selector for ambiguity resolution
-    report-type-card.tsx        # Kinded selection_prompt buttons (report_type, partner_filter, salesperson_type)
+    report-type-card.tsx        # Kinded selection_prompt buttons (report_type, partner_filter, salesperson_type, contact_type)
     odoo-file-card.tsx          # PDF report download card (in-memory base64 Blob download)
     odoo-chart-card.tsx         # Interactive charts (bar/line/pie) + Excel export + pin
     excel-export-card.tsx       # Standalone Excel download card
@@ -288,7 +288,7 @@ hooks/
 lib/
   api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route; getBillingState() fetches render-only billing context (falls back to BETA_BILLING_DEFAULTS)
   post-auth.ts                  # resolvePostAuthPath(meData) + onboarding-skip flag helpers (localStorage `toa_onboarding_skipped`)
-  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?; report-01: ReportTypeSelectionMetadata, PartnerFilterSelectionMetadata, SalespersonTypeSelectionMetadata, KindedSelectionMetadata union, report_combined action, FileAttachmentMetadata with pdf_base64)
+  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?; report-01: ReportTypeSelectionMetadata, PartnerFilterSelectionMetadata, SalespersonTypeSelectionMetadata, ContactTypeSelectionMetadata, KindedSelectionMetadata union, report_combined action, FileAttachmentMetadata with pdf_base64; ActionLabels gains optional values?: ActionLabelValue[] for humanized read-only field display)
   invitation-email.ts           # Localized copy + HTML/text builder for the invitation email (es/en/fr/de/pt/it); content only — transport lives in app/api/send-invitation/route.ts
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
   analytics.ts                  # First-party analytics: track(), captureUtm(), getSessionId() — fire-and-forget events to POST /events; captures utm_* on app mount and stitches them to later signup via session_id
@@ -338,9 +338,10 @@ Displayed when required fields are missing:
 AI-proposed CRUD action with confirm/cancel flow:
 - Purple button using Odoo brand color (#714B67)
 - Shows action summary (model, operation, data)
-- **Field editor modal** with inline editing and validation
+- **Field editor modal** with inline editing and validation (when `labels.values` is absent — the default)
+- **Humanized read-only display:** when `labels.values` (`ActionLabelValue[]`) is present in the SSE payload, fields are rendered as a static `label / value` list — no editing, no dirty-count badge, no modified indicators. The backend controls which mode is used by including or omitting `values`.
 - Handles 422 per-field validation errors from backend
-- User-edited field indicators (badge showing "Modified")
+- User-edited field indicators (badge showing "Modified") — suppressed when `humanValues` is set
 - Confirm executes the action; cancel shows a translated cancellation message
 - Loading and completed states with visual feedback
 - **Dual-voice:** Builder header shows uppercase `action · model` and uses the backend-provided `action_btn` label verbatim. Client header shows neutral "Confirmar acción" and the CTA label comes from `Client.ActionProposal.verb.<action>.<docType>` (e.g. "Confirmar pedido", "Descargar") with a `.generic` fallback per action.
@@ -356,7 +357,7 @@ Interactive button for confirmable method calls:
 Displayed when the agent needs to resolve ambiguity:
 - Lists matching records as selectable options
 - Clicking an option sends the selection back as a chat message
-- **Report-type variant** (`kind: "report_type"`, `"partner_filter"`, `"salesperson_type"`): rendered by `ReportTypeCard` — user picks an option, the value is sent as a normal chat message to `/chat/{id}/stream`
+- **Report-type variant** (`kind: "report_type"`, `"partner_filter"`, `"salesperson_type"`, `"contact_type"`): rendered by `ReportTypeCard` — user picks an option, the value is sent as a normal chat message to `/chat/{id}/stream`
 
 ### 📄 OdooFileCard
 PDF report download card:
@@ -720,9 +721,18 @@ The backend sends typed events in the SSE stream. Each event has an explicit `ty
     "action_btn": "Create Contact",
     "confirm_btn": "Confirm",
     "cancel_btn": "Cancel",
-    "cancelled_msg": "Action cancelled. How else can I help you?"
+    "cancelled_msg": "Action cancelled. How else can I help you?",
+    "values": [
+      { "label": "Contact name", "value": "Juan Perez" },
+      { "label": "Email", "value": "juan@example.com" }
+    ]
   }
 }
+```
+
+When `labels.values` is present, `ActionProposalButton` renders the fields as a **humanized read-only list** — no field editor, no dirty-count badge. When absent (the default), the full inline field editor with validation is shown.
+
+```json
 ```
 
 **Selection Prompt (ambiguity resolution):**
