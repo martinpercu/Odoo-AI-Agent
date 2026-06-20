@@ -914,7 +914,7 @@
       "tryThis": {
         "overdue_invoices": "Quantas faturas vencidas há este mês?",
         "top_customers": "Top 5 clientes por receita",
-        "stock_check": "Há estoque do produto X?"
+        "stock_check": "Criar relatório mês março"
       },
       "ctaPrimary": "Começar a testar",
       "ctaSecondary": "Conecte o seu Odoo (grátis)",

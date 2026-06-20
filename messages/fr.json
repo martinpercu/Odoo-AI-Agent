@@ -914,7 +914,7 @@
       "tryThis": {
         "overdue_invoices": "Combien de factures en retard ce mois-ci ?",
         "top_customers": "Top 5 des clients par chiffre d'affaires",
-        "stock_check": "Le produit X est-il en stock ?"
+        "stock_check": "Créer un rapport mars"
       },
       "ctaPrimary": "Commencer à tester",
       "ctaSecondary": "Connectez votre Odoo (gratuit)",
