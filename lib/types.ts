@@ -80,6 +80,24 @@ export interface ReportTypeSelectionMetadata {
   options: ReportTypeOption[];
 }
 
+export interface PartnerFilterSelectionMetadata {
+  type: "selection_prompt";
+  kind: "partner_filter";
+  options: ReportTypeOption[];
+}
+
+export interface SalespersonTypeSelectionMetadata {
+  type: "selection_prompt";
+  kind: "salesperson_type";
+  options: ReportTypeOption[];
+}
+
+// All `selection_prompt` variants that carry a `kind` field and button options.
+export type KindedSelectionMetadata =
+  | ReportTypeSelectionMetadata
+  | PartnerFilterSelectionMetadata
+  | SalespersonTypeSelectionMetadata;
+
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
 // "al aire" via a Blob — see downloadActionReport in odoo-file-card.tsx.
@@ -117,6 +135,8 @@ export type MessageMetadata =
   | ActionProposalMetadata
   | SelectionPromptMetadata
   | ReportTypeSelectionMetadata
+  | PartnerFilterSelectionMetadata
+  | SalespersonTypeSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
