@@ -213,6 +213,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
     );
   }
 
+  const humanValues = metadata.labels.values;
   const fieldEntries = Object.entries(initialValsRef.current);
 
   return (
@@ -232,7 +233,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
           <span className="font-medium">{t("actionProposal.confirm")}</span>
         )}
         <AnimatePresence>
-          {dirtyCount > 0 && (
+          {!humanValues && dirtyCount > 0 && (
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -246,130 +247,144 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
         </AnimatePresence>
       </div>
 
-      {/* Editable fields */}
-      <div className="space-y-1.5">
-        {fieldEntries.map(([key]) => {
-          const originalValue = initialValsRef.current[key];
-          const fieldType = getFieldType(key, originalValue);
-          const isEditing = editingField === key;
-          const currentValue = editedVals[key];
-          const dirty = isFieldDirty(key);
-          const isHovered = hoveredDirtyField === key;
-          const fieldError = fieldErrors[key];
-
-          return (
-            <div key={key}>
-            <motion.div
-              animate={{
-                backgroundColor: fieldError
-                  ? "var(--state-error-subtle)"
-                  : dirty
-                    ? "var(--state-success-subtle)"
-                    : "transparent",
-                borderColor: fieldError
-                  ? "var(--state-error)"
-                  : dirty
-                    ? "var(--state-success)"
-                    : "transparent",
-              }}
-              transition={dirtyTransition}
-              className="relative flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-body"
-              onMouseEnter={() => dirty && setHoveredDirtyField(key)}
-              onMouseLeave={() => setHoveredDirtyField(null)}
+      {/* Field list: humanized (labels.values) when available, raw vals otherwise */}
+      {humanValues ? (
+        <div className="space-y-1.5">
+          {humanValues.map((item, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 text-body"
             >
-              {/* Dirty indicator dot */}
-              <AnimatePresence>
-                {dirty && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    transition={dirtyTransition}
-                    className="absolute -left-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-success-solid shadow-sm"
-                  >
-                    <Pencil size={8} className="text-white" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Label */}
-              <span className="w-36 shrink-0 truncate text-text-secondary" title={key}>
-                {formatFieldLabel(key)}
-              </span>
-
-              {/* Value / Input */}
-              <div className="flex-1">
-                {isEditing ? (
-                  <FieldInput
-                    fieldKey={key}
-                    fieldType={fieldType}
-                    value={currentValue}
-                    onChange={(v) => updateField(key, v)}
-                    chatId={currentChatId || ""}
-                    onDone={() => setEditingField(null)}
-                    isDirty={dirty}
-                  />
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <motion.span
-                      animate={{
-                        color: dirty ? "var(--state-success)" : "inherit",
-                        fontWeight: dirty ? 600 : 400,
-                      }}
-                      transition={dirtyTransition}
-                    >
-                      {formatDisplayValue(currentValue)}
-                    </motion.span>
-                  </div>
-                )}
-              </div>
-
-              {/* Edit toggle */}
-              {!loading && (
-                <button
-                  type="button"
-                  onClick={() => setEditingField(isEditing ? null : key)}
-                  className="shrink-0 rounded-md p-1 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
-                  title={t("actionProposal.editField")}
-                  aria-label={t("actionProposal.editField")}
-                >
-                  {isEditing ? <Check size={14} strokeWidth={1.5} /> : <Pencil size={14} strokeWidth={1.5} />}
-                </button>
-              )}
-
-              {/* Tooltip: original value on hover */}
-              <AnimatePresence>
-                {dirty && isHovered && !isEditing && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute -bottom-8 left-10 z-50 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-small text-background shadow-lg"
-                  >
-                    {t("actionProposal.originalValue")}: {formatDisplayValue(originalValue)}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-            <AnimatePresence>
-              {fieldError && (
-                <motion.p
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="flex items-center gap-1 px-2.5 text-small text-error font-technical"
-                >
-                  <AlertTriangle size={12} strokeWidth={1.5} className="shrink-0" />
-                  {fieldError}
-                </motion.p>
-              )}
-            </AnimatePresence>
+              <span className="w-36 shrink-0 truncate text-text-secondary">{item.label}</span>
+              <span className="flex-1">{item.value}</span>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-1.5">
+          {fieldEntries.map(([key]) => {
+            const originalValue = initialValsRef.current[key];
+            const fieldType = getFieldType(key, originalValue);
+            const isEditing = editingField === key;
+            const currentValue = editedVals[key];
+            const dirty = isFieldDirty(key);
+            const isHovered = hoveredDirtyField === key;
+            const fieldError = fieldErrors[key];
+
+            return (
+              <div key={key}>
+              <motion.div
+                animate={{
+                  backgroundColor: fieldError
+                    ? "var(--state-error-subtle)"
+                    : dirty
+                      ? "var(--state-success-subtle)"
+                      : "transparent",
+                  borderColor: fieldError
+                    ? "var(--state-error)"
+                    : dirty
+                      ? "var(--state-success)"
+                      : "transparent",
+                }}
+                transition={dirtyTransition}
+                className="relative flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-body"
+                onMouseEnter={() => dirty && setHoveredDirtyField(key)}
+                onMouseLeave={() => setHoveredDirtyField(null)}
+              >
+                {/* Dirty indicator dot */}
+                <AnimatePresence>
+                  {dirty && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={dirtyTransition}
+                      className="absolute -left-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-success-solid shadow-sm"
+                    >
+                      <Pencil size={8} className="text-white" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Label */}
+                <span className="w-36 shrink-0 truncate text-text-secondary" title={key}>
+                  {formatFieldLabel(key)}
+                </span>
+
+                {/* Value / Input */}
+                <div className="flex-1">
+                  {isEditing ? (
+                    <FieldInput
+                      fieldKey={key}
+                      fieldType={fieldType}
+                      value={currentValue}
+                      onChange={(v) => updateField(key, v)}
+                      chatId={currentChatId || ""}
+                      onDone={() => setEditingField(null)}
+                      isDirty={dirty}
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <motion.span
+                        animate={{
+                          color: dirty ? "var(--state-success)" : "inherit",
+                          fontWeight: dirty ? 600 : 400,
+                        }}
+                        transition={dirtyTransition}
+                      >
+                        {formatDisplayValue(currentValue)}
+                      </motion.span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Edit toggle */}
+                {!loading && (
+                  <button
+                    type="button"
+                    onClick={() => setEditingField(isEditing ? null : key)}
+                    className="shrink-0 rounded-md p-1 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
+                    title={t("actionProposal.editField")}
+                    aria-label={t("actionProposal.editField")}
+                  >
+                    {isEditing ? <Check size={14} strokeWidth={1.5} /> : <Pencil size={14} strokeWidth={1.5} />}
+                  </button>
+                )}
+
+                {/* Tooltip: original value on hover */}
+                <AnimatePresence>
+                  {dirty && isHovered && !isEditing && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 4 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute -bottom-8 left-10 z-50 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-small text-background shadow-lg"
+                    >
+                      {t("actionProposal.originalValue")}: {formatDisplayValue(originalValue)}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+              <AnimatePresence>
+                {fieldError && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="flex items-center gap-1 px-2.5 text-small text-error font-technical"
+                  >
+                    <AlertTriangle size={12} strokeWidth={1.5} className="shrink-0" />
+                    {fieldError}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Validation error banner */}
       <AnimatePresence>
