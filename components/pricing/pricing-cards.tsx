@@ -325,7 +325,7 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="w-full max-w-2xl rounded-lg border border-border bg-surface p-6 shadow-xl"
+              className="w-full max-w-2xl rounded-lg border border-border bg-surface p-6 shadow-lg"
             >
               <div className="mb-6 flex items-center justify-between">
                 <div>
