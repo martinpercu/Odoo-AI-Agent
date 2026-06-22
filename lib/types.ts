@@ -39,11 +39,17 @@ export interface ActionContext {
   sections?: unknown;
 }
 
+export interface ActionLabelValue {
+  label: string;
+  value: string;
+}
+
 export interface ActionLabels {
   confirm_btn: string;
   cancel_btn: string;
   action_btn: string;
   cancelled_msg: string;
+  values?: ActionLabelValue[];
 }
 
 export interface ActionProposalMetadata {
@@ -92,11 +98,18 @@ export interface SalespersonTypeSelectionMetadata {
   options: ReportTypeOption[];
 }
 
+export interface ContactTypeSelectionMetadata {
+  type: "selection_prompt";
+  kind: "contact_type";
+  options: ReportTypeOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
   | PartnerFilterSelectionMetadata
-  | SalespersonTypeSelectionMetadata;
+  | SalespersonTypeSelectionMetadata
+  | ContactTypeSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
