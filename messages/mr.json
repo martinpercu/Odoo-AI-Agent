@@ -93,7 +93,8 @@
       "description": "कृपया खालील फील्ड प्रदान करा:"
     },
     "selection": {
-      "selected": "निवडले: {name}"
+      "selected": "निवडले: {name}",
+      "tooMany": "If not in the list, type the full name."
     },
     "fileCard": {
       "downloadPdf": "PDF डाउनलोड करा",

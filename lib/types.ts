@@ -104,12 +104,28 @@ export interface ContactTypeSelectionMetadata {
   options: ReportTypeOption[];
 }
 
+export interface PersonDisambiguationSelectionMetadata {
+  type: "selection_prompt";
+  kind: "person_disambiguation";
+  role?: string;
+  tooMany?: boolean;
+  options: ReportTypeOption[];
+}
+
+export interface PersonRoleSelectionMetadata {
+  type: "selection_prompt";
+  kind: "person_role";
+  options: ReportTypeOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
   | PartnerFilterSelectionMetadata
   | SalespersonTypeSelectionMetadata
-  | ContactTypeSelectionMetadata;
+  | ContactTypeSelectionMetadata
+  | PersonDisambiguationSelectionMetadata
+  | PersonRoleSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -150,6 +166,9 @@ export type MessageMetadata =
   | ReportTypeSelectionMetadata
   | PartnerFilterSelectionMetadata
   | SalespersonTypeSelectionMetadata
+  | ContactTypeSelectionMetadata
+  | PersonDisambiguationSelectionMetadata
+  | PersonRoleSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
