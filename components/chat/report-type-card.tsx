@@ -67,6 +67,11 @@ export function ReportTypeCard({ metadata, onSelect }: ReportTypeCardProps) {
           );
         })}
       </div>
+      {"tooMany" in metadata && metadata.tooMany && selected === null && (
+        <p className="mt-2 text-small text-text-muted">
+          {t("selection.tooMany")}
+        </p>
+      )}
       {selected !== null && (
         <p className="mt-2 text-small text-text-secondary">
           {t("selection.selected", {

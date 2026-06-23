@@ -93,7 +93,8 @@
       "description": "ದಯವಿಟ್ಟು ಈ ಕೆಳಗಿನ ಕ್ಷೇತ್ರಗಳನ್ನು ಒದಗಿಸಿ:"
     },
     "selection": {
-      "selected": "ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ: {name}"
+      "selected": "ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ: {name}",
+      "tooMany": "If not in the list, type the full name."
     },
     "fileCard": {
       "downloadPdf": "PDF ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",

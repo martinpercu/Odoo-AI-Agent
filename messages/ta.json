@@ -93,7 +93,8 @@
       "description": "கீழ்கண்ட புலங்களை நிரப்பவும்:"
     },
     "selection": {
-      "selected": "தேர்ந்தெடுக்கப்பட்டது: {name}"
+      "selected": "தேர்ந்தெடுக்கப்பட்டது: {name}",
+      "tooMany": "If not in the list, type the full name."
     },
     "fileCard": {
       "downloadPdf": "PDF பதிவிறக்கவும்",

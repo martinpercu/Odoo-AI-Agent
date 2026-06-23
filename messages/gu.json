@@ -93,7 +93,8 @@
       "description": "કૃપા કરી નીચેના ક્ષેત્રો ભરો:"
     },
     "selection": {
-      "selected": "પસંદ: {name}"
+      "selected": "પસંદ: {name}",
+      "tooMany": "If not in the list, type the full name."
     },
     "fileCard": {
       "downloadPdf": "PDF ડાઉનલોડ કરો",
