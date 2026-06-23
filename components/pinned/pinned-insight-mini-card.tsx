@@ -72,7 +72,7 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
         {/* Top row: icon + live dot + actions */}
         <div className="flex items-center justify-between gap-1">
           <div className="flex items-center gap-1.5">
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-odoo-purple/10 text-odoo-purple">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-accent-subtle text-accent">
               <Icon size={12} strokeWidth={1.5} />
             </div>
             {isLive && (
@@ -109,7 +109,7 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
 
         {/* Value */}
         {total !== null && (
-          <p className="mt-auto font-technical text-small font-semibold text-odoo-purple">
+          <p className="mt-auto font-technical text-small font-semibold text-accent">
             {total}
           </p>
         )}

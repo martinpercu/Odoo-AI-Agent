@@ -124,7 +124,7 @@ export function FoundingPartnerPricing({ billing }: FoundingPartnerPricingProps)
         className="w-full max-w-md px-4"
         containerClassName="items-end sm:items-center"
       >
-        <div className="rounded-card border border-border bg-surface p-6 shadow-xl">
+        <div className="rounded-card border border-border bg-surface p-6 shadow-lg">
           <h2 id="founding-modal-title" className="mb-2 text-heading">
             {t("modal.title")}
           </h2>
