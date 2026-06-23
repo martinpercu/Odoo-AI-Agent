@@ -66,7 +66,7 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.97 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
-          className="w-full max-w-md rounded-lg border border-border bg-surface shadow-xl"
+          className="w-full max-w-md rounded-lg border border-border bg-surface shadow-lg"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border px-5 py-4">

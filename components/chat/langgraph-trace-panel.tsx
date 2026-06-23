@@ -33,7 +33,7 @@ export function LangGraphTracePanel({ entries }: Props) {
         <Terminal size={16} strokeWidth={1.5} />
         <span className="font-technical-sm">{t("title")}</span>
         {entries.length > 0 && (
-          <span className="ml-1 rounded-full bg-[#35312D] px-1.5 text-[10px] font-medium tracking-wider">
+          <span className="ml-1 rounded-full bg-raised px-1.5 text-[10px] font-medium tracking-wider">
             {entries.length}
           </span>
         )}
@@ -48,21 +48,21 @@ export function LangGraphTracePanel({ entries }: Props) {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 320, opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="deep-surface fixed right-0 top-0 z-40 flex h-screen w-[320px] flex-col border-l border-[#2A2520]"
+        className="deep-surface fixed right-0 top-0 z-40 flex h-screen w-[320px] flex-col border-l border-border-subtle"
       >
-        <header className="flex items-center justify-between border-b border-[#2A2520] px-4 py-3">
+        <header className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
           <h2 className="font-technical-sm uppercase tracking-wider">
             {t("title")}
           </h2>
           <button
             onClick={() => setCollapsed(true)}
-            className="text-[#7A7670] hover:text-[#B8B3AC]"
+            className="text-muted hover:text-text-secondary"
             aria-label={t("collapse")}
           >
             <X size={16} strokeWidth={1.5} />
           </button>
         </header>
-        <ol className="flex-1 overflow-y-auto px-4 py-3 font-mono text-[12px] leading-[1.7]">
+        <ol className="flex-1 overflow-y-auto px-4 py-3 font-technical leading-[1.7]">
           {entries.length === 0 ? (
             <li className="deep-ts">{t("empty")}</li>
           ) : (

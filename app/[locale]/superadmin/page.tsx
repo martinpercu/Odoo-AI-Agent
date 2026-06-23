@@ -235,7 +235,7 @@ function ExtendBetaModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+      <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-lg">
         <div className="mb-1 flex items-center gap-2">
           <Clock size={18} strokeWidth={1.5} className="text-accent" />
           <h3 className="text-body font-medium text-foreground">{t("orgs.founderExtendTitle")}</h3>
@@ -367,7 +367,7 @@ function EditSubscriptionModal({
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
-        className="w-full max-w-md rounded-lg bg-surface p-6 shadow-xl"
+        className="w-full max-w-md rounded-lg bg-surface p-6 shadow-lg"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-subheading font-medium text-heading">
@@ -488,7 +488,7 @@ function OrgDetailModal({
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
-        className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-xl"
+        className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-lg"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-subheading font-medium text-heading">
@@ -743,7 +743,7 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
       {/* Confirm dialog */}
       {confirmAction && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-lg">
             <p className="mb-4 text-body text-foreground">
               {confirmAction.action === "suspend"
                 ? t("orgs.confirmSuspend", { name: confirmAction.orgName })
@@ -774,7 +774,7 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
       {/* Type toggle confirm dialog */}
       {confirmTypeAction && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-lg">
             <p className="mb-4 text-body text-foreground">
               {confirmTypeAction.newType === "PARTNER"
                 ? t("orgs.typeToggleConfirmPartner", { name: confirmTypeAction.orgName })
@@ -1116,7 +1116,7 @@ function UsersTab({ t }: { t: ReturnType<typeof useTranslations> }) {
 
       {confirmAction && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-lg">
             <p className="mb-4 text-body text-foreground">
               {confirmAction.action === "suspend"
                 ? t("users.confirmSuspend", { email: confirmAction.userEmail })
@@ -2040,7 +2040,7 @@ function ReportDetailPanel({ reportId, onClose, onUpdate, onDelete, t }: {
       {/* Delete confirm */}
       {confirmDelete && (
         <div className="absolute inset-0 z-60 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-lg bg-surface p-6 shadow-lg">
             <p className="mb-4 text-body text-foreground">{t("feedback.confirmDelete")}</p>
             <div className="flex justify-end gap-2">
               <button

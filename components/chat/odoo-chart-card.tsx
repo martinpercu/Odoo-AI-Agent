@@ -24,8 +24,8 @@ import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useChatContext } from "@/components/app-shell";
 import { PinToggleButton } from "@/components/pinned/pin-toggle-button";
 
-// Purple palette for pie charts
-const PIE_COLORS = ["#714B67", "#8d6584", "#a87fa1", "#c49bbe", "#deb8db"];
+// Brand indigo palette for pie charts (Rule 3: odoo-purple is logo-only)
+const PIE_COLORS = ["#6366F1", "#818CF8", "#A5B4FC", "#C7D2FE", "#E0E7FF"];
 
 function formatValue(
   val: number,
@@ -91,7 +91,7 @@ function ChartTooltip(props: Record<string, unknown> & { meta: ChartSSEEvent["me
   return (
     <div className="rounded-md border border-border bg-surface px-3 py-2 shadow-lg">
       <p className="text-small font-medium text-foreground">{label ?? payload[0].name}</p>
-      <p className="text-body font-semibold font-technical text-odoo-purple">
+      <p className="text-body font-semibold font-technical text-accent">
         {formatValue(payload[0].value as number, meta.value_format, meta.currency_symbol, meta.no_decimals)}
       </p>
     </div>
@@ -148,7 +148,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
     >
       {/* Header */}
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-odoo-purple/10 text-odoo-purple">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent-subtle text-accent">
           {chartIcon}
         </div>
         <h3 className="text-body font-semibold text-foreground leading-tight flex-1">
@@ -163,7 +163,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
           <a
             href={`${API_BASE}${chart.export_url}`}
             download
-            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-small font-medium text-odoo-purple transition-colors hover:bg-odoo-purple/10"
+            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-small font-medium text-accent transition-colors hover:bg-accent-subtle"
           >
             <Download size={14} strokeWidth={1.5} />
             <span>{t("downloadExcel")}</span>
@@ -197,7 +197,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                       tickFormatter={(v) => truncateLabel(v, 12)}
                     />
                     <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
-                    <Bar dataKey="value" fill="var(--color-odoo-purple)" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="value" fill="var(--brand)" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 ) : (
                   <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
@@ -212,15 +212,15 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                       tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
                     />
                     <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
-                    <Bar dataKey="value" fill="var(--color-odoo-purple)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="value" fill="var(--brand)" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 )
               ) : chart_type === "line" ? (
                 <AreaChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <defs>
                     <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-odoo-purple)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="var(--color-odoo-purple)" stopOpacity={0} />
+                      <stop offset="5%" stopColor="var(--brand)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--brand)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -237,7 +237,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke="var(--color-odoo-purple)"
+                    stroke="var(--brand)"
                     strokeWidth={2}
                     fill="url(#purpleGradient)"
                   />
@@ -276,7 +276,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
           <span className="text-small text-text-secondary">
             {t("globalTotal")}
           </span>
-          <span className="text-body font-semibold font-technical text-odoo-purple">
+          <span className="text-body font-semibold font-technical text-accent">
             {formatValue(meta.total, meta.value_format, meta.currency_symbol, meta.no_decimals)}
           </span>
         </div>
