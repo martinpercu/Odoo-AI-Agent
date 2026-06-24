@@ -1535,7 +1535,14 @@ export async function fetchAuditHistory(
   try {
     const res = await authFetch(`${API_BASE}/chat/${chatId}/audit`);
     const data = await res.json();
-    if (res.ok) return { success: true, entries: data.entries ?? data };
+    if (res.ok) {
+      const entries = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.entries)
+          ? data.entries
+          : [];
+      return { success: true, entries };
+    }
     return { success: false, error: data.detail || "Failed to fetch audit history" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;

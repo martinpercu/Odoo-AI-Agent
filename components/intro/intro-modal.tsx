@@ -8,6 +8,9 @@ import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useChatContext } from "@/components/app-shell";
+import { useAuth } from "@/hooks/use-auth";
+import { useSession } from "@/hooks/use-session";
+import { clearOnboardingSkipped } from "@/lib/post-auth";
 import { track } from "@/lib/analytics";
 import { A11yModal } from "@/components/intro/a11y-modal";
 
@@ -26,6 +29,8 @@ export function IntroModal() {
   const { isModalOpen, openModal, closeModal, openPanel, dismissed, ready } = useIntro();
   const { isDemoMode } = useOdooConfig();
   const { createChat, sendMessage } = useChatContext();
+  const { user } = useAuth();
+  const { meData } = useSession();
   const [dontShowAgain, setDontShowAgain] = useState(true);
   const autoOpened = useRef(false);
   const titleId = useId();
@@ -62,7 +67,13 @@ export function IntroModal() {
   function handleConnect() {
     track("connect_own_odoo_clicked", { source: "modal" });
     closeModal(dontShowAgain);
-    router.push("/register");
+    // Anonymous → register. Logged in with no instance (ADMIN first-instance gate)
+    // → onboarding. Logged in with an instance (e.g. CLIENT_USER loading their own
+    // key, or ADMIN whose connection is unset) → self-service credentials.
+    const loggedIn = !!user;
+    const hasInstance = (meData?.odoo_configs?.length ?? 0) > 0;
+    if (loggedIn && !hasInstance) clearOnboardingSkipped();
+    router.push(!loggedIn ? "/register" : hasInstance ? "/settings/odoo" : "/onboarding");
   }
 
   function handleWhatIsThis() {
