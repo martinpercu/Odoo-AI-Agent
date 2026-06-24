@@ -230,6 +230,7 @@ components/
     action-proposal-button.tsx  # AI-proposed CRUD action confirm/cancel with field editor
     selection-card.tsx          # Multi-option selector for ambiguity resolution
     report-type-card.tsx        # Kinded selection_prompt buttons (report_type, partner_filter, salesperson_type, contact_type, person_disambiguation, person_role)
+    report-offer-card.tsx       # Non-blocking "Generar PDF" button for `report_offer` kind — POSTs to /action directly, never sends a chat message
     odoo-file-card.tsx          # PDF report download card (in-memory base64 Blob download)
     odoo-chart-card.tsx         # Interactive charts (bar/line/pie) + Excel export + pin
     excel-export-card.tsx       # Standalone Excel download card
@@ -288,7 +289,7 @@ hooks/
 lib/
   api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route; getBillingState() fetches render-only billing context (falls back to BETA_BILLING_DEFAULTS)
   post-auth.ts                  # resolvePostAuthPath(meData) + onboarding-skip flag helpers (localStorage `toa_onboarding_skipped`)
-  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?; report-01: ReportTypeSelectionMetadata, PartnerFilterSelectionMetadata, SalespersonTypeSelectionMetadata, ContactTypeSelectionMetadata, PersonDisambiguationSelectionMetadata (kind: "person_disambiguation", role?, tooMany?), PersonRoleSelectionMetadata (kind: "person_role"), KindedSelectionMetadata union (all six), report_combined action, FileAttachmentMetadata with pdf_base64; ActionLabels gains optional values?: ActionLabelValue[] for humanized read-only field display)
+  types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?; report-01: ReportTypeSelectionMetadata, PartnerFilterSelectionMetadata, SalespersonTypeSelectionMetadata, ContactTypeSelectionMetadata, PersonDisambiguationSelectionMetadata (kind: "person_disambiguation", role?, tooMany?), PersonRoleSelectionMetadata (kind: "person_role"), KindedSelectionMetadata union (all seven), report_combined action, FileAttachmentMetadata with pdf_base64; ActionLabels gains optional values?: ActionLabelValue[] for humanized read-only field display; report-offer: ReportOfferOption, ReportOfferSelectionMetadata (kind: "report_offer"), ActionContext gains optional domain?/total_count? for domain-based reports)
   invitation-email.ts           # Localized copy + HTML/text builder for the invitation email (es/en/fr/de/pt/it); content only — transport lives in app/api/send-invitation/route.ts
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
   analytics.ts                  # First-party analytics: track(), captureUtm(), getSessionId() — fire-and-forget events to POST /events; captures utm_* on app mount and stitches them to later signup via session_id
@@ -358,6 +359,7 @@ Displayed when the agent needs to resolve ambiguity:
 - Lists matching records as selectable options
 - Clicking an option sends the selection back as a chat message
 - **Report-type variant** (`kind: "report_type"`, `"partner_filter"`, `"salesperson_type"`, `"contact_type"`, `"person_disambiguation"`, `"person_role"`): rendered by `ReportTypeCard` — user picks an option, the value is sent as a normal chat message to `/chat/{id}/stream`. The `person_disambiguation` variant also carries optional `role?` and `tooMany?` fields; when `tooMany` is true, a hint is shown below the options to type the full name if the target isn't in the list
+- **Report-offer variant** (`kind: "report_offer"`): rendered by `ReportOfferCard` — a single non-blocking "Generar PDF" button that fires `executeAction` (POSTs to `/chat/{id}/action`) directly. Does **not** send a chat message. User can ignore it and keep typing. `options[0]` carries `model`, `vals`, `domain`, and `total_count`
 
 ### 📄 OdooFileCard
 PDF report download card:

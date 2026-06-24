@@ -37,6 +37,9 @@ export interface ActionContext {
   status: "pending_confirmation";
   // report_combined carries `sections` — re-forwarded to /action verbatim.
   sections?: unknown;
+  // report_offer: domain-based report (no target_ids — backend resolves ids from domain).
+  domain?: unknown[];
+  total_count?: number;
 }
 
 export interface ActionLabelValue {
@@ -118,6 +121,24 @@ export interface PersonRoleSelectionMetadata {
   options: ReportTypeOption[];
 }
 
+// Report offer: a single "Generar PDF" button that POSTs to /action directly.
+// Clicking must NOT send the option as a chat message.
+export interface ReportOfferOption {
+  value: string;
+  label: string;
+  action: "report";
+  model: string;
+  vals: Record<string, unknown>;
+  domain: unknown[];
+  total_count: number;
+}
+
+export interface ReportOfferSelectionMetadata {
+  type: "selection_prompt";
+  kind: "report_offer";
+  options: ReportOfferOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
@@ -125,7 +146,8 @@ export type KindedSelectionMetadata =
   | SalespersonTypeSelectionMetadata
   | ContactTypeSelectionMetadata
   | PersonDisambiguationSelectionMetadata
-  | PersonRoleSelectionMetadata;
+  | PersonRoleSelectionMetadata
+  | ReportOfferSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -169,6 +191,7 @@ export type MessageMetadata =
   | ContactTypeSelectionMetadata
   | PersonDisambiguationSelectionMetadata
   | PersonRoleSelectionMetadata
+  | ReportOfferSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
