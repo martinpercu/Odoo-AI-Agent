@@ -93,7 +93,8 @@
       "description": "Please provide the following fields:"
     },
     "selection": {
-      "selected": "Selected: {name}"
+      "selected": "Selected: {name}",
+      "tooMany": "If not in the list, type the full name."
     },
     "fileCard": {
       "downloadPdf": "Download PDF",

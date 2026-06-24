@@ -93,7 +93,8 @@
       "description": "Veuillez renseigner les champs suivants :"
     },
     "selection": {
-      "selected": "Sélectionné : {name}"
+      "selected": "Sélectionné : {name}",
+      "tooMany": "Si absent de la liste, saisissez le nom complet."
     },
     "fileCard": {
       "downloadPdf": "Télécharger le PDF",
