@@ -581,8 +581,9 @@ export function useChat(chatId?: string, userId?: string) {
           filename: result.result.filename,
           mimetype: result.result.mimetype,
         } satisfies FileAttachmentMetadata;
-      } else if (result.result) {
-        // CRUD / method_call success
+      } else if (result.result && result.result.action !== "report_grouped") {
+        // CRUD / method_call success. report_grouped is handled by AggReportCard
+        // (direct Blob download) and never flows through executeAction.
         const r = result.result;
         metadata = {
           type: "action_success",

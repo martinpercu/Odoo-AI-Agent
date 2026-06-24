@@ -2,6 +2,7 @@ import type {
   OdooConfig,
   ActionContext,
   ActionResult,
+  AggReportOption,
   PinnedInsight,
   ChartSSEEvent,
   FileAttachmentMetadata,
@@ -1129,6 +1130,34 @@ export async function executeAction(
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export async function executeAggReportAction(
+  chatId: string,
+  opt: AggReportOption,
+  configId: string,
+  locale: string
+): Promise<{ success: boolean; result?: ActionResult & { action: "report_grouped" }; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/chat/${chatId}/action`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        config_id: configId,
+        language: locale,
+        action: "report_grouped",
+        context: { action: "report_grouped", format: opt.format, payload: opt.payload },
+      }),
+    });
+    const data = await res.json();
+    if (data.status === "ok") {
+      return { success: true, result: data.result };
+    }
+    return { success: false, error: data.detail || data.message || "Action failed" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: "Network error" };
   }
 }
 
