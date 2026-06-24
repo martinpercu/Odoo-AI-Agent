@@ -93,7 +93,8 @@
       "description": "Por favor proporciona los siguientes campos:"
     },
     "selection": {
-      "selected": "Seleccionado: {name}"
+      "selected": "Seleccionado: {name}",
+      "tooMany": "Si no está en la lista, escribí el nombre completo."
     },
     "fileCard": {
       "downloadPdf": "Descargar PDF",
