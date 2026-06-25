@@ -556,13 +556,10 @@ export function useChat(chatId?: string, userId?: string) {
           content: `⚠️ ${result.error || "Action failed"}`,
           timestamp: new Date(),
         };
-        setChats((prev) =>
-          prev.map((c) =>
-            c.id === currentChatId
-              ? { ...c, messages: [...c.messages, errorMessage] }
-              : c
-          )
-        );
+        updateChat(currentChatId, (c) => ({
+          ...c,
+          messages: [...c.messages, errorMessage],
+        }));
         return;
       }
 
@@ -603,13 +600,10 @@ export function useChat(chatId?: string, userId?: string) {
         ...(metadata && { metadata }),
       };
 
-      setChats((prev) =>
-        prev.map((c) =>
-          c.id === currentChatId
-            ? { ...c, messages: [...c.messages, responseMessage] }
-            : c
-        )
-      );
+      updateChat(currentChatId, (c) => ({
+        ...c,
+        messages: [...c.messages, responseMessage],
+      }));
 
       // Auto-sequence: if queue_next is present, send the next message after a delay
       if (result.queue_next) {
@@ -617,7 +611,7 @@ export function useChat(chatId?: string, userId?: string) {
         sendMessage(result.queue_next.text, currentChatId);
       }
     },
-    [currentChatId, activeConfigId, locale, sendMessage]
+    [currentChatId, activeConfigId, locale, sendMessage, updateChat]
   );
 
   const loadChatHistory = useCallback(
