@@ -13,6 +13,7 @@ import type {
   ExcelExportMetadata,
   NoCredentialsMetadata,
 } from "@/lib/types";
+import type { TraceEntry } from "@/components/chat/langgraph-trace-panel";
 import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -78,6 +79,7 @@ export function useChat(chatId?: string, userId?: string) {
   serverChatsRef.current = serverChats;
   const [serverOffset, setServerOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [traceEntries, setTraceEntries] = useState<TraceEntry[]>([]);
 
   const currentChat =
     chats.find((c) => c.id === currentChatId) ??
@@ -228,6 +230,7 @@ export function useChat(chatId?: string, userId?: string) {
       }));
 
       setIsStreaming(true);
+      setTraceEntries([]);
 
       // Guard: require Odoo config before calling backend
       if (!isConfigured || !activeConfigId) {
@@ -379,20 +382,36 @@ export function useChat(chatId?: string, userId?: string) {
           }
         };
 
+        let currentEventType = "message";
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
 
-          // Parse SSE lines: "data: <text>\n\n"
+          // Parse SSE lines: "event: <name>\n" + "data: <text>\n\n"
           const lines = buffer.split("\n");
           // Keep the last potentially incomplete line in the buffer
           buffer = lines.pop() ?? "";
 
           for (const line of lines) {
+            if (line.startsWith("event: ")) {
+              currentEventType = line.slice(7).trim();
+              continue;
+            }
             if (line.startsWith("data: ")) {
               const raw = line.slice(6);
+
+              if (currentEventType === "trace") {
+                currentEventType = "message";
+                try {
+                  const entry = JSON.parse(raw) as TraceEntry;
+                  setTraceEntries((prev) => [...prev, { ts: entry.ts, level: entry.level, node: entry.node, message: entry.message }]);
+                } catch { /* ignore malformed trace */ }
+                continue;
+              }
+              currentEventType = "message";
 
               // Try to parse as JSON
               let text = "";
@@ -690,5 +709,6 @@ export function useChat(chatId?: string, userId?: string) {
     hasMore,
     deleteChat,
     clearChats,
+    traceEntries,
   };
 }

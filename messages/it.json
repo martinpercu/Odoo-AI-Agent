@@ -1041,7 +1041,6 @@
       "title": "Nuova istanza",
       "blockInstanceTitle": "Dati dell'istanza",
       "blockCredsTitle": "Le tue credenziali per questa istanza",
-      "credsOptionalHint": "Puoi aggiungerle ora o dopo. Senza, non potrai chattare con questa istanza, ma potrai comunque invitare utenti.",
       "labelLabel": "Etichetta",
       "optional": "facoltativo",
       "labelPlaceholder": "Produzione",

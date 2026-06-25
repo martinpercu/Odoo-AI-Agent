@@ -4,9 +4,9 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { Sidebar } from "@/components/chat/sidebar";
 import { PinnedSidebar } from "@/components/pinned/pinned-sidebar";
 import { FlyingPinPortal } from "@/components/pinned/flying-pin-animation";
-import { LangGraphTracePanel, type TraceEntry } from "@/components/chat/langgraph-trace-panel";
+import { LangGraphTracePanel } from "@/components/chat/langgraph-trace-panel";
 import { useChat } from "@/hooks/use-chat";
-import { createContext, useContext, useState, useEffect, useRef } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
@@ -63,27 +63,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { loadAllPins } = usePinnedInsights();
   const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
 
-  // Stub LangGraph trace — TODO: replace with real SSE `trace` event when backend exposes it.
-  // Pushes a synthetic entry on each isStreaming transition so Builder can validate the panel.
-  const [traceEntries, setTraceEntries] = useState<TraceEntry[]>([]);
-  const prevStreamingRef = useRef(chat.isStreaming);
-  useEffect(() => {
-    if (prevStreamingRef.current === chat.isStreaming) return;
-    const ts = new Date().toTimeString().slice(0, 8);
-    if (chat.isStreaming) {
-      setTraceEntries((prev) => [
-        ...prev,
-        { ts, level: "info", node: "stream:start", message: `chat=${chat.currentChatId ?? "new"}` },
-      ]);
-    } else if (prevStreamingRef.current) {
-      setTraceEntries((prev) => [
-        ...prev,
-        { ts, level: "ok", node: "stream:end", message: "completed" },
-      ]);
-    }
-    prevStreamingRef.current = chat.isStreaming;
-  }, [chat.isStreaming, chat.currentChatId]);
-
   useEffect(() => {
     if (!user) {
       chat.clearChats();
@@ -131,7 +110,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
               <PinnedSidebar />
               <FlyingPinPortal />
-              {user && isBuilder && <LangGraphTracePanel entries={traceEntries} />}
+              {user && isBuilder && <LangGraphTracePanel entries={chat.traceEntries} />}
             </div>
             <IntroModal />
             <IntroPanel />

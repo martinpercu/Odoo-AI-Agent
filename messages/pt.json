@@ -1041,7 +1041,6 @@
       "title": "Nova instância",
       "blockInstanceTitle": "Dados da instância",
       "blockCredsTitle": "Suas credenciais para esta instância",
-      "credsOptionalHint": "Você pode adicioná-las agora ou depois. Sem elas, você não poderá conversar com esta instância, mas ainda poderá convidar usuários.",
       "labelLabel": "Rótulo",
       "optional": "opcional",
       "labelPlaceholder": "Produção",

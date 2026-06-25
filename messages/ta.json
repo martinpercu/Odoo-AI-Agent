@@ -1041,7 +1041,6 @@
       "title": "New instance",
       "blockInstanceTitle": "Instance data",
       "blockCredsTitle": "Your credentials for this instance",
-      "credsOptionalHint": "You can add them now or later. Without them you won't be able to chat with this instance, but you can still invite users to it.",
       "labelLabel": "Label",
       "optional": "optional",
       "labelPlaceholder": "Production",
