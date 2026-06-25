@@ -1041,7 +1041,6 @@
       "title": "Nueva instancia",
       "blockInstanceTitle": "Datos de la instancia",
       "blockCredsTitle": "Tus credenciales para esta instancia",
-      "credsOptionalHint": "Podés cargarlas ahora o después. Si no las cargás, no vas a poder chatear con esta instancia, pero sí podés invitarle usuarios.",
       "labelLabel": "Etiqueta",
       "optional": "opcional",
       "labelPlaceholder": "Producción",
