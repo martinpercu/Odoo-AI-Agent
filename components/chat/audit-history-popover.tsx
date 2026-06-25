@@ -24,7 +24,7 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
     setLoading(true);
     fetchAuditHistory(chatId)
       .then((result) => {
-        if (result.success && result.entries) {
+        if (result.success && Array.isArray(result.entries)) {
           setEntries(result.entries);
         }
         setLoaded(true);
