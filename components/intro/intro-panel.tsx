@@ -24,6 +24,9 @@ import { MarkB } from "@/components/AgentMark";
 import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
 import { useChatContext } from "@/components/app-shell";
+import { useAuth } from "@/hooks/use-auth";
+import { useSession } from "@/hooks/use-session";
+import { clearOnboardingSkipped } from "@/lib/post-auth";
 import { track } from "@/lib/analytics";
 
 const FOCUSABLE =
@@ -119,6 +122,8 @@ export function IntroPanel() {
   const router = useRouter();
   const { isPanelOpen, closePanel } = useIntro();
   const { createChat, sendMessage } = useChatContext();
+  const { user } = useAuth();
+  const { meData } = useSession();
   const panelRef = useRef<HTMLDivElement>(null);
   const partnerRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -168,7 +173,13 @@ export function IntroPanel() {
   function handleConnect() {
     track("connect_own_odoo_clicked", { source: "panel" });
     closePanel();
-    router.push("/register");
+    // Anonymous → register. Logged in with no instance (ADMIN first-instance gate)
+    // → onboarding. Logged in with an instance (e.g. CLIENT_USER loading their own
+    // key, or ADMIN whose connection is unset) → self-service credentials.
+    const loggedIn = !!user;
+    const hasInstance = (meData?.odoo_configs?.length ?? 0) > 0;
+    if (loggedIn && !hasInstance) clearOnboardingSkipped();
+    router.push(!loggedIn ? "/register" : hasInstance ? "/settings/odoo" : "/onboarding");
   }
 
   function handlePartner() {
