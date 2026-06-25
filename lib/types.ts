@@ -139,6 +139,25 @@ export interface ReportOfferSelectionMetadata {
   options: ReportOfferOption[];
 }
 
+// Aggregation report offer: two buttons (PDF + Excel) that POST to /action directly.
+// Clicking must NOT send the option as a chat message — the card is non-blocking.
+// `payload` is the canonical chart payload round-tripped verbatim as the action context.
+export interface AggReportOption {
+  label: string;
+  value: "__agg_report_pdf__" | "__agg_report_excel__";
+  action: "report_grouped";
+  format: "pdf" | "excel";
+  payload: unknown;
+}
+
+export interface AggReportSelectionMetadata {
+  type: "selection_prompt";
+  kind: "agg_report";
+  reason: "too_many" | "explicit";
+  groupCount: number;
+  options: AggReportOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
@@ -147,7 +166,8 @@ export type KindedSelectionMetadata =
   | ContactTypeSelectionMetadata
   | PersonDisambiguationSelectionMetadata
   | PersonRoleSelectionMetadata
-  | ReportOfferSelectionMetadata;
+  | ReportOfferSelectionMetadata
+  | AggReportSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -166,7 +186,8 @@ export type ActionResult =
   | { action: "update"; model: string; ids: number[]; success: boolean }
   | { action: "method_call"; model: string; method: string; ids: number[]; method_result: unknown }
   | { action: "report"; model: string; ids: number[]; pdf_base64: string; filename: string; mimetype: string }
-  | { action: "report_combined"; model?: string; ids?: number[]; pdf_base64: string; filename: string; mimetype: string };
+  | { action: "report_combined"; model?: string; ids?: number[]; pdf_base64: string; filename: string; mimetype: string }
+  | { action: "report_grouped"; format: "pdf" | "excel"; pdf_base64?: string; xlsx_base64?: string; filename: string; mimetype: string };
 
 export interface ExcelExportMetadata {
   type: "excel_export";
@@ -192,6 +213,7 @@ export type MessageMetadata =
   | PersonDisambiguationSelectionMetadata
   | PersonRoleSelectionMetadata
   | ReportOfferSelectionMetadata
+  | AggReportSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;

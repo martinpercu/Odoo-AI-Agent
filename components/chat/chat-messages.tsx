@@ -8,10 +8,12 @@ import { User, KeyRound, ArrowRight, Flag } from "lucide-react";
 import { MarkB, MarkI } from "@/components/AgentMark";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useAudienceT } from "@/hooks/use-audience-translations";
-import type { Message } from "@/lib/types";
+import type { Message, AggReportOption } from "@/lib/types";
+import { executeAggReportAction } from "@/lib/api";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { SuccessCard } from "./success-card";
 import { ValidationPrompt } from "./validation-prompt";
@@ -20,6 +22,7 @@ import { ActionProposalButton } from "./action-proposal-button";
 import { SelectionCard } from "./selection-card";
 import { ReportTypeCard } from "./report-type-card";
 import { ReportOfferCard } from "./report-offer-card";
+import { AggReportCard } from "./agg-report-card";
 import { OdooFileCard } from "./odoo-file-card";
 import { OdooChartCard } from "./odoo-chart-card";
 import { ExcelExportCard } from "./excel-export-card";
@@ -82,6 +85,7 @@ function TypingIndicator() {
 export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("ChatMessages");
+  const locale = useLocale();
   const avatarSize = useIconSize("inline");
   const { executeAction, sendMessage, currentChatId } = useChatContext();
   const { meData } = useSession();
@@ -89,6 +93,24 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const allowFeedback = meData?.user?.allow_feedback === true;
 
   const [feedbackMessageId, setFeedbackMessageId] = useState<string | null>(null);
+
+  async function handleAggReport(opt: AggReportOption) {
+    if (!currentChatId || !activeConfigId) return;
+    const res = await executeAggReportAction(currentChatId, opt, activeConfigId, locale);
+    if (!res.success || !res.result) return;
+    const b64 = res.result.format === "excel" ? res.result.xlsx_base64 : res.result.pdf_base64;
+    if (!b64) return;
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const blob = new Blob([bytes], { type: res.result.mimetype });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = res.result.filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -183,6 +205,11 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                               <ReportOfferCard
                                 metadata={message.metadata}
                                 onAction={executeAction}
+                              />
+                            ) : message.metadata.kind === "agg_report" ? (
+                              <AggReportCard
+                                metadata={message.metadata}
+                                onPick={handleAggReport}
                               />
                             ) : (
                               <ReportTypeCard
