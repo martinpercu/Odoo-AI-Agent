@@ -1041,7 +1041,6 @@
       "title": "Nouvelle instance",
       "blockInstanceTitle": "Données de l'instance",
       "blockCredsTitle": "Vos identifiants pour cette instance",
-      "credsOptionalHint": "Vous pouvez les ajouter maintenant ou plus tard. Sans eux, vous ne pourrez pas discuter avec cette instance, mais vous pourrez tout de même y inviter des utilisateurs.",
       "labelLabel": "Libellé",
       "optional": "facultatif",
       "labelPlaceholder": "Production",

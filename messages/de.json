@@ -1041,7 +1041,6 @@
       "title": "Neue Instanz",
       "blockInstanceTitle": "Instanzdaten",
       "blockCredsTitle": "Deine Zugangsdaten für diese Instanz",
-      "credsOptionalHint": "Du kannst sie jetzt oder später hinzufügen. Ohne sie kannst du nicht mit dieser Instanz chatten, aber du kannst trotzdem Nutzer einladen.",
       "labelLabel": "Bezeichnung",
       "optional": "optional",
       "labelPlaceholder": "Produktion",

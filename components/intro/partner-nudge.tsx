@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowRight, Store, Minus } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import { useIntro } from "@/hooks/use-intro";
 import { usePartnerNudge } from "@/hooks/use-partner-nudge";
 import { track } from "@/lib/analytics";
@@ -19,13 +20,16 @@ import { track } from "@/lib/analytics";
 export function PartnerNudge() {
   const t = useTranslations("Intro.nudge");
   const router = useRouter();
+  const { user } = useAuth();
   const { view, minimize, expand } = usePartnerNudge();
   const { openPanel } = useIntro();
   const reduceMotion = useReducedMotion();
 
   function handleStartFree() {
     track("partner_cta_clicked", { source: "nudge" });
-    router.push("/register");
+    // Logged-in implementers go straight to their instances; anonymous demo
+    // visitors first need an account (/instances is ADMIN-only).
+    router.push(user ? "/instances" : "/register");
   }
 
   function handleHowItWorks() {
