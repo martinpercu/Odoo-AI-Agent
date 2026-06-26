@@ -112,6 +112,9 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const isSuperAdmin = role === "SUPERADMIN";
   const isClient = role !== "ADMIN" && role !== "SUPERADMIN";
   const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
+  // An ADMIN who hasn't connected their first instance (no configs) only gets
+  // Instances — Settings stays hidden until there's at least one instance.
+  const showSettings = !(role === "ADMIN" && configs.length === 0);
 
   // A config is "chat-ready" when the caller's Connection is active (spec §6.2).
   // Fall back to credential presence when the status field isn't populated.
@@ -367,7 +370,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                   <span className="flex-1">{t("myConnection")}</span>
                 </Link>
               )}
-              {user && (
+              {user && showSettings && (
                 <Link href={settingsHref} onClick={close} className={itemClass}>
                   <Settings size={iconInline} strokeWidth={1.5} className="shrink-0" />
                   <span className="flex-1">{t("settings")}</span>

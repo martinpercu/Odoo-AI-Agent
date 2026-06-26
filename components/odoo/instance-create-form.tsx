@@ -140,7 +140,6 @@ export function InstanceCreateForm({ orgId, onCreated }: { orgId: string; onCrea
             label={t("blockCredsTitle")}
             sub={t("blockCredsSub")}
           />
-          <p className="mb-3 text-small text-text-muted">{t("credsOptionalHint")}</p>
           <div className="space-y-3">
             <div>
               <label className="mb-1.5 flex items-center gap-1.5 text-small text-text-secondary">
@@ -169,7 +168,7 @@ export function InstanceCreateForm({ orgId, onCreated }: { orgId: string; onCrea
               />
               {errorField === "creds" && <p className="mt-1 text-small text-error">{errorMessageFor(validator.errorCode!)}</p>}
             </div>
-            {wantsCreds && <OdooApiKeyHelper />}
+            <OdooApiKeyHelper />
           </div>
         </CredentialBlock>
       </CredentialBlocksCard>
