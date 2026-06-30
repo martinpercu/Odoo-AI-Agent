@@ -523,7 +523,10 @@
     "foundingLine2": "Ihr Feedback bestimmt unsere Roadmap. Zum Ende des <prog>Programms</prog> behalten Sie den Founder-Partner-Tarif auf Lebenszeit: 1 $/Nutzer.",
     "foundingScarcity": "Begrenzte Plätze",
     "programTooltip": "Der Vorteil des Founding-Partners-Programms gilt mindestens 2 Monate und ist je nach Zusammenarbeit verlängerbar.",
-    "scarcityTooltip": "Aus Kostengründen halten wir die Zahl der Founding Partner begrenzt."
+    "scarcityTooltip": "Aus Kostengründen halten wir die Zahl der Founding Partner begrenzt.",
+    "accessCodeLabel": "Zugangscode",
+    "accessCodePlaceholder": "Ihr Einladungscode",
+    "accessCodeError": "Die Registrierung ist nur für Founding Partners. Für Zugang wenden Sie sich an martin@theodooagent.com"
   },
   "Onboarding": {
     "step1Label": "Odoo-Verbindung",
@@ -904,24 +907,22 @@
   },
   "Intro": {
     "modal": {
-      "title": "Du testest gerade TheOdooAgent",
-      "subtitle": "Ein Agent, der dein Odoo abfragt und steuert.\nDies ist eine Demo mit Beispieldaten.",
+      "title": "TheOdooAgent-Demo",
+      "subtitle": "So wird es Ihre Kunden sehen.\nLäuft auf einem Demo-Odoo mit echten Testdaten.",
       "chips": {
-        "language": "Frag in deiner Sprache: Verkäufe, Rechnungen, Bestand",
-        "noInvent": "Erfindet keine Zahlen: Das System berechnet sie, nicht das Modell",
-        "anyOdoo": "Läuft auf Enterprise und Community v12–v19"
+        "anyOdoo": "Community & Enterprise v12–v19 · White-Label · KI inklusive"
       },
-      "tryThisLabel": "Probier das",
+      "tryThisLabel": "Testen Sie es wie Ihr Kunde",
       "tryThis": {
         "overdue_invoices": "Wie viele überfällige Rechnungen gibt es diesen Monat?",
         "top_customers": "Top 5 Kunden nach Umsatz",
-        "stock_check": "Erstelle Märzbericht"
+        "stock_check": "Bericht für März erstellen"
       },
-      "ctaPrimary": "Loslegen",
-      "ctaSecondary": "Verbinde dein Odoo (kostenlos)",
+      "ctaPrimary": "Demo erkunden",
+      "ctaSecondary": "Verbinden Sie Ihr Odoo",
       "dontShowAgain": "Nicht mehr anzeigen",
       "whatIsThis": "Was ist das?",
-      "madeBy": "Gemacht von Martin",
+      "madeBy": "Erstellt von Martin",
       "close": "Schließen"
     },
     "sidebarItem": "Was ist TheOdooAgent?",
@@ -930,71 +931,71 @@
       "close": "Schließen",
       "hook": {
         "title": "TheOdooAgent",
-        "line": "Sprich mit deinem Odoo in natürlicher Sprache. Frage Daten ab und steuere dein ERP, wie du mit einem Kollegen reden würdest — echte Daten, Diagramme und Exporte, ohne Menüs zu durchsuchen.",
-        "partnerTag": "Implementierst du Odoo?"
+        "line": "Eine konversationelle KI-Schicht auf dem Odoo Ihrer Kunden — unter Ihrer Marke, ohne Module zu installieren, ohne variable LLM-Kosten. In Minuten eingerichtet; Ihre Kunden befragen und bedienen es ab Tag 1 in natürlicher Sprache.",
+        "partnerTag": "Geschäftsmodell"
       },
       "what": {
-        "heading": "Frag, und es antwortet mit deinen echten Daten",
-        "line": "Es interpretiert deine Frage, fragt dein Odoo ab und antwortet sofort. Es führt auch Aktionen aus —anlegen, bestätigen, aktualisieren— immer mit deiner Bestätigung.",
+        "heading": "Testen Sie es wie Ihr Kunde",
+        "line": "Dies läuft auf einem Demo-Odoo. Senden Sie eine Anfrage und sehen Sie genau, was Ihre Endnutzer sehen werden.",
         "chip1": "Überfällige Rechnungen über 10.000 $",
-        "chip2": "Umsatz pro Vertriebler letzten Monat",
-        "chip3": "Lege einen Kontakt an: María López"
+        "chip2": "Umsatz nach Vertriebsmitarbeiter letzten Monat",
+        "chip3": "Kontakt erstellen: María López"
       },
       "different": {
-        "heading": "Was Odoo AI und MCPs Ihnen nicht bieten",
-        "item1Label": "Community und Enterprise v12–v19",
-        "item1Body": "Funktioniert dort, wo Ihr Kunde heute ist.",
+        "heading": "Warum es in Ihre Praxis passt",
+        "item1Label": "Community & Enterprise, v12–v19",
+        "item1Body": "Funktioniert mit dem Odoo aller Ihrer Kunden heute — keine Migration erforderlich.",
         "item2Label": "KI-Kosten inklusive",
-        "item2Body": "Keine LLM-Tokens. Die KI ist bereits abgedeckt.",
-        "item3Label": "Echtes White-Label",
-        "item3Body": "Ihre Kunden sehen Ihre Marke. Odoo und MCP-Server nicht.",
-        "item4Label": "Keine erfundenen Zahlen",
-        "item4Body": "Das System rechnet; das LLM formuliert. Keine Halluzinationen."
+        "item2Body": "Keine LLM-Tokens weiterzugeben. Fester Preis pro Seat — saubere Marge.",
+        "item3Label": "Vollständiges White-Label",
+        "item3Body": "Ihre Kunden sehen Ihre Marke. TheOdooAgent und MCP-Server bleiben unsichtbar.",
+        "item4Label": "Exakte Zahlen, keine Halluzinationen",
+        "item4Body": "Das System rechnet; das LLM schreibt nur. Sie können es im Kundengespräch vertrauensvoll zeigen."
       },
       "partner": {
-        "heading": "Implementierst du Odoo?",
-        "line": "Biete es deinen Kunden unter deiner Marke an und verkaufe es weiter.",
-        "item1Label": "White-Label und Weiterverkauf",
-        "item1Body": "Ihre Marke, Ihre Preise.",
-        "item2Label": "Multi-Mandant",
-        "item2Body": "verwalte alle deine Unternehmen über ein einziges Konto",
-        "item3Label": "Installiert nichts im Odoo des Kunden",
-        "item3Body": "nichts bricht bei Upgrades, null Wartung",
-        "cta": "Wie man es weiterverkauft"
+        "heading": "Geschäftsmodell",
+        "line": "Verkaufen Sie es unter Ihrer Marke und Ihren Preisen an Ihre Kunden weiter.",
+        "item1Label": "Fixkosten, Ihre Marge",
+        "item1Body": "Sie bestimmen den Preis für jeden Kunden. TheOdooAgent berechnet eine Pauschale pro Seat.",
+        "item2Label": "Multi-Kunde aus einem Konto",
+        "item2Body": "Verwalten Sie alle Instanzen Ihrer Kunden aus einem einzigen Panel, vollständig isoliert.",
+        "item3Label": "Keine Installation im Odoo des Kunden",
+        "item3Body": "Verbindung über Standard-API-Schlüssel (XML-RPC). Nichts bricht bei Upgrades, kein Wartungsaufwand.",
+        "cta": "Mit Martin sprechen"
       },
       "secure": {
-        "heading": "Sicher per Design",
+        "heading": "Sicher by Design",
         "item1": "Menschliche Bestätigung bei jedem Schreibvorgang",
-        "item2": "Respektiert deine Odoo-Berechtigungen",
-        "item3": "Halluziniert keine Zahlen",
+        "item2": "Isolierung pro Kunde — Daten nie vermischt",
+        "item3": "Respektiert die Odoo-Berechtigungen jedes Nutzers",
         "item4": "Verschlüsselte Zugangsdaten"
       },
       "faq": {
-        "heading": "Häufige Fragen",
-        "q1": "Ist es sicher?",
-        "a1": "Ja: menschliche Bestätigung bei jedem Schreibvorgang, es respektiert deine Odoo-Berechtigungen und Zugangsdaten werden verschlüsselt.",
-        "q2": "Werden meine Daten für das Training verwendet?",
-        "a2": "Ihre Daten werden nicht zum Training verwendet. OpenAI mit aktivierter Zero Data Retention: API-Aufrufinhalte werden weder gespeichert noch zum Training verwendet.",
-        "q3": "Welche Versionen werden unterstützt?",
-        "a3": "Odoo 12 bis 19, Enterprise und Community.",
-        "q4": "Installiert es etwas in meinem Odoo?",
-        "a4": "Nein. Es verbindet sich über einen Standard-API-Key (XML-RPC).",
-        "q5": "Kann ich meine eigene Marke verwenden?",
-        "a5": "Ja: White-Label, um es deinen Kunden unter deiner Identität weiterzuverkaufen.",
-        "q6": "Was kostet es?",
-        "a6": "Kostenlos auf deinem eigenen Odoo. Für den Einsatz bei deinen Kunden ab 7 $/Nutzer."
+        "heading": "Technische Fragen",
+        "q1": "Wie verbindet es sich mit dem Odoo des Kunden?",
+        "a1": "Über einen Standard-Odoo-API-Schlüssel (XML-RPC). Kein Modul zu installieren, kein direkter Datenbankzugriff erforderlich.",
+        "q2": "Können die Daten eines Kunden einen anderen erreichen?",
+        "a2": "Nein. Jede Odoo-Instanz ist isoliert. Ein Benutzer eines Kunden kann niemals die Daten eines anderen Kunden sehen.",
+        "q3": "Was passiert, wenn mein Kunde Odoo aktualisiert?",
+        "a3": "Nichts. Die Verbindung ist Standard-XML-RPC — sie hängt nicht von internen Modulen oder ORM-Versionen ab. Upgrades unterbrechen die Integration nicht.",
+        "q4": "Werden Daten zum Training der KI verwendet?",
+        "a4": "Nein. Wir verwenden OpenAI mit aktivierter Zero Data Retention: API-Aufruf-Inhalte werden weder gespeichert noch zum Training verwendet.",
+        "q5": "Welche Odoo-Versionen werden unterstützt?",
+        "a5": "Odoo 12 bis 19, Community und Enterprise.",
+        "q6": "Wie viel berechne ich meinen Kunden?",
+        "a6": "Sie setzen den Preis. TheOdooAgent berechnet Ihnen pro aktivem Seat; die Differenz ist Ihre Marge."
       },
       "founder": {
-        "heading": "Gemacht von Martin",
-        "body": "Ich habe es allein gebaut, mit einer einfachen Idee: dass jeder in einem Unternehmen mit seinem Odoo sprechen kann, ohne sich mit Menüs herumzuschlagen. Aktive Entwicklung und direkter Support von mir — wenn du es ausprobierst und etwas nicht stimmt, schreib mir: dein Feedback macht es buchstäblich besser.",
+        "heading": "Gebaut von Martin",
+        "body": "Ich habe es alleine gebaut mit einer einfachen Idee: dass jeder in einem Odoo-Unternehmen abfragen und bedienen kann, ohne mit Menüs zu kämpfen. Aktive Entwicklung, direkter Support von mir — wenn Sie es ausprobieren und etwas nicht stimmt, schreiben Sie mir.",
         "email": "martin@theodooagent.com"
       },
-      "ctaConnect": "Verbinde dein Odoo (kostenlos)"
+      "ctaConnect": "Kostenlos starten"
     },
     "nudge": {
       "eyebrow": "FÜR ODOO-IMPLEMENTIERER",
-      "title": "Was du gerade testest, kannst du unter deiner eigenen Marke weiterverkaufen.",
-      "body": "Verbinde es mit dem Odoo deiner Kunden, mit deiner Identität. Kostenlos, bis einer deiner Kunden es nutzt.",
+      "title": "Was Sie gerade testen, können Sie unter Ihrer Marke verkaufen.",
+      "body": "Verbinden Sie es mit dem Odoo Ihrer Kunden, mit Ihrer Identität. Kostenlos bis ein Kunde es nutzt.",
       "ctaPrimary": "Kostenlos starten",
       "ctaSecondary": "So funktioniert es für Partner",
       "pill": "Für Implementierer",

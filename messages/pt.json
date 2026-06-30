@@ -523,7 +523,10 @@
     "foundingLine2": "Seu feedback define o nosso roadmap. Ao terminar o <prog>programa</prog>, você fica com a tarifa de founder partner para sempre: US$ 1/usuário.",
     "foundingScarcity": "Vagas limitadas",
     "programTooltip": "O benefício do programa Founding Partners dura no mínimo 2 meses, extensível conforme colaboração.",
-    "scarcityTooltip": "Por questões de custo, mantemos um número limitado de founding partners."
+    "scarcityTooltip": "Por questões de custo, mantemos um número limitado de founding partners.",
+    "accessCodeLabel": "Código de acesso",
+    "accessCodePlaceholder": "Seu código de convite",
+    "accessCodeError": "O registro é exclusivo para Founding Partners. Para solicitar acesso, entre em contato em martin@theodooagent.com"
   },
   "Onboarding": {
     "step1Label": "Conexão Odoo",
@@ -904,23 +907,21 @@
   },
   "Intro": {
     "modal": {
-      "title": "Você está testando o TheOdooAgent",
-      "subtitle": "Um agente que consulta e opera o seu Odoo.\nIsto é uma demo com dados de exemplo.",
+      "title": "Demo do TheOdooAgent",
+      "subtitle": "Isto é o que seus clientes verão.\nRodando em um Odoo de exemplo com dados reais de teste.",
       "chips": {
-        "language": "Pergunte no seu idioma: vendas, faturas, estoque",
-        "noInvent": "Não inventa números: quem os calcula é o sistema, não o modelo",
-        "anyOdoo": "Funciona no Enterprise e Community v12–v19"
+        "anyOdoo": "Community & Enterprise v12–v19 · White-label · IA incluída"
       },
-      "tryThisLabel": "Experimente isto",
+      "tryThisLabel": "Experimente como seu cliente faria",
       "tryThis": {
         "overdue_invoices": "Quantas faturas vencidas há este mês?",
         "top_customers": "Top 5 clientes por receita",
         "stock_check": "Criar relatório mês março"
       },
-      "ctaPrimary": "Começar a testar",
-      "ctaSecondary": "Conecte o seu Odoo (grátis)",
+      "ctaPrimary": "Explorar o demo",
+      "ctaSecondary": "Conecte seu Odoo",
       "dontShowAgain": "Não mostrar novamente",
-      "whatIsThis": "O que é isto?",
+      "whatIsThis": "O que é isso?",
       "madeBy": "Feito por Martin",
       "close": "Fechar"
     },
@@ -930,71 +931,71 @@
       "close": "Fechar",
       "hook": {
         "title": "TheOdooAgent",
-        "line": "Fale com o seu Odoo em linguagem natural. Consulte e opere o seu ERP como falaria com um colega — dados reais, gráficos e exportações, sem navegar por menus.",
-        "partnerTag": "Implementa Odoo?"
+        "line": "Uma camada de IA conversacional sobre o Odoo dos seus clientes — com a sua marca, sem instalar módulos, sem custos variáveis de LLM. Configure em minutos; seus clientes consultam e operam em linguagem natural desde o primeiro dia.",
+        "partnerTag": "Modelo de negócio"
       },
       "what": {
-        "heading": "Pergunte, e responde com os seus dados reais",
-        "line": "Interpreta a sua pergunta, consulta o seu Odoo e responde na hora. Também opera —criar, confirmar, atualizar— sempre com a sua confirmação.",
-        "chip1": "Faturas vencidas acima de $10.000",
+        "heading": "Experimente como seu cliente faria",
+        "line": "Isto roda em um Odoo demo. Envie uma consulta e veja exatamente o que seus usuários finais verão.",
+        "chip1": "Faturas vencidas acima de R$ 10.000",
         "chip2": "Vendas por vendedor no mês passado",
-        "chip3": "Criar um contato: María López"
+        "chip3": "Criar contato: María López"
       },
       "different": {
-        "heading": "O que o Odoo AI e os MCPs não te dão",
-        "item1Label": "Community e Enterprise v12–v19",
-        "item1Body": "Funciona onde o seu cliente está hoje.",
-        "item2Label": "Custo da IA incluído",
-        "item2Body": "Sem tokens de LLM. A IA já está coberta.",
-        "item3Label": "White-label de verdade",
-        "item3Body": "Os seus clientes veem a sua marca. O Odoo e os servidores MCP, não.",
-        "item4Label": "Não inventa números",
-        "item4Body": "O sistema calcula; o LLM redige. Nenhuma alucinação."
+        "heading": "Por que funciona na sua prática",
+        "item1Label": "Community e Enterprise, v12 a v19",
+        "item1Body": "Funciona com o Odoo atual de todos os seus clientes, sem precisar migrar.",
+        "item2Label": "Custo de IA incluído",
+        "item2Body": "Sem tokens de LLM para repassar. Preço fixo por seat — margem limpa.",
+        "item3Label": "White-label completo",
+        "item3Body": "Seus clientes veem a sua marca. TheOdooAgent e servidores MCP permanecem invisíveis.",
+        "item4Label": "Números exatos, sem alucinações",
+        "item4Body": "O sistema calcula; o LLM apenas redige. Você pode mostrar em uma demonstração ao cliente com confiança."
       },
       "partner": {
-        "heading": "Você implementa Odoo?",
-        "line": "Ofereça aos seus clientes com a sua marca e revenda.",
-        "item1Label": "White-label e revenda",
-        "item1Body": "A sua marca, os seus preços.",
-        "item2Label": "Multicliente",
-        "item2Body": "gerencie todas as suas empresas a partir de uma única conta",
-        "item3Label": "Não instala nada no Odoo do cliente",
-        "item3Body": "nada quebra nos upgrades, zero manutenção",
-        "cta": "Como revender"
+        "heading": "Modelo de negócio",
+        "line": "Revenda aos seus clientes com a sua marca e seus preços.",
+        "item1Label": "Custo fixo, margem sua",
+        "item1Body": "Você define o preço para cada cliente. TheOdooAgent cobra um valor fixo por seat.",
+        "item2Label": "Multi-cliente em uma conta",
+        "item2Body": "Gerencie todas as instâncias dos seus clientes em um único painel, isoladas.",
+        "item3Label": "Zero instalação no Odoo do cliente",
+        "item3Body": "Conexão por chave de API padrão (XML-RPC). Nada quebra em atualizações, sem manutenção.",
+        "cta": "Falar com Martin"
       },
       "secure": {
         "heading": "Seguro por design",
         "item1": "Confirmação humana em toda escrita",
-        "item2": "Respeita as suas permissões do Odoo",
-        "item3": "Não alucina números",
+        "item2": "Isolamento por cliente — dados nunca misturados",
+        "item3": "Respeita as permissões Odoo de cada usuário",
         "item4": "Credenciais criptografadas"
       },
       "faq": {
-        "heading": "Perguntas frequentes",
-        "q1": "É seguro?",
-        "a1": "Sim: confirmação humana em toda escrita, respeita as suas permissões do Odoo e as credenciais são criptografadas.",
-        "q2": "Meus dados são usados para treinamento?",
-        "a2": "Seus dados não são usados para treinar. A OpenAI com Zero Data Retention ativado não armazena o conteúdo das chamadas de API nem o usa para treinar.",
-        "q3": "Quais versões são suportadas?",
-        "a3": "Odoo 12 a 19, Enterprise e Community.",
-        "q4": "Instala algo no meu Odoo?",
-        "a4": "Não. Conecta-se por uma chave de API padrão (XML-RPC).",
-        "q5": "Posso colocar a minha marca?",
-        "a5": "Sim: white-label para revender aos seus clientes com a sua identidade.",
-        "q6": "Quanto custa?",
-        "a6": "Grátis no seu próprio Odoo. Para implantá-lo nos seus clientes, a partir de $7/usuário."
+        "heading": "Perguntas técnicas",
+        "q1": "Como ele se conecta ao Odoo do cliente?",
+        "a1": "Via chave de API Odoo padrão (XML-RPC). Nenhum módulo para instalar, sem acesso direto ao banco de dados.",
+        "q2": "Os dados de um cliente podem chegar a outro?",
+        "a2": "Não. Cada instância Odoo é isolada. Um usuário de um cliente nunca pode ver os dados de outro.",
+        "q3": "O que acontece se meu cliente atualizar o Odoo?",
+        "a3": "Nada. A conexão é XML-RPC padrão — não depende de módulos internos nem de versões do ORM. As atualizações não quebram a integração.",
+        "q4": "Os dados são usados para treinar a IA?",
+        "a4": "Não. Usamos OpenAI com Zero Data Retention ativado: o conteúdo das chamadas de API não é armazenado nem usado para treinar nenhum modelo.",
+        "q5": "Quais versões do Odoo são suportadas?",
+        "a5": "Odoo 12 a 19, Community e Enterprise.",
+        "q6": "Quanto cobro dos meus clientes?",
+        "a6": "Você define o preço. TheOdooAgent te cobra por seat ativo; a diferença é a sua margem."
       },
       "founder": {
         "heading": "Feito por Martin",
-        "body": "Construí sozinho, com uma ideia simples: que qualquer pessoa numa empresa possa falar com o seu Odoo sem brigar com menus. Desenvolvimento ativo e suporte direto comigo — se experimentar e algo não funcionar, escreva-me: o seu feedback literalmente o melhora.",
+        "body": "Construí sozinho com uma ideia simples: que qualquer pessoa em uma empresa Odoo possa consultar e operar sem brigar com menus. Desenvolvimento ativo, suporte direto comigo — se você testar e algo não funcionar, escreva para mim.",
         "email": "martin@theodooagent.com"
       },
-      "ctaConnect": "Conecte o seu Odoo (grátis)"
+      "ctaConnect": "Comece grátis"
     },
     "nudge": {
       "eyebrow": "PARA IMPLEMENTADORES DE ODOO",
-      "title": "O que você está testando, você revende com a sua marca.",
-      "body": "Conecte ao Odoo dos seus clientes, com a sua identidade. Grátis até que um cliente seu o utilize.",
+      "title": "O que você está testando, você pode revender com a sua marca.",
+      "body": "Conecte ao Odoo dos seus clientes, com a sua identidade. Grátis até que um cliente seu use.",
       "ctaPrimary": "Comece grátis",
       "ctaSecondary": "Como funciona para parceiros",
       "pill": "Para implementadores",

@@ -28,7 +28,7 @@ import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useChatContext } from "@/components/app-shell";
 
 const DISMISSED_KEY = "toa_partner_nudge_dismissed";
-const SUCCESS_THRESHOLD = 2;
+const SUCCESS_THRESHOLD = 3;
 
 export type PartnerNudgeView = "hidden" | "expanded" | "pill";
 
