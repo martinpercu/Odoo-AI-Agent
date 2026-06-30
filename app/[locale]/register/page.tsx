@@ -8,21 +8,28 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { resolvePostAuthPath } from "@/lib/post-auth";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
-import { Loader2 } from "lucide-react";
+import { Loader2, Zap } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
+
+const ACCESS_CODE = process.env.NEXT_PUBLIC_ACCESS_CODE ?? "odoopower";
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
   const { register, isLoading: authLoading, user } = useAuth();
   const { reload, meData } = useSession();
+  const demoAvailable = meData?.demo_available ?? false;
   const router = useRouter();
   const pathname = usePathname();
 
+  const [accessCode, setAccessCode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const accessCodeValid = accessCode === ACCESS_CODE;
+  const showAccessError = accessCode.length > 0 && !accessCodeValid;
 
   const locale = pathname?.split("/")[1] || "en";
 
@@ -91,11 +98,26 @@ export default function RegisterPage() {
               ),
             })}
           </p>
-          <p className="mt-3 text-micro font-medium uppercase tracking-wide text-accent">
-            <InfoTooltip text={t("scarcityTooltip")} className="text-accent uppercase">
-              {t("foundingScarcity")}
-            </InfoTooltip>
-          </p>
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <p className="text-micro font-medium uppercase tracking-wide text-accent">
+              <InfoTooltip text={t("scarcityTooltip")} className="text-accent uppercase">
+                {t("foundingScarcity")}
+              </InfoTooltip>
+            </p>
+            <input
+              type="text"
+              value={accessCode}
+              onChange={(e) => setAccessCode(e.target.value)}
+              placeholder={t("accessCodePlaceholder")}
+              className="w-40 shrink-0 rounded-btn border border-border bg-base px-2.5 py-1 text-small text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/30"
+              autoComplete="off"
+            />
+          </div>
+          {showAccessError && (
+            <p className="mt-1.5 rounded-md bg-error-subtle px-3 py-2 text-small text-error">
+              {t("accessCodeError")}
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -133,7 +155,7 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={isSubmitting || authLoading}
+            disabled={isSubmitting || authLoading || !accessCodeValid}
             className="mt-1 flex h-btn-md items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
           >
             {isSubmitting && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
@@ -150,6 +172,19 @@ export default function RegisterPage() {
             {t("loginLink")}
           </Link>
         </p>
+
+        {demoAvailable && (
+          <div className="mt-4 border-t border-border pt-4">
+            <button
+              type="button"
+              onClick={() => router.push(`/${locale}/chat`)}
+              className="flex h-btn-md w-full items-center justify-center gap-2 rounded-btn border border-border px-4 text-body font-medium text-foreground hover:bg-raised transition-colors"
+            >
+              <Zap size={16} strokeWidth={1.5} className="text-warning-solid" />
+              {t("tryDemo")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

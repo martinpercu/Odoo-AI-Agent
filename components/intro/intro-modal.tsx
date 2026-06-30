@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Languages, Calculator, Boxes, X, ArrowRight } from "lucide-react";
+import { Boxes, X, ArrowRight } from "lucide-react";
 import { MarkB } from "@/components/AgentMark";
 import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
@@ -18,8 +18,6 @@ import { A11yModal } from "@/components/intro/a11y-modal";
 const EXAMPLE_PROMPTS = ["overdue_invoices", "top_customers", "stock_check"] as const;
 
 const CHIPS = [
-  { key: "language", icon: Languages },
-  { key: "noInvent", icon: Calculator },
   { key: "anyOdoo", icon: Boxes },
 ] as const;
 
@@ -120,23 +118,11 @@ export function IntroModal() {
             </div>
           </div>
 
-          {/* Chips */}
-          <ul className="mb-6 space-y-2.5">
-            {CHIPS.map(({ key, icon: Icon }) => (
-              <li key={key} className="flex items-center gap-3 text-body">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn bg-accent-subtle text-accent">
-                  <Icon size={18} strokeWidth={1.5} />
-                </span>
-                <span className="text-text-secondary">{t(`chips.${key}`)}</span>
-              </li>
-            ))}
-          </ul>
-
           {/* Try this */}
           <p className="mb-2 text-small font-medium text-text-secondary">
             {t("tryThisLabel")}
           </p>
-          <div className="mb-6 space-y-2">
+          <div className="mb-4 space-y-2">
             {EXAMPLE_PROMPTS.map((id) => {
               const text = t(`tryThis.${id}`);
               return (
@@ -155,6 +141,18 @@ export function IntroModal() {
               );
             })}
           </div>
+
+          {/* Chips */}
+          <ul className="mb-6 space-y-2.5">
+            {CHIPS.map(({ key, icon: Icon }) => (
+              <li key={key} className="flex items-center gap-3 text-body">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn bg-accent-subtle text-accent">
+                  <Icon size={18} strokeWidth={1.5} />
+                </span>
+                <span className="text-text-secondary">{t(`chips.${key}`)}</span>
+              </li>
+            ))}
+          </ul>
 
           {/* CTAs */}
           <div className="flex flex-col gap-2.5 sm:flex-row">
