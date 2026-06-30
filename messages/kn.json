@@ -200,36 +200,43 @@
     "founding": {
       "name": "Founding Partner",
       "yourPlan": "Your plan",
-      "betaFree": "$0 during beta",
-      "founderRate": "{rate}/user — forever",
-      "founderRateNote": "80% founder discount",
-      "anchor": "{anchor}/user (list price)",
+      "limitedSpots": "Limited spots",
+      "freeNow": "Free during the program",
+      "afterProgram": "Then: {rate}/user/mo",
+      "lockedForLife": "Locked in for life",
+      "byInvitation": "By invitation",
+      "contactCta": "Talk to Martin",
       "features": {
-        "freeBeta": "Free access during beta (your usage + the clients you bring to test)",
-        "lockedRate": "Founder rate locked in for life",
-        "feedback": "Your feedback shapes the roadmap",
-        "firstInMarket": "First in your market offering AI on Odoo"
+        "whiteLabel": "Full white-label — your clients see your brand",
+        "aiIncluded": "AI cost included — no LLM tokens to pass on",
+        "multiClient": "Multi-client from a single panel",
+        "noInstall": "Nothing to install on the client's Odoo",
+        "exactNumbers": "Exact numbers, no hallucinations",
+        "feedback": "Your feedback shapes the roadmap"
       },
-      "honestNote": "{rate} barely covers what it costs to run it — you pay (almost) my cost, not my price.",
-      "standard": {
+      "public": {
         "name": "Standard",
-        "price": "{anchor} / user / month",
-        "soon": "Coming soon"
+        "price": "{anchor}/user/mo",
+        "tag": "Public price",
+        "note": "The same product, without the program rate — what anyone pays."
       },
       "enterprise": {
         "name": "Enterprise",
-        "desc": "More than 20 seats · custom pricing",
-        "soon": "Coming soon"
+        "desc": "200+ seats or 30+ instances",
+        "tag": "Custom pricing",
+        "note": "Volume, multi-instance and dedicated support."
       },
       "modal": {
-        "title": "Not yet — we're in beta",
-        "body": "For now TheOdooAgent is open only to founding partners. The Standard and Enterprise plans activate when we leave beta. You're already in as a founding partner, so enjoy the beta for free.",
-        "cta": "Got it"
+        "title": "Founding Partners program",
+        "body": "Right now TheOdooAgent is open by invitation only, through the Founding Partners program. Write to us and we'll see how to bring you in.",
+        "cta": "Email Martin",
+        "email": "martin@theodooagent.com"
       },
       "indicator": {
-        "status": "Founding Partner · free during beta",
-        "note": "When we leave beta, your founder rate stays locked: {rate}/user forever."
-      }
+        "status": "Founding Partner · free during the program",
+        "note": "When the program ends, your founder rate stays locked: {rate}/user for life."
+      },
+      "startCta": "Get started"
     }
   },
   "Settings": {
@@ -526,7 +533,9 @@
     "scarcityTooltip": "For cost reasons, we keep a limited number of founding partners.",
     "accessCodeLabel": "Access code",
     "accessCodePlaceholder": "Your invitation code",
-    "accessCodeError": "Registration is for Founding Partners only. To request access, reach out at martin@theodooagent.com"
+    "accessCodeError": "Registration is for Founding Partners only. To request access, reach out at <mail>martin@theodooagent.com</mail>",
+    "requestAccess": "No code yet? <mail>Request access</mail>",
+    "requestAccessEmail": "martin@theodooagent.com"
   },
   "Onboarding": {
     "step1Label": "Odoo Connection",
@@ -907,19 +916,19 @@
   },
   "Intro": {
     "modal": {
-      "title": "TheOdooAgent demo",
-      "subtitle": "This is what your clients will see.\nRunning on a sample Odoo with real test data.",
+      "title": "You're trying TheOdooAgent",
+      "subtitle": "This is what your clients will see.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · AI included"
       },
-      "tryThisLabel": "Try it as your client would",
+      "tryThisLabel": "Try this",
       "tryThis": {
         "overdue_invoices": "How many overdue invoices are there this month?",
         "top_customers": "Top 5 customers by revenue",
         "stock_check": "Create March month report"
       },
       "ctaPrimary": "Explore the demo",
-      "ctaSecondary": "Connect your Odoo",
+      "ctaSecondary": "Connect your Odoo (free)",
       "dontShowAgain": "Don't show again",
       "whatIsThis": "What is this?",
       "madeBy": "Made by Martin",
@@ -931,7 +940,7 @@
       "close": "Close",
       "hook": {
         "title": "TheOdooAgent",
-        "line": "An AI chat layer on top of your clients' Odoo — under your brand, no modules to install, no per-use LLM costs. Set it up in minutes; your clients query and operate in plain language from day 1.",
+        "line": "An AI agent on your clients' Odoo — under your brand, no modules to install, no per-use LLM costs. Set it up in minutes; your clients query and operate in plain language from day 1.",
         "partnerTag": "Business model"
       },
       "what": {
@@ -1145,7 +1154,7 @@
   "FoundingPartner": {
     "badge": "Founding Partner",
     "clockDaysLeft": "{days} days left",
-    "clockExpired": "Beta ended",
+    "clockExpired": "Program ended",
     "clockTooltip": "Days left in the Founding Partner program"
   }
 }
