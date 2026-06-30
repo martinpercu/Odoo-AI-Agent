@@ -51,7 +51,7 @@ export default function PricingPage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:py-20">
+      <div className="mx-auto max-w-5xl px-4 pb-12 pt-4 sm:px-6 lg:pb-20 lg:pt-10">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -61,8 +61,7 @@ export default function PricingPage() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-accent-subtle">
             <Sparkles size={24} strokeWidth={1.5} className="text-accent" />
           </div>
-          <h1 className="mb-3 text-display">{t("heading")}</h1>
-          <p className="mx-auto max-w-xl text-body text-text-secondary">{t("subheading")}</p>
+          <h1 className="text-display">{t("heading")}</h1>
         </motion.div>
 
         {isBeta ? (

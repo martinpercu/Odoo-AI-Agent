@@ -200,36 +200,43 @@
     "founding": {
       "name": "Founding Partner",
       "yourPlan": "Ihr Plan",
-      "betaFree": "0 $ während der Beta",
-      "founderRate": "{rate}/Nutzer — für immer",
-      "founderRateNote": "80 % Gründerrabatt",
-      "anchor": "{anchor}/Nutzer (Listenpreis)",
+      "limitedSpots": "Begrenzte Plätze",
+      "freeNow": "Kostenlos während des Programms",
+      "afterProgram": "Danach: {rate}/Benutzer/Monat",
+      "lockedForLife": "Lebenslang gesichert",
+      "byInvitation": "Auf Einladung",
+      "contactCta": "Martin kontaktieren",
       "features": {
-        "freeBeta": "Kostenloser Zugang während der Beta (Ihre Nutzung + die Kunden, die Sie zum Testen mitbringen)",
-        "lockedRate": "Gründertarif auf Lebenszeit gesichert",
-        "feedback": "Ihr Feedback bestimmt die Roadmap",
-        "firstInMarket": "Erster in Ihrem Markt mit KI für Odoo"
+        "whiteLabel": "Komplettes White-Label — Ihre Kunden sehen Ihre Marke",
+        "aiIncluded": "KI-Kosten inklusive — keine LLM-Tokens weiterzugeben",
+        "multiClient": "Multi-Client aus einem einzigen Panel",
+        "noInstall": "Nichts im Odoo des Kunden zu installieren",
+        "exactNumbers": "Exakte Zahlen, keine Halluzinationen",
+        "feedback": "Ihr Feedback gestaltet die Roadmap"
       },
-      "honestNote": "{rate} deckt kaum die Betriebskosten — Sie zahlen (fast) meine Kosten, nicht meinen Preis.",
-      "standard": {
+      "public": {
         "name": "Standard",
-        "price": "{anchor} / Nutzer / Monat",
-        "soon": "Demnächst"
+        "price": "{anchor}/Benutzer/Monat",
+        "tag": "Öffentlicher Preis",
+        "note": "Dasselbe Produkt, ohne den Programmtarif — was alle zahlen."
       },
       "enterprise": {
         "name": "Enterprise",
-        "desc": "Mehr als 20 Plätze · individueller Preis",
-        "soon": "Demnächst"
+        "desc": "200+ Sitze oder 30+ Instanzen",
+        "tag": "Individueller Preis",
+        "note": "Volumen, Multi-Instanz und dedizierter Support."
       },
       "modal": {
-        "title": "Noch nicht — wir sind in der Beta",
-        "body": "Derzeit ist TheOdooAgent nur für Founding Partner geöffnet. Die Pläne Standard und Enterprise werden beim Verlassen der Beta aktiviert. Sie sind bereits als Founding Partner dabei, also genießen Sie die Beta kostenlos.",
-        "cta": "Verstanden"
+        "title": "Founding-Partners-Programm",
+        "body": "TheOdooAgent ist derzeit nur auf Einladung im Rahmen des Founding-Partners-Programms verfügbar. Schreiben Sie uns, und wir finden einen Weg, Sie aufzunehmen.",
+        "cta": "Martin schreiben",
+        "email": "martin@theodooagent.com"
       },
       "indicator": {
-        "status": "Founding Partner · kostenlos während der Beta",
-        "note": "Beim Verlassen der Beta bleibt Ihr Gründertarif gesichert: {rate}/Nutzer für immer."
-      }
+        "status": "Founding Partner · kostenlos während des Programms",
+        "note": "Wenn das Programm endet, bleibt Ihr Founder-Tarif gesichert: {rate}/Benutzer auf Lebenszeit."
+      },
+      "startCta": "Loslegen"
     }
   },
   "Settings": {
@@ -526,7 +533,9 @@
     "scarcityTooltip": "Aus Kostengründen halten wir die Zahl der Founding Partner begrenzt.",
     "accessCodeLabel": "Zugangscode",
     "accessCodePlaceholder": "Ihr Einladungscode",
-    "accessCodeError": "Die Registrierung ist nur für Founding Partners. Für Zugang wenden Sie sich an martin@theodooagent.com"
+    "accessCodeError": "Die Registrierung ist nur für Founding Partners. Für Zugang wenden Sie sich an <mail>martin@theodooagent.com</mail>",
+    "requestAccess": "Noch keinen Code? <mail>Zugang anfragen</mail>",
+    "requestAccessEmail": "martin@theodooagent.com"
   },
   "Onboarding": {
     "step1Label": "Odoo-Verbindung",
@@ -907,19 +916,19 @@
   },
   "Intro": {
     "modal": {
-      "title": "TheOdooAgent-Demo",
-      "subtitle": "So wird es Ihre Kunden sehen.\nLäuft auf einem Demo-Odoo mit echten Testdaten.",
+      "title": "Sie testen TheOdooAgent",
+      "subtitle": "So wird es Ihre Kunden sehen.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-Label · KI inklusive"
       },
-      "tryThisLabel": "Testen Sie es wie Ihr Kunde",
+      "tryThisLabel": "Probieren Sie das",
       "tryThis": {
         "overdue_invoices": "Wie viele überfällige Rechnungen gibt es diesen Monat?",
         "top_customers": "Top 5 Kunden nach Umsatz",
         "stock_check": "Bericht für März erstellen"
       },
       "ctaPrimary": "Demo erkunden",
-      "ctaSecondary": "Verbinden Sie Ihr Odoo",
+      "ctaSecondary": "Verbinden Sie Ihr Odoo (kostenlos)",
       "dontShowAgain": "Nicht mehr anzeigen",
       "whatIsThis": "Was ist das?",
       "madeBy": "Erstellt von Martin",
@@ -931,7 +940,7 @@
       "close": "Schließen",
       "hook": {
         "title": "TheOdooAgent",
-        "line": "Eine konversationelle KI-Schicht auf dem Odoo Ihrer Kunden — unter Ihrer Marke, ohne Module zu installieren, ohne variable LLM-Kosten. In Minuten eingerichtet; Ihre Kunden befragen und bedienen es ab Tag 1 in natürlicher Sprache.",
+        "line": "Ein KI-Agent auf dem Odoo Ihrer Kunden — unter Ihrer Marke, ohne Module zu installieren, ohne variable LLM-Kosten. In Minuten eingerichtet; Ihre Kunden befragen und bedienen es in natürlicher Sprache ab Tag 1.",
         "partnerTag": "Geschäftsmodell"
       },
       "what": {
@@ -1145,7 +1154,7 @@
   "FoundingPartner": {
     "badge": "Founding Partner",
     "clockDaysLeft": "Noch {days} Tage",
-    "clockExpired": "Beta beendet",
+    "clockExpired": "Programm beendet",
     "clockTooltip": "Verbleibende Tage im Founding-Partner-Programm"
   }
 }

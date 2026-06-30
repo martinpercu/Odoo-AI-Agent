@@ -1646,7 +1646,7 @@ export async function createBillingCheckout(
 export const BETA_BILLING_DEFAULTS: BillingState = {
   phase: "beta_founder",
   price_anchor: 7,
-  founder_rate: 1.4,
+  founder_rate: 1,
   beta_free: true,
   founder_rate_locked: false,
 };

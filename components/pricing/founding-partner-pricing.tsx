@@ -1,28 +1,39 @@
 "use client";
 
 /**
- * Founding Partners pricing (Fase 0, spec §3). Three cards:
- *   A — Founding Partner: active, the user's current plan (no purchase CTA).
- *   B — Standard: greyed/disabled, opens the informative modal (§3.1).
- *   C — Enterprise: greyed/disabled, opens the informative modal (§3.1).
+ * Founding Partners pricing (Fase 0, spec §3). A 3-card contrast ladder:
+ *   A — Founding Partner: active, the viewer's plan. Free during the program,
+ *       then $1/user for life. Visually dominant.
+ *   B — Standard (public): the price a non-founder pays ($7/user). Lives as the
+ *       anchor that makes the founder rate read as 7× cheaper — not "coming soon".
+ *   C — Enterprise: 200+ seats / 30+ instances, custom pricing (no number).
  *
- * Tone: invitation + status + scarcity + honesty — never "buy / subscribe".
- * All prices are read from `BillingState` (spec §6) — nothing hardcoded.
- * Cards B/C are purely informative: no POST, no interest capture.
+ * Tone: invitation + status + scarcity — the program is by invitation only.
+ * All three cards are clickable and open one short modal whose only CTA is to
+ * email Martin (martin@theodooagent.com). No purchase flow, no data capture.
+ *
+ * All prices come from `BillingState` (spec §6): founder_rate = $1,
+ * price_anchor = $7 (public). Nothing hardcoded.
+ *
+ * Mobile: every card is a real <button>, so a tap opens the modal. The hover
+ * elevation is a desktop-only nicety — the "by invitation" / "Talk to Martin"
+ * affordance text is always visible so the tap target reads as actionable
+ * without relying on hover.
  */
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Check, Sparkles, Building2, Star } from "lucide-react";
-import { A11yModal } from "@/components/intro/a11y-modal";
+import { Check, Star, Users, Building2, ArrowRight } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { FoundingInfoModal } from "@/components/pricing/founding-info-modal";
 import type { BillingState } from "@/lib/types";
 
 interface FoundingPartnerPricingProps {
   billing: BillingState;
 }
 
-/** $7 → "$7", $1.4 → "$1.40" — keeps cents only when they exist. */
+/** $7 → "$7", $1 → "$1", $1.4 → "$1.40" — keeps cents only when they exist. */
 function formatPrice(value: number): string {
   const hasCents = value % 1 !== 0;
   return `$${value.toFixed(hasCents ? 2 : 0)}`;
@@ -31,21 +42,24 @@ function formatPrice(value: number): string {
 export function FoundingPartnerPricing({ billing }: FoundingPartnerPricingProps) {
   const t = useTranslations("Pricing.founding");
   const [infoOpen, setInfoOpen] = useState(false);
+  const openInfo = () => setInfoOpen(true);
 
-  const founderRate = formatPrice(billing.founder_rate);
-  const anchor = formatPrice(billing.price_anchor);
+  const founderRate = formatPrice(billing.founder_rate); // $1
+  const anchor = formatPrice(billing.price_anchor); // $7
 
-  const founderFeatures = [
-    t("features.freeBeta"),
-    t("features.lockedRate"),
+  const features = [
+    t("features.whiteLabel"),
+    t("features.aiIncluded"),
+    t("features.multiClient"),
+    t("features.noInstall"),
+    t("features.exactNumbers"),
     t("features.feedback"),
-    t("features.firstInMarket"),
   ];
 
   return (
     <>
       <div className="grid gap-6 md:grid-cols-3 md:items-stretch">
-        {/* ---- Card A: Founding Partner (active) ---- */}
+        {/* ---- Card A: Founding Partner (active, dominant) — CTA goes to /register ---- */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -59,27 +73,25 @@ export function FoundingPartnerPricing({ billing }: FoundingPartnerPricingProps)
           </div>
 
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-accent text-white">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-accent text-white">
               <Star size={20} strokeWidth={1.5} />
             </div>
-            <h3 className="text-subheading">{t("name")}</h3>
+            <div className="min-w-0">
+              <h3 className="text-subheading">{t("name")}</h3>
+              <span className="text-micro font-medium text-accent">{t("limitedSpots")}</span>
+            </div>
           </div>
 
-          {billing.beta_free && (
-            <div className="mb-1">
-              <span className="text-4xl font-extrabold">{t("betaFree")}</span>
-            </div>
-          )}
+          <div className="mb-1">
+            <span className="text-3xl font-extrabold">{t("freeNow")}</span>
+          </div>
           <p className="mb-1 text-body font-semibold text-foreground">
-            {t("founderRate", { rate: founderRate })}
+            {t("afterProgram", { rate: founderRate })}
           </p>
-          <p className="mb-2 text-small text-accent">{t("founderRateNote")}</p>
-          <p className="mb-6 text-small text-text-muted">
-            <span className="line-through">{t("anchor", { anchor })}</span>
-          </p>
+          <p className="mb-6 text-small text-accent">{t("lockedForLife")}</p>
 
           <ul className="mb-6 flex flex-1 flex-col gap-3">
-            {founderFeatures.map((feature, i) => (
+            {features.map((feature, i) => (
               <li key={i} className="flex items-start gap-2.5 text-body">
                 <Check size={16} strokeWidth={1.5} className="mt-0.5 shrink-0 text-accent" />
                 <span>{feature}</span>
@@ -87,103 +99,112 @@ export function FoundingPartnerPricing({ billing }: FoundingPartnerPricingProps)
             ))}
           </ul>
 
-          <p className="rounded-btn bg-accent-subtle px-3 py-2 text-small text-text-secondary">
-            {t("honestNote", { rate: founderRate })}
-          </p>
+          <Link
+            href="/register"
+            className="mt-auto flex h-btn-md w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
+          >
+            {t("startCta")}
+            <ArrowRight size={16} strokeWidth={1.5} />
+          </Link>
         </motion.div>
 
-        {/* ---- Card B: Standard (disabled → info modal) ---- */}
-        <DisabledCard
-          icon={<Sparkles size={20} strokeWidth={1.5} />}
-          name={t("standard.name")}
-          price={t("standard.price", { anchor })}
-          soonLabel={t("standard.soon")}
-          ariaLabel={t("modal.title")}
-          onOpen={() => setInfoOpen(true)}
+        {/* ---- Card B: Standard / public price (the anchor) ---- */}
+        <ContrastCard
+          icon={<Users size={20} strokeWidth={1.5} />}
+          name={t("public.name")}
+          price={t("public.price", { anchor })}
+          tag={t("public.tag")}
+          note={t("public.note")}
+          cta={t("contactCta")}
+          onOpen={openInfo}
           delay={0.1}
         />
 
-        {/* ---- Card C: Enterprise (disabled → info modal) ---- */}
-        <DisabledCard
+        {/* ---- Card C: Enterprise (scale, no number) ---- */}
+        <ContrastCard
           icon={<Building2 size={20} strokeWidth={1.5} />}
           name={t("enterprise.name")}
           price={t("enterprise.desc")}
-          soonLabel={t("enterprise.soon")}
-          ariaLabel={t("modal.title")}
-          onOpen={() => setInfoOpen(true)}
+          priceSmall
+          tag={t("enterprise.tag")}
+          note={t("enterprise.note")}
+          cta={t("contactCta")}
+          onOpen={openInfo}
           delay={0.2}
         />
       </div>
 
-      {/* ---- Informative modal (§3.1) — no data capture ---- */}
-      <A11yModal
-        open={infoOpen}
-        onClose={() => setInfoOpen(false)}
-        labelledBy="founding-modal-title"
-        describedBy="founding-modal-body"
-        className="w-full max-w-md px-4"
-        containerClassName="items-end sm:items-center"
-      >
-        <div className="rounded-card border border-border bg-surface p-6 shadow-lg">
-          <h2 id="founding-modal-title" className="mb-2 text-heading">
-            {t("modal.title")}
-          </h2>
-          <p id="founding-modal-body" className="mb-6 text-body text-text-secondary">
-            {t("modal.body")}
-          </p>
-          <button
-            type="button"
-            onClick={() => setInfoOpen(false)}
-            className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
-          >
-            {t("modal.cta")}
-          </button>
-        </div>
-      </A11yModal>
+      {/* ---- Short modal — its only CTA is to email Martin ---- */}
+      <FoundingInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
     </>
   );
 }
 
-// ---- Disabled-but-clickable card (cards B/C) ----
+// ---- Contrast card (cards B/C) — clickable, opens the same modal ----
 
-interface DisabledCardProps {
+interface ContrastCardProps {
   icon: React.ReactNode;
   name: string;
   price: string;
-  soonLabel: string;
-  ariaLabel: string;
+  /** Smaller price type for descriptive strings (Enterprise). */
+  priceSmall?: boolean;
+  tag: string;
+  note: string;
+  cta: string;
   onOpen: () => void;
   delay: number;
 }
 
-function DisabledCard({ icon, name, price, soonLabel, ariaLabel, onOpen, delay }: DisabledCardProps) {
+function ContrastCard({
+  icon,
+  name,
+  price,
+  priceSmall,
+  tag,
+  note,
+  cta,
+  onOpen,
+  delay,
+}: ContrastCardProps) {
   return (
     <motion.button
       type="button"
       onClick={onOpen}
-      aria-disabled="true"
-      aria-label={ariaLabel}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay, duration: 0.15, ease: "easeOut" }}
-      className="relative flex flex-col rounded-card border border-border bg-raised/40 p-6 text-left opacity-70 transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+      className="relative flex flex-col rounded-card border border-border bg-surface p-6 text-left transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
     >
       <div className="absolute right-4 top-4">
-        <span className="rounded-btn border border-border bg-surface px-2 py-0.5 text-micro font-medium text-text-secondary">
-          {soonLabel}
+        <span className="rounded-btn border border-border bg-base px-2 py-0.5 text-micro font-medium text-text-secondary">
+          {tag}
         </span>
       </div>
 
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-raised text-text-secondary">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-raised text-text-secondary">
           {icon}
         </div>
-        <h3 className="text-subheading text-text-secondary">{name}</h3>
+        <h3 className="text-subheading">{name}</h3>
       </div>
 
       <div className="mb-2">
-        <span className="text-2xl font-bold text-text-secondary">{price}</span>
+        <span
+          className={
+            priceSmall
+              ? "text-xl font-bold text-foreground"
+              : "text-3xl font-extrabold text-foreground"
+          }
+        >
+          {price}
+        </span>
       </div>
+      <p className="mb-6 text-small text-text-secondary">{note}</p>
+
+      <span className="mt-auto inline-flex items-center gap-1.5 text-small font-medium text-accent">
+        {cta}
+        <ArrowRight size={14} strokeWidth={1.5} />
+      </span>
     </motion.button>
   );
 }
