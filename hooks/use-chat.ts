@@ -345,7 +345,7 @@ export function useChat(chatId?: string, userId?: string) {
         let accumulated = "";
         let buffer = "";
         let charts: ChartSSEEvent[] = [];
-        // Watermark: safe default = show (true). Updated by "watermark" SSE event.
+        // Watermark: safe default = not show. Only shows when backend explicitly sends show: true.
         let showWatermark: boolean | undefined = undefined;
 
         // Throttle state updates to once per animation frame to avoid
@@ -450,7 +450,7 @@ export function useChat(chatId?: string, userId?: string) {
                       text = "";
                     } else if (parsed.type === "watermark") {
                       // Watermark event comes at the start. show: false = paid client.
-                      showWatermark = typeof parsed.show === "boolean" ? parsed.show : true;
+                      showWatermark = typeof parsed.show === "boolean" ? parsed.show : false;
                       continue;
                     } else if (parsed.type === "error") {
                       // Terminal error event: the backend graph failed mid-stream.
