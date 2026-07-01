@@ -84,9 +84,9 @@ export function PartnerNudge() {
             <button
               onClick={minimize}
               aria-label={t("minimize")}
-              className="shrink-0 rounded-btn p-1.5 text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
+              className="shrink-0 rounded-btn border border-border bg-surface p-1.5 text-foreground/70 shadow-sm transition-colors hover:bg-raised hover:text-foreground"
             >
-              <Minus size={18} strokeWidth={1.5} />
+              <Minus size={16} strokeWidth={2} />
             </button>
           </div>
         </motion.div>
