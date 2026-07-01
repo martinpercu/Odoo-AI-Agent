@@ -946,7 +946,7 @@
       "what": {
         "heading": "Provalo come lo vedrà il tuo cliente",
         "line": "Questo gira su un Odoo demo. Invia una query e vedi esattamente cosa vedranno i tuoi utenti finali.",
-        "chip1": "Fatture scadute oltre $10.000",
+        "chip1": "Fatture scadute oltre 450.000",
         "chip2": "Vendite per agente il mese scorso",
         "chip3": "Crea contatto: María López"
       },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Terminal, X } from "lucide-react";
+import { Workflow, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -26,17 +26,12 @@ export function LangGraphTracePanel({ entries }: Props) {
     return (
       <button
         onClick={() => setCollapsed(false)}
-        className="fixed right-4 bottom-4 z-50 flex h-btn-md items-center gap-2 rounded-btn px-3 shadow-lg hover:opacity-90 deep-surface"
+        className="fixed z-50 hidden lg:flex rounded-md p-2 shadow-md bg-sidebar text-text-secondary transition-colors hover:bg-sidebar-active hover:text-foreground"
+        style={{ bottom: "calc(var(--spacing) * 6)", right: "calc(var(--spacing) * 1.25)" }}
         aria-label={t("expand")}
         title={t("title")}
       >
-        <Terminal size={16} strokeWidth={1.5} />
-        <span className="font-technical-sm">{t("title")}</span>
-        {entries.length > 0 && (
-          <span className="ml-1 rounded-full bg-raised px-1.5 text-[10px] font-medium tracking-wider">
-            {entries.length}
-          </span>
-        )}
+        <Workflow size={20} strokeWidth={1.5} />
       </button>
     );
   }
