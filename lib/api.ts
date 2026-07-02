@@ -249,7 +249,7 @@ export async function submitOnboarding(
 
 export async function updateOrg(
   orgId: string,
-  payload: { name?: string; slug?: string; type?: OrgType }
+  payload: { name?: string; slug?: string; type?: OrgType; brand_name?: string | null; brand_logo_url?: string | null }
 ): Promise<OrgResult> {
   try {
     const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}`, {
@@ -344,12 +344,15 @@ export async function fetchInstanceDetail(
     const res = await authFetch(`${API_BASE}/admin/orgs/${orgId}/configs/${configId}`);
     const data = await res.json();
     if (res.ok) {
-      // Backend may omit empty collections — guarantee the arrays/counts so the UI never hits undefined.
+      // Backend wraps the config under a `config` key: { status, config: {...} }.
+      // Fall back to `data` directly for forward-compatibility if the shape changes.
+      const raw = data.config ?? data;
       const detail: InstanceDetail = {
-        ...data,
-        users: data.users ?? [],
-        invitations: data.invitations ?? [],
-        counts: data.counts ?? { active: 0, unset: 0, invalid: 0, pending: 0 },
+        ...raw,
+        id: raw.id ?? configId,
+        users: raw.users ?? [],
+        invitations: raw.invitations ?? [],
+        counts: raw.counts ?? { active: 0, unset: 0, invalid: 0, pending: 0 },
       };
       return { success: true, detail };
     }
@@ -363,7 +366,7 @@ export async function fetchInstanceDetail(
 export async function updateOdooConfig(
   orgId: string,
   configId: string,
-  payload: Partial<{ label: string; url: string; db_name: string; is_active: boolean }>
+  payload: Partial<{ label: string | null; url: string; db_name: string; is_active: boolean }>
 ): Promise<OdooConfigResult> {
   try {
     const res = await authFetch(

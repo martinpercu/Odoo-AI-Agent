@@ -31,6 +31,8 @@ import type { BillingState } from "@/lib/types";
 
 interface FoundingPartnerPricingProps {
   billing: BillingState;
+  /** True when org is a founding partner but hasn't connected their first instance yet. */
+  awaitingFirstInstance?: boolean;
 }
 
 /** $7 → "$7", $1 → "$1", $1.4 → "$1.40" — keeps cents only when they exist. */
@@ -39,7 +41,7 @@ function formatPrice(value: number): string {
   return `$${value.toFixed(hasCents ? 2 : 0)}`;
 }
 
-export function FoundingPartnerPricing({ billing }: FoundingPartnerPricingProps) {
+export function FoundingPartnerPricing({ billing, awaitingFirstInstance }: FoundingPartnerPricingProps) {
   const t = useTranslations("Pricing.founding");
   const [infoOpen, setInfoOpen] = useState(false);
   const openInfo = () => setInfoOpen(true);
@@ -100,7 +102,7 @@ export function FoundingPartnerPricing({ billing }: FoundingPartnerPricingProps)
           </ul>
 
           <Link
-            href="/register"
+            href={awaitingFirstInstance ? "/instances" : "/register"}
             className="mt-auto flex h-btn-md w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
           >
             {t("startCta")}

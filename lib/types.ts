@@ -429,6 +429,10 @@ export interface MeOrg {
   beta_ends_at?: string | null;
   /** Whole days left in the free-beta window (0 if expired, null if no clock). */
   days_left?: number | null;
+  /** White-label brand name shown to clients (distinct from the internal org name). */
+  brand_name?: string | null;
+  /** White-label logo URL shown to clients. */
+  brand_logo_url?: string | null;
 }
 
 export interface MeSubscription {

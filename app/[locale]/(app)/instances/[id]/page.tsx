@@ -162,7 +162,11 @@ function InstanceEditForm({
   async function saveLabel() {
     setSavingLabel(true);
     setError(null);
-    const res = await updateOdooConfig(orgId, detail.id, { label });
+    const res = await updateOdooConfig(orgId, detail.id, {
+      label: label.trim() || null,
+      url: detail.url,
+      db_name: detail.db_name,
+    });
     if (res.success) onSaved();
     else setError(res.error ?? t("edit.saveError"));
     setSavingLabel(false);
@@ -172,7 +176,11 @@ function InstanceEditForm({
     e.preventDefault();
     setSavingConn(true);
     setError(null);
-    const res = await updateOdooConfig(orgId, detail.id, { url, db_name: dbName });
+    const res = await updateOdooConfig(orgId, detail.id, {
+      label: label.trim() || null,
+      url,
+      db_name: dbName,
+    });
     if (res.success) onSaved();
     else setError(res.error ?? t("edit.saveError"));
     setSavingConn(false);
