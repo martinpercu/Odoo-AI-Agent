@@ -946,7 +946,7 @@
       "what": {
         "heading": "Testez-le comme votre client le ferait",
         "line": "Ceci tourne sur un Odoo de démo. Envoyez une requête et voyez exactement ce que verront vos utilisateurs finaux.",
-        "chip1": "Factures échues de plus de 10 000 $",
+        "chip1": "Factures échues de plus de 450k",
         "chip2": "Ventes par commercial le mois dernier",
         "chip3": "Créer un contact : María López"
       },

@@ -946,7 +946,7 @@
       "what": {
         "heading": "Try it as your client would",
         "line": "This runs on a demo Odoo. Send a query and see exactly what your end users will see.",
-        "chip1": "Overdue invoices over $10,000",
+        "chip1": "Overdue invoices over 450k",
         "chip2": "Sales by rep last month",
         "chip3": "Create a contact: María López"
       },

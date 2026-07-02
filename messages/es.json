@@ -946,7 +946,7 @@
       "what": {
         "heading": "Pruébalo como lo verá tu cliente",
         "line": "Esto corre sobre un Odoo demo. Envía una consulta y verás exactamente lo que vería un usuario final.",
-        "chip1": "Facturas vencidas de más de $10.000",
+        "chip1": "Facturas vencidas de más de 450k",
         "chip2": "Ventas por vendedor del mes pasado",
         "chip3": "Crea un contacto: María López, maria@acme.com"
       },

@@ -176,7 +176,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                   </div>
                 ) : (
                   <>
-                    <div className="markdown-content text-body">
+                    <div className="markdown-content text-body [&>*:last-child]:!mb-0">
                       <ReactMarkdown>{message.content}</ReactMarkdown>
                     </div>
                     {message.metadata && (
@@ -242,8 +242,8 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       </>
                     )}
                     {/* Watermark: show unless explicitly set to false (safe default = show) */}
-                    {message.watermark !== false && message.content && (
-                      <p className="mt-2 text-micro text-text-muted select-none">
+                    {message.watermark === true && message.content && (
+                      <p className="mt-3 text-micro text-text-muted select-none">
                         Powered by The Odoo Agent
                       </p>
                     )}
