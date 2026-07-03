@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "Instanz-Inspektor",
-      "buttonLabel": "Instanz prüfen",
+      "buttonLabel": "Aktuelle Instanz prüfen",
       "modulesFound": "{count} Module gefunden",
       "errorGeneric": "Prüfung fehlgeschlagen",
       "networkError": "Verbindung zum Server fehlgeschlagen."
@@ -598,8 +598,8 @@
     "errorDesc": "Einladung konnte nicht akzeptiert werden.",
     "goHome": "Zur App",
     "registerTitle": "Registrierung abschließen",
-    "registerDescPre": "Sie wurden eingeladen,",
-    "registerDescPost": "beizutreten. Erstellen Sie Ihr Passwort, um Ihr Konto zu aktivieren.",
+    "registerInviterSuffix": "lädt Sie ein beizutreten",
+    "registerDescPost": "Erstellen Sie Ihr Passwort, um Ihr Konto zu aktivieren.",
     "emailLabel": "E-Mail",
     "passwordLabel": "Passwort",
     "registering": "Konto wird erstellt...",
@@ -1119,7 +1119,9 @@
       "emailSent": "Einladungs-E-Mail gesendet.",
       "emailFailed": "Einladung erstellt, aber die E-Mail konnte nicht gesendet werden. Kopiere den Link unten.",
       "copy": "Kopieren",
-      "copied": "Kopiert"
+      "copied": "Kopiert",
+      "noSeatsWarning": "Benutzerlimit erreicht",
+      "noSeatsLink": "Hinzufügen"
     },
     "edit": {
       "button": "Bearbeiten",
@@ -1129,7 +1131,10 @@
       "saveError": "Änderungen konnten nicht gespeichert werden. Bitte erneut versuchen.",
       "labelLabel": "Bezeichnung",
       "labelPlaceholder": "z. B. Produktion",
-      "labelSave": "Speichern"
+      "labelSave": "Speichern",
+      "urlDbTitle": "URL oder Datenbank ändern",
+      "confirmTitle": "Das Ändern der Instanzdaten erfordert eine erneute Validierung aller Nutzer.",
+      "confirmApply": "Änderungen anwenden"
     }
   },
   "Connection": {

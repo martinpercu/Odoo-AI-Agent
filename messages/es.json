@@ -407,7 +407,7 @@
     },
     "inspector": {
       "heading": "Inspeccionar Instancia",
-      "buttonLabel": "Inspeccionar Instancia",
+      "buttonLabel": "Inspeccionar Instancia Actual",
       "modulesFound": "{count} módulos encontrados",
       "errorGeneric": "Error al inspeccionar la instancia",
       "networkError": "No se pudo conectar con el servidor backend."
@@ -598,7 +598,7 @@
     "errorDesc": "No se pudo aceptar la invitación. Intentá de nuevo.",
     "goHome": "Ir a la app",
     "registerTitle": "Completá tu registro",
-    "registerDescPre": "Fuiste invitado a unirte a",
+    "registerInviterSuffix": "te invita a unirte a",
     "registerDescPost": "Creá tu contraseña para activar tu cuenta.",
     "emailLabel": "Email",
     "passwordLabel": "Contraseña",
@@ -1119,7 +1119,9 @@
       "emailSent": "Email de invitación enviado.",
       "emailFailed": "Invitación creada, pero no se pudo enviar el email. Copiá el link de abajo.",
       "copy": "Copiar",
-      "copied": "Copiado"
+      "copied": "Copiado",
+      "noSeatsWarning": "Alcanzaste el máximo de usuarios",
+      "noSeatsLink": "Agregar"
     },
     "edit": {
       "button": "Editar",
@@ -1129,7 +1131,10 @@
       "saveError": "No se pudieron guardar los cambios. Intentá de nuevo.",
       "labelLabel": "Etiqueta",
       "labelPlaceholder": "ej. Producción",
-      "labelSave": "Guardar"
+      "labelSave": "Guardar",
+      "urlDbTitle": "Cambiar la URL o DB",
+      "confirmTitle": "Cambiar los datos de la instancia exige revalidar a todos los usuarios.",
+      "confirmApply": "Aplicar cambios"
     }
   },
   "Connection": {

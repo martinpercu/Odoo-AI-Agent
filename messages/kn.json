@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "ಇನ್‌ಸ್ಟೆನ್ಸ್ ಇನ್ಸ್‌ಪೆಕ್ಟರ್",
-      "buttonLabel": "ಇನ್‌ಸ್ಟೆನ್ಸ್ ಪರಿಶೀಲಿಸಿ",
+      "buttonLabel": "Inspect Current Instance",
       "modulesFound": "{count} ಮಾಡ್ಯೂಲ್‌ಗಳು ಕಂಡುಬಂದಿವೆ",
       "errorGeneric": "ಇನ್‌ಸ್ಟೆನ್ಸ್ ಪರಿಶೀಲಿಸಲು ವಿಫಲವಾಗಿದೆ",
       "networkError": "ಬ್ಯಾಕ್‌ಎಂಡ್ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
@@ -598,8 +598,8 @@
     "errorDesc": "ಆಹ್ವಾನವನ್ನು ಸ್ವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     "goHome": "ಅಪ್ಲಿಕೇಶನ್‌ಗೆ ಹೋಗಿ",
     "registerTitle": "ನಿಮ್ಮ ನೋಂದಣಿ ಪೂರ್ಣಗೊಳಿಸಿ",
-    "registerDescPre": "ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸಲಾಗಿದೆ",
-    "registerDescPost": "ಸಂಸ್ಥೆಗೆ ಸೇರಲು. ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ಪಾಸ್‌ವರ್ಡ್ ರಚಿಸಿ.",
+    "registerInviterSuffix": "ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ",
+    "registerDescPost": "ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ಪಾಸ್‌ವರ್ಡ್ ರಚಿಸಿ.",
     "emailLabel": "ಇಮೇಲ್",
     "passwordLabel": "ಪಾಸ್‌ವರ್ಡ್",
     "registering": "ಖಾತೆ ರಚಿಸಲಾಗುತ್ತಿದೆ...",
@@ -1119,7 +1119,9 @@
       "emailSent": "Invitation email sent.",
       "emailFailed": "Invitation created, but the email couldn't be sent. Copy the link below.",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "noSeatsWarning": "User limit reached",
+      "noSeatsLink": "Add seats"
     },
     "edit": {
       "button": "Edit",
@@ -1129,7 +1131,10 @@
       "saveError": "Could not save the changes. Please try again.",
       "labelLabel": "Label",
       "labelPlaceholder": "e.g. Production",
-      "labelSave": "Save"
+      "labelSave": "Save",
+      "urlDbTitle": "Change URL or DB",
+      "confirmTitle": "Changing the instance data requires re-validating all users.",
+      "confirmApply": "Apply changes"
     }
   },
   "Connection": {
