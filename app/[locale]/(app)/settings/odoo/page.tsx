@@ -73,9 +73,9 @@ function MyConnectionRow({ config }: { config: OdooConfigSummary }) {
             <Building2 size={18} strokeWidth={1.5} className="shrink-0 text-accent" />
             <h3 className="truncate text-subheading">{title}</h3>
           </div>
-          <p className="mt-0.5 truncate text-small font-technical text-text-muted">
+          {/* <p className="mt-0.5 truncate text-small font-technical text-text-muted">
             {config.url} · {config.db_name}
-          </p>
+          </p> */}
         </div>
         {!loading && <ConnectionStatusBadge status={status} />}
       </div>
