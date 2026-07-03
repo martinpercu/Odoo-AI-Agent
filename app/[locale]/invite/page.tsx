@@ -163,18 +163,20 @@ function InviteContent() {
           <br />
         </p>
         <p>
-           <span className="mt-2 pt-8">{t("registerDescPost")}</span>          
+           <span className="mt-2">{t("registerDescPost")}</span>
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-2">
         <div className="flex flex-col gap-1.5">
           <label className="text-small font-medium text-text-secondary">{t("emailLabel")}</label>
+        
+        {/* <div className="flex flex-col items-center"> */}
           <input
             type="email"
             value={inviteEmail}
             readOnly
-            className="rounded-md border border-border bg-raised px-3 py-2 text-body text-text-secondary cursor-default focus:outline-none"
+            className="w-full border-0 bg-transparent px-3 py-2 pt-0 text-center text-body font-medium"
           />
         </div>
 
