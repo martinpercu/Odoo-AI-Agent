@@ -27,17 +27,17 @@ function InstanceCard({ config }: { config: OdooConfigSummary }) {
       href={`/instances/${config.id}`}
       className="block rounded-card border border-border bg-surface p-5 transition-colors hover:bg-raised/40"
     >
-      <div className="mb-3 flex items-start justify-between gap-3">
+      <div className="mb-2 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <Building2 size={18} strokeWidth={1.5} className="shrink-0 text-accent" />
             <h3 className="truncate text-subheading">{title}</h3>
             {showLabel && <span className="shrink-0 truncate text-small text-text-muted">{config.label}</span>}
           </div>
-          <p className="mt-0.5 truncate text-small font-technical text-text-muted">
+          {/* <p className="mt-0.5 truncate text-small font-technical text-text-muted">
             {config.url} · {config.db_name}
             {config.odoo_version && ` · Odoo ${config.odoo_version}`}
-          </p>
+          </p> */}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {config.my_connection_status && <ConnectionStatusBadge status={config.my_connection_status} />}

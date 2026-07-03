@@ -19,6 +19,7 @@ import {
   Pencil,
   X,
   Loader2 as Spinner,
+  UsersIcon,
 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { fetchInstanceDetail, listOdooConfigs, saveUserCredential, updateOdooConfig } from "@/lib/api";
@@ -416,24 +417,31 @@ export default function InstanceDetailPage() {
   }
 
   const title = detail.company_name || detail.label || detail.url;
-  const showLabel = !!detail.label && detail.label !== title;
 
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto w-full max-w-3xl px-6 py-8">
-      <Link href="/instances" className="mb-4 inline-flex items-center gap-1.5 text-small text-text-secondary hover:text-foreground">
-        <ArrowLeft size={16} strokeWidth={1.5} />
-        {t("backToList")}
-      </Link>
+      {/* Nav row: back link (left) | icon + title (center) | spacer (right) */}
+      <div className="mb-6 flex items-center">
+        <div className="flex-1">
+          <Link href="/instances" className="inline-flex items-center gap-1.5 text-small text-text-secondary hover:text-foreground">
+            <ArrowLeft size={16} strokeWidth={1.5} />
+            {t("backToList")}
+          </Link>
+        </div>
+        <div className="flex items-center gap-2">
+          <Building2 size={24} strokeWidth={1.5} className="text-accent" />
+          <h1 className="text-heading">{title}</h1>
+        </div>
+        <div className="flex-1" />
+      </div>
 
       {/* Instance header */}
       <div className="mb-6 rounded-card border border-border bg-surface p-5">
-        <div className="mb-3 flex items-start justify-between gap-3">
-          <div className="flex items-baseline gap-2">
-            <Building2 size={24} strokeWidth={1.5} className="self-center text-accent" />
-            <h1 className="text-heading">{title}</h1>
-            {showLabel && <span className="text-body text-text-muted">{detail.label}</span>}
-          </div>
+        <div className="mb-1 flex items-center justify-between gap-3">
+          <p className="text-small font-technical text-text-muted">
+            {detail.url} · {detail.db_name}
+          </p>
           <button
             type="button"
             onClick={() => setEditing((v) => !v)}
@@ -444,11 +452,16 @@ export default function InstanceDetailPage() {
             {t("edit.button")}
           </button>
         </div>
-        <p className="mb-4 text-small font-technical text-text-muted">
-          {detail.url} · {detail.db_name}
-          {detail.odoo_version && ` · Odoo ${detail.odoo_version}`}
-        </p>
-        <InstanceHealthSummary counts={detail.counts} seats={detail.seats} />
+        {(detail.odoo_version || detail.label) && (
+          <p className="mb-6 text-small font-technical text-text-muted">
+            {detail.odoo_version && `Odoo ${detail.odoo_version}`}
+            {detail.odoo_version && detail.label && " · "}
+            {detail.label}
+          </p>
+        )}
+        <div className={detail.odoo_version || detail.label ? "" : "mt-4"}>
+          <InstanceHealthSummary counts={detail.counts} seats={detail.seats} />
+        </div>
 
         <AnimatePresence>
           {editing && (
@@ -476,7 +489,9 @@ export default function InstanceDetailPage() {
       {/* Users on this instance */}
       <section className="mb-6">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="text-subheading">{t("users.title")}</h2>
+          <h2 className="flex items-center gap-2 text-subheading">
+            <UsersIcon size={18} strokeWidth={1.5} className="text-info" />
+            {t("users.title")}</h2>
           {isPartner && (
             <button
               type="button"
