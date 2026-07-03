@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "Ispettore istanza",
-      "buttonLabel": "Ispeziona istanza",
+      "buttonLabel": "Ispeziona istanza attuale",
       "modulesFound": "{count} moduli trovati",
       "errorGeneric": "Impossibile ispezionare l'istanza",
       "networkError": "Impossibile connettersi al server backend."
@@ -598,7 +598,7 @@
     "errorDesc": "Impossibile accettare l'invito. Riprova.",
     "goHome": "Vai all'app",
     "registerTitle": "Completa la registrazione",
-    "registerDescPre": "Sei stato invitato a unirti a",
+    "registerInviterSuffix": "ti ha invitato a unirti a",
     "registerDescPost": "Crea la tua password per attivare l'account.",
     "emailLabel": "Email",
     "passwordLabel": "Password",
@@ -1119,7 +1119,9 @@
       "emailSent": "E-mail di invito inviata.",
       "emailFailed": "Invito creato, ma non è stato possibile inviare l'e-mail. Copia il link qui sotto.",
       "copy": "Copia",
-      "copied": "Copiato"
+      "copied": "Copiato",
+      "noSeatsWarning": "Limite utenti raggiunto",
+      "noSeatsLink": "Aggiungi"
     },
     "edit": {
       "button": "Modifica",
@@ -1129,7 +1131,10 @@
       "saveError": "Impossibile salvare le modifiche. Riprova.",
       "labelLabel": "Etichetta",
       "labelPlaceholder": "es. Produzione",
-      "labelSave": "Salva"
+      "labelSave": "Salva",
+      "urlDbTitle": "Modifica URL o DB",
+      "confirmTitle": "Modificare i dati dell'istanza richiede la rivalidazione di tutti gli utenti.",
+      "confirmApply": "Applica modifiche"
     }
   },
   "Connection": {

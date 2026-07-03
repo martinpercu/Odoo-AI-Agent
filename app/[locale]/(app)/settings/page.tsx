@@ -333,6 +333,7 @@ function UsersSection() {
   const freeUsed = users.filter((u) => u.is_free_license).length;
   const paidLimit = subscription?.paid_slots_limit ?? 0;
   const freeLimit = subscription?.free_slots_limit ?? 0;
+  const showSeatBadge = paidLimit >= 1 && freeLimit >= 1;
 
   const seatsWidget = subscription ? (
     <div className="inline-flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
@@ -413,18 +414,20 @@ function UsersSection() {
                     {user.allow_feedback ? t("admin.feedback") : t("admin.noFeedback")}
                   </button>
 
-                  {/* Free/Paid toggle */}
-                  <button
-                    onClick={() => handleFreeToggle(user.id, !user.is_free_license)}
-                    className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
-                      user.is_free_license
-                        ? "bg-raised text-text-secondary"
-                        : "bg-accent-subtle text-accent"
-                    }`}
-                    title={t("admin.toggleFree")}
-                  >
-                    {user.is_free_license ? t("admin.free") : t("admin.paid")}
-                  </button>
+                  {/* Free/Paid toggle — only shown when the plan supports both seat types */}
+                  {showSeatBadge && (
+                    <button
+                      onClick={() => handleFreeToggle(user.id, !user.is_free_license)}
+                      className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                        user.is_free_license
+                          ? "bg-raised text-text-secondary"
+                          : "bg-accent-subtle text-accent"
+                      }`}
+                      title={t("admin.toggleFree")}
+                    >
+                      {user.is_free_license ? t("admin.free") : t("admin.paid")}
+                    </button>
+                  )}
 
                   {/* Credentials button */}
                   {orgId && (

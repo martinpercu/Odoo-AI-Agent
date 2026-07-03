@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "Inspecteur d'instance",
-      "buttonLabel": "Inspecter l'instance",
+      "buttonLabel": "Inspecter l'instance actuelle",
       "modulesFound": "{count} modules trouvés",
       "errorGeneric": "Échec de l'inspection",
       "networkError": "Erreur réseau avec le serveur."
@@ -598,7 +598,7 @@
     "errorDesc": "Échec de l'acceptation.",
     "goHome": "Aller à l'application",
     "registerTitle": "Complétez votre inscription",
-    "registerDescPre": "Vous avez été invité à rejoindre",
+    "registerInviterSuffix": "vous invite à rejoindre",
     "registerDescPost": "Créez votre mot de passe pour activer votre compte.",
     "emailLabel": "Email",
     "passwordLabel": "Mot de passe",
@@ -1119,7 +1119,9 @@
       "emailSent": "E-mail d'invitation envoyé.",
       "emailFailed": "Invitation créée, mais l'e-mail n'a pas pu être envoyé. Copiez le lien ci-dessous.",
       "copy": "Copier",
-      "copied": "Copié"
+      "copied": "Copié",
+      "noSeatsWarning": "Limite d'utilisateurs atteinte",
+      "noSeatsLink": "Ajouter"
     },
     "edit": {
       "button": "Modifier",
@@ -1129,7 +1131,10 @@
       "saveError": "Impossible d'enregistrer les modifications. Réessayez.",
       "labelLabel": "Libellé",
       "labelPlaceholder": "ex. Production",
-      "labelSave": "Enregistrer"
+      "labelSave": "Enregistrer",
+      "urlDbTitle": "Modifier l'URL ou la BD",
+      "confirmTitle": "Modifier les données de l'instance oblige à revalider tous les utilisateurs.",
+      "confirmApply": "Appliquer les modifications"
     }
   },
   "Connection": {

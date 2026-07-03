@@ -850,6 +850,8 @@ export interface SendInvitationEmailParams {
   token: string;
   email: string;
   orgName: string;
+  brandName?: string | null;
+  companyName?: string | null;
   role?: UserRole;
   lang?: string;
   expiresAt?: string;
@@ -914,12 +916,21 @@ export async function listInvitations(orgId: string): Promise<InvitationsResult>
   }
 }
 
+export interface InvitationOdooInstance {
+  company_name: string;
+  label: string;
+  display_name: string;
+}
+
 export interface InvitationInfoResult {
   success: boolean;
   email?: string;
   org_name?: string;
   role?: string;
   expires_at?: string;
+  brand_name?: string | null;
+  brand_logo_url?: string | null;
+  odoo_instance?: InvitationOdooInstance | null;
   status?: number;
   error?: string;
 }

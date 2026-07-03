@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "நிகழ்வு ஆய்வாளர்",
-      "buttonLabel": "நிகழ்வை ஆய்வு செய்யவும்",
+      "buttonLabel": "Inspect Current Instance",
       "modulesFound": "{count} தொகுதிகள் கண்டறியப்பட்டன",
       "errorGeneric": "நிகழ்வை ஆய்வு செய்ய முடியவில்லை",
       "networkError": "Backend சர்வரை இணைக்க முடியவில்லை."
@@ -598,8 +598,8 @@
     "errorDesc": "அழைப்பை ஏற்றுக்கொள்ள முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
     "goHome": "பயன்பாட்டிற்கு செல்லவும்",
     "registerTitle": "பதிவை முடிக்கவும்",
-    "registerDescPre": "நீங்கள் அழைக்கப்பட்டீர்கள்",
-    "registerDescPost": "-ல் சேர. உங்கள் கணக்கை செயல்படுத்த கடவுச்சொல்லை உருவாக்கவும்.",
+    "registerInviterSuffix": "உங்களை அழைக்கிறார்",
+    "registerDescPost": "உங்கள் கணக்கை செயல்படுத்த கடவுச்சொல்லை உருவாக்கவும்.",
     "emailLabel": "மின்னஞ்சல்",
     "passwordLabel": "கடவுச்சொல்",
     "registering": "கணக்கை உருவாக்குகிறோம்...",
@@ -1119,7 +1119,9 @@
       "emailSent": "Invitation email sent.",
       "emailFailed": "Invitation created, but the email couldn't be sent. Copy the link below.",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "noSeatsWarning": "User limit reached",
+      "noSeatsLink": "Add seats"
     },
     "edit": {
       "button": "Edit",
@@ -1129,7 +1131,10 @@
       "saveError": "Could not save the changes. Please try again.",
       "labelLabel": "Label",
       "labelPlaceholder": "e.g. Production",
-      "labelSave": "Save"
+      "labelSave": "Save",
+      "urlDbTitle": "Change URL or DB",
+      "confirmTitle": "Changing the instance data requires re-validating all users.",
+      "confirmApply": "Apply changes"
     }
   },
   "Connection": {
