@@ -48,20 +48,33 @@ export function InstanceInspector() {
     }
   }
 
+  const instanceName = activeConfig?.company_name || activeConfig?.label;
+  const instanceUser = activeConfig?.odoo_username;
+
   return (
     <div className="space-y-4">
-      <button
-        onClick={handleInspect}
-        disabled={status === "loading" || !config}
-        className="flex h-btn-md items-center gap-2 rounded-btn border border-border bg-surface px-4 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
-      >
-        {status === "loading" ? (
-          <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
-        ) : (
-          <Search size={16} strokeWidth={1.5} />
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          onClick={handleInspect}
+          disabled={status === "loading" || !config}
+          className="flex h-btn-md shrink-0 items-center gap-2 rounded-btn border border-border bg-surface px-4 text-body font-medium transition-colors hover:bg-raised disabled:opacity-50"
+        >
+          {status === "loading" ? (
+            <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
+          ) : (
+            <Search size={16} strokeWidth={1.5} />
+          )}
+          {t("buttonLabel")}
+        </button>
+        {instanceName && (
+          <span className="flex min-w-0 items-baseline gap-1.5 text-small">
+            <span className="truncate font-medium text-foreground">{instanceName}</span>
+            {instanceUser && (
+              <span className="shrink-0 text-text-muted">{instanceUser}</span>
+            )}
+          </span>
         )}
-        {t("buttonLabel")}
-      </button>
+      </div>
 
       <AnimatePresence mode="wait">
         {status === "success" && modules.length > 0 && (

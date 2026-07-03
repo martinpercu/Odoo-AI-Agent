@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "ઇન્સ્ટન્સ ઇન્સ્પેક્ટર",
-      "buttonLabel": "ઇન્સ્ટન્સ તપાસો",
+      "buttonLabel": "Inspect Current Instance",
       "modulesFound": "{count} મોડ્યુલ મળ્યા",
       "errorGeneric": "ઇન્સ્ટન્સ તપાસવામાં નિષ્ફળ",
       "networkError": "બેકએન્ડ સર્વર સાથે કનેક્ટ થઈ શક્યું નહીં."
@@ -598,8 +598,8 @@
     "errorDesc": "આમંત્રણ સ્વીકારી શક્યા નહીં. ફરી પ્રયાસ કરો.",
     "goHome": "એપ પર જાઓ",
     "registerTitle": "તમારું રજિસ્ટ્રેશન પૂર્ણ કરો",
-    "registerDescPre": "તમને આમંત્રિત કરાયા છે",
-    "registerDescPost": "માં જોડાવા. ખાતું સક્રિય કરવા પાસવર્ડ બનાવો.",
+    "registerInviterSuffix": "એ તમને આમંત્રિત કર્યા છે",
+    "registerDescPost": "ખાતું સક્રિય કરવા પાસવર્ડ બનાવો.",
     "emailLabel": "ઇ-મેઇલ",
     "passwordLabel": "પાસવર્ડ",
     "registering": "ખાતું બની રહ્યું છે...",
@@ -1119,7 +1119,9 @@
       "emailSent": "Invitation email sent.",
       "emailFailed": "Invitation created, but the email couldn't be sent. Copy the link below.",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "noSeatsWarning": "User limit reached",
+      "noSeatsLink": "Add seats"
     },
     "edit": {
       "button": "Edit",
@@ -1129,7 +1131,10 @@
       "saveError": "Could not save the changes. Please try again.",
       "labelLabel": "Label",
       "labelPlaceholder": "e.g. Production",
-      "labelSave": "Save"
+      "labelSave": "Save",
+      "urlDbTitle": "Change URL or DB",
+      "confirmTitle": "Changing the instance data requires re-validating all users.",
+      "confirmApply": "Apply changes"
     }
   },
   "Connection": {

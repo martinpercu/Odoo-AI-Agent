@@ -34,13 +34,15 @@ const SMTP_HOST = process.env.ZOHO_SMTP_HOST || "smtp.zoho.com";
 const SMTP_PORT = Number(process.env.ZOHO_SMTP_PORT || 465);
 const SMTP_USER = process.env.ZOHO_SMTP_USER;
 const SMTP_PASS = process.env.ZOHO_SMTP_PASS;
-const FROM = process.env.INVITE_EMAIL_FROM || "TheOdooAgent <martin@theodooagent.com>";
+const NO_REPLY_ADDR = process.env.INVITE_NO_REPLY_ADDR || "no-reply@theodooagent.com";
 const REPLY_TO = process.env.INVITE_EMAIL_REPLY_TO || undefined;
 
 interface SendInvitationBody {
   token?: string;
   email?: string;
   orgName?: string;
+  brandName?: string | null;
+  companyName?: string | null;
   role?: string;
   lang?: string;
   expiresAt?: string;
@@ -77,7 +79,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { token, email, orgName, role, lang, expiresAt } = body;
+  const { token, email, orgName, brandName, companyName, role, lang, expiresAt } = body;
   if (!token || !email || !orgName) {
     return NextResponse.json(
       { error: "Missing required fields: token, email, orgName" },
@@ -92,10 +94,15 @@ export async function POST(req: NextRequest) {
   const { subject, html, text } = buildInvitationEmail({
     lang: emailLang,
     orgName,
+    brandName,
+    companyName,
     role: invitationRole,
     acceptUrl,
     expiresAt,
   });
+
+  // From name = brand name (white-label) so the recipient recognises who invited them.
+  const from = `${brandName || orgName} <${NO_REPLY_ADDR}>`;
 
   const transporter = nodemailer.createTransport({
     host: SMTP_HOST,
@@ -105,7 +112,7 @@ export async function POST(req: NextRequest) {
   });
 
   try {
-    await transporter.sendMail({ from: FROM, to: email, replyTo: REPLY_TO, subject, html, text });
+    await transporter.sendMail({ from, to: email, replyTo: REPLY_TO, subject, html, text });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[send-invitation] SMTP error:", err);
