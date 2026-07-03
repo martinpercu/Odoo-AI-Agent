@@ -304,7 +304,9 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                     <Server size={iconInline} strokeWidth={1.5} className="shrink-0" />
                     <span className="min-w-0 flex-1">
                       <span className="block text-micro text-text-muted">{t("instance")}</span>
-                      <span className="block truncate">{activeConfig?.label ?? "—"}</span>
+                      <span className="block truncate">
+                        {activeConfig?.company_name || activeConfig?.label || "—"}
+                      </span>
                     </span>
                     <ChevronRight
                       size={14}
@@ -320,18 +322,27 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -4 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute bottom-0 left-full z-50 ml-1 max-h-[60vh] w-56 overflow-y-auto rounded-card border border-border bg-surface py-1 shadow-lg"
+                        className="absolute bottom-0 left-full z-50 ml-1 max-h-[60vh] w-72 overflow-y-auto rounded-card border border-border bg-surface py-1 shadow-lg"
                       >
                         {configs.map((config) => {
                           const ready = isChatReady(config);
+                          const title = config.company_name || config.label;
+                          const showLabel = !!config.label && config.label !== title;
                           return (
                             <button
                               key={config.id}
                               onClick={() => (ready ? selectInstance(config.id) : configureInstance(config.id))}
-                              className="flex w-full items-center gap-2 px-3 py-2 text-left text-body transition-colors hover:bg-raised"
+                              className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-body transition-colors hover:bg-raised"
                             >
-                              <span className="min-w-0 flex-1 truncate">
-                                {config.label}
+                              <span className="min-w-0 flex-1">
+                                <span className="flex items-center gap-1.5">
+                                  <span className="truncate font-medium">{title}</span>
+                                  {showLabel && (
+                                    <span className="shrink-0 truncate text-small text-text-muted">
+                                      {config.label}
+                                    </span>
+                                  )}
+                                </span>
                                 {ready && config.odoo_username ? (
                                   <span className="block truncate text-micro text-text-muted">
                                     {config.odoo_username}

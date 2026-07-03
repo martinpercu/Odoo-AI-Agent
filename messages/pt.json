@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "Inspetor de Instância",
-      "buttonLabel": "Inspecionar Instância",
+      "buttonLabel": "Inspecionar Instância Atual",
       "modulesFound": "{count} módulos encontrados",
       "errorGeneric": "Falha ao inspecionar instância",
       "networkError": "Não foi possível conectar ao servidor backend."
@@ -598,7 +598,7 @@
     "errorDesc": "Não foi possível aceitar o convite.",
     "goHome": "Ir para o app",
     "registerTitle": "Complete seu cadastro",
-    "registerDescPre": "Você foi convidado para entrar em",
+    "registerInviterSuffix": "convidou você a entrar em",
     "registerDescPost": "Crie sua senha para ativar sua conta.",
     "emailLabel": "Email",
     "passwordLabel": "Senha",
@@ -1119,7 +1119,9 @@
       "emailSent": "E-mail de convite enviado.",
       "emailFailed": "Convite criado, mas o e-mail não pôde ser enviado. Copie o link abaixo.",
       "copy": "Copiar",
-      "copied": "Copiado"
+      "copied": "Copiado",
+      "noSeatsWarning": "Limite de usuários atingido",
+      "noSeatsLink": "Adicionar"
     },
     "edit": {
       "button": "Editar",
@@ -1129,7 +1131,10 @@
       "saveError": "Não foi possível salvar as alterações. Tente novamente.",
       "labelLabel": "Rótulo",
       "labelPlaceholder": "ex. Produção",
-      "labelSave": "Salvar"
+      "labelSave": "Salvar",
+      "urlDbTitle": "Alterar URL ou BD",
+      "confirmTitle": "Alterar os dados da instância exige revalidar todos os usuários.",
+      "confirmApply": "Aplicar alterações"
     }
   },
   "Connection": {

@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "Instance Inspector",
-      "buttonLabel": "Inspect Instance",
+      "buttonLabel": "Inspect Current Instance",
       "modulesFound": "{count} modules found",
       "errorGeneric": "Failed to inspect instance",
       "networkError": "Could not connect to the backend server."
@@ -598,7 +598,7 @@
     "errorDesc": "Could not accept the invitation. Please try again.",
     "goHome": "Go to app",
     "registerTitle": "Complete your registration",
-    "registerDescPre": "You've been invited to join",
+    "registerInviterSuffix": "invites you to join",
     "registerDescPost": "Create your password to activate your account.",
     "emailLabel": "Email",
     "passwordLabel": "Password",
@@ -1119,7 +1119,9 @@
       "emailSent": "Invitation email sent.",
       "emailFailed": "Invitation created, but the email couldn't be sent. Copy the link below.",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "noSeatsWarning": "User limit reached",
+      "noSeatsLink": "Add seats"
     },
     "edit": {
       "button": "Edit",
@@ -1129,7 +1131,10 @@
       "saveError": "Could not save the changes. Please try again.",
       "labelLabel": "Label",
       "labelPlaceholder": "e.g. Production",
-      "labelSave": "Save"
+      "labelSave": "Save",
+      "urlDbTitle": "Change URL or DB",
+      "confirmTitle": "Changing the instance data requires re-validating all users.",
+      "confirmApply": "Apply changes"
     }
   },
   "Connection": {

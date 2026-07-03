@@ -24,8 +24,8 @@ function InviteContent() {
 
   const [status, setStatus] = useState<PageStatus>(token ? "loading" : "no_token");
   const [inviteEmail, setInviteEmail] = useState("");
-  const [orgName, setOrgName] = useState("");
-  const [role, setRole] = useState("");
+  const [inviterName, setInviterName] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -37,8 +37,8 @@ function InviteContent() {
         return;
       }
       setInviteEmail(info.email ?? "");
-      setOrgName(info.org_name ?? "");
-      setRole(info.role ?? "");
+      setInviterName(info.brand_name ?? info.org_name ?? "");
+      setDisplayName(info.odoo_instance?.company_name ?? "");
       setStatus("register");
     });
   }, [token]);
@@ -143,23 +143,31 @@ function InviteContent() {
   return (
     <Card>
       <div className="mb-6 flex flex-col items-center gap-2">
-        <UserPlus size={28} strokeWidth={1.5} className="text-accent" />
-        <h1 className="text-heading">{t("registerTitle")}</h1>
-        {orgName && (
-          <p className="text-center text-body text-text-secondary">
-            {t("registerDescPre")}<br />
-            <span className="font-medium text-foreground">{orgName}</span><br />
-            {t("registerDescPost")}
-          </p>
-        )}
-        {role && (
-          <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-small font-technical text-accent">
-            {role}
-          </span>
-        )}
+        <div className="flex items-center gap-4">
+          {/* <UserPlus size={30} strokeWidth={1.5} className="text-accent" /> */}
+          {/* <h1 className="text-heading">{t("registerTitle")}</h1> */}
+        </div>
+        <p className="text-center text-body text-text-secondary">
+          {inviterName && (
+            <>
+              <span className="font-medium text-foreground">{inviterName}</span>
+              {" "}{t("registerInviterSuffix")}
+            </>
+          )}
+          {displayName && (
+            <>
+              <br />
+              <span className="font-medium text-foreground">{displayName}</span>
+            </>
+          )}
+          <br />
+        </p>
+        <p>
+           <span className="mt-2 pt-8">{t("registerDescPost")}</span>          
+        </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-2">
         <div className="flex flex-col gap-1.5">
           <label className="text-small font-medium text-text-secondary">{t("emailLabel")}</label>
           <input
@@ -187,7 +195,7 @@ function InviteContent() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="mt-1 flex h-btn-md items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
+          className="mt-4 h-btn-md items-center justify-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
         >
           {status === "submitting" && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
           {status === "submitting" ? t("registering") : t("registerCta")}

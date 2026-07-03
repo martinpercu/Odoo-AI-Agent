@@ -274,7 +274,7 @@
     },
     "inspector": {
       "heading": "इन्स्टन्स इन्स्पेक्टर",
-      "buttonLabel": "इन्स्टन्स तपासा",
+      "buttonLabel": "Inspect Current Instance",
       "modulesFound": "{count} मॉड्यूल्स सापडले",
       "errorGeneric": "इन्स्टन्स तपासण्यात अपयश आले",
       "networkError": "बॅकएंड सर्व्हरशी कनेक्ट होऊ शकले नाही."
@@ -598,8 +598,8 @@
     "errorDesc": "आमंत्रण स्वीकारता आले नाही. कृपया पुन्हा प्रयत्न करा.",
     "goHome": "ॲपवर जा",
     "registerTitle": "तुमची नोंदणी पूर्ण करा",
-    "registerDescPre": "तुम्हाला आमंत्रित केले आहे",
-    "registerDescPost": "मध्ये सामील होण्यासाठी. तुमचे खाते सक्रिय करण्यासाठी पासवर्ड तयार करा.",
+    "registerInviterSuffix": "ने तुम्हाला आमंत्रित केले आहे",
+    "registerDescPost": "तुमचे खाते सक्रिय करण्यासाठी पासवर्ड तयार करा.",
     "emailLabel": "ईमेल",
     "passwordLabel": "पासवर्ड",
     "registering": "खाते तयार करत आहे...",
@@ -1119,7 +1119,9 @@
       "emailSent": "Invitation email sent.",
       "emailFailed": "Invitation created, but the email couldn't be sent. Copy the link below.",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "noSeatsWarning": "User limit reached",
+      "noSeatsLink": "Add seats"
     },
     "edit": {
       "button": "Edit",
@@ -1129,7 +1131,10 @@
       "saveError": "Could not save the changes. Please try again.",
       "labelLabel": "Label",
       "labelPlaceholder": "e.g. Production",
-      "labelSave": "Save"
+      "labelSave": "Save",
+      "urlDbTitle": "Change URL or DB",
+      "confirmTitle": "Changing the instance data requires re-validating all users.",
+      "confirmApply": "Apply changes"
     }
   },
   "Connection": {
