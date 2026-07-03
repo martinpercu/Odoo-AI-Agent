@@ -74,7 +74,7 @@ export function CredentialForm({
       <div>
         <p className="mb-1.5 text-small font-medium text-text-secondary">{t("instanceLabel")}</p>
         <div className="rounded-btn border border-border bg-raised/50 px-3 py-2.5">
-          {instance.label && <p className="text-body font-medium text-foreground">{instance.label}</p>}
+          {/* {instance.label && <p className="text-body font-medium text-foreground">{instance.label}</p>} */}
           <p className="text-small font-technical text-text-muted">
             {instance.url} · {instance.db_name}
           </p>
