@@ -148,10 +148,10 @@ function OrgSection() {
   const { meData, reload } = useSession();
   const org = meData?.org;
   const subscription = meData?.subscription;
-  const slots = meData?.slots_used;
 
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(org?.name ?? "");
+  const [brandName, setBrandName] = useState(org?.brand_name ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -160,7 +160,10 @@ function OrgSection() {
     if (!org) return;
     setSaving(true);
     setError(null);
-    const result = await updateOrg(org.id, { name });
+    const result = await updateOrg(org.id, {
+      name,
+      brand_name: brandName.trim() || null,
+    });
     if (result.success) {
       await reload();
       setEditing(false);
@@ -172,83 +175,100 @@ function OrgSection() {
 
   if (!org) return null;
 
+  const isFoundingPartner = org.is_founding_partner === true;
+
   return (
-    <CollapsibleCard icon={<Building2 size={20} strokeWidth={1.5} className="text-accent" />} title={t("admin.orgTitle")}>
-      {!editing ? (
-        <div className="space-y-3">
-          <div className="flex justify-between text-body">
-            <span className="text-text-secondary">{t("admin.orgName")}</span>
-            <span className="font-medium">{org.name}</span>
-          </div>
-          <div className="flex justify-between text-body">
-            <span className="text-text-secondary">{t("admin.orgSlug")}</span>
-            <span className="font-technical text-text-muted">{org.slug}</span>
-          </div>
-          <div className="flex justify-between text-body">
-            <span className="text-text-secondary">{t("admin.orgType")}</span>
-            <span>{org.type}</span>
-          </div>
-          {subscription && (
-            <>
-              <div className="flex justify-between text-body">
-                <span className="text-text-secondary">{t("admin.tier")}</span>
-                <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
-                  {subscription.tier}
-                </span>
-              </div>
-              <div className="flex justify-between text-body">
-                <span className="text-text-secondary">{t("admin.slots")}</span>
-                <span>
-                  {t("admin.slotsValue", {
-                    paid: slots?.paid ?? 0,
-                    paidLimit: subscription.paid_slots_limit,
-                    free: slots?.free ?? 0,
-                    freeLimit: subscription.free_slots_limit,
-                  })}
-                </span>
-              </div>
-            </>
-          )}
+    <div className="rounded-lg border border-border bg-surface shadow-sm">
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-5">
+        <div className="flex items-center gap-2">
+          <Building2 size={20} strokeWidth={1.5} className="text-accent" />
+          <span className="text-subheading">{t("admin.orgTitle")}</span>
+        </div>
+        {!editing && (
           <button
-            onClick={() => { setEditing(true); setName(org.name); }}
-            className="mt-2 rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
+            onClick={() => { setEditing(true); setBrandName(org.brand_name ?? ""); setName(org.name); }}
+            className="rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
           >
             {t("admin.edit")}
           </button>
-        </div>
-      ) : (
-        <form onSubmit={handleSave} className="space-y-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-small font-medium text-text-secondary">{t("admin.orgName")}</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
-            />
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="px-6 pb-6">
+        {!editing ? (
+          <div className="space-y-3">
+            <div className="flex justify-between text-body">
+              <span className="text-text-secondary">
+                {t("admin.brandName")}
+                <span className="ml-1.5 italic text-text-muted">{t("admin.brandNameHint")}</span>
+              </span>
+              <span className="font-medium">{org.brand_name || "—"}</span>
+            </div>
+            <div className="flex justify-between text-body">
+              <span className="text-text-secondary">{t("admin.yourName")}</span>
+              <span className="font-medium">{org.name}</span>
+            </div>
+            {subscription && (
+              <div className="flex justify-between text-body">
+                <span className="text-text-secondary">{t("admin.tier")}</span>
+                {isFoundingPartner ? (
+                  <span className="rounded-md bg-accent px-2 py-0.5 text-micro font-semibold text-white">
+                    Founding Partner
+                  </span>
+                ) : (
+                  <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
+                    {subscription.tier}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
-          {error && <p className="text-small text-error">{error}</p>}
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex h-btn-md items-center gap-1.5 rounded-btn bg-accent px-3 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
-            >
-              {saving && <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />}
-              {t("admin.save")}
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditing(false)}
-              className="rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
-            >
-              {t("admin.cancel")}
-            </button>
-          </div>
-        </form>
-      )}
-    </CollapsibleCard>
+        ) : (
+          <form onSubmit={handleSave} className="space-y-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-small font-medium text-text-secondary">{t("admin.brandName")}</label>
+              <input
+                type="text"
+                value={brandName}
+                onChange={(e) => setBrandName(e.target.value)}
+                placeholder={t("admin.brandNamePlaceholder")}
+                className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-small font-medium text-text-secondary">{t("admin.yourName")}</label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
+              />
+            </div>
+            {error && <p className="text-small text-error">{error}</p>}
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={saving}
+                className="flex h-btn-md items-center gap-1.5 rounded-btn bg-accent px-3 text-body text-white shadow-sm hover:bg-accent-hover disabled:opacity-50"
+              >
+                {saving && <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />}
+                {t("admin.save")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditing(false)}
+                className="rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
+              >
+                {t("admin.cancel")}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -983,6 +1003,12 @@ export default function SettingsPage() {
   const isClientUser = roleUpper === "CLIENT_USER";
   const hasOrg = !!meData?.org;
   const isSolitary = meData?.org?.type === "SOLITARY";
+  const awaitingFirstInstance =
+    meData?.org?.is_founding_partner === true && !meData?.org?.founder_since;
+
+  const visibleTabs = awaitingFirstInstance
+    ? TAB_CONFIG.filter((t) => t.id !== "users" && t.id !== "feedback")
+    : TAB_CONFIG;
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("org");
 
@@ -1021,7 +1047,7 @@ export default function SettingsPage() {
             className="mb-8 flex justify-center"
           >
             <div className="inline-flex items-center gap-1 rounded-lg bg-raised p-1">
-              {TAB_CONFIG.map((tab) => {
+              {visibleTabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                   <button
@@ -1090,9 +1116,11 @@ export default function SettingsPage() {
                   cta={t("admin.movedInstancesCta")}
                   href="/instances"
                 />
-                <CollapsibleCard icon={<BookSearch size={20} strokeWidth={1.5} className="text-accent" />} title={t("inspector.heading")}>
-                  <InstanceInspector />
-                </CollapsibleCard>
+                {(meData?.odoo_configs ?? []).length > 0 && (
+                  <CollapsibleCard icon={<BookSearch size={20} strokeWidth={1.5} className="text-accent" />} title={t("inspector.heading")}>
+                    <InstanceInspector />
+                  </CollapsibleCard>
+                )}
                 <CollapsibleCard icon={<Shield size={20} strokeWidth={1.5} className="text-accent" />} title={t("security.title")}>
                   <p className="text-body text-text-secondary">{t("security.description")}</p>
                 </CollapsibleCard>
