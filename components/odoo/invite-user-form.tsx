@@ -16,7 +16,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { createInvitation, sendInvitationEmail } from "@/lib/api";
-import type { InvitationMode, InstanceSeats } from "@/lib/types";
+import type { InvitationMode, InstanceSeats, SeatType } from "@/lib/types";
 import { deriveSeatState } from "@/lib/seats";
 
 const EMAIL_LANGS = ["es", "en", "fr", "de", "pt", "it"] as const;
