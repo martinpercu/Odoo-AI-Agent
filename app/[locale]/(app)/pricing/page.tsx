@@ -48,6 +48,8 @@ export default function PricingPage() {
   if (isClient) return null;
 
   const isBeta = billing.phase === "beta_founder";
+  const awaitingFirstInstance =
+    meData?.org?.is_founding_partner === true && !meData?.org?.founder_since;
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -65,7 +67,7 @@ export default function PricingPage() {
         </motion.div>
 
         {isBeta ? (
-          <FoundingPartnerPricing billing={billing} />
+          <FoundingPartnerPricing billing={billing} awaitingFirstInstance={awaitingFirstInstance} />
         ) : (
           <PricingCards currentTier={currentTier} />
         )}
