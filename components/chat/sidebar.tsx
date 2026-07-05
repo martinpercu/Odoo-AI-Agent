@@ -17,6 +17,7 @@ import {
 import { MarkB, Wordmark } from "@/components/AgentMark";
 import { FoundingPartnerBadge } from "@/components/ui/founding-partner-badge";
 import { useIconSize } from "@/hooks/use-icon-size";
+import { useSession } from "@/hooks/use-session";
 import { UserMenu } from "@/components/chat/user-menu";
 import type { ChatGroup } from "@/lib/types";
 
@@ -39,6 +40,12 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const tGroups = useTranslations("ChatGroups");
   const iconBtn = useIconSize("button");
   const iconInline = useIconSize("inline");
+  const { meData } = useSession();
+
+  const sessionReady = meData !== null;
+  const isClient = meData?.user?.role === "CLIENT_USER";
+  const brandLogoUrl = isClient ? (meData?.org?.brand_logo_url ?? null) : null;
+  const brandName = isClient ? (meData?.org?.brand_name ?? null) : null;
 
   const displayGroups = chatGroups;
 
@@ -56,24 +63,28 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
     >
       {/* Header */}
       <div className={`flex items-center border-b border-sidebar-border p-4 ${collapsed ? "justify-center" : ""}`}>
-        {/* Logo — when collapsed: hover swaps MarkB → PanelLeftOpen, click opens sidebar */}
+        {/* Logo — when collapsed: hover swaps icon → PanelLeftOpen, click opens sidebar */}
         <div
-          className={`group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-white ${collapsed ? "cursor-pointer" : ""}`}
+          className={`group relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg transition-opacity duration-150 ${!sessionReady ? "opacity-0" : (brandLogoUrl ? "" : "bg-accent text-white")} ${collapsed ? "cursor-pointer" : ""}`}
           onClick={collapsed ? (e) => { e.stopPropagation(); setCollapsed(false); } : undefined}
           role={collapsed ? "button" : undefined}
           tabIndex={collapsed ? 0 : undefined}
           aria-label={collapsed ? t("expand") : undefined}
           onKeyDown={collapsed ? (e) => { if (e.key === "Enter" || e.key === " ") setCollapsed(false); } : undefined}
         >
-          <span className={`flex items-center justify-center ${collapsed ? "group-hover:hidden" : ""}`}>
-            <MarkB size={22} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
+          <span className={`flex h-full w-full items-center justify-center ${collapsed ? "group-hover:hidden" : ""}`}>
+            {brandLogoUrl ? (
+              <img src={brandLogoUrl} alt={brandName ?? ""} className="h-full w-full object-contain" />
+            ) : (
+              <MarkB size={22} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
+            )}
           </span>
           {collapsed && (
-            <PanelLeftOpen size={18} strokeWidth={1.5} className="absolute hidden text-white group-hover:block" />
+            <PanelLeftOpen size={18} strokeWidth={1.5} className={`absolute hidden group-hover:block ${brandLogoUrl ? "text-text-secondary" : "text-white"}`} />
           )}
         </div>
 
-        {/* Wordmark — only when expanded */}
+        {/* Wordmark / brand name — only when expanded */}
         {!collapsed && (
           <motion.div
             initial={{ opacity: 0, width: 0 }}
@@ -82,9 +93,16 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="ml-3 flex flex-col gap-1 overflow-hidden whitespace-nowrap"
           >
-            <Wordmark scale={0.9} />
-            {/* Founding Partner badge — Builder-only (white-label gated inside the component) */}
-            <FoundingPartnerBadge />
+            {/* Inner div controls visibility until session resolves — separate from framer so opacity doesn't conflict */}
+            <div className={`flex flex-col gap-1 transition-opacity duration-150 ${!sessionReady ? "opacity-0" : ""}`}>
+              {brandName ? (
+                <span style={{ fontWeight: 600 }}>{brandName}</span>
+              ) : (
+                <Wordmark scale={0.9} />
+              )}
+              {/* Founding Partner badge — Builder-only (gated inside the component) */}
+              <FoundingPartnerBadge />
+            </div>
           </motion.div>
         )}
 
