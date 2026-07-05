@@ -130,7 +130,9 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
     close();
   }
 
-  const secondaryLine = [meData?.org?.name].filter(Boolean).join(" · ");
+  const secondaryLine = role === "CLIENT_USER"
+    ? (activeConfig?.company_name ?? "")
+    : (meData?.org?.name ?? "");
 
   const itemClass =
     "flex w-full items-center gap-3 rounded-btn px-2.5 py-2 text-body text-left transition-colors hover:bg-raised";
