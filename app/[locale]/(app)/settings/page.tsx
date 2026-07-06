@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, useRef, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,14 +28,18 @@ import {
   Zap,
   ArrowRight,
   BookSearch,
+  ImagePlus,
 } from "lucide-react";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
 import { FounderClockPill } from "@/components/ui/founder-clock-pill";
+import { MarkB, Wordmark } from "@/components/AgentMark";
+import { FoundingPartnerBadge } from "@/components/ui/founding-partner-badge";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
 import { AdminInvitationCredentialsModal } from "@/components/settings/admin-invitation-credentials-modal";
 import { useSession } from "@/hooks/use-session";
 import {
   updateOrg,
+  uploadBrandLogo,
   listOrgUsers,
   updateOrgUser,
   removeOrgUser,
@@ -155,6 +159,45 @@ function OrgSection() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [logoUrl, setLogoUrl] = useState<string | null>(org?.brand_logo_url ?? null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [logoError, setLogoError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const LOGO_ERROR_MAP: Record<string, string> = {
+    "413": t("admin.logoError413"),
+    "415": t("admin.logoError415"),
+    "422": t("admin.logoError422"),
+    "generic": t("admin.logoErrorGeneric"),
+  };
+
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !org) return;
+    const ALLOWED = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    if (!ALLOWED.includes(file.type)) {
+      setLogoError(t("admin.logoError415"));
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setLogoError(t("admin.logoError413"));
+      e.target.value = "";
+      return;
+    }
+    setLogoError(null);
+    setLogoUploading(true);
+    const result = await uploadBrandLogo(org.id, file);
+    setLogoUploading(false);
+    e.target.value = "";
+    if (result.url) {
+      setLogoUrl(result.url);
+      reload();
+    } else {
+      setLogoError(LOGO_ERROR_MAP[result.errorCode ?? "generic"] ?? t("admin.logoErrorGeneric"));
+    }
+  }
+
   async function handleSave(e: FormEvent) {
     e.preventDefault();
     if (!org) return;
@@ -187,7 +230,7 @@ function OrgSection() {
         </div>
         {!editing && (
           <button
-            onClick={() => { setEditing(true); setBrandName(org.brand_name ?? ""); setName(org.name); }}
+            onClick={() => { setEditing(true); setBrandName(org.brand_name ?? ""); setName(org.name); setLogoUrl(org.brand_logo_url ?? null); setLogoError(null); }}
             className="rounded-md border border-border px-3 py-1.5 text-body hover:bg-raised transition-colors"
           >
             {t("admin.edit")}
@@ -198,55 +241,177 @@ function OrgSection() {
       {/* Content */}
       <div className="px-6 pb-6">
         {!editing ? (
-          <div className="space-y-3">
-            <div className="flex justify-between text-body">
-              <span className="text-text-secondary">
-                {t("admin.brandName")}
-                <span className="ml-1.5 italic text-text-muted">{t("admin.brandNameHint")}</span>
-              </span>
-              <span className="font-medium">{org.brand_name || "—"}</span>
-            </div>
-            <div className="flex justify-between text-body">
-              <span className="text-text-secondary">{t("admin.yourName")}</span>
-              <span className="font-medium">{org.name}</span>
-            </div>
-            {subscription && (
+          <div className="flex flex-col">
+            {/* Tu Marca */}
+            <div className="pb-4 pt-2">
+              <div className="mb-3">
+                <p className="text-small text-foreground" style={{ fontWeight: 600 }}>{t("admin.brandSectionTitle")}</p>
+                <p className="text-small text-text-muted">{t("admin.brandSectionDesc")}</p>
+              </div>
+
+              {/* Side-by-side sidebar header previews */}
+              <div className="mb-4 grid grid-cols-2 gap-3">
+                {/* Block 1 — tenant view */}
+                <div className="rounded-card border border-border bg-raised/30 p-3">
+                  <p className="mb-2 text-micro text-text-muted">{t("admin.previewLabelAdmin")}</p>
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent">
+                      <MarkB size={18} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <Wordmark scale={0.72} />
+                      <FoundingPartnerBadge />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Block 2 — client view */}
+                <div className="rounded-card border border-border bg-raised/30 p-3">
+                  <p className="mb-2 text-micro text-text-muted">{t("admin.previewLabelClient")}</p>
+                  <div className="flex items-center gap-2">
+                    {org.brand_logo_url ? (
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface">
+                        <img src={org.brand_logo_url} alt={org.brand_name ?? ""} className="h-full w-full object-contain" />
+                      </div>
+                    ) : (
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent">
+                        <MarkB size={18} fg="#FFFFFF" accent="#FFFFFF" odoo="#FFFFFF" />
+                      </div>
+                    )}
+                    {org.brand_name ? (
+                      <span className="truncate text-body" style={{ fontWeight: 700 }}>{org.brand_name}</span>
+                    ) : (
+                      <span className="truncate text-small italic text-text-muted">{t("admin.previewNoBrand")}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-between text-body">
-                <span className="text-text-secondary">{t("admin.tier")}</span>
-                {isFoundingPartner ? (
-                  <span className="rounded-md bg-accent px-2 py-0.5 text-micro font-semibold text-white">
-                    Founding Partner
-                  </span>
+                <span className="text-text-secondary">{t("admin.brandName")}</span>
+                <span className="font-medium">{org.brand_name || "—"}</span>
+              </div>
+              <div className="mt-2 flex items-center justify-between text-body">
+                <span className="text-text-secondary">{t("admin.logoLabel")}</span>
+                {org.brand_logo_url ? (
+                  <div className="h-8 w-8 overflow-hidden rounded-lg border border-border bg-raised">
+                    <img src={org.brand_logo_url} alt={org.brand_name ?? org.name} className="h-full w-full object-contain" />
+                  </div>
                 ) : (
-                  <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
-                    {subscription.tier}
-                  </span>
+                  <span>—</span>
                 )}
               </div>
+            </div>
+
+            <hr className="border-border-subtle" />
+
+            {/* Tu cuenta */}
+            <div className="py-4">
+              <div className="mb-3">
+                <p className="text-small text-foreground" style={{ fontWeight: 600 }}>{t("admin.accountSectionTitle")}</p>
+                <p className="text-small text-text-muted">{t("admin.accountSectionDesc")}</p>
+              </div>
+              <div className="flex justify-between text-body">
+                <span className="text-text-secondary">{t("admin.yourName")}</span>
+                <span className="font-medium">{org.name}</span>
+              </div>
+            </div>
+
+            {subscription && (
+              <>
+                <hr className="border-border-subtle" />
+                <div className="flex items-center justify-between pt-4 text-body">
+                  <span className="text-text-secondary">{t("admin.tier")}</span>
+                  {isFoundingPartner ? (
+                    <span className="rounded-md bg-accent px-2 py-0.5 text-micro font-semibold text-white">
+                      Founding Partner
+                    </span>
+                  ) : (
+                    <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
+                      {subscription.tier}
+                    </span>
+                  )}
+                </div>
+              </>
             )}
           </div>
         ) : (
-          <form onSubmit={handleSave} className="space-y-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-small font-medium text-text-secondary">{t("admin.brandName")}</label>
-              <input
-                type="text"
-                value={brandName}
-                onChange={(e) => setBrandName(e.target.value)}
-                placeholder={t("admin.brandNamePlaceholder")}
-                className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
-              />
+          <form onSubmit={handleSave} className="flex flex-col">
+            {/* Tu Marca */}
+            <div className="pb-4 pt-2">
+              <div className="mb-3">
+                <p className="text-small text-foreground" style={{ fontWeight: 600 }}>{t("admin.brandSectionTitle")}</p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-small font-medium text-text-secondary">{t("admin.brandName")}</label>
+                <input
+                  type="text"
+                  value={brandName}
+                  onChange={(e) => setBrandName(e.target.value)}
+                  placeholder={t("admin.brandNamePlaceholder")}
+                  className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
+                />
+              </div>
+
+              {/* Logo upload */}
+              <div className="mt-4 flex flex-col gap-1.5">
+                <label className="text-small font-medium text-text-secondary">{t("admin.logoLabel")}</label>
+                <div className="flex items-center gap-3">
+                  {/* Current logo or placeholder */}
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-raised">
+                    {logoUrl ? (
+                      <img src={logoUrl} alt="logo" className="h-full w-full object-contain" />
+                    ) : (
+                      <ImagePlus size={20} strokeWidth={1.5} className="text-text-muted" />
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      disabled={logoUploading}
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-1.5 rounded-btn border border-border px-3 py-1.5 text-small transition-colors hover:bg-raised disabled:opacity-50"
+                    >
+                      {logoUploading ? (
+                        <Loader2 size={13} strokeWidth={1.5} className="animate-spin" />
+                      ) : (
+                        <ImagePlus size={13} strokeWidth={1.5} />
+                      )}
+                      {logoUploading ? t("admin.logoUploading") : (logoUrl ? t("admin.logoChange") : t("admin.logoUpload"))}
+                    </button>
+                    <p className="text-micro text-text-muted">{t("admin.logoHint")}</p>
+                  </div>
+                </div>
+                {logoError && <p className="text-small text-error">{logoError}</p>}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  className="hidden"
+                  onChange={handleLogoUpload}
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-small font-medium text-text-secondary">{t("admin.yourName")}</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
-              />
+
+            <hr className="border-border-subtle" />
+
+            {/* Tu cuenta */}
+            <div className="py-4">
+              <div className="mb-3">
+                <p className="text-small text-foreground" style={{ fontWeight: 600 }}>{t("admin.accountSectionTitle")}</p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-small font-medium text-text-secondary">{t("admin.yourName")}</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="rounded-md border border-border bg-surface px-3 py-2 text-body focus:outline-none focus:ring-2 focus:ring-accent/30"
+                />
+              </div>
             </div>
+
             {error && <p className="text-small text-error">{error}</p>}
             <div className="flex gap-2">
               <button

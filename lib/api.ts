@@ -266,6 +266,43 @@ export async function updateOrg(
   }
 }
 
+export type UploadLogoResult =
+  | { url: string; errorCode?: never }
+  | { url?: never; errorCode: "413" | "415" | "422" | "generic" };
+
+export async function uploadBrandLogo(orgId: string, file: File): Promise<UploadLogoResult> {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const token = await getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/admin/orgs/${orgId}/brand-logo`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    if (res.status === 401) {
+      if (typeof window !== "undefined")
+        window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+      return { errorCode: "generic" };
+    }
+    if (res.status === 413) return { errorCode: "413" };
+    if (res.status === 415) return { errorCode: "415" };
+    if (res.status === 422) return { errorCode: "422" };
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return { errorCode: "generic" };
+
+    return { url: data.brand_logo_url };
+  } catch {
+    return { errorCode: "generic" };
+  }
+}
+
 // ---- Admin: Odoo Configs ----
 
 export interface OdooConfigsResult {

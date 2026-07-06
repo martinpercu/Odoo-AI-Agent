@@ -2,12 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, ArrowLeftRight } from "lucide-react";
 import { MarkB } from "@/components/AgentMark";
 import dynamic from "next/dynamic";
 import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useSession } from "@/hooks/use-session";
 import { useRouter } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
 import { PartnerNudge } from "@/components/intro/partner-nudge";
@@ -22,6 +23,12 @@ export default function NewChatPage() {
   const t = useTranslations("NewChat");
   const { sendMessage, isStreaming, stopStreaming, createChat } = useChatContext();
   const { isConfigured, isDemoMode } = useOdooConfig();
+  const { meData } = useSession();
+
+  const sessionReady = meData !== null;
+  const isClient = meData?.user?.role === "CLIENT_USER";
+  const brandLogoUrl = sessionReady && isClient ? (meData?.org?.brand_logo_url ?? null) : null;
+  const brandName = sessionReady && isClient ? (meData?.org?.brand_name ?? null) : null;
 
   async function handleSend(content: string, image?: File) {
     const id = createChat(content || "Image upload");
@@ -41,9 +48,21 @@ export default function NewChatPage() {
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="mb-10 text-center"
           >
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-md bg-accent-subtle">
-              <MarkB size={36} fg="currentColor" className="text-accent" />
-            </div>
+            {brandLogoUrl ? (
+              <div className="mx-auto mb-6 flex items-center justify-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-card bg-accent-subtle">
+                  <MarkB size={36} fg="currentColor" className="text-accent" />
+                </div>
+                <ArrowLeftRight size={20} strokeWidth={1.5} className="text-text-muted" />
+                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-card border border-border bg-surface">
+                  <img src={brandLogoUrl} alt={brandName ?? ""} className="h-full w-full object-contain" />
+                </div>
+              </div>
+            ) : (
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-card bg-accent-subtle">
+                <MarkB size={36} fg="currentColor" className="text-accent" />
+              </div>
+            )}
             <h2 className="mb-3 text-display">{t("heading")}</h2>
             <p className="text-body text-text-secondary">{t("subheading")}</p>
           </motion.div>
