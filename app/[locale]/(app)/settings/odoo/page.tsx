@@ -26,7 +26,7 @@ import { ConnectionInvalidBanner } from "@/components/odoo/connection-invalid-ba
 import { CredentialForm } from "@/components/odoo/credential-form";
 
 /** A single instance the current user can self-manage credentials for (spec §6.5/§6.6). */
-function MyConnectionRow({ config }: { config: OdooConfigSummary }) {
+function MyConnectionRow({ config, isClient }: { config: OdooConfigSummary; isClient: boolean }) {
   const t = useTranslations("Connection");
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string | null>(null);
@@ -139,12 +139,13 @@ function MyConnectionRow({ config }: { config: OdooConfigSummary }) {
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-4 border-t border-border pt-4">
+            <div className="mt-4 px-1 border-t border-border pt-4">
               <CredentialForm
                 instance={config}
                 currentUsername={username}
                 currentStatus={status}
                 lastValidatedAt={lastValidatedAt}
+                hideInstanceInfo={isClient}
                 onSave={(u, k) => saveMyCredential(config.id, { odoo_username: u, odoo_api_key: k })}
                 onSaved={() => {
                   setEditing(false);
@@ -176,10 +177,12 @@ export default function MyOdooConnectionPage() {
   return (
     <div className="flex-1 overflow-y-auto">
     <div className="mx-auto w-full max-w-2xl px-6 py-8">
-      <Link href="/settings" className="mb-4 inline-flex items-center gap-1.5 text-small text-text-secondary hover:text-foreground">
-        <ArrowLeft size={16} strokeWidth={1.5} />
-        {t("backToSettings")}
-      </Link>
+      {!isClient && (
+        <Link href="/settings" className="mb-4 inline-flex items-center gap-1.5 text-small text-text-secondary hover:text-foreground">
+          <ArrowLeft size={16} strokeWidth={1.5} />
+          {t("backToSettings")}
+        </Link>
+      )}
 
       <div className="mb-2 flex items-center gap-2">
         <KeyRound size={24} strokeWidth={1.5} className="text-accent" />
@@ -196,7 +199,7 @@ export default function MyOdooConnectionPage() {
       ) : (
         <div className="space-y-3">
           {configs.map((c) => (
-            <MyConnectionRow key={c.id} config={c} />
+            <MyConnectionRow key={c.id} config={c} isClient={isClient} />
           ))}
         </div>
       )}
