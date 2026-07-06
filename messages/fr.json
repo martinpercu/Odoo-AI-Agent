@@ -68,7 +68,9 @@
       "paymentsByClientJan": "Total des paiements par client en janvier",
       "salesBySellerYear": "Ventes par vendeur cette année",
       "salesBySeller2024": "Ventes par vendeur en 2024"
-    }
+    },
+    "noCredsBanner": "Configurez vos identifiants pour commencer à chatter",
+    "noCredsCta": "Aller à Connexion"
   },
   "ChatInput": {
     "placeholder": "Posez une question sur vos données Odoo...",
@@ -1090,7 +1092,7 @@
     "credentials": {
       "instanceLabel": "Instance",
       "usernameLabel": "Nom d'utilisateur Odoo",
-      "usernamePlaceholder": "admin",
+      "usernamePlaceholder": "votre utilisateur Odoo",
       "apiKeyLabel": "Clé API",
       "apiKeyPlaceholder": "Votre clé API Odoo",
       "apiKeyUpdatePlaceholder": "Saisissez une nouvelle clé pour la remplacer",
@@ -1177,5 +1179,56 @@
     "clockDaysLeft": "{days} jours restants",
     "clockExpired": "Programme terminé",
     "clockTooltip": "Jours restants du programme Founding Partner"
+  },
+  "HowItWorks": {
+    "sidebarItem": "Comment ça marche ?",
+    "panel": {
+      "title": "Comment ça marche ?",
+      "close": "Fermer",
+      "hook": {
+        "title": "Votre Odoo en langage naturel",
+        "line": "Posez des questions comme vous parleriez à un collègue et le système interroge votre Odoo instantanément. Sans menus, sans rapports manuels.",
+        "scrollTag": "C'est sécurisé ?"
+      },
+      "what": {
+        "heading": "Essayez maintenant",
+        "line": "Cliquez sur l'un de ces exemples et voyez comment ça fonctionne en temps réel.",
+        "chip1": "Combien ai-je vendu ce mois-ci ?",
+        "chip2": "Factures en retard",
+        "chip3": "Top 5 clients par ventes",
+        "chip4": "Des produits en rupture de stock ?",
+        "chip5": "État de mes commandes en attente",
+        "chip6": "Créer contact : Marie Dupont, marie@entreprise.com"
+      },
+      "partner": {
+        "heading": "Le modèle d'accès",
+        "line": "Accès par utilisateur. Sans frais surprises.",
+        "item1Label": "Prix fixe par utilisateur",
+        "item1Body": "Vous savez exactement ce que vous payez. Aucun frais par requête ou par volume.",
+        "item2Label": "Vos données, rien qu'à vous",
+        "item2Body": "Votre entreprise dispose de son propre espace isolé. Aucun autre client n'accède à vos informations.",
+        "item3Label": "Rien ne change dans votre Odoo",
+        "item3Body": "Connexion via votre clé API. Aucun module installé, aucune base de données touchée."
+      },
+      "secure": {
+        "heading": "Sécurisé par conception",
+        "item1": "Vous confirmez avant toute modification",
+        "item2": "Données isolées par entreprise",
+        "item3": "Respecte vos permissions Odoo",
+        "item4": "Identifiants chiffrés"
+      },
+      "faq": {
+        "heading": "Questions fréquentes",
+        "q1": "Mes données servent-elles à entraîner l'IA ?",
+        "a1": "Non. Nous appliquons la Zero Data Retention : le contenu de vos requêtes n'est jamais stocké ni utilisé pour entraîner un modèle d'IA.",
+        "q2": "Dois-je installer quelque chose ?",
+        "a2": "Non. Ça fonctionne depuis le navigateur, sans extension ni application supplémentaire.",
+        "q3": "Puis-je créer ou modifier des données ?",
+        "a3": "Oui. Avant toute modification, le système vous demande toujours confirmation.",
+        "q4": "Et si je pose une question incorrectement ?",
+        "a4": "Rien. Reformulez simplement ou demandez une autre explication. Vous ne pouvez rien casser en écrivant."
+      },
+      "ctaConnection": "Connexion"
+    }
   }
 }

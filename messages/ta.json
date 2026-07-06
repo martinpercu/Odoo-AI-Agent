@@ -68,7 +68,9 @@
       "paymentsByClientJan": "ஜனவரியில் வாடிக்கையாளர்வாரியாக மொத்த கட்டணங்கள்",
       "salesBySellerYear": "இந்த ஆண்டு விற்பனையாளர்வாரியாக விற்பனை",
       "salesBySeller2024": "2024 இல் விற்பனையாளர்வாரியாக விற்பனை"
-    }
+    },
+    "noCredsBanner": "Configure your credentials to start chatting",
+    "noCredsCta": "Go to Connection"
   },
   "ChatInput": {
     "placeholder": "உங்கள் Odoo தரவைப் பற்றி கேளுங்கள்...",
@@ -1090,7 +1092,7 @@
     "credentials": {
       "instanceLabel": "Instance",
       "usernameLabel": "Odoo username",
-      "usernamePlaceholder": "admin",
+      "usernamePlaceholder": "your Odoo username",
       "apiKeyLabel": "API key",
       "apiKeyPlaceholder": "Your Odoo API key",
       "apiKeyUpdatePlaceholder": "Enter a new key to replace it",
@@ -1177,5 +1179,56 @@
     "clockDaysLeft": "{days} days left",
     "clockExpired": "Program ended",
     "clockTooltip": "Days left in the Founding Partner program"
+  },
+  "HowItWorks": {
+    "sidebarItem": "How does it work?",
+    "panel": {
+      "title": "How does it work?",
+      "close": "Close",
+      "hook": {
+        "title": "Your Odoo in plain language",
+        "line": "Ask like you'd talk to a colleague and the system queries your Odoo instantly. No menus, no manual reports, no training needed.",
+        "scrollTag": "How secure is it?"
+      },
+      "what": {
+        "heading": "Try it now",
+        "line": "Tap any of these examples and see how it works in real time.",
+        "chip1": "How much did I sell this month?",
+        "chip2": "Overdue invoices",
+        "chip3": "Top 5 customers by sales",
+        "chip4": "Any products out of stock?",
+        "chip5": "Status of my pending orders",
+        "chip6": "Create contact: Maria Lopez, maria@company.com"
+      },
+      "partner": {
+        "heading": "How access works",
+        "line": "Per-user access. No surprise costs.",
+        "item1Label": "Fixed price per user",
+        "item1Body": "You know exactly what you pay. No charges per query or per data volume.",
+        "item2Label": "Your data, yours only",
+        "item2Body": "Your company has its own isolated space. No other client can access your information.",
+        "item3Label": "Nothing changes in your Odoo",
+        "item3Body": "Connects via your API key. No modules installed, no database touched."
+      },
+      "secure": {
+        "heading": "Secure by design",
+        "item1": "You confirm before any change",
+        "item2": "Data isolated per company",
+        "item3": "Respects your Odoo user permissions",
+        "item4": "Encrypted credentials"
+      },
+      "faq": {
+        "heading": "Frequently asked questions",
+        "q1": "Is my data used to train AI?",
+        "a1": "No. We operate with Zero Data Retention: the content of your queries is never stored or used to train any AI model.",
+        "q2": "Do I need to install anything?",
+        "a2": "No. It works from the browser, no extensions or additional apps needed.",
+        "q3": "Can I create or modify data?",
+        "a3": "Yes. Before modifying any data, the system always asks for your confirmation.",
+        "q4": "What if I phrase a question wrong?",
+        "a4": "Nothing happens. Just rephrase it or ask it to explain differently. You can't break anything by typing."
+      },
+      "ctaConnection": "Connection"
+    }
   }
 }

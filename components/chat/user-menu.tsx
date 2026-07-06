@@ -21,8 +21,9 @@ import {
   Check,
   User as UserIcon,
 } from "lucide-react";
-import { PoweredBy } from "@/components/ui/powered-by";
+
 import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
+import { HowItWorksSidebarItem } from "@/components/intro/how-it-works-sidebar-item";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -114,7 +115,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const settingsHref = user && !meData?.org ? "/onboarding" : "/settings";
   // An ADMIN who hasn't connected their first instance (no configs) only gets
   // Instances — Settings stays hidden until there's at least one instance.
-  const showSettings = !(role === "ADMIN" && configs.length === 0);
+  const showSettings = !isClient && !(role === "ADMIN" && configs.length === 0);
 
   // A config is "chat-ready" when the caller's Connection is active (spec §6.2).
   // Fall back to credential presence when the status field isn't populated.
@@ -148,6 +149,13 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
         <div className="flex flex-col gap-0.5">
           {/* What is TheOdooAgent? */}
           <IntroSidebarItem
+            collapsed={collapsed}
+            onOpened={onNavigate}
+            className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+          />
+
+          {/* How does it work? */}
+          <HowItWorksSidebarItem
             collapsed={collapsed}
             onOpened={onNavigate}
             className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
@@ -400,7 +408,8 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             {/* Preferences: intro + theme + language */}
             <div className="my-1 border-t border-border" />
             <div className="px-1">
-              <IntroSidebarItem onOpened={close} className={itemClass} />
+              {!isClient && <IntroSidebarItem onOpened={close} className={itemClass} />}
+              <HowItWorksSidebarItem onOpened={close} className={itemClass} />
 
               {!isClient && (
                 <Link href="/pricing" onClick={close} className={itemClass}>
@@ -483,12 +492,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
         )}
       </AnimatePresence>
 
-      {/* Powered by — always visible below the trigger (Client only) */}
-      {isClient && !collapsed && (
-        <div className="mt-3 flex justify-center border-t border-sidebar-border pt-3">
-          <PoweredBy />
-        </div>
-      )}
+
     </div>
   );
 }
