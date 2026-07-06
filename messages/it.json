@@ -68,7 +68,9 @@
       "paymentsByClientJan": "Totale pagamenti per cliente a gennaio",
       "salesBySellerYear": "Vendite per venditore quest'anno",
       "salesBySeller2024": "Vendite per venditore nel 2024"
-    }
+    },
+    "noCredsBanner": "Configura le tue credenziali per chattare",
+    "noCredsCta": "Vai a Connessione"
   },
   "ChatInput": {
     "placeholder": "Chiedi informazioni sui tuoi dati Odoo...",
@@ -1090,7 +1092,7 @@
     "credentials": {
       "instanceLabel": "Istanza",
       "usernameLabel": "Nome utente Odoo",
-      "usernamePlaceholder": "admin",
+      "usernamePlaceholder": "il tuo nome utente Odoo",
       "apiKeyLabel": "Chiave API",
       "apiKeyPlaceholder": "La tua chiave API Odoo",
       "apiKeyUpdatePlaceholder": "Inserisci una nuova chiave per sostituirla",
@@ -1177,5 +1179,56 @@
     "clockDaysLeft": "{days} giorni rimanenti",
     "clockExpired": "Programma terminato",
     "clockTooltip": "Giorni rimanenti del programma Founding Partner"
+  },
+  "HowItWorks": {
+    "sidebarItem": "Come funziona?",
+    "panel": {
+      "title": "Come funziona?",
+      "close": "Chiudi",
+      "hook": {
+        "title": "Il tuo Odoo in linguaggio naturale",
+        "line": "Chiedi come parleresti a un collega e il sistema interroga il tuo Odoo all'istante. Senza menu, senza report manuali.",
+        "scrollTag": "È sicuro?"
+      },
+      "what": {
+        "heading": "Provalo ora",
+        "line": "Tocca uno di questi esempi e vedi come funziona in tempo reale.",
+        "chip1": "Quanto ho venduto questo mese?",
+        "chip2": "Fatture scadute",
+        "chip3": "Top 5 clienti per vendite",
+        "chip4": "Ci sono prodotti esauriti?",
+        "chip5": "Stato dei miei ordini in sospeso",
+        "chip6": "Crea contatto: Maria Rossi, maria@azienda.it"
+      },
+      "partner": {
+        "heading": "Come funziona l'accesso",
+        "line": "Accesso per utente. Nessun costo a sorpresa.",
+        "item1Label": "Prezzo fisso per utente",
+        "item1Body": "Sai esattamente quanto paghi. Nessun addebito per query o volume di dati.",
+        "item2Label": "I tuoi dati, solo tuoi",
+        "item2Body": "La tua azienda ha il suo spazio isolato. Nessun altro cliente accede alle tue informazioni.",
+        "item3Label": "Nulla cambia nel tuo Odoo",
+        "item3Body": "Si connette tramite la tua chiave API. Nessun modulo installato, nessun database toccato."
+      },
+      "secure": {
+        "heading": "Sicuro per design",
+        "item1": "Confermi prima di qualsiasi modifica",
+        "item2": "Dati isolati per azienda",
+        "item3": "Rispetta i permessi del tuo utente Odoo",
+        "item4": "Credenziali cifrate"
+      },
+      "faq": {
+        "heading": "Domande frequenti",
+        "q1": "I miei dati vengono usati per addestrare l'IA?",
+        "a1": "No. Operiamo con Zero Data Retention: il contenuto delle tue query non viene mai salvato né usato per addestrare nessun modello di IA.",
+        "q2": "Devo installare qualcosa?",
+        "a2": "No. Funziona dal browser, senza estensioni o app aggiuntive.",
+        "q3": "Posso creare o modificare dati?",
+        "a3": "Sì. Prima di modificare qualsiasi dato, il sistema chiede sempre conferma.",
+        "q4": "Cosa succede se formulo male una domanda?",
+        "a4": "Niente. Riformulala o chiedi di spiegare in altro modo. Non si può rompere nulla scrivendo."
+      },
+      "ctaConnection": "Connessione"
+    }
   }
 }

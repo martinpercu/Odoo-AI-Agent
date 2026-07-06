@@ -16,6 +16,8 @@ export interface CredentialFormProps {
   currentUsername?: string | null;
   currentStatus?: OdooConnectionStatus | null;
   lastValidatedAt?: string | null;
+  /** When true, hides the read-only instance block (URL + DB). Used for CLIENT_USER self-service. */
+  hideInstanceInfo?: boolean;
   /** Persists creds — parent picks the endpoint (self-service vs admin pre-load). Validates server-side. */
   onSave: (username: string, apikey: string) => Promise<CredentialResult>;
   onSaved?: (result: CredentialResult) => void;
@@ -30,6 +32,7 @@ export function CredentialForm({
   currentUsername,
   currentStatus,
   lastValidatedAt,
+  hideInstanceInfo = false,
   onSave,
   onSaved,
 }: CredentialFormProps) {
@@ -70,16 +73,17 @@ export function CredentialForm({
 
   return (
     <form onSubmit={handleSave} className="space-y-4">
-      {/* Instance block — read-only (URL + DB inherited) */}
-      <div>
-        <p className="mb-1.5 text-small font-medium text-text-secondary">{t("instanceLabel")}</p>
-        <div className="rounded-btn border border-border bg-raised/50 px-3 py-2.5">
-          {/* {instance.label && <p className="text-body font-medium text-foreground">{instance.label}</p>} */}
-          <p className="text-small font-technical text-text-muted">
-            {instance.url} · {instance.db_name}
-          </p>
+      {/* Instance block — read-only (URL + DB inherited). Hidden for CLIENT_USER. */}
+      {!hideInstanceInfo && (
+        <div>
+          <p className="mb-1.5 text-small font-medium text-text-secondary">{t("instanceLabel")}</p>
+          <div className="rounded-btn border border-border bg-raised/50 px-3 py-2.5">
+            <p className="text-small font-technical text-text-muted">
+              {instance.url} · {instance.db_name}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       {isConfigured && validatedDate && (
         <p className="flex items-center gap-1.5 text-small text-text-secondary">

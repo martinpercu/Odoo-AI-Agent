@@ -9,7 +9,7 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useSession } from "@/hooks/use-session";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
 import { PartnerNudge } from "@/components/intro/partner-nudge";
 
@@ -22,7 +22,7 @@ export default function NewChatPage() {
   const router = useRouter();
   const t = useTranslations("NewChat");
   const { sendMessage, isStreaming, stopStreaming, createChat } = useChatContext();
-  const { isConfigured, isDemoMode } = useOdooConfig();
+  const { isConfigured, isDemoMode, activeConfig } = useOdooConfig();
   const { meData } = useSession();
 
   const sessionReady = meData !== null;
@@ -30,7 +30,18 @@ export default function NewChatPage() {
   const brandLogoUrl = sessionReady && isClient ? (meData?.org?.brand_logo_url ?? null) : null;
   const brandName = sessionReady && isClient ? (meData?.org?.brand_name ?? null) : null;
 
+  // CLIENT_USER with an assigned instance that isn't active yet (unset / invalid) → block chat.
+  const isClientBlocked =
+    isClient &&
+    !isDemoMode &&
+    !!activeConfig &&
+    activeConfig.connection_status !== "active";
+
   async function handleSend(content: string, image?: File) {
+    if (isClientBlocked) {
+      router.push("/settings/odoo");
+      return;
+    }
     const id = createChat(content || "Image upload");
     router.push(`/chat/${id}`);
     sendMessage(content, id, image);
@@ -40,6 +51,16 @@ export default function NewChatPage() {
     <div className="flex flex-1 flex-col">
       {isDemoMode && <DemoBanner />}
       {isDemoMode && <PartnerNudge />}
+      {isClientBlocked && (
+        <div className="flex items-center justify-center gap-3 border-b border-border bg-warning-subtle px-4 py-2 text-small text-warning-solid shrink-0">
+          <Link
+            href="/settings/odoo"
+            className="font-medium underline underline-offset-2 hover:no-underline"
+          >
+            {t("noCredsBanner")}
+          </Link>
+        </div>
+      )}
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-2xl">
           <motion.div
@@ -96,6 +117,7 @@ export default function NewChatPage() {
         onSend={handleSend}
         onStop={stopStreaming}
         isStreaming={isStreaming}
+        disabled={isClientBlocked}
       />
     </div>
   );

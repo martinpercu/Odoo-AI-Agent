@@ -24,6 +24,7 @@ const DISMISS_KEY = "toa_intro_dismissed";
 interface IntroContextValue {
   isModalOpen: boolean;
   isPanelOpen: boolean;
+  isHowItWorksPanelOpen: boolean;
   /** Whether the modal has been permanently dismissed (persisted). */
   dismissed: boolean;
   /** True once localStorage has been read — gates auto-open to avoid a flash. */
@@ -33,6 +34,8 @@ interface IntroContextValue {
   closeModal: (persist?: boolean) => void;
   openPanel: () => void;
   closePanel: () => void;
+  openHowItWorksPanel: () => void;
+  closeHowItWorksPanel: () => void;
 }
 
 const IntroContext = createContext<IntroContextValue | null>(null);
@@ -46,6 +49,7 @@ export function useIntro(): IntroContextValue {
 export function IntroProvider({ children }: { children: React.ReactNode }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isPanelOpen, setPanelOpen] = useState(false);
+  const [isHowItWorksPanelOpen, setHowItWorksPanelOpen] = useState(false);
   // Default `true` until we read storage → prevents auto-open flash before hydration.
   const [dismissed, setDismissed] = useState(true);
   const [ready, setReady] = useState(false);
@@ -78,18 +82,23 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
 
   const openPanel = useCallback(() => setPanelOpen(true), []);
   const closePanel = useCallback(() => setPanelOpen(false), []);
+  const openHowItWorksPanel = useCallback(() => setHowItWorksPanelOpen(true), []);
+  const closeHowItWorksPanel = useCallback(() => setHowItWorksPanelOpen(false), []);
 
   return (
     <IntroContext.Provider
       value={{
         isModalOpen,
         isPanelOpen,
+        isHowItWorksPanelOpen,
         dismissed,
         ready,
         openModal,
         closeModal,
         openPanel,
         closePanel,
+        openHowItWorksPanel,
+        closeHowItWorksPanel,
       }}
     >
       {children}

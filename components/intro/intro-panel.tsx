@@ -124,6 +124,7 @@ export function IntroPanel() {
   const { createChat, sendMessage } = useChatContext();
   const { user } = useAuth();
   const { meData } = useSession();
+  const isPartner = meData?.org?.type === "PARTNER";
   const panelRef = useRef<HTMLDivElement>(null);
   const partnerRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -403,15 +404,17 @@ export function IntroPanel() {
               </div>
             </div>
 
-            {/* Footer CTA */}
-            <div className="border-t border-border p-4">
-              <button
-                onClick={handleConnect}
-                className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
-              >
-                {t("ctaConnect")}
-              </button>
-            </div>
+            {/* Footer CTA — hidden for PARTNER orgs (already onboarded) */}
+            {!isPartner && (
+              <div className="border-t border-border p-4">
+                <button
+                  onClick={handleConnect}
+                  className="h-btn-md w-full rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+                >
+                  {t("ctaConnect")}
+                </button>
+              </div>
+            )}
           </motion.div>
         </div>
       )}
