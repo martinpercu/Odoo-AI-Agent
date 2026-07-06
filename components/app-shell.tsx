@@ -14,6 +14,7 @@ import { IntroProvider } from "@/hooks/use-intro";
 import { PartnerNudgeProvider } from "@/hooks/use-partner-nudge";
 import { IntroModal } from "@/components/intro/intro-modal";
 import { IntroPanel } from "@/components/intro/intro-panel";
+import { HowItWorksPanel } from "@/components/intro/how-it-works-panel";
 import { captureUtm } from "@/lib/analytics";
 
 type ChatContextType = ReturnType<typeof useChat>;
@@ -114,6 +115,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <IntroModal />
             <IntroPanel />
+            <HowItWorksPanel />
           </PartnerNudgeProvider>
         </IntroProvider>
       </RightPanelContext.Provider>
