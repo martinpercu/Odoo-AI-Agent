@@ -40,72 +40,11 @@ graph LR
 
 ---
 
-## ✨ Features
-
-| | Feature | Description |
-|---|---|---|
-| 💬 | **Natural Language Queries** | Ask questions about your Odoo data in plain language |
-| 🌊 | **Real-time Streaming** | Server-Sent Events for word-by-word response streaming |
-| 🌍 | **Multi-language** | English, Spanish, French, German, Portuguese & Italian |
-| 🔌 | **Any Odoo Instance** | Connect to any Odoo via XML-RPC with API key auth |
-| 💱 | **Currency Aware** | Auto-detects symbol + ISO 4217 code from the instance (`$`/`USD`, `€`/`EUR`, `₲`/`PYG`) for locale-aware Excel |
-| 🧠 | **Stateful Conversations** | PostgreSQL-backed memory across messages |
-| 🔗 | **Follow-up Queries** | Referential language detection — "those invoices", "how much total?" |
-| 📄 | **Pagination** | Ask for "more" or "next" to browse large result sets |
-| ❓ | **Smart Clarification** | Asks follow-up questions when date ranges or context are ambiguous |
-| 📊 | **Charts & Analytics** | Auto-generated bar, pie and line charts for aggregation queries |
-| 📥 | **Excel Export** | Export any chart or dataset to `.xlsx` — automatic or on-demand |
-| 🔢 | **Computed Facts** | All numeric totals pre-calculated in Python — no LLM arithmetic hallucinations |
-| ✏️ | **CRUD Operations** | Create contacts, update records and execute business methods via natural language |
-| 🔒 | **Confirmation Gate** | All write operations require explicit user confirmation before executing |
-| 🔍 | **Entity Resolution** | Resolves names to Odoo IDs ("Azure Interior" → `partner_id: 42`) |
-| 🧩 | **Smart Field Extraction** | Regex-first extraction of names/emails/phones/companies — LLM fallback for hard cases |
-| 📌 | **Sticky Context** | Remembers last-referenced records — "create a quote for that customer" just works |
-| 🔄 | **Multi-Intent Sequences** | Chain actions — "Create a contact, then create a quote and confirm it" |
-| 📋 | **PDF Reports** | Generate and download Odoo PDF reports (invoices, orders, etc.) |
-| 📌 | **Insight Vault** | Pin charts/files/text to a persistent dashboard — with full query context saved |
-| 🔃 | **Live Refresh** | Re-execute pinned chart queries against Odoo for up-to-date data |
-| 🧾 | **Document OCR** | Upload invoice/receipt images — heuristic extraction with LLM fallback |
-| 📡 | **Proactive Monitoring** | Background anomaly detection — sales drops, spikes, overdue invoices |
-| 🔔 | **Notifications** | Thread-scoped alert inbox with unread count in the SSE stream |
-| 🔐 | **Supabase Auth** | JWT authentication (ES256 via JWKS) with automatic user sync |
-| 🏢 | **Multi-Tenancy** | Organizations, roles (SUPERADMIN/ADMIN/CLIENT_USER), per-user credentials, kill switch |
-| 🗣️ | **Audience-Aware Voice** | Responses adapt to the caller's role — Client gets concierge tone, Builder gets technical detail |
-| 🪜 | **Builder Trace Panel** | Builders receive a `trace` SSE event with node-level pipeline activity — never emitted to Client |
-| 🎨 | **White-Label Branding** | Per-org `brand_name` / `brand_logo_url` shown in the Client sidebar |
-| 💳 | **Stripe Billing** | Webhook-driven subscription lifecycle — tiers, slot limits, watermark control |
-| 🎰 | **Slot-Based Licensing** | Paid + free user slots per org — enforced at invite/accept; pending invites reserve seats |
-| 🔑 | **Encrypted Credentials** | Odoo API keys encrypted at rest (Fernet) |
-| 💬 | **User Feedback Reports** | Report incorrect responses with full conversation + LangGraph state snapshot |
-| ⚡ | **Result Cache** | In-memory TTL cache (45s) for Odoo reads — auto-invalidated on writes |
-| ✅ | **Tested** | 1000+ unit tests + 180+ evaluation scenarios across intent, CRUD, analytics, multi-turn |
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| 🧩 AI Framework | LangGraph + LangChain |
-| 💬 Response LLM | OpenAI `gpt-4.1-nano` (configurable: Google, Anthropic) |
-| ⚡ Backend | FastAPI (SSE streaming) |
-| 🗄️ Database | PostgreSQL 15 (checkpointer + tenancy + pins + notifications + audit) |
-| 🔐 Auth | Supabase JWT (ES256 via JWKS) |
-| 💳 Billing | Stripe webhooks (no SDK — HMAC verification) |
-| 🔗 Odoo | XML-RPC |
-| 📊 Excel | openpyxl |
-| 🧾 OCR | Tesseract + Pillow (heuristic-first, LLM fallback) |
-| 🔑 Encryption | Fernet (cryptography) — Odoo API keys at rest |
-
----
-
 ## 🧠 Agent Design Philosophy
 
 The agent uses a **keyword-first, LLM-last** approach. Most nodes run pure Python heuristics in under 5ms. The LLM is only called **twice per turn maximum**: once for intent classification (when keywords aren't enough) and once for response generation. This keeps latency low and cost minimal.
 
 A key design decision is **computed facts**: all numeric totals, averages and breakdowns are pre-calculated in Python by the Data Formatter node and handed to the LLM as exact values — the model is told to use them verbatim instead of doing its own arithmetic. This eliminates hallucinated math. When results are paginated, the executor fetches **global totals** (via `read_group`) so the LLM can distinguish page subtotals from the full dataset total.
-
-The same philosophy extends to **document OCR** (Tesseract → regex/heuristics → LLM only as a fallback for missing critical fields) and to **concurrency**: the synchronous LangGraph run executes on a worker thread that feeds the event loop through a bounded queue, so a slow Odoo/LLM turn never blocks the server for other requests.
 
 ### LLM Configuration
 
@@ -116,6 +55,43 @@ The Response LLM is configurable via the `RESPONSE_LLM_PROVIDER` env var:
 | OpenAI _(default)_ | `gpt-4.1-nano` |
 | Google | `gemini-2.5-flash-lite` |
 | Anthropic | `claude-sonnet-4-5` |
+
+---
+
+## 🧪 Quality Engineering
+
+Not just tested — the test suite is a **closed feedback loop**, not a one-time checkbox.
+
+### The testing pyramid
+
+| Layer | Tests what | Deps | Runs in CI |
+|-------|-----------|------|:----------:|
+| **Unit** | Keyword/regex helpers + nodes in isolation, pure Python, LLM mocked | none | ✅ |
+| **Characterization** | The SSE contract itself — event order, token integrity, audience, edge cases | PostgreSQL | ✅ |
+| **E2E evaluation** | Full conversational behavior, judged by an **LLM-as-judge** (chain-of-thought + state/node-path assertions + latency) | live server + real Odoo + LLM | manual |
+| **Feedback → regression** | Real production bugs, replayed as regression scenarios | live server + real Odoo + LLM | manual |
+
+**2,000+ unit/characterization tests** run on every change; **180+ end-to-end evaluation scenarios** cover intent detection, CRUD, analytics and multi-turn conversations end-to-end.
+
+### Feedback → regression: closing the loop on production bugs
+
+```mermaid
+graph LR
+    A["🙋 User reports<br/>a bad answer"] --> B["👀 Admin reviews<br/>+ marks 'reviewed'"]
+    B --> C["⚙️ Auto-converts to a<br/>regression scenario"]
+    C --> D["🤖 LLM judge<br/>reproduces the bug"]
+    D --> E["🔧 Fix in code"]
+    E --> F["✅ Regression test passes<br/>+ full suite verified"]
+    F --> G["✔️ Marked resolved"]
+
+    style A fill:#f59e0b,color:#fff
+    style D fill:#8b5cf6,color:#fff
+    style G fill:#10b981,color:#fff
+```
+
+A "report problem" click captures a full forensic snapshot of the conversation and the agent's own reasoning at that moment — not just the bad reply, but *why* the agent got there. That snapshot is what turns a one-off complaint into a deterministic, replayable test: a genuine bug found in production becomes a permanent regression guard instead of a support ticket that gets forgotten.
+
+One deliberate design choice: whether a scenario is single-turn or multi-turn is decided **objectively** by counting conversation turns — never by asking the agent whether it thought it was a follow-up. If the bug *is* that the agent failed to recognize context, trusting its own judgment on that would hide the very failure being reproduced.
 
 ---
 
@@ -169,30 +145,66 @@ graph TD
     style V fill:#8b5cf6,color:#fff
 ```
 
-### Node Pipeline
+> 💡 **The graph is the easy part to draw.** The hard part is making the keyword layer resolve 90%+ of real queries — across 6 languages — without ever touching the LLM, tuned against 2000+ regression tests so it doesn't silently regress as Odoo edge cases pile up.
 
-| # | Node | Type | Description |
-|---|------|------|-------------|
-| 1 | **State Logger Start** | Logger | Records initial state, resets per-turn fields |
-| 2 | **Language Choice** | Keyword | Detects user language (es/en/fr/de/pt/it) |
-| 3 | **Odoo Intention Detector** | Keyword | Determines if the query is business-related; handles confirmations and pending clarifications |
-| 4 | **Validate Odoo Connection** | RPC | Tests XML-RPC authentication with the Odoo instance |
-| 5 | **Context Resolver** | Keyword | Detects referential language, resolves clarification replies, detects export intent, restores write context |
-| 6 | **Keyword Area Classifier** | Keyword | Classifies query into business areas (sales, finance, inventory, contacts, hr, projects) |
-| 7 | **Classify Intent** | LLM | Fallback classification when keywords aren't confident enough |
-| 8 | **Prepare Metadata** | Python | Loads model definitions, fields and common domains for the detected area |
-| 9 | **Query Planner** | Keyword | Determines query type (count, aggregation, top_n, listing, detail, exists, create, update, method_call), limits, model and groupby |
-| 10 | **Domain Builder** | Keyword | Builds Odoo domains from date ranges, state and amount filters; supports pagination and follow-up reuse |
-| 11 | **Write Vals Extractor** | Regex+LLM | Extracts field values (name, email, phone, company…) from natural language — regex first, LLM fallback |
-| 12 | **Query Validator** | Keyword | Validates the plan, auto-fixes issues, or asks for clarification |
-| 13 | **Clarification Responder** | Output | Emits a clarification question and ends the turn |
-| 14 | **Odoo Executor** | RPC | Runs `search_read` / `search_count` / `read_group`; fetches global totals when truncated; checks the 45s `ResultCache` |
-| 15 | **Action Executor** | RPC | Validates writes, resolves names to IDs, produces `pending_confirmation` — **does NOT execute** until the user confirms |
-| 16 | **Data Formatter** | Python | Cleans data, pre-calculates computed facts, builds chart data, generates Excel, humanizes `move_type` codes and model/groupby labels in 6 languages |
-| 17 | **Response Generator** | LLM | Generates the natural-language answer using computed facts as exact values; appends the audience-aware voice block |
-| 18 | **State Logger End** | Logger | Records final state |
+---
 
-> 💡 **Keyword** nodes run pure Python heuristics (~1–5ms). **LLM** nodes invoke the configured model (~200–800ms). Max 2 LLM calls per turn.
+## ✨ Features
+
+| | Feature | Description |
+|---|---|---|
+| 💬 | **Natural Language Queries** | Ask questions about your Odoo data in plain language |
+| 🌊 | **Real-time Streaming** | Server-Sent Events for word-by-word response streaming |
+| 🌍 | **Multi-language** | English, Spanish, French, German, Portuguese & Italian |
+| 🔌 | **Any Odoo Instance** | Connect to any Odoo via XML-RPC with API key auth |
+| 💱 | **Currency Aware** | Auto-detects symbol + ISO 4217 code from the instance (`$`/`USD`, `€`/`EUR`, `₲`/`PYG`) for locale-aware Excel |
+| 🧠 | **Stateful Conversations** | PostgreSQL-backed memory across messages |
+| 🔗 | **Follow-up Queries** | Referential language detection — "those invoices", "how much total?" |
+| 📄 | **Pagination** | Ask for "more" or "next" to browse large result sets |
+| ❓ | **Smart Clarification** | Asks follow-up questions when date ranges or context are ambiguous |
+| 📊 | **Charts & Analytics** | Auto-generated bar, pie and line charts for aggregation queries |
+| 📥 | **Excel Export** | Export any chart or dataset to `.xlsx` — automatic or on-demand |
+| 🔢 | **Computed Facts** | All numeric totals pre-calculated in Python — no LLM arithmetic hallucinations |
+| ✏️ | **CRUD Operations** | Create contacts, update records and execute business methods via natural language |
+| 🔒 | **Confirmation Gate** | All write operations require explicit user confirmation before executing |
+| 🔍 | **Entity Resolution** | Resolves names to Odoo IDs ("Azure Interior" → `partner_id: 42`) |
+| 🧩 | **Smart Field Extraction** | Regex-first extraction of names/emails/phones/companies — LLM fallback for hard cases |
+| 📌 | **Sticky Context** | Remembers last-referenced records — "create a quote for that customer" just works |
+| 🔄 | **Multi-Intent Sequences** | Chain actions — "Create a contact, then create a quote and confirm it" |
+| 📋 | **PDF Reports** | Generate and download Odoo PDF reports (invoices, orders, etc.) |
+| 📌 | **Insight Vault** | Pin charts/files/text to a persistent dashboard — with full query context saved |
+| 🔃 | **Live Refresh** | Re-execute pinned chart queries against Odoo for up-to-date data |
+| 🧾 | **Document OCR** | Upload invoice/receipt images — heuristic extraction with LLM fallback |
+| 📡 | **Proactive Monitoring** | Background anomaly detection — sales drops, spikes, overdue invoices |
+| 🔔 | **Notifications** | Thread-scoped alert inbox with unread count in the SSE stream |
+| 🔐 | **Supabase Auth** | JWT authentication (ES256 via JWKS) with automatic user sync |
+| 🏢 | **Multi-Tenancy** | Organizations, roles (SUPERADMIN/ADMIN/CLIENT_USER), per-user credentials, kill switch |
+| 🗣️ | **Audience-Aware Voice** | Responses adapt to the caller's role — Client gets concierge tone, Builder gets technical detail |
+| 🪜 | **Builder Trace Panel** | Builders receive a `trace` SSE event with node-level pipeline activity — never emitted to Client |
+| 🎨 | **White-Label Branding** | Per-org `brand_name` / `brand_logo_url` shown in the Client sidebar |
+| 💳 | **Stripe Billing** | Webhook-driven subscription lifecycle — tiers, slot limits, watermark control |
+| 🎰 | **Slot-Based Licensing** | Paid + free user slots per org — enforced at invite/accept; pending invites reserve seats |
+| 🔑 | **Encrypted Credentials** | Odoo API keys encrypted at rest (Fernet) |
+| 💬 | **User Feedback Reports** | Report incorrect responses with full conversation + LangGraph state snapshot |
+| ⚡ | **Result Cache** | In-memory TTL cache (45s) for Odoo reads — auto-invalidated on writes |
+| ✅ | **Tested** | 2,000+ unit tests + 180+ evaluation scenarios across intent, CRUD, analytics, multi-turn |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| 🧩 AI Framework | LangGraph + LangChain |
+| 💬 Response LLM | OpenAI `gpt-4.1-nano` (configurable: Google, Anthropic) |
+| ⚡ Backend | FastAPI (SSE streaming) |
+| 🗄️ Database | PostgreSQL 15 (checkpointer + tenancy + pins + notifications + audit) |
+| 🔐 Auth | Supabase JWT (ES256 via JWKS) |
+| 💳 Billing | Stripe webhooks (no SDK — HMAC verification) |
+| 🔗 Odoo | XML-RPC |
+| 📊 Excel | openpyxl |
+| 🧾 OCR | Tesseract + Pillow (heuristic-first, LLM fallback) |
+| 🔑 Encryption | Fernet (cryptography) — Odoo API keys at rest |
 
 ---
 
@@ -389,8 +401,6 @@ src/agents/odoo_agent/
 │   ├── query_validator/           odoo_executor/             odoo_action_executor/
 │   ├── data_formatter/            response_generator/        …
 ├── routes/                # Conditional routing (business vs general, valid vs invalid)
-├── helpers/               # Keyword dictionaries, entity resolver, file generator,
-│                          #   result cache, text utils, analytics metadata
 └── tools/                 # XML-RPC auth, execute_kw, CRUD, reports, search/read
 ```
 
