@@ -15,7 +15,6 @@ import {
   Loader2,
 } from "lucide-react";
 import { MarkB, Wordmark } from "@/components/AgentMark";
-import { FoundingPartnerBadge } from "@/components/ui/founding-partner-badge";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useSession } from "@/hooks/use-session";
 import { UserMenu } from "@/components/chat/user-menu";
@@ -43,9 +42,8 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const { meData } = useSession();
 
   const sessionReady = meData !== null;
-  const isClient = meData?.user?.role === "CLIENT_USER";
-  const brandLogoUrl = isClient ? (meData?.org?.brand_logo_url ?? null) : null;
-  const brandName = isClient ? (meData?.org?.brand_name ?? null) : null;
+  const brandLogoUrl = meData?.org?.brand_logo_url ?? null;
+  const brandName = meData?.org?.brand_name ?? null;
 
   const displayGroups = chatGroups;
 
@@ -100,8 +98,6 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
               ) : (
                 <Wordmark scale={0.9} />
               )}
-              {/* Founding Partner badge — Builder-only (gated inside the component) */}
-              <FoundingPartnerBadge />
             </div>
           </motion.div>
         )}
