@@ -33,7 +33,6 @@ import {
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
 import { FounderClockPill } from "@/components/ui/founder-clock-pill";
 import { MarkB, Wordmark } from "@/components/AgentMark";
-import { FoundingPartnerBadge } from "@/components/ui/founding-partner-badge";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
 import { AdminInvitationCredentialsModal } from "@/components/settings/admin-invitation-credentials-modal";
 import { useSession } from "@/hooks/use-session";
@@ -260,7 +259,6 @@ function OrgSection() {
                     </div>
                     <div className="flex min-w-0 flex-col gap-1">
                       <Wordmark scale={0.72} />
-                      <FoundingPartnerBadge />
                     </div>
                   </div>
                 </div>
@@ -298,9 +296,29 @@ function OrgSection() {
                     <img src={org.brand_logo_url} alt={org.brand_name ?? org.name} className="h-full w-full object-contain" />
                   </div>
                 ) : (
-                  <span>—</span>
+                  <button
+                    type="button"
+                    disabled={logoUploading}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-1.5 rounded-btn border border-border px-3 py-1.5 text-small transition-colors hover:bg-raised disabled:opacity-50"
+                  >
+                    {logoUploading ? (
+                      <Loader2 size={13} strokeWidth={1.5} className="animate-spin" />
+                    ) : (
+                      <ImagePlus size={13} strokeWidth={1.5} />
+                    )}
+                    {logoUploading ? t("admin.logoUploading") : t("admin.logoUpload")}
+                  </button>
                 )}
               </div>
+              {logoError && <p className="mt-2 text-small text-error">{logoError}</p>}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                className="hidden"
+                onChange={handleLogoUpload}
+              />
             </div>
 
             <hr className="border-border-subtle" />
