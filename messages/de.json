@@ -78,7 +78,12 @@
     "attachImage": "Bild anhängen",
     "removeImage": "Bild entfernen",
     "send": "Senden",
-    "stop": "Stopp"
+    "stop": "Stopp",
+    "micStart": "Sprachnachricht aufnehmen",
+    "micStop": "Aufnahme stoppen",
+    "micDenied": "Mikrofonzugriff verweigert",
+    "transcribing": "Wird transkribiert...",
+    "transcribeError": "Audio konnte nicht transkribiert werden"
   },
   "ChatMessages": {
     "typingIndicator": "Frage Odoo ab",
@@ -371,7 +376,16 @@
       "movedInviteCta": "Öffnen",
       "movedCredsTitle": "Deine Odoo-Verbindung",
       "movedCredsDesc": "Lade und verwalte deinen Benutzernamen und API-Schlüssel.",
-      "movedCredsCta": "Öffnen"
+      "movedCredsCta": "Öffnen",
+      "stt": "Sprache→Text",
+      "toggleStt": "Mikrofon umschalten (STT)",
+      "tts": "Text→Sprache",
+      "toggleTts": "Gesprochene Antworten umschalten (TTS)",
+      "sttWidget": "STT",
+      "ttsWidget": "TTS",
+      "sttLimitReached": "STT-Kontingent erreicht — wenden Sie sich an Ihren Anbieter",
+      "ttsLimitReached": "TTS-Kontingent erreicht — wenden Sie sich an Ihren Anbieter",
+      "voiceToggleError": "Die Sprachpräferenz konnte nicht aktualisiert werden"
     },
     "credentials": {
       "sectionTitle": "Meine Odoo-Anmeldedaten",
@@ -720,7 +734,10 @@
       "founderExtendHint": "Negative Werte verkürzen den Zeitraum.",
       "founderExtendConfirm": "Anwenden",
       "founderExtendSuccess": "Beta-Zeitraum aktualisiert",
-      "founderExtendError": "Beta-Zeitraum konnte nicht aktualisiert werden"
+      "founderExtendError": "Beta-Zeitraum konnte nicht aktualisiert werden",
+      "editSttSlots": "STT-Plätze",
+      "editTtsSlots": "TTS-Plätze",
+      "editSlotsHint": "-1 = unbegrenzt, 0 = nicht gebucht"
     },
     "users": {
       "statsTotal": "Benutzer gesamt",
@@ -1230,5 +1247,16 @@
       },
       "ctaConnection": "Verbindung"
     }
+  },
+  "VoiceSettings": {
+    "title": "Sprache",
+    "micToggle": "Mikrofon",
+    "autoSend": "Nach Transkription automatisch senden",
+    "ttsToggle": "Gesprochene Antworten",
+    "voice": "Stimme",
+    "speed": "Geschwindigkeit",
+    "preview": "Beispiel abspielen",
+    "previewText": "Hallo, so klinge ich.",
+    "stopAudio": "Audio stoppen"
   }
 }

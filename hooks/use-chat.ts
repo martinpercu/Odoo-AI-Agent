@@ -19,6 +19,9 @@ import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useLocale, useTranslations } from "next-intl";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
+import { useSession } from "@/hooks/use-session";
+import { useAudioPlayer } from "@/hooks/use-audio-player";
+import { getVoiceBoolPref, getVoicePref } from "@/lib/voice-prefs";
 
 function groupChatsByDate(chats: Chat[]): ChatGroup[] {
   const now = new Date();
@@ -72,6 +75,8 @@ export function useChat(chatId?: string, userId?: string) {
   const { activeConfigId, isConfigured } = useOdooConfig();
   const locale = useLocale();
   const t = useTranslations("ChatMessages");
+  const { meData } = useSession();
+  const audioPlayer = useAudioPlayer();
 
   // Server-side conversation list
   const serverChatsRef = useRef<Chat[]>([]);
@@ -232,6 +237,15 @@ export function useChat(chatId?: string, userId?: string) {
       setIsStreaming(true);
       setTraceEntries([]);
 
+      // TTS: reset the previous turn's audio queue immediately so a stale
+      // chunk from a cancelled/older turn never plays over the new one.
+      // unlock() runs synchronously here (still within the click gesture's
+      // callstack — this is the first statement of sendMessage, before any
+      // `await`) so iOS/Chrome autoplay policies don't block later playback.
+      const ttsEnabled = Boolean(meData?.voice_features?.tts) && getVoiceBoolPref("tts", false);
+      audioPlayer.reset();
+      if (ttsEnabled) audioPlayer.unlock();
+
       // Guard: require Odoo config before calling backend
       if (!isConfigured || !activeConfigId) {
         updateChat(targetId, (c) => ({
@@ -293,10 +307,24 @@ export function useChat(chatId?: string, userId?: string) {
         const sseHeaders: Record<string, string> = { "Content-Type": "application/json" };
         if (token) sseHeaders["Authorization"] = `Bearer ${token}`;
 
+        const ttsBody = ttsEnabled
+          ? {
+              tts: {
+                voice: getVoicePref("voice", "") || undefined,
+                speed: parseFloat(getVoicePref("speed", "1.0")) || 1.0,
+              },
+            }
+          : {};
+
         const res = await fetch(`${API_BASE}/chat/${targetId}/stream`, {
           method: "POST",
           headers: sseHeaders,
-          body: JSON.stringify({ message: content, config_id: activeConfigId, language: locale }),
+          body: JSON.stringify({
+            message: content,
+            config_id: activeConfigId,
+            language: locale,
+            ...ttsBody,
+          }),
           signal: controller.signal,
         });
 
@@ -452,6 +480,13 @@ export function useChat(chatId?: string, userId?: string) {
                       // Watermark event comes at the start. show: false = paid client.
                       showWatermark = typeof parsed.show === "boolean" ? parsed.show : false;
                       continue;
+                    } else if (parsed.type === "audio") {
+                      // TTS chunk — enqueue for gapless playback, never touches
+                      // the visible chat content.
+                      if (typeof parsed.sequence === "number" && typeof parsed.audio_b64 === "string") {
+                        audioPlayer.enqueue(parsed.sequence, parsed.audio_b64);
+                      }
+                      continue;
                     } else if (parsed.type === "error") {
                       // Terminal error event: the backend graph failed mid-stream.
                       // `detail` is already localized + neutral — show it as-is.
@@ -546,13 +581,25 @@ export function useChat(chatId?: string, userId?: string) {
         loadServerConversations(0);
       }
     },
-    [currentChatId, createChat, updateChat, activeConfigId, isConfigured, locale, t, loadServerConversations]
+    [
+      currentChatId,
+      createChat,
+      updateChat,
+      activeConfigId,
+      isConfigured,
+      locale,
+      t,
+      loadServerConversations,
+      audioPlayer,
+      meData?.voice_features?.tts,
+    ]
   );
 
   const stopStreaming = useCallback(() => {
     abortControllerRef.current?.abort();
     setIsStreaming(false);
-  }, []);
+    audioPlayer.reset();
+  }, [audioPlayer]);
 
   const executeAction = useCallback(
     async (actionContext: ActionContext) => {
@@ -710,5 +757,7 @@ export function useChat(chatId?: string, userId?: string) {
     deleteChat,
     clearChats,
     traceEntries,
+    isPlayingAudio: audioPlayer.isPlaying,
+    stopAudio: audioPlayer.reset,
   };
 }
