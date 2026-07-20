@@ -308,6 +308,28 @@ export interface ExportSSEEvent {
   filename: string;
 }
 
+/** TTS audio chunk SSE event — see PLAN_STT_TTS.md Etapa 5. Emitted only when
+ * the request carried a `tts` param AND the caller is entitled; sequence is
+ * 1-based and monotonically increasing (chunks always arrive in order). */
+export interface AudioSSEEvent {
+  type: "audio";
+  sequence: number;
+  audio_b64: string;
+  mime: string; // "audio/mpeg"
+}
+
+export interface TtsVoice {
+  id: string;
+  label: string;
+  lang: string;
+}
+
+export interface TtsVoicesResult {
+  provider: string;
+  default_voice: string;
+  voices: TtsVoice[];
+}
+
 export type ConnectionStatus = "idle" | "loading" | "success" | "error";
 
 // Entity search result for autocomplete (from name_search)
@@ -402,6 +424,20 @@ export interface MeUser {
   role: UserRole;
   is_free_license: boolean;
   allow_feedback: boolean;
+  /** Admin-granted entitlement flags (voice features). See VoiceFeatures. */
+  stt_enabled?: boolean;
+  tts_enabled?: boolean;
+}
+
+/**
+ * Effective voice entitlements for the caller (role bypass + global kill
+ * switch already applied server-side — this is what the UI should gate on,
+ * NOT `user.stt_enabled`/`user.tts_enabled` directly, which are the raw
+ * admin-granted flags before SUPERADMIN bypass / kill switch).
+ */
+export interface VoiceFeatures {
+  stt: boolean;
+  tts: boolean;
 }
 
 export interface MeOrg {
@@ -441,6 +477,9 @@ export interface MeSubscription {
   paid_slots_limit: number;
   free_slots_limit: number;
   is_active: boolean;
+  /** Voice feature quotas (-1 = unlimited, 0 = not contracted). SUPERADMIN-managed. */
+  stt_slots_limit?: number;
+  tts_slots_limit?: number;
 }
 
 export interface SlotsUsed {
@@ -573,6 +612,7 @@ export interface MeResponse {
   slots_used: SlotsUsed | null;
   odoo_configs: OdooConfigSummary[];
   demo_available?: boolean;
+  voice_features?: VoiceFeatures;
 }
 
 // ---- Billing state (Fase 0 — Founding Partners, spec §5/§6) ----
@@ -632,6 +672,8 @@ export interface OrgUser {
   is_free_license: boolean;
   allow_feedback: boolean;
   created_at: string;
+  stt_enabled?: boolean;
+  tts_enabled?: boolean;
 }
 
 export interface Invitation {
@@ -656,6 +698,9 @@ export interface SuperAdminSubscription {
   free_slots_limit: number;
   show_watermark: boolean;
   is_active: boolean;
+  /** Voice feature quotas (-1 = unlimited, 0 = not contracted). */
+  stt_slots_limit?: number;
+  tts_slots_limit?: number;
 }
 
 export interface SuperAdminOrg {
@@ -687,6 +732,8 @@ export interface SuperAdminOrgDetail extends SuperAdminOrg {
   slots: {
     paid_used: number;
     free_used: number;
+    stt_used?: number;
+    tts_used?: number;
   };
   odoo_configs?: OdooConfigItem[];
 }

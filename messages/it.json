@@ -78,7 +78,12 @@
     "attachImage": "Allega immagine",
     "removeImage": "Rimuovi immagine",
     "send": "Invia",
-    "stop": "Ferma"
+    "stop": "Ferma",
+    "micStart": "Registra messaggio vocale",
+    "micStop": "Ferma registrazione",
+    "micDenied": "Permesso del microfono negato",
+    "transcribing": "Trascrizione in corso...",
+    "transcribeError": "Impossibile trascrivere l'audio"
   },
   "ChatMessages": {
     "typingIndicator": "Interrogazione Odoo in corso",
@@ -371,7 +376,16 @@
       "movedInviteCta": "Apri",
       "movedCredsTitle": "La tua connessione Odoo",
       "movedCredsDesc": "Carica e gestisci il tuo nome utente e la chiave API.",
-      "movedCredsCta": "Apri"
+      "movedCredsCta": "Apri",
+      "stt": "Voce→Testo",
+      "toggleStt": "Attiva/disattiva microfono (STT)",
+      "tts": "Testo→Voce",
+      "toggleTts": "Attiva/disattiva risposte vocali (TTS)",
+      "sttWidget": "STT",
+      "ttsWidget": "TTS",
+      "sttLimitReached": "Limite quota STT raggiunto — contatta il tuo fornitore",
+      "ttsLimitReached": "Limite quota TTS raggiunto — contatta il tuo fornitore",
+      "voiceToggleError": "Impossibile aggiornare la preferenza vocale"
     },
     "credentials": {
       "sectionTitle": "Le mie credenziali Odoo",
@@ -720,7 +734,10 @@
       "founderExtendHint": "I valori negativi accorciano la finestra.",
       "founderExtendConfirm": "Applica",
       "founderExtendSuccess": "Finestra beta aggiornata",
-      "founderExtendError": "Impossibile aggiornare la finestra beta"
+      "founderExtendError": "Impossibile aggiornare la finestra beta",
+      "editSttSlots": "Slot STT",
+      "editTtsSlots": "Slot TTS",
+      "editSlotsHint": "-1 = illimitato, 0 = non attivo"
     },
     "users": {
       "statsTotal": "Utenti totali",
@@ -1230,5 +1247,16 @@
       },
       "ctaConnection": "Connessione"
     }
+  },
+  "VoiceSettings": {
+    "title": "Voce",
+    "micToggle": "Microfono",
+    "autoSend": "Invia automaticamente dopo la trascrizione",
+    "ttsToggle": "Risposte vocali",
+    "voice": "Voce",
+    "speed": "Velocità",
+    "preview": "Ascolta esempio",
+    "previewText": "Ciao, ecco come suono.",
+    "stopAudio": "Ferma audio"
   }
 }

@@ -78,7 +78,12 @@
     "attachImage": "Adjuntar imagen",
     "removeImage": "Quitar imagen",
     "send": "Enviar",
-    "stop": "Detener"
+    "stop": "Detener",
+    "micStart": "Grabar mensaje de voz",
+    "micStop": "Detener grabación",
+    "micDenied": "Permiso de micrófono denegado",
+    "transcribing": "Transcribiendo...",
+    "transcribeError": "No se pudo transcribir el audio"
   },
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",
@@ -342,7 +347,16 @@
       "movedInviteCta": "Abrir",
       "movedCredsTitle": "Tu conexión a Odoo",
       "movedCredsDesc": "Carga y gestiona tu usuario y API key.",
-      "movedCredsCta": "Abrir"
+      "movedCredsCta": "Abrir",
+      "stt": "Voz→Texto",
+      "toggleStt": "Alternar micrófono (STT)",
+      "tts": "Texto→Voz",
+      "toggleTts": "Alternar respuestas por voz (TTS)",
+      "sttWidget": "STT",
+      "ttsWidget": "TTS",
+      "sttLimitReached": "Límite de cupos STT alcanzado — contactá a tu proveedor",
+      "ttsLimitReached": "Límite de cupos TTS alcanzado — contactá a tu proveedor",
+      "voiceToggleError": "No se pudo actualizar la preferencia de voz"
     },
     "credentials": {
       "sectionTitle": "Mis Credenciales Odoo",
@@ -720,7 +734,10 @@
       "founderExtendHint": "Los valores negativos acortan la ventana.",
       "founderExtendConfirm": "Aplicar",
       "founderExtendSuccess": "Ventana de beta actualizada",
-      "founderExtendError": "No se pudo actualizar la ventana de beta"
+      "founderExtendError": "No se pudo actualizar la ventana de beta",
+      "editSttSlots": "Slots STT",
+      "editTtsSlots": "Slots TTS",
+      "editSlotsHint": "-1 = ilimitado, 0 = no contratado"
     },
     "users": {
       "statsTotal": "Total usuarios",
@@ -1230,5 +1247,16 @@
       },
       "ctaConnection": "Conexión"
     }
+  },
+  "VoiceSettings": {
+    "title": "Voz",
+    "micToggle": "Micrófono",
+    "autoSend": "Enviar automáticamente al transcribir",
+    "ttsToggle": "Respuestas por voz",
+    "voice": "Voz",
+    "speed": "Velocidad",
+    "preview": "Escuchar ejemplo",
+    "previewText": "Hola, así sueno yo.",
+    "stopAudio": "Detener audio"
   }
 }

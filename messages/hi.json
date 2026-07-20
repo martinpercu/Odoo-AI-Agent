@@ -78,7 +78,12 @@
     "attachImage": "छवि संलग्न करें",
     "removeImage": "छवि हटाएं",
     "send": "भेजें",
-    "stop": "रोकें"
+    "stop": "रोकें",
+    "micStart": "आवाज़ संदेश रिकॉर्ड करें",
+    "micStop": "रिकॉर्डिंग रोकें",
+    "micDenied": "माइक्रोफ़ोन की अनुमति अस्वीकृत",
+    "transcribing": "ट्रांसक्राइब हो रहा है...",
+    "transcribeError": "ऑडियो ट्रांसक्राइब नहीं हो सका"
   },
   "ChatMessages": {
     "typingIndicator": "Odoo से क्वेरी हो रही है",
@@ -371,7 +376,16 @@
       "movedInviteCta": "Open",
       "movedCredsTitle": "Your Odoo connection",
       "movedCredsDesc": "Load and manage your username and API key.",
-      "movedCredsCta": "Open"
+      "movedCredsCta": "Open",
+      "stt": "Speech→Text",
+      "toggleStt": "Toggle microphone (STT)",
+      "tts": "Text→Speech",
+      "toggleTts": "Toggle spoken responses (TTS)",
+      "sttWidget": "STT",
+      "ttsWidget": "TTS",
+      "sttLimitReached": "STT quota limit reached — contact your provider",
+      "ttsLimitReached": "TTS quota limit reached — contact your provider",
+      "voiceToggleError": "Couldn't update the voice preference"
     },
     "credentials": {
       "sectionTitle": "मेरे Odoo क्रेडेंशियल",
@@ -720,7 +734,10 @@
       "founderExtendHint": "Negative values shorten the window.",
       "founderExtendConfirm": "Apply",
       "founderExtendSuccess": "Beta window updated",
-      "founderExtendError": "Couldn't update the beta window"
+      "founderExtendError": "Couldn't update the beta window",
+      "editSttSlots": "STT slots",
+      "editTtsSlots": "TTS slots",
+      "editSlotsHint": "-1 = unlimited, 0 = not contracted"
     },
     "users": {
       "statsTotal": "कुल उपयोगकर्ता",
@@ -1230,5 +1247,16 @@
       },
       "ctaConnection": "Connection"
     }
+  },
+  "VoiceSettings": {
+    "title": "आवाज़",
+    "micToggle": "माइक्रोफ़ोन",
+    "autoSend": "ट्रांसक्रिप्शन के बाद स्वतः भेजें",
+    "ttsToggle": "बोली गई प्रतिक्रियाएं",
+    "voice": "आवाज़",
+    "speed": "गति",
+    "preview": "नमूना सुनें",
+    "previewText": "नमस्ते, मैं ऐसे सुनाई देता हूं।",
+    "stopAudio": "ऑडियो रोकें"
   }
 }

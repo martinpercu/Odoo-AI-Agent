@@ -40,6 +40,7 @@ import type {
   SeatType,
   InvitationMode,
   OdooConnectionStatus,
+  TtsVoicesResult,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -466,11 +467,24 @@ export async function listOrgUsers(orgId: string): Promise<OrgUsersResult> {
   }
 }
 
+export interface UpdateOrgUserResult extends BasicResult {
+  /** 409 + error_code "sttLimitReached" — org's STT quota is exhausted. */
+  sttLimitReached?: boolean;
+  /** 409 + error_code "ttsLimitReached" — org's TTS quota is exhausted. */
+  ttsLimitReached?: boolean;
+}
+
 export async function updateOrgUser(
   orgId: string,
   userId: string,
-  payload: { role?: UserRole; is_free_license?: boolean; allow_feedback?: boolean }
-): Promise<BasicResult> {
+  payload: {
+    role?: UserRole;
+    is_free_license?: boolean;
+    allow_feedback?: boolean;
+    stt_enabled?: boolean;
+    tts_enabled?: boolean;
+  }
+): Promise<UpdateOrgUserResult> {
   try {
     const res = await authFetch(
       `${API_BASE}/admin/orgs/${orgId}/users/${userId}`,
@@ -482,7 +496,13 @@ export async function updateOrgUser(
     );
     if (res.ok) return { success: true };
     const data = await res.json();
-    return { success: false, error: extractError(data.detail, "Failed to update user") };
+    const code = (data.detail?.error_code ?? data.error_code) as string | undefined;
+    return {
+      success: false,
+      sttLimitReached: code === "sttLimitReached",
+      ttsLimitReached: code === "ttsLimitReached",
+      error: extractError(data.detail, "Failed to update user"),
+    };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -1450,6 +1470,107 @@ export async function uploadImage(
   }
 }
 
+// ---- Voice — STT (transcription) ----
+
+export interface TranscribeResult {
+  success: boolean;
+  text?: string;
+  error?: string;
+}
+
+/**
+ * Records the mic locally, sends the audio blob for transcription, and
+ * returns the plain text. The caller is responsible for putting it in the
+ * chat input / sending it — this endpoint never touches the LangGraph agent.
+ * `language` should be omitted unless it's one of the agent's 6 languages
+ * (es/en/fr/de/pt/it) — see STT_FORCEABLE_LANGUAGES in the backend.
+ */
+export async function transcribeAudio(blob: Blob, language?: string): Promise<TranscribeResult> {
+  try {
+    const formData = new FormData();
+    const ext = blob.type.includes("mp4") ? "audio.mp4" : "audio.webm";
+    formData.append("file", blob, ext);
+    if (language) formData.append("language", language);
+
+    // Manual fetch (not authFetch) so we control headers precisely — same
+    // pattern as uploadImage: no Content-Type override, browser sets the
+    // multipart boundary itself.
+    const token = await getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/transcribe`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    if (res.status === 401) {
+      if (typeof window !== "undefined")
+        window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+      throw new Error("UNAUTHORIZED");
+    }
+    if (res.status === 402) {
+      if (typeof window !== "undefined")
+        window.dispatchEvent(new CustomEvent("auth:limit_reached"));
+      throw new LimitReachedError();
+    }
+    if (res.status === 403) {
+      return { success: false, error: "STT_NOT_ENTITLED" };
+    }
+
+    const data = await res.json();
+    if (res.ok) return { success: true, text: data.text };
+    return { success: false, error: extractError(data.detail, "Transcription failed") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---- Voice — TTS catalog + preview ----
+
+export interface FetchTtsVoicesResult {
+  success: boolean;
+  data?: TtsVoicesResult;
+  error?: string;
+}
+
+export async function fetchTtsVoices(): Promise<FetchTtsVoicesResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/voice/tts/voices`);
+    if (!res.ok) return { success: false };
+    return { success: true, data: await res.json() };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** Short preview for the voice picker. Returns an MP3 Blob, or null on failure. */
+export async function fetchTtsPreview(text: string, voice: string, speed = 1.0): Promise<Blob | null> {
+  try {
+    const formData = new FormData();
+    formData.append("text", text);
+    formData.append("voice", voice);
+    formData.append("speed", String(speed));
+
+    const token = await getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/voice/tts/preview`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    if (!res.ok) return null;
+    return await res.blob();
+  } catch {
+    return null;
+  }
+}
+
 // ---- Refresh Pin API ----
 
 export interface RefreshPinResult {
@@ -1837,6 +1958,9 @@ export interface UpdateOrgSubscriptionPayload {
   paid_slots_limit?: number;
   free_slots_limit?: number;
   show_watermark?: boolean;
+  /** Voice feature quotas (-1 = unlimited, 0 = not contracted). */
+  stt_slots_limit?: number;
+  tts_slots_limit?: number;
 }
 
 export async function superadminUpdateSubscription(

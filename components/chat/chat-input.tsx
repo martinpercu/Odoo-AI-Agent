@@ -3,24 +3,82 @@
 import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Square, /* Paperclip, */ X } from "lucide-react";
+import { Send, Square, Mic, MicOff, Loader2, /* Paperclip, */ X } from "lucide-react";
 import { useIconSize } from "@/hooks/use-icon-size";
+import { useVoiceRecorder } from "@/hooks/use-voice-recorder";
+import { VoiceSettings } from "@/components/chat/voice-settings";
 
 interface ChatInputProps {
   onSend: (message: string, image?: File) => void;
   onStop: () => void;
   isStreaming: boolean;
   disabled?: boolean;
+  /** Effective STT entitlement (voice_features.stt) AND the user's local pref. */
+  sttAvailable?: boolean;
+  /** Transcribes the recorded blob. Returns the text, or null on failure
+   * (the caller is expected to have already shown an error toast). */
+  onTranscribe?: (blob: Blob) => Promise<string | null>;
+  /** When true, a successful transcription is sent immediately instead of
+   * just filling the input. Mirrors the "auto-send" voice preference. */
+  autoSendVoice?: boolean;
+  /** Called synchronously inside the mic click handler, before any await —
+   * lets the caller unlock the TTS AudioContext within the user gesture
+   * (iOS/Chrome autoplay policy). No-op if omitted. */
+  onBeforeRecord?: () => void;
+  /** TTS audio is currently playing for the last response. */
+  isPlayingAudio?: boolean;
+  /** Stops the current TTS playback (does not cancel the text stream). */
+  onStopAudio?: () => void;
 }
 
-export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputProps) {
+export function ChatInput({
+  onSend,
+  onStop,
+  isStreaming,
+  disabled,
+  sttAvailable,
+  onTranscribe,
+  autoSendVoice,
+  onBeforeRecord,
+  isPlayingAudio,
+  onStopAudio,
+}: ChatInputProps) {
   const t = useTranslations("ChatInput");
+  const tVoice = useTranslations("VoiceSettings");
   const [value, setValue] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const iconBtn = useIconSize("button");
+
+  const handleAudioReady = useCallback(
+    async (blob: Blob) => {
+      if (!onTranscribe) return;
+      setIsTranscribing(true);
+      try {
+        const text = await onTranscribe(blob);
+        if (!text) return;
+        if (autoSendVoice) {
+          onSend(text);
+        } else {
+          setValue(text);
+          textareaRef.current?.focus();
+        }
+      } finally {
+        setIsTranscribing(false);
+      }
+    },
+    [onTranscribe, autoSendVoice, onSend]
+  );
+
+  const { isRecording, micPermission, toggleRecording } = useVoiceRecorder(handleAudioReady);
+
+  function handleMicClick() {
+    onBeforeRecord?.();
+    toggleRecording();
+  }
 
   // Cleanup preview URL on unmount or change
   useEffect(() => {
@@ -105,6 +163,30 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
             )}
           </AnimatePresence>
 
+          <AnimatePresence>
+            {isPlayingAudio && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="flex items-center gap-2 px-3 pt-3"
+              >
+                <span className="flex h-2 w-2 shrink-0 animate-pulse rounded-full bg-accent" />
+                <span className="text-small text-text-secondary">{tVoice("ttsToggle")}</span>
+                {onStopAudio && (
+                  <button
+                    onClick={onStopAudio}
+                    className="text-small text-accent underline underline-offset-2 hover:no-underline"
+                    aria-label={tVoice("stopAudio")}
+                  >
+                    {tVoice("stopAudio")}
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="flex items-end gap-2 p-2">
             {/* Clip button — temporalmente oculto, dejar a tiro para futuro */}
             {/*
@@ -126,6 +208,8 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
             </button>
             */}
 
+            <VoiceSettings />
+
             <textarea
               ref={textareaRef}
               value={value}
@@ -139,6 +223,30 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: ChatInputPr
               disabled={disabled}
               className="max-h-50 min-h-input flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"
             />
+
+            {sttAvailable && micPermission !== "unsupported" && (
+              <button
+                onClick={handleMicClick}
+                disabled={isStreaming || disabled || isTranscribing}
+                aria-label={isRecording ? t("micStop") : t("micStart")}
+                title={micPermission === "denied" ? t("micDenied") : undefined}
+                className={`flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn transition-colors disabled:opacity-40 ${
+                  isRecording
+                    ? "bg-error text-white hover:opacity-90"
+                    : micPermission === "denied"
+                      ? "text-error hover:bg-raised"
+                      : "text-text-secondary hover:bg-raised hover:text-foreground"
+                }`}
+              >
+                {isTranscribing ? (
+                  <Loader2 size={iconBtn - 4} strokeWidth={1.5} className="animate-spin" />
+                ) : micPermission === "denied" ? (
+                  <MicOff size={iconBtn - 4} strokeWidth={1.5} />
+                ) : (
+                  <Mic size={iconBtn - 4} strokeWidth={1.5} />
+                )}
+              </button>
+            )}
 
             {isStreaming ? (
               <motion.button
