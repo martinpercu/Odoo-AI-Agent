@@ -353,11 +353,20 @@ function EditSubscriptionModal({
   const [paidSlots, setPaidSlots] = useState(org.subscription.paid_slots_limit);
   const [freeSlots, setFreeSlots] = useState(org.subscription.free_slots_limit);
   const [watermark, setWatermark] = useState(org.subscription.show_watermark);
+  const [sttSlots, setSttSlots] = useState(org.subscription.stt_slots_limit ?? 0);
+  const [ttsSlots, setTtsSlots] = useState(org.subscription.tts_slots_limit ?? 0);
   const [saving, setSaving] = useState(false);
 
   async function handleSave() {
     setSaving(true);
-    await onSave({ tier, paid_slots_limit: paidSlots, free_slots_limit: freeSlots, show_watermark: watermark });
+    await onSave({
+      tier,
+      paid_slots_limit: paidSlots,
+      free_slots_limit: freeSlots,
+      show_watermark: watermark,
+      stt_slots_limit: sttSlots,
+      tts_slots_limit: ttsSlots,
+    });
     setSaving(false);
   }
 
@@ -424,6 +433,35 @@ function EditSubscriptionModal({
                 onChange={(e) => setFreeSlots(Number(e.target.value))}
                 className="w-full rounded-md border border-sidebar-border bg-base px-3 py-2 text-body text-foreground"
               />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1 block text-small text-text-secondary">
+                {t("orgs.editSttSlots")}
+              </label>
+              <input
+                type="number"
+                min={-1}
+                value={sttSlots}
+                onChange={(e) => setSttSlots(Number(e.target.value))}
+                className="w-full rounded-md border border-sidebar-border bg-base px-3 py-2 text-body text-foreground"
+              />
+              <p className="mt-1 text-micro text-text-muted">{t("orgs.editSlotsHint")}</p>
+            </div>
+            <div>
+              <label className="mb-1 block text-small text-text-secondary">
+                {t("orgs.editTtsSlots")}
+              </label>
+              <input
+                type="number"
+                min={-1}
+                value={ttsSlots}
+                onChange={(e) => setTtsSlots(Number(e.target.value))}
+                className="w-full rounded-md border border-sidebar-border bg-base px-3 py-2 text-body text-foreground"
+              />
+              <p className="mt-1 text-micro text-text-muted">{t("orgs.editSlotsHint")}</p>
             </div>
           </div>
 
@@ -658,6 +696,8 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                   paid_slots_limit: payload.paid_slots_limit ?? o.subscription.paid_slots_limit,
                   free_slots_limit: payload.free_slots_limit ?? o.subscription.free_slots_limit,
                   show_watermark: payload.show_watermark ?? o.subscription.show_watermark,
+                  stt_slots_limit: payload.stt_slots_limit ?? o.subscription.stt_slots_limit,
+                  tts_slots_limit: payload.tts_slots_limit ?? o.subscription.tts_slots_limit,
                 },
               }
             : o
