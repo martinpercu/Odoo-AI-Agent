@@ -11,6 +11,7 @@ import { PartnerNudge } from "@/components/intro/partner-nudge";
 import { useChatContext } from "@/components/app-shell";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useVoiceInput } from "@/hooks/use-voice-input";
 
 export default function ChatPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { id } = use(params);
@@ -22,10 +23,13 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
     isLoadingHistory,
     stopStreaming,
     loadChatHistory,
+    isPlayingAudio,
+    stopAudio,
   } = useChatContext();
   const { loadPins } = usePinnedInsights();
   const t = useTranslations("ChatHistory");
   const { isDemoMode } = useOdooConfig();
+  const { sttAvailable, autoSendVoice, onTranscribe } = useVoiceInput();
 
   useEffect(() => {
     setCurrentChatId(id);
@@ -61,6 +65,11 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
         onSend={sendMessage}
         onStop={stopStreaming}
         isStreaming={isStreaming}
+        sttAvailable={sttAvailable}
+        onTranscribe={onTranscribe}
+        autoSendVoice={autoSendVoice}
+        isPlayingAudio={isPlayingAudio}
+        onStopAudio={stopAudio}
       />
     </div>
   );

@@ -9,6 +9,7 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useSession } from "@/hooks/use-session";
+import { useVoiceInput } from "@/hooks/use-voice-input";
 import { useRouter, Link } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
 import { PartnerNudge } from "@/components/intro/partner-nudge";
@@ -21,9 +22,10 @@ const SuggestionCarousel = dynamic(
 export default function NewChatPage() {
   const router = useRouter();
   const t = useTranslations("NewChat");
-  const { sendMessage, isStreaming, stopStreaming, createChat } = useChatContext();
+  const { sendMessage, isStreaming, stopStreaming, createChat, isPlayingAudio, stopAudio } = useChatContext();
   const { isConfigured, isDemoMode, activeConfig } = useOdooConfig();
   const { meData } = useSession();
+  const { sttAvailable, autoSendVoice, onTranscribe } = useVoiceInput();
 
   const sessionReady = meData !== null;
   const isClient = meData?.user?.role === "CLIENT_USER";
@@ -118,6 +120,11 @@ export default function NewChatPage() {
         onStop={stopStreaming}
         isStreaming={isStreaming}
         disabled={isClientBlocked}
+        sttAvailable={sttAvailable}
+        onTranscribe={onTranscribe}
+        autoSendVoice={autoSendVoice}
+        isPlayingAudio={isPlayingAudio}
+        onStopAudio={stopAudio}
       />
     </div>
   );

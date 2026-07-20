@@ -78,7 +78,12 @@
     "attachImage": "ઇમેજ જોડો",
     "removeImage": "ઇમેજ દૂર કરો",
     "send": "મોકલો",
-    "stop": "રોકો"
+    "stop": "રોકો",
+    "micStart": "વૉઇસ મેસેજ રેકોર્ડ કરો",
+    "micStop": "રેકોર્ડિંગ બંધ કરો",
+    "micDenied": "માઇક્રોફોનની પરવાનગી નકારાઈ",
+    "transcribing": "ટ્રાન્સક્રાઇબ થઈ રહ્યું છે...",
+    "transcribeError": "ઓડિયો ટ્રાન્સક્રાઇબ કરી શકાયો નહીં"
   },
   "ChatMessages": {
     "typingIndicator": "Odoo ક્વેરી કરી રહ્યા છીએ",
@@ -371,7 +376,16 @@
       "movedInviteCta": "Open",
       "movedCredsTitle": "Your Odoo connection",
       "movedCredsDesc": "Load and manage your username and API key.",
-      "movedCredsCta": "Open"
+      "movedCredsCta": "Open",
+      "stt": "Speech→Text",
+      "toggleStt": "Toggle microphone (STT)",
+      "tts": "Text→Speech",
+      "toggleTts": "Toggle spoken responses (TTS)",
+      "sttWidget": "STT",
+      "ttsWidget": "TTS",
+      "sttLimitReached": "STT quota limit reached — contact your provider",
+      "ttsLimitReached": "TTS quota limit reached — contact your provider",
+      "voiceToggleError": "Couldn't update the voice preference"
     },
     "credentials": {
       "sectionTitle": "મારા Odoo ઓળખપત્ર",
@@ -720,7 +734,10 @@
       "founderExtendHint": "Negative values shorten the window.",
       "founderExtendConfirm": "Apply",
       "founderExtendSuccess": "Beta window updated",
-      "founderExtendError": "Couldn't update the beta window"
+      "founderExtendError": "Couldn't update the beta window",
+      "editSttSlots": "STT slots",
+      "editTtsSlots": "TTS slots",
+      "editSlotsHint": "-1 = unlimited, 0 = not contracted"
     },
     "users": {
       "statsTotal": "કુલ વપરાશકર્તાઓ",
@@ -1230,5 +1247,16 @@
       },
       "ctaConnection": "Connection"
     }
+  },
+  "VoiceSettings": {
+    "title": "અવાજ",
+    "micToggle": "માઇક્રોફોન",
+    "autoSend": "ટ્રાન્સક્રિપ્શન પછી આપમેળે મોકલો",
+    "ttsToggle": "બોલાયેલા જવાબો",
+    "voice": "અવાજ",
+    "speed": "ઝડપ",
+    "preview": "નમૂનો સાંભળો",
+    "previewText": "નમસ્તે, હું આવો સંભળાઉં છું.",
+    "stopAudio": "ઓડિયો બંધ કરો"
   }
 }

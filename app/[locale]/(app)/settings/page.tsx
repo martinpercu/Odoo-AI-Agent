@@ -472,6 +472,7 @@ function UsersSection() {
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [credentialsUser, setCredentialsUser] = useState<OrgUser | null>(null);
   const [freeToggleError, setFreeToggleError] = useState<string | null>(null);
+  const [voiceToggleError, setVoiceToggleError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!orgId) return;
@@ -504,6 +505,23 @@ function UsersSection() {
     }
   }
 
+  async function handleVoiceToggle(userId: string, feature: "stt_enabled" | "tts_enabled", value: boolean) {
+    if (!orgId) return;
+    setVoiceToggleError(null);
+    const result = await updateOrgUser(orgId, userId, { [feature]: value });
+    if (result.success) {
+      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, [feature]: value } : u)));
+    } else {
+      const msg = result.sttLimitReached
+        ? t("admin.sttLimitReached")
+        : result.ttsLimitReached
+          ? t("admin.ttsLimitReached")
+          : result.error ?? t("admin.voiceToggleError");
+      setVoiceToggleError(msg);
+      setTimeout(() => setVoiceToggleError(null), 6000);
+    }
+  }
+
   async function handleRemove(userId: string) {
     if (!orgId) return;
     await removeOrgUser(orgId, userId);
@@ -518,20 +536,45 @@ function UsersSection() {
   const freeLimit = subscription?.free_slots_limit ?? 0;
   const showSeatBadge = paidLimit >= 1 && freeLimit >= 1;
 
+  // Voice feature quotas — computed from the loaded users list + org subscription.
+  const sttUsed = users.filter((u) => u.stt_enabled).length;
+  const ttsUsed = users.filter((u) => u.tts_enabled).length;
+  const sttLimit = subscription?.stt_slots_limit ?? 0;
+  const ttsLimit = subscription?.tts_slots_limit ?? 0;
+  const sttFeatureAvailable = sttLimit === -1 || sttLimit > 0;
+  const ttsFeatureAvailable = ttsLimit === -1 || ttsLimit > 0;
+
   const seatsWidget = subscription ? (
-    <div className="inline-flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
-      <span className="text-text-secondary font-medium">{t("admin.seatsWidget")}</span>
-      <span className={`font-technical ${paidLimit > 0 && paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
-        {t("admin.seatsPaid")}: {paidUsed}/{paidLimit}
-      </span>
-      {/* Hide the free bucket entirely on plans with no free seats (e.g. founder = 6 paid / 0 free) */}
-      {freeLimit > 0 && (
-        <>
-          <span className="text-border">·</span>
-          <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
-            {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
-          </span>
-        </>
+    <div className="flex flex-wrap items-center gap-2">
+      <div className="inline-flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
+        <span className="text-text-secondary font-medium">{t("admin.seatsWidget")}</span>
+        <span className={`font-technical ${paidLimit > 0 && paidUsed >= paidLimit ? "text-error" : "text-foreground"}`}>
+          {t("admin.seatsPaid")}: {paidUsed}/{paidLimit}
+        </span>
+        {/* Hide the free bucket entirely on plans with no free seats (e.g. founder = 6 paid / 0 free) */}
+        {freeLimit > 0 && (
+          <>
+            <span className="text-border">·</span>
+            <span className={`font-technical ${freeUsed >= freeLimit ? "text-warning-solid" : "text-foreground"}`}>
+              {t("admin.seatsFree")}: {freeUsed}/{freeLimit}
+            </span>
+          </>
+        )}
+      </div>
+      {(sttFeatureAvailable || ttsFeatureAvailable) && (
+        <div className="inline-flex items-center gap-3 rounded-md bg-raised px-3 py-1.5 text-small">
+          {sttFeatureAvailable && (
+            <span className={`font-technical ${sttLimit > 0 && sttUsed >= sttLimit ? "text-error" : "text-foreground"}`}>
+              {t("admin.sttWidget")}: {sttUsed}/{sttLimit === -1 ? "∞" : sttLimit}
+            </span>
+          )}
+          {sttFeatureAvailable && ttsFeatureAvailable && <span className="text-border">·</span>}
+          {ttsFeatureAvailable && (
+            <span className={`font-technical ${ttsLimit > 0 && ttsUsed >= ttsLimit ? "text-error" : "text-foreground"}`}>
+              {t("admin.ttsWidget")}: {ttsUsed}/{ttsLimit === -1 ? "∞" : ttsLimit}
+            </span>
+          )}
+        </div>
       )}
     </div>
   ) : undefined;
@@ -548,6 +591,14 @@ function UsersSection() {
           <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
             <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
             <span>{freeToggleError}</span>
+          </div>
+        )}
+
+        {/* STT/TTS toggle error banner (quota reached) */}
+        {voiceToggleError && (
+          <div className="mb-3 flex items-start gap-2 rounded-md bg-error-subtle px-3 py-2.5 text-small text-error">
+            <AlertTriangle size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+            <span>{voiceToggleError}</span>
           </div>
         )}
 
@@ -609,6 +660,36 @@ function UsersSection() {
                       title={t("admin.toggleFree")}
                     >
                       {user.is_free_license ? t("admin.free") : t("admin.paid")}
+                    </button>
+                  )}
+
+                  {/* Voice — STT toggle */}
+                  {sttFeatureAvailable && (
+                    <button
+                      onClick={() => handleVoiceToggle(user.id, "stt_enabled", !user.stt_enabled)}
+                      className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                        user.stt_enabled
+                          ? "bg-accent-subtle text-accent"
+                          : "bg-raised text-text-secondary"
+                      }`}
+                      title={t("admin.toggleStt")}
+                    >
+                      {t("admin.stt")}
+                    </button>
+                  )}
+
+                  {/* Voice — TTS toggle */}
+                  {ttsFeatureAvailable && (
+                    <button
+                      onClick={() => handleVoiceToggle(user.id, "tts_enabled", !user.tts_enabled)}
+                      className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                        user.tts_enabled
+                          ? "bg-accent-subtle text-accent"
+                          : "bg-raised text-text-secondary"
+                      }`}
+                      title={t("admin.toggleTts")}
+                    >
+                      {t("admin.tts")}
                     </button>
                   )}
 
