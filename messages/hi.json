@@ -40,7 +40,8 @@
     "instances": "Instances",
     "myConnection": "My connection",
     "configureToChat": "Set up to chat",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "implementerManual": "Technical manual"
   },
   "ChatGroups": {
     "today": "आज",
@@ -1005,7 +1006,8 @@
         "item2Body": "Manage all your clients' instances from a single panel, fully isolated.",
         "item3Label": "Zero installation on the client's Odoo",
         "item3Body": "Standard API key connection (XML-RPC). Nothing breaks on upgrades, no maintenance.",
-        "cta": "Talk to Martin"
+        "cta": "Talk to Martin",
+        "manualLink": "See the technical manual"
       },
       "secure": {
         "heading": "Secure by design",
@@ -1258,5 +1260,171 @@
     "preview": "नमूना सुनें",
     "previewText": "नमस्ते, मैं ऐसे सुनाई देता हूं।",
     "stopAudio": "ऑडियो रोकें"
+  },
+  "ImplementerManual": {
+    "hero": {
+      "eyebrow": "For Odoo implementers",
+      "title": "Technical manual",
+      "subtitle": "Which parts of Odoo the agent covers today and how deeply, how it is built underneath, and what we are considering building next. Written for whoever installs and maintains Odoo in production for their clients.",
+      "updated": "Content verified against the production system"
+    },
+    "nav": {
+      "label": "Sections on this page",
+      "coverage": "Coverage by domain",
+      "security": "Security and architecture",
+      "roadmap": "Open roadmap"
+    },
+    "coverage": {
+      "heading": "Functional coverage by Odoo domain",
+      "lead": "This isn't a generic Odoo chatbot. Requests are handled by a deterministic engine (keywords and rules) that knows precisely which models and fields to target in each domain. The language model (LLM) is used solely at the end to draft the response.",
+      "writeNote": "Every write operation, in every domain, goes through an explicit human confirmation before it runs against Odoo.",
+      "modelsLabel": "Models",
+      "readLabel": "Read",
+      "writeLabel": "Confirmed writes",
+      "readOnlyLabel": "Read-only for now: no writes available in this domain.",
+      "sales": {
+        "name": "Sales / CRM",
+        "read": "Counts, rankings (“top 5 best-selling products”) and aggregations grouped by salesperson, team, category or month. Date filters, including opportunity closing date, plus filtering by a named salesperson or customer with disambiguation when there are several matches. Conversion rate (win rate) and probability-weighted pipeline are computed in the backend, never by the language model. It understands “my opportunities” and filters by the logged-in user.",
+        "w1": "Sales orders: create, edit, confirm, cancel and send by email",
+        "w2": "Opportunities: move stage, mark won or lost with a reason, assign a salesperson",
+        "w3": "Convert a lead into an opportunity",
+        "w4": "Schedule a call or a meeting",
+        "limit": "Creating a brand-new opportunity from scratch over chat is not available yet."
+      },
+      "finance": {
+        "name": "Finance",
+        "read": "Status filters over invoices and credit notes (overdue, paid, partial, receivable, payable) and receivables ageing in 30, 60 and 90+ day buckets, computed in Python: it does not depend on Enterprise modules. Any result can be downloaded as PDF or Excel with a totals row.",
+        "w1": "Invoices: create and edit",
+        "w2": "Existing invoices: validate, cancel and send by email"
+      },
+      "inventory": {
+        "name": "Inventory / Purchasing",
+        "read": "Catalogue with price and stock on hand, filtering by stock availability and sorting by price or stock. Read access over purchase orders, their lines and transfers.",
+        "w1": "Catalogue products: create and edit",
+        "w2": "Existing purchase orders and transfers: confirm, cancel, validate and send",
+        "limit": "Creating a brand-new purchase order from scratch over chat is not available yet."
+      },
+      "contacts": {
+        "name": "Contacts",
+        "read": "It tells customers, vendors, companies and individuals apart. Name search tolerates accents and capitalisation, and for broad listings it offers to filter by type before dumping the whole address book.",
+        "w1": "Contacts: create and edit",
+        "w2": "Automatic classification (customer, vendor, company or plain contact), resolved with a short question when needed"
+      },
+      "hr": {
+        "name": "HR",
+        "read": "Employee records and roster, with payslips and their lines. Columns adjust themselves to what the instance actually has filled in: no empty columns."
+      },
+      "projects": {
+        "name": "Projects",
+        "read": "Deep read access over projects, tasks and logged hours (timesheets).",
+        "w1": "Existing tasks: workflow actions, for example marking one as done",
+        "limit": "Creating brand-new projects or tasks from scratch over chat is not available yet."
+      },
+      "cross": {
+        "heading": "Cross-cutting capabilities",
+        "memory": {
+          "label": "Conversation with real memory",
+          "body": "It understands references to the previous answer — “and in March?”, “the overdue ones out of those”, “go on” — without having to repeat the whole query."
+        },
+        "languages": {
+          "label": "Multi-language",
+          "body": "The conversation engine understands and answers in Spanish, English, French, German, Portuguese and Italian. The interface adds Hindi, Gujarati, Tamil, Kannada and Marathi: 11 languages in total."
+        },
+        "reports": {
+          "label": "PDF and Excel reports",
+          "body": "Any result can be requested as PDF or Excel, including grouped reports — by salesperson, by month — with a totals row."
+        },
+        "adapts": {
+          "label": "Built for real instances, not ideal ones",
+          "body": "It automatically detects the edition (Community, Enterprise, OCA) and the Odoo version, from 14 to 19. If someone asks for something that module or field does not have installed, it says so explicitly instead of inventing an answer."
+        },
+        "customModules": {
+          "label": "Your custom ERP, understood on its own",
+          "body": "If you have your own or OCA modules, or Studio fields, the agent can learn to answer queries about those models by reading the menus and views Odoo already has: names, labels and business rules declared in the search filters. Nobody has to teach it by hand, and there is nothing for you to configure up front."
+        }
+      }
+    },
+    "security": {
+      "heading": "Security and architecture",
+      "lead": "Why an implementer can trust connecting this to a client's production instance.",
+      "confirm": {
+        "label": "Nothing runs without human confirmation",
+        "body": "For any write operation — creating or editing a record, changing a state — the agent builds a proposal and the person has to confirm it explicitly before it runs against Odoo. The agent never writes on its own.",
+        "note": "This applies evenly to every write the system supports today, across all domains: there is no such thing as an “unconfirmed write”. What varies between domains is how many write actions exist yet, never how safe they are."
+      },
+      "encryption": {
+        "label": "Credentials encrypted, never in plain text",
+        "body": "Every Odoo API key is stored encrypted with Fernet, authenticated symmetric encryption. The key is never readable in the database or in logs."
+      },
+      "perUser": {
+        "label": "Per-user credentials, not shared",
+        "body": "Each person connects with their own Odoo user and API key, so the agent respects the permissions that already exist in Odoo for that person. There is no all-powerful credential shared by the whole organisation."
+      },
+      "jwt": {
+        "label": "Token authentication on every request",
+        "body": "Every API call carries a JWT and its signature is cryptographically verified against the identity provider's JWKS."
+      },
+      "tenancy": {
+        "label": "Real multi-tenant isolation",
+        "body": "Every organisation and every conversation is isolated by its own identifier, with explicit controls so an authenticated user cannot read another organisation's or another user's history or data by guessing an ID."
+      },
+      "readOnlyMode": {
+        "label": "Read-only mode for support sessions",
+        "body": "When support needs to look at an instance to diagnose something, there is a mode that blocks any Odoo method that is not explicitly allowed: an allowlist, not a denylist. That way neither human error nor a bug can end up writing to the client's database during support."
+      },
+      "ssrf": {
+        "label": "Protection against internal URLs (SSRF)",
+        "body": "When an instance is connected, the system verifies the URL points to a real public address before attempting the handshake, and rejects internal or private addresses. Nobody can use the connector as a way into an internal network."
+      },
+      "deterministic": {
+        "label": "Rules first, AI last",
+        "body": "Classifying what is being asked is resolved with deterministic rules. The language model only comes in at the end, to write: never to decide what to write into Odoo, and never to do arithmetic. Totals and calculations are done by the backend, so no model can invent a number."
+      },
+      "timeouts": {
+        "label": "Timeouts on every Odoo call",
+        "body": "Every XML-RPC call has a time limit. If an instance hangs, the agent does not hang with it."
+      },
+      "errors": {
+        "label": "Errors never expose internal details",
+        "body": "If something fails, the person sees a neutral, actionable message. The technical detail stays in server-side logs only."
+      }
+    },
+    "roadmap": {
+      "heading": "What we are considering building next",
+      "lead": "This is not a changelog or a list of promises: it is the open menu of the fronts on our table today. There are no committed dates, and the order is largely defined by what implementers ask us for. If something here unblocks a specific client of yours, we want to hear it.",
+      "queries": {
+        "label": "More questions per domain",
+        "body": "Margins per product, categories via purchase lines, country and geography, tags, warehouses on transfers. Which one do you need first?"
+      },
+      "custom": {
+        "label": "More depth on custom and OCA modules",
+        "body": "The agent already learns the vocabulary of your custom modules on its own; the next step is adding more filter nuance and your own business rules."
+      },
+      "typos": {
+        "label": "Broader typo tolerance",
+        "body": "Today it fixes typos in dates, states and query type. The idea is to extend that to more query types."
+      },
+      "tracing": {
+        "label": "Finer tracing for diagnostics",
+        "body": "Response times per Odoo call, not just per agent step: useful when you have to show a client where the slowness actually is."
+      },
+      "progress": {
+        "label": "Live progress on long operations",
+        "body": "Connecting, queued, running and validating indicators, so a heavy query never looks stuck."
+      },
+      "hardening": {
+        "label": "Internal platform hardening",
+        "body": "More automated tests over the product's own administration and billing layer. It does not affect your clients' instances; it is our own solidity."
+      },
+      "cta": "Tell us what would help you most",
+      "ctaNote": "It goes straight by email to the person building it. No forms, no tickets.",
+      "emailSubject": "TheOdooAgent roadmap — implementer feedback"
+    },
+    "closing": {
+      "heading": "Want to try it on a real instance?",
+      "body": "Connect an instance with your own Odoo user and try it on real data before offering it to a client. The connection is by API key: it installs no modules and does not modify your Odoo's structure.",
+      "primary": "Connect an instance",
+      "secondary": "See plans"
+    }
   }
 }

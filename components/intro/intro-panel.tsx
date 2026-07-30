@@ -19,8 +19,8 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { MarkB } from "@/components/AgentMark";
+import { FactRow } from "@/components/ui/fact-row";
 import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
 import { useChatContext } from "@/components/app-shell";
@@ -45,29 +45,6 @@ function Section({
       <h3 className="mb-3 text-subheading">{heading}</h3>
       {children}
     </section>
-  );
-}
-
-/** Icon + short label + short line — used in "distinto" and "implementás". */
-function FeatureRow({
-  icon: Icon,
-  label,
-  body,
-}: {
-  icon: LucideIcon;
-  label: string;
-  body: string;
-}) {
-  return (
-    <li className="flex items-start gap-3">
-      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-btn bg-accent-subtle text-accent">
-        <Icon size={18} strokeWidth={1.5} />
-      </span>
-      <div className="min-w-0">
-        <p className="text-body font-medium text-foreground">{label}</p>
-        <p className="text-small text-text-secondary">{body}</p>
-      </div>
-    </li>
   );
 }
 
@@ -188,6 +165,11 @@ export function IntroPanel() {
     window.location.href = `mailto:${t("founder.email")}?subject=${encodeURIComponent(
       "Revender TheOdooAgent"
     )}`;
+  }
+
+  function handleManual() {
+    closePanel();
+    router.push("/implementers");
   }
 
   function handleChip(promptId: string, text: string) {
@@ -324,7 +306,7 @@ export function IntroPanel() {
                 <Section heading={t("different.heading")}>
                   <ul className="space-y-3">
                     {diffRows.map((row) => (
-                      <FeatureRow
+                      <FactRow
                         key={row.label}
                         icon={row.icon}
                         label={row.label}
@@ -344,7 +326,7 @@ export function IntroPanel() {
                       </div>
                       <ul className="mb-4 space-y-3">
                         {partnerRows.map((row) => (
-                          <FeatureRow
+                          <FactRow
                             key={row.label}
                             icon={row.icon}
                             label={row.label}
@@ -352,12 +334,23 @@ export function IntroPanel() {
                           />
                         ))}
                       </ul>
-                      <button
-                        onClick={handlePartner}
-                        className="h-btn-sm rounded-btn bg-accent px-4 text-small font-medium text-white transition-colors hover:bg-accent-hover"
-                      >
-                        {t("partner.cta")}
-                      </button>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <button
+                          onClick={handlePartner}
+                          className="h-btn-sm rounded-btn bg-accent px-4 text-small font-medium text-white transition-colors hover:bg-accent-hover"
+                        >
+                          {t("partner.cta")}
+                        </button>
+                        {/* Deep-link to the canonical technical detail */}
+                        <button
+                          type="button"
+                          onClick={handleManual}
+                          className="inline-flex items-center gap-1 text-small font-medium text-accent transition-colors hover:underline"
+                        >
+                          {t("partner.manualLink")}
+                          <ArrowRight size={14} strokeWidth={1.5} aria-hidden="true" />
+                        </button>
+                      </div>
                     </div>
                   </Section>
                 </div>

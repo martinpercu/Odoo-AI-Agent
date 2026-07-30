@@ -40,7 +40,8 @@
     "instances": "Instanzen",
     "myConnection": "Meine Verbindung",
     "configureToChat": "Zum Chatten einrichten",
-    "pricing": "Preise"
+    "pricing": "Preise",
+    "implementerManual": "Technisches Handbuch"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -1005,7 +1006,8 @@
         "item2Body": "Verwalten Sie alle Instanzen Ihrer Kunden aus einem einzigen Panel, vollständig isoliert.",
         "item3Label": "Keine Installation im Odoo des Kunden",
         "item3Body": "Verbindung über Standard-API-Schlüssel (XML-RPC). Nichts bricht bei Upgrades, kein Wartungsaufwand.",
-        "cta": "Mit Martin sprechen"
+        "cta": "Mit Martin sprechen",
+        "manualLink": "Technisches Handbuch ansehen"
       },
       "secure": {
         "heading": "Sicher by Design",
@@ -1258,5 +1260,171 @@
     "preview": "Beispiel abspielen",
     "previewText": "Hallo, so klinge ich.",
     "stopAudio": "Audio stoppen"
+  },
+  "ImplementerManual": {
+    "hero": {
+      "eyebrow": "Für Odoo-Implementierer",
+      "title": "Technisches Handbuch",
+      "subtitle": "Welche Teile von Odoo der Agent heute abdeckt und wie tief, wie er innen aufgebaut ist und was wir als Nächstes zu bauen erwägen. Geschrieben für alle, die Odoo für ihre Kunden produktiv installieren und betreuen.",
+      "updated": "Inhalt gegen das Produktivsystem geprüft"
+    },
+    "nav": {
+      "label": "Abschnitte dieser Seite",
+      "coverage": "Abdeckung pro Domäne",
+      "security": "Sicherheit und Architektur",
+      "roadmap": "Offene Roadmap"
+    },
+    "coverage": {
+      "heading": "Funktionale Abdeckung pro Odoo-Domäne",
+      "lead": "Das ist kein generischer Odoo-Chatbot. Die Anfrage wird über eine deterministische Engine (Keywords und Regeln) gelöst, die genau weiß, welche Modelle und Felder in der jeweiligen Domäne angesteuert werden müssen. Das Sprachmodell (LLM) wird erst ganz am Ende eingesetzt, um die Antwort zu verfassen.",
+      "writeNote": "Jede schreibende Operation, in jeder Domäne, durchläuft eine ausdrückliche menschliche Bestätigung, bevor sie gegen Odoo ausgeführt wird.",
+      "modelsLabel": "Modelle",
+      "readLabel": "Lesen",
+      "writeLabel": "Bestätigte Schreibvorgänge",
+      "readOnlyLabel": "Vorläufig nur lesend: in dieser Domäne sind keine Schreibvorgänge verfügbar.",
+      "sales": {
+        "name": "Verkauf / CRM",
+        "read": "Zählungen, Rankings („die 5 bestverkauften Produkte“) und Aggregationen gruppiert nach Vertriebsmitarbeiter, Team, Kategorie oder Monat. Datumsfilter einschließlich des Abschlussdatums von Verkaufschancen sowie Filter nach benanntem Vertriebsmitarbeiter oder Kunden, mit Rückfrage bei mehreren Treffern. Conversion Rate (Win Rate) und wahrscheinlichkeitsgewichtete Pipeline werden im Backend berechnet, nie durch das Sprachmodell. Es versteht „meine Verkaufschancen“ und filtert nach dem angemeldeten Benutzer.",
+        "w1": "Verkaufsaufträge: erstellen, bearbeiten, bestätigen, abbrechen und per E-Mail senden",
+        "w2": "Verkaufschancen: Phase wechseln, als gewonnen oder verloren mit Grund markieren, Vertriebsmitarbeiter zuweisen",
+        "w3": "Einen Lead in eine Verkaufschance umwandeln",
+        "w4": "Einen Anruf oder ein Meeting planen",
+        "limit": "Eine völlig neue Verkaufschance per Chat anzulegen ist noch nicht verfügbar."
+      },
+      "finance": {
+        "name": "Finanzen",
+        "read": "Statusfilter über Rechnungen und Gutschriften (überfällig, bezahlt, teilweise bezahlt, offene Forderungen, offene Verbindlichkeiten) sowie Forderungsalter in Stufen von 30, 60 und 90+ Tagen, in Python berechnet: unabhängig von Enterprise-Modulen. Jedes Ergebnis lässt sich als PDF oder Excel mit Summenzeile herunterladen.",
+        "w1": "Rechnungen: erstellen und bearbeiten",
+        "w2": "Bestehende Rechnungen: validieren, abbrechen und per E-Mail senden"
+      },
+      "inventory": {
+        "name": "Lager / Einkauf",
+        "read": "Katalog mit Preis und Bestand, Filter nach Verfügbarkeit und Sortierung nach Preis oder Bestand. Lesezugriff auf Bestellungen, deren Positionen und Lieferscheine.",
+        "w1": "Katalogprodukte: erstellen und bearbeiten",
+        "w2": "Bestehende Bestellungen und Lieferscheine: bestätigen, abbrechen, validieren und senden",
+        "limit": "Eine völlig neue Bestellung per Chat anzulegen ist noch nicht verfügbar."
+      },
+      "contacts": {
+        "name": "Kontakte",
+        "read": "Unterscheidet Kunden, Lieferanten, Unternehmen und Personen. Die Namenssuche verzeiht Akzente und Groß-/Kleinschreibung, und bei breiten Listen wird angeboten, zuerst nach Typ zu filtern, statt das ganze Adressbuch auszugeben.",
+        "w1": "Kontakte: erstellen und bearbeiten",
+        "w2": "Automatische Klassifizierung (Kunde, Lieferant, Unternehmen oder einfacher Kontakt), bei Bedarf über eine kurze Rückfrage geklärt"
+      },
+      "hr": {
+        "name": "Personal",
+        "read": "Personalakten und Belegschaftsübersicht mit Gehaltsabrechnungen und deren Positionen. Die Spalten richten sich selbst nach dem, was in der Instanz tatsächlich gefüllt ist: keine leeren Spalten."
+      },
+      "projects": {
+        "name": "Projekte",
+        "read": "Tiefer Lesezugriff auf Projekte, Aufgaben und erfasste Stunden (Zeiterfassung).",
+        "w1": "Bestehende Aufgaben: Workflow-Aktionen, zum Beispiel als erledigt markieren",
+        "limit": "Völlig neue Projekte oder Aufgaben per Chat anzulegen ist noch nicht verfügbar."
+      },
+      "cross": {
+        "heading": "Übergreifende Fähigkeiten",
+        "memory": {
+          "label": "Konversation mit echtem Gedächtnis",
+          "body": "Bezüge auf die vorherige Antwort werden verstanden — „und im März?“, „davon die überfälligen“, „mach weiter“ — ohne die ganze Anfrage zu wiederholen."
+        },
+        "languages": {
+          "label": "Mehrsprachig",
+          "body": "Die Konversations-Engine versteht und antwortet auf Spanisch, Englisch, Französisch, Deutsch, Portugiesisch und Italienisch. Die Oberfläche ergänzt Hindi, Gujarati, Tamil, Kannada und Marathi: insgesamt 11 Sprachen."
+        },
+        "reports": {
+          "label": "Berichte als PDF und Excel",
+          "body": "Jedes Ergebnis kann als PDF oder Excel angefordert werden, auch gruppierte Berichte — nach Vertriebsmitarbeiter, nach Monat — mit Summenzeile."
+        },
+        "adapts": {
+          "label": "Für echte Instanzen gebaut",
+          "body": "Edition (Community, Enterprise, OCA) und Odoo-Version von 14 bis 19 werden automatisch erkannt. Wird etwas gefragt, das dieses Modul oder Feld nicht installiert hat, wird das ausdrücklich gesagt, statt eine Antwort zu erfinden."
+        },
+        "customModules": {
+          "label": "Ihr maßgeschneidertes ERP, von selbst verstanden",
+          "body": "Wenn Sie eigene oder OCA-Module oder mit Studio erstellte Felder haben, kann der Agent lernen, Fragen zu diesen Modellen zu beantworten, indem er die Menüs und Ansichten liest, die Odoo bereits hat: Namen, Bezeichnungen und in den Suchfiltern deklarierte Geschäftsregeln. Niemand muss ihm etwas von Hand beibringen, und auf Ihrer Seite ist nichts vorab zu konfigurieren."
+        }
+      }
+    },
+    "security": {
+      "heading": "Sicherheit und Architektur",
+      "lead": "Warum ein Implementierer darauf vertrauen kann, dies mit der Produktivinstanz eines Kunden zu verbinden.",
+      "confirm": {
+        "label": "Nichts wird ohne menschliche Bestätigung ausgeführt",
+        "body": "Für jede schreibende Operation — einen Datensatz anlegen oder bearbeiten, einen Status ändern — erstellt der Agent einen Vorschlag, den die Person ausdrücklich bestätigen muss, bevor er gegen Odoo ausgeführt wird. Der Agent schreibt nie von sich aus.",
+        "note": "Das gilt gleichmäßig für alle Schreibvorgänge, die das System heute unterstützt, in allen Domänen: eine Kategorie „unbestätigter Schreibvorgang“ existiert nicht. Was zwischen den Domänen variiert, ist die Anzahl der bereits verfügbaren Schreibaktionen, nie deren Sicherheit."
+      },
+      "encryption": {
+        "label": "Zugangsdaten verschlüsselt, nie im Klartext",
+        "body": "Jeder Odoo-API-Key wird mit Fernet verschlüsselt gespeichert, einer authentifizierten symmetrischen Verschlüsselung. Weder in der Datenbank noch in den Logs ist der Key lesbar."
+      },
+      "perUser": {
+        "label": "Zugangsdaten pro Benutzer, nicht geteilt",
+        "body": "Jede Person verbindet sich mit ihrem eigenen Odoo-Benutzer und API-Key, sodass der Agent die Berechtigungen respektiert, die in Odoo für diese Person bereits gelten. Es gibt keinen allmächtigen, organisationsweit geteilten Zugang."
+      },
+      "jwt": {
+        "label": "Token-Authentifizierung bei jedem Request",
+        "body": "Jeder API-Aufruf trägt ein JWT, dessen Signatur kryptografisch gegen das JWKS des Identity Providers geprüft wird."
+      },
+      "tenancy": {
+        "label": "Echte Mandantentrennung",
+        "body": "Jede Organisation und jede Konversation ist über eine eigene Kennung isoliert, mit ausdrücklichen Kontrollen, damit ein authentifizierter Benutzer nicht durch Erraten einer ID den Verlauf oder die Daten einer anderen Organisation oder eines anderen Benutzers lesen kann."
+      },
+      "readOnlyMode": {
+        "label": "Nur-Lese-Modus für Support-Sitzungen",
+        "body": "Wenn der Support zur Diagnose in eine Instanz schauen muss, gibt es einen Modus, der jede nicht ausdrücklich erlaubte Odoo-Methode blockiert: Allowlist, nicht Denylist. So können weder menschlicher Fehler noch ein Bug während des Supports in die Kundendatenbank schreiben."
+      },
+      "ssrf": {
+        "label": "Schutz vor internen URLs (SSRF)",
+        "body": "Beim Verbinden einer Instanz prüft das System vor dem Verbindungsaufbau, dass die URL auf eine echte öffentliche Adresse zeigt, und lehnt interne oder private Adressen ab. Niemand kann den Connector als Einstieg in ein internes Netz nutzen."
+      },
+      "deterministic": {
+        "label": "Regeln zuerst, KI zuletzt",
+        "body": "Die Klassifizierung dessen, was gefragt wird, erfolgt über deterministische Regeln. Das Sprachmodell kommt erst am Ende zum Formulieren: nie um zu entscheiden, was in Odoo geschrieben wird, und nie zum Rechnen. Summen und Berechnungen macht das Backend, damit kein Modell eine Zahl erfinden kann."
+      },
+      "timeouts": {
+        "label": "Timeouts bei jedem Odoo-Aufruf",
+        "body": "Jeder XML-RPC-Aufruf hat ein Zeitlimit. Hängt eine Instanz, hängt der Agent nicht mit ihr."
+      },
+      "errors": {
+        "label": "Fehler legen keine internen Details offen",
+        "body": "Schlägt etwas fehl, sieht die Person eine neutrale, handlungsleitende Meldung. Das technische Detail bleibt ausschließlich in den serverseitigen Logs."
+      }
+    },
+    "roadmap": {
+      "heading": "Was wir als Nächstes zu bauen erwägen",
+      "lead": "Das ist kein Changelog und keine Liste von Versprechen: es ist die offene Auswahl der Themen, die heute auf unserem Tisch liegen. Es gibt keine zugesagten Termine, und die Reihenfolge bestimmt weitgehend, was Implementierer von uns verlangen. Wenn etwas hier bei Ihnen einen konkreten Kunden freischaltet, wollen wir das wissen.",
+      "queries": {
+        "label": "Mehr Fragen pro Domäne",
+        "body": "Margen pro Produkt, Kategorien über Einkaufspositionen, Land und Geografie, Tags, Lager auf Lieferscheinen. Was fehlt Ihnen zuerst?"
+      },
+      "custom": {
+        "label": "Mehr Tiefe bei eigenen und OCA-Modulen",
+        "body": "Der Agent lernt das Vokabular Ihrer eigenen Module schon selbst; der nächste Schritt sind mehr Filternuancen und Ihre eigenen Geschäftsregeln."
+      },
+      "typos": {
+        "label": "Breitere Tippfehler-Toleranz",
+        "body": "Heute korrigiert er Tippfehler bei Datumsangaben, Status und Anfragetyp. Die Idee ist, das auf mehr Anfragetypen auszuweiten."
+      },
+      "tracing": {
+        "label": "Feineres Tracing für die Diagnose",
+        "body": "Antwortzeiten pro Odoo-Aufruf, nicht nur pro Agentenschritt: nützlich, wenn man einem Kunden zeigen muss, wo die Langsamkeit wirklich sitzt."
+      },
+      "progress": {
+        "label": "Live-Fortschritt bei langen Operationen",
+        "body": "Anzeigen für Verbinden, Warteschlange, Ausführen und Validieren, damit eine schwere Anfrage nie hängengeblieben wirkt."
+      },
+      "hardening": {
+        "label": "Interne Robustheit der Plattform",
+        "body": "Mehr automatisierte Tests für die Verwaltungs- und Abrechnungsschicht des Produkts. Das betrifft die Instanzen Ihrer Kunden nicht; es ist unsere eigene Solidität."
+      },
+      "cta": "Sagen Sie uns, was Ihnen am meisten hilft",
+      "ctaNote": "Geht direkt per E-Mail an die Person, die es baut. Ohne Formulare, ohne Tickets.",
+      "emailSubject": "TheOdooAgent Roadmap — Feedback von Implementierern"
+    },
+    "closing": {
+      "heading": "Auf einer echten Instanz ausprobieren?",
+      "body": "Verbinden Sie eine Instanz mit Ihrem eigenen Odoo-Benutzer und testen Sie sie mit echten Daten, bevor Sie sie einem Kunden anbieten. Die Verbindung läuft über einen API-Key: sie installiert keine Module und verändert die Struktur Ihres Odoo nicht.",
+      "primary": "Instanz verbinden",
+      "secondary": "Tarife ansehen"
+    }
   }
 }

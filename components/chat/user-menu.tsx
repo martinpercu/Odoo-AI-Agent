@@ -10,6 +10,7 @@ import {
   Database,
   KeyRound,
   Tag,
+  BookOpen,
   Sun,
   Moon,
   Globe,
@@ -158,6 +159,17 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             onOpened={onNavigate}
             className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
           />
+
+          {/* Technical manual for implementers */}
+          <Link
+            href="/implementers"
+            onClick={() => onNavigate?.()}
+            className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+            aria-label={collapsed ? t("implementerManual") : undefined}
+          >
+            <BookOpen size={iconInline} strokeWidth={1.5} className="shrink-0" />
+            {!collapsed && <span className="flex-1">{t("implementerManual")}</span>}
+          </Link>
 
           {/* Pricing */}
           <Link
@@ -409,11 +421,19 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
               {!isClient && <IntroSidebarItem onOpened={close} className={itemClass} />}
               <HowItWorksSidebarItem onOpened={close} className={itemClass} />
 
+              {/* Implementer manual + pricing — Builder-only (white-label) */}
               {!isClient && (
-                <Link href="/pricing" onClick={close} className={itemClass}>
-                  <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
-                  <span className="flex-1">{t("pricing")}</span>
-                </Link>
+                <>
+                  <Link href="/implementers" onClick={close} className={itemClass}>
+                    <BookOpen size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                    <span className="flex-1">{t("implementerManual")}</span>
+                  </Link>
+
+                  <Link href="/pricing" onClick={close} className={itemClass}>
+                    <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                    <span className="flex-1">{t("pricing")}</span>
+                  </Link>
+                </>
               )}
 
               <button onClick={toggleTheme} className={itemClass}>
