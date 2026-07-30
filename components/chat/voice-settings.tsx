@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { Volume2, VolumeX, Play, Loader2 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
@@ -13,9 +13,42 @@ import {
   setVoiceBoolPref,
   getVoicePref,
   setVoicePref,
+  getVoiceForLang,
+  setVoiceForLang,
+  ttsLangBucket,
 } from "@/lib/voice-prefs";
 
 const SPEED_OPTIONS = ["0.8", "1.0", "1.2"];
+
+/** Preview trigger — sits next to the voice picker, or next to speed when the
+ * language only has one voice and the picker is hidden. */
+function PreviewButton({
+  onClick,
+  disabled,
+  previewing,
+  label,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+  previewing: boolean;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
+    >
+      {previewing ? (
+        <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+      ) : (
+        <Play size={14} strokeWidth={1.5} />
+      )}
+    </button>
+  );
+}
 
 /**
  * Popover with the user's voice preferences (STT mic toggle + auto-send, TTS
@@ -25,6 +58,7 @@ const SPEED_OPTIONS = ["0.8", "1.0", "1.2"];
  */
 export function VoiceSettings() {
   const t = useTranslations("VoiceSettings");
+  const locale = useLocale();
   const { meData } = useSession();
   const iconBtn = useIconSize("button");
   const [open, setOpen] = useState(false);
@@ -42,12 +76,20 @@ export function VoiceSettings() {
   const [voicesLoaded, setVoicesLoaded] = useState(false);
   const [previewing, setPreviewing] = useState(false);
 
+  const bucket = ttsLangBucket(locale);
+  const langVoices = voices.filter((v) => v.lang === bucket);
+  // Fallback to the full catalog only if this bucket somehow has nothing
+  // (shouldn't happen with full coverage, but avoids an empty dropdown).
+  const optionVoices = langVoices.length > 0 ? langVoices : voices;
+  // With a single voice available for this language there is nothing to
+  // choose: drop the picker and let the speed selector take its row.
+  const showVoicePicker = !voicesLoaded || optionVoices.length > 1;
+
   // Hydrate from localStorage once mounted (avoids SSR/client mismatch).
   useEffect(() => {
     setSttOn(getVoiceBoolPref("stt", true));
     setAutoSend(getVoiceBoolPref("autoSend", true));
     setTtsOn(getVoiceBoolPref("tts", false));
-    setVoice(getVoicePref("voice", ""));
     setSpeed(getVoicePref("speed", "1.0"));
   }, []);
 
@@ -64,15 +106,33 @@ export function VoiceSettings() {
     void fetchTtsVoices().then((res) => {
       if (res.success && res.data) {
         setVoices(res.data.voices);
-        if (!voice) {
-          setVoice(res.data.default_voice);
-          setVoicePref("voice", res.data.default_voice);
-        }
       }
       setVoicesLoaded(true);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, ttsEntitled, voicesLoaded]);
+
+  // Resolve the voice for the CURRENT UI language on mount and every time the
+  // locale changes — never keep a voice selected for a language the user
+  // isn't in anymore. First time in a given language: auto-pick its first
+  // catalog voice and persist it, same bootstrap the picker already did for
+  // the very first load.
+  useEffect(() => {
+    if (!voicesLoaded) return;
+    const saved = getVoiceForLang(locale);
+    // A saved voice that is no longer offered for this language must be
+    // re-picked: with a single-voice language the picker is hidden, so the
+    // user would have no way to correct it.
+    if (saved && optionVoices.some((v) => v.id === saved)) {
+      setVoice(saved);
+      return;
+    }
+    const fallback = voices.find((v) => v.lang === bucket)?.id || voices[0]?.id || "";
+    if (fallback) {
+      setVoice(fallback);
+      setVoiceForLang(locale, fallback);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, voicesLoaded, voices]);
 
   if (!sttEntitled && !ttsEntitled) return null;
 
@@ -90,7 +150,7 @@ export function VoiceSettings() {
   }
   function changeVoice(value: string) {
     setVoice(value);
-    setVoicePref("voice", value);
+    setVoiceForLang(locale, value);
   }
   function changeSpeed(value: string) {
     setSpeed(value);
@@ -186,47 +246,52 @@ export function VoiceSettings() {
 
                   {ttsOn && (
                     <div className="flex flex-col gap-2 pl-3">
+                      {showVoicePicker && (
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={voice}
+                            onChange={(e) => changeVoice(e.target.value)}
+                            className="flex-1 rounded-md border border-border bg-base px-2 py-1.5 text-small text-foreground"
+                            aria-label={t("voice")}
+                          >
+                            {optionVoices.length === 0 && <option value="">{t("voice")}</option>}
+                            {optionVoices.map((v) => (
+                              <option key={v.id} value={v.id}>
+                                {v.label}
+                              </option>
+                            ))}
+                          </select>
+                          <PreviewButton
+                            onClick={handlePreview}
+                            disabled={!voice || previewing}
+                            previewing={previewing}
+                            label={t("preview")}
+                          />
+                        </div>
+                      )}
+
                       <div className="flex items-center gap-2">
                         <select
-                          value={voice}
-                          onChange={(e) => changeVoice(e.target.value)}
+                          value={speed}
+                          onChange={(e) => changeSpeed(e.target.value)}
                           className="flex-1 rounded-md border border-border bg-base px-2 py-1.5 text-small text-foreground"
-                          aria-label={t("voice")}
+                          aria-label={t("speed")}
                         >
-                          {voices.length === 0 && <option value="">{t("voice")}</option>}
-                          {voices.map((v) => (
-                            <option key={v.id} value={v.id}>
-                              {v.label}
+                          {SPEED_OPTIONS.map((s) => (
+                            <option key={s} value={s}>
+                              {s}x
                             </option>
                           ))}
                         </select>
-                        <button
-                          type="button"
-                          onClick={handlePreview}
-                          disabled={!voice || previewing}
-                          aria-label={t("preview")}
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
-                        >
-                          {previewing ? (
-                            <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
-                          ) : (
-                            <Play size={14} strokeWidth={1.5} />
-                          )}
-                        </button>
+                        {!showVoicePicker && (
+                          <PreviewButton
+                            onClick={handlePreview}
+                            disabled={!voice || previewing}
+                            previewing={previewing}
+                            label={t("preview")}
+                          />
+                        )}
                       </div>
-
-                      <select
-                        value={speed}
-                        onChange={(e) => changeSpeed(e.target.value)}
-                        className="rounded-md border border-border bg-base px-2 py-1.5 text-small text-foreground"
-                        aria-label={t("speed")}
-                      >
-                        {SPEED_OPTIONS.map((s) => (
-                          <option key={s} value={s}>
-                            {s}x
-                          </option>
-                        ))}
-                      </select>
                     </div>
                   )}
                 </>

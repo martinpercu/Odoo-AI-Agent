@@ -21,7 +21,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { useSession } from "@/hooks/use-session";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
-import { getVoiceBoolPref, getVoicePref } from "@/lib/voice-prefs";
+import { getVoiceBoolPref, getVoicePref, getVoiceForLang } from "@/lib/voice-prefs";
 
 function groupChatsByDate(chats: Chat[]): ChatGroup[] {
   const now = new Date();
@@ -310,7 +310,7 @@ export function useChat(chatId?: string, userId?: string) {
         const ttsBody = ttsEnabled
           ? {
               tts: {
-                voice: getVoicePref("voice", "") || undefined,
+                voice: getVoiceForLang(locale) || undefined,
                 speed: parseFloat(getVoicePref("speed", "1.0")) || 1.0,
               },
             }
