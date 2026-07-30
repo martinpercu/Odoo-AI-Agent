@@ -40,8 +40,11 @@ This is a production-grade SaaS front end, not a toy chat box. At a glance:
 | 🔔 **Notifications** | Proactive Odoo alerts with severity, unread badges, deep-link into chat, 30s polling |
 | 🔐 **Auth & multi-tenancy** | Supabase auth + DEV MODE + Demo mode, org management, RBAC (SuperAdmin/Admin/Client), subscription tiers, team invitations, slot limits |
 | 🎭 **Dual-voice UI** | Audience-aware copy & density — technical for Builders, concierge for Clients — custom brand mark, white-label "Powered by", LangGraph trace panel |
+| 🎙️ **Voice (STT/TTS)** | Mic dictation via a standalone `/transcribe` endpoint, spoken answers streamed as `audio` SSE chunks and played back gapless through the Web Audio API, per-user preferences popover (voice, speed, auto-send) — all behind a 3-layer entitlement model (org quota → admin grant → the user's own local toggle) |
+| 🏷️ **White-label** | An org's uploaded logo replaces the product wordmark in the sidebar for every role; invitations show the inviter's brand, so an end client never sees who built the product |
 | 🌍 **i18n & theming** | 11 languages, light/dark mode with no-flash persistence, full design-token system, responsive collapsible layout |
-| 🚀 **Landing intro surfaces** | Welcome modal (auto-opens once on first demo visit, dismissal persisted), info panel drawer ("¿Qué es TheOdooAgent?") reachable from the sidebar any time, in-flow **partner reframe nudge** (auto-expands after the 2nd successful demo response, minimizes to a persistent pill), first-party funnel analytics (`track()`, UTM capture, session stitching) |
+| 🚀 **Landing intro surfaces** | Welcome modal (auto-opens once on first demo visit, dismissal persisted), **two** drawers reachable from the sidebar any time — "¿Qué es TheOdooAgent?" (partner-flavoured, Builder entry) and "¿Cómo funciona?" (Client-flavoured, every role) — in-flow **partner reframe nudge** (auto-expands after the 2nd successful demo response, minimizes to a persistent pill), first-party funnel analytics (`track()`, UTM capture, session stitching) |
+| 📕 **Implementer manual** | A Builder-only page at `/implementers` selling the agent to Odoo partners: per-domain coverage (which models, what it reads, which writes are actually confirmed), a security/architecture fact sheet, and a roadmap presented as an open menu with a feedback CTA |
 
 > 💡 If this already looks broad — it is. Keep scrolling for the complete reference: project structure, provider stack, every UI card, auth flows, the multi-tenancy model, the full endpoint table and the SSE protocol.
 
@@ -186,26 +189,27 @@ app/
     layout.tsx                  # Root layout with provider stack (9 nested contexts)
     page.tsx                    # Auth-based redirector — delegates to resolvePostAuthPath (SUPERADMIN→/superadmin; ADMIN/no-org with 0 instances→/onboarding unless demo-skipped; else→chat)
     login/page.tsx              # Supabase email/password login (+ DEV MODE bypass; "Forgot password?" link)
-    register/page.tsx           # Account signup → resolvePostAuthPath redirect
-    invite/page.tsx             # Accept team invitation by token (post-accept: connectionStatus "unset"→/settings/odoo, else→/chat)
+    register/page.tsx           # Account signup — GATED by an access code (NEXT_PUBLIC_ACCESS_CODE; Founding-Partners-only beta) → resolvePostAuthPath redirect
+    invite/page.tsx             # Accept team invitation by token (post-accept: connectionStatus "unset"→/settings/odoo, else→/chat); header shows the inviter's brand_name + instance company_name, never product branding
     forgot-password/page.tsx    # Password recovery step 1: request a 6-digit OTP by email
     reset-password/page.tsx     # Password recovery step 2: verify OTP + set new password
     superadmin/page.tsx         # Superadmin panel (standalone, no AppShell)
     (app)/
       layout.tsx                # AppShell wrapper (ChatContext + RightPanelContext); only wraps app routes
-      chat/page.tsx             # New query (rotating carousel: 4 random suggestions from pool of 12 + input)
-      chat/[id]/page.tsx        # Conversation with SSE streaming
+      chat/page.tsx             # New query (rotating carousel: 4 random suggestions from pool of 12 + input); blocks a CLIENT_USER whose Connection isn't active (banner + disabled input + redirect to /settings/odoo)
+      chat/[id]/page.tsx        # Conversation with SSE streaming; wires voice (useVoiceInput → mic/STT, isPlayingAudio/stopAudio → TTS playback)
       onboarding/page.tsx       # First-instance gate (configure now vs keep demo) + two-block connect form with discriminated validation
       instances/page.tsx        # ADMIN-only: instance list (status badge + health summary) + add-instance form (1st always; 2nd+ PARTNER-only)
       instances/[id]/page.tsx   # ADMIN-only: instance detail — users + per-user Connection status, pending invites, per-instance invite (seat + mode, gated on isPartner = org.type === "PARTNER"), edit
       settings/odoo/page.tsx    # Self-service: the current user manages their own Odoo Connection per instance (load/edit/revalidate credentials)
       settings/page.tsx         # Admin panel: org, users, feedback + MovedToCard pointers to /instances and /settings/odoo
       pricing/page.tsx          # Subscription plans — Builder-only (Client users bounced to /chat); renders FoundingPartnerPricing in beta phase or PricingCards otherwise; prices from getBillingState()
+      implementers/page.tsx     # Technical manual for Odoo implementers — Builder-only (Client bounced to /chat, anonymous allowed). Sticky header (eyebrow pill + title + /settings-style tab selector) over 3 swappable panels: coverage per Odoo domain, security/architecture fact sheet, roadmap-as-open-menu with a mailto CTA. Static content, no API calls
   api/
     send-invitation/route.ts    # Server-side route handler: sends the localized invitation email via Zoho SMTP (nodemailer); SMTP secrets never reach the client; verifies caller via /me before sending
   globals.css                   # Theme variables (light/dark) + markdown styles
 components/
-  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles; wraps layout in IntroProvider + PartnerNudgeProvider; mounts IntroModal + IntroPanel; calls captureUtm() on mount
+  app-shell.tsx                 # Wrapper with ChatContext + RightPanelContext; mounts LangGraphTracePanel for builder roles; wraps layout in IntroProvider + PartnerNudgeProvider; mounts IntroModal + IntroPanel + HowItWorksPanel; calls captureUtm() on mount
   AgentMark.tsx                 # Brand mark primitives: MarkB, MarkI, Wordmark, Lockup
   theme-initializer.tsx         # Client component: applies .dark class from localStorage on every route change (default theme is light unless `theme==='dark'`)
   auth/
@@ -214,14 +218,17 @@ components/
     intro-modal.tsx             # Welcome modal (auto-opens once on first demo visit; dismissed state persisted in localStorage `toa_intro_dismissed`)
     intro-panel.tsx             # Info drawer panel — reachable any time from the sidebar "¿Qué es?" item
     intro-sidebar-item.tsx      # Sidebar entry point for the info panel; fires `info_opened_from_panel` analytics event
+    how-it-works-panel.tsx      # SECOND drawer — Client-flavoured "¿Cómo funciona?" (hook, interactive example chips, "seguro por diseño" card, connection CTA); namespace HowItWorks.panel
+    how-it-works-sidebar-item.tsx # Sidebar entry point for that drawer — shown to EVERY role (unlike intro-sidebar-item, which is Builder-only)
     partner-nudge.tsx           # Surface C — in-flow demo nudge (expanded ↔ pill) pushing the partner/reseller reframe; rendered in both chat pages when isDemoMode
     a11y-modal.tsx              # Accessible modal primitive (focus trap, Esc-to-close, body scroll lock, ARIA wiring; `containerClassName` controls anchoring — full-screen on mobile)
   chat/
-    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; collapse uses PanelLeft/PanelLeftClose/PanelLeftOpen icons with hover-swap; collapsed body is clickeable to expand; mounts FoundingPartnerBadge below Wordmark in expanded header
-    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?"), avatar/initials, Instances (ADMIN) + My connection links, settings, Pricing link (Tag icon — shown to Builder and to anonymous/DEV-mode users; hidden for CLIENT_USER), superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
+    sidebar.tsx                 # Collapsible sidebar + history (paginated); delegates bottom nav to UserMenu; collapse uses PanelLeft/PanelLeftClose/PanelLeftOpen icons with hover-swap; collapsed body is clickeable to expand. The expanded header renders org.brand_logo_url instead of Wordmark when the org has one — for ALL roles (white-label surface: nothing product-branded belongs here)
+    user-menu.tsx               # Popover menu (bottom of sidebar): IntroSidebarItem ("¿Qué es?", Builder-only) + HowItWorksSidebarItem ("¿Cómo funciona?", every role), avatar/initials, Instances (ADMIN) + My connection links, settings (shown to every Builder role), Technical manual + Pricing links (BookOpen/Tag icons — shown to Builder and to anonymous/DEV-mode users; hidden for CLIENT_USER), superadmin link, theme toggle, language sub-menu, instance sub-menu (lists all configs; non-ready ones route to /settings/odoo "set up to chat"), login/logout, PoweredBy (Client only)
     chat-messages.tsx           # Message bubbles with metadata + charts + image handling + feedback button (shown when allow_feedback)
     feedback-modal.tsx          # Modal to report an AI message (category + comment + expected response)
-    chat-input.tsx              # Auto-resizing input with image upload (UI temporarily hidden) + send/stop
+    chat-input.tsx              # Auto-resizing input with image upload (UI temporarily hidden) + send/stop + mic button (STT, shown when entitled) + VoiceSettings popover + stop-audio control while TTS plays; accepts `disabled` (used to block a CLIENT_USER without an active Connection)
+    voice-settings.tsx          # STT/TTS preferences popover (mic + auto-send toggles, TTS toggle + voice/speed + preview); renders null unless the caller has at least one voice entitlement
     demo-banner.tsx             # Banner shown in demo mode (short "Demo Mode" text on mobile); CTA routes to /onboarding (0 instances) or /settings/odoo (has instance, no active Connection), else /register (logged-out)
     odoo-config-selector.tsx    # Dropdown to switch active Odoo config + credential status indicator
     success-card.tsx            # Green card for successful actions
@@ -236,7 +243,7 @@ components/
     excel-export-card.tsx       # Standalone Excel download card
     audit-history-popover.tsx   # Action execution history timeline
     entity-autocomplete.tsx     # Odoo model search with debounced autocomplete
-    langgraph-trace-panel.tsx   # Builder-only collapsible right-side trace panel (stub; replace with SSE `trace` event when available)
+    langgraph-trace-panel.tsx   # Builder-only collapsible right-side trace panel; fed by real `event: trace` SSE lines parsed in use-chat.ts and exposed as traceEntries
   pinned/
     pinned-sidebar.tsx          # Collapsible right sidebar (pins + alerts tabs)
     pinned-insight-mini-card.tsx # Compact card with refresh (charts) + unpin
@@ -256,27 +263,29 @@ components/
     connection-status-badge.tsx # unset/active/invalid/pending pill (icon + label, never color-only)
     connection-invalid-banner.tsx # Per-user "connection down" notice + reload-API-key CTA
     credential-blocks.tsx       # Two-block "instance data vs your credentials" form scaffolding
-    credential-form.tsx         # Shared credential editor (url+db read-only, user+apikey editable; validates on save)
+    credential-form.tsx         # Shared credential editor (url+db read-only, user+apikey editable; validates on save); `hideInstanceInfo` drops the URL+DB block for the CLIENT_USER self-service view
     instance-create-form.tsx    # Create instance N (creator credentials optional from the 2nd)
     instance-health-summary.tsx # Active/unset/invalid/pending counts + seat usage at a glance
     invite-user-form.tsx        # Per-instance invite (seat paid/free + mode invite_only/precreds; blocks existing accounts)
     odoo-apikey-helper.tsx      # Collapsible "how to generate your Odoo API key" steps
   pricing/
     pricing-cards.tsx           # Plan cards (Free, Starter, Implementor); accepts currentTier prop; Stripe checkout/portal CTAs; Implementor detail modal
-    founding-partner-pricing.tsx # Founding Partner beta pricing: active founder card (rate from BillingState) + Standard/Enterprise "coming soon" cards (informative-only A11yModal on click)
+    founding-partner-pricing.tsx # Founding Partner beta pricing: active founder card (rate from BillingState) + Standard/Enterprise "coming soon" cards (informative-only modal on click)
+    founding-info-modal.tsx     # Shared "Founding Partners program" explainer — mailto-only CTA, no purchase flow, no data capture; used by both the pricing contrast cards and the gated /register CTA so the copy stays identical
   ui/
     error-toast.tsx             # Toast notification provider + display
     limit-reached-modal.tsx     # 402 payment limit upgrade modal
     password-input.tsx          # Password field with show/hide toggle (Eye/EyeOff)
     doc-num.tsx                 # Document number: `.docnum` pill for Client (only mono surface they see), `font-technical` plain for Builder
     powered-by.tsx              # Discreet "Powered by TheOdooAgent" lockup (Client-only footer)
-    founding-partner-badge.tsx  # "Founding Partner" badge — shown in expanded sidebar header below Wordmark; Builder-only by architecture (returns null for Client); gated on org.is_founding_partner !== false AND org.founder_since being set (real founder = connected + validated their first instance)
+    founding-partner-badge.tsx  # "Founding Partner" badge — CURRENTLY MOUNTED NOWHERE (removed from the sidebar header and Settings when the brand logo became universal; the sidebar header is now a white-label surface). Still self-gating: Builder-only, org.is_founding_partner !== false AND org.founder_since set. Safe to re-mount on a Builder-only surface — but not in the sidebar
     founder-clock-pill.tsx      # Floating "X days left" free-beta pill (Fase 0); Builder-only + real-founder gating (same as badge); mounted top-left of /settings
     info-tooltip.tsx            # Inline hover/tap help tooltip (audience-neutral); used for the Founding Partners program/scarcity copy on /register
+    fact-row.tsx                # Shared icon + label + body list row; used by IntroPanel and the implementer manual
 hooks/
   use-auth.tsx                  # Supabase auth context (login/register/logout, DEV MODE stub; password recovery via OTP: requestPasswordReset/verifyRecoveryCode/updatePassword; updateUserLang persists UI lang to metadata for localized emails)
   use-session.tsx               # /me endpoint context (user/org/subscription/odoo_configs bootstrap; always loads, even unauthenticated)
-  use-chat.ts                   # Chat state + SSE + image upload + action execution + clearChats (resets all chat state on logout)
+  use-chat.ts                   # Chat state + SSE + image upload + action execution + clearChats (resets all chat state on logout); owns the TTS audio player — adds `tts` to the stream body when entitled + local pref are both on, parses `audio` SSE events into it, exposes isPlayingAudio/stopAudio
   use-odoo-config.tsx           # Odoo config context; selection driven by per-user `connection_status === "active"` (chat-ready); activeConfigId persisted in localStorage; isDemoMode flag
   use-connection-validator.ts   # Wraps validateConnection with UI state (OK: company + version | discriminated error_code + per-field errors)
   use-pinned-insights.tsx       # Pinned insights context (pin/unpin/refresh/clear/loadAllPins); defensive payload validation
@@ -284,11 +293,16 @@ hooks/
   use-limit-reached-modal.tsx   # 402 limit modal context (listens to auth:limit_reached event)
   use-audience-translations.ts  # `useAudienceT(ns)` → translator scoped to `Builder.<ns>` or `Client.<ns>` based on role
   use-icon-size.ts              # `useIconSize(slot)` → role-aware icon size (builder: 16/20/24, client: 18/22/28)
-  use-intro.tsx                 # IntroProvider + useIntro: shared state for intro modal + info panel (open/close, dismissal persisted in localStorage `toa_intro_dismissed`)
+  use-voice-recorder.ts         # STT mic capture (MediaRecorder, webm/opus with mp4 fallback for iOS); manual stop only
+  use-audio-player.ts           # TTS playback queue — ordered by `sequence`, gapless via Web Audio API (not the <audio> element); unlock() must run synchronously inside a user gesture (iOS/Chrome autoplay policy)
+  use-voice-input.ts            # Shared STT wiring for both chat pages: resolves sttAvailable (entitlement AND local pref) and builds onTranscribe
+  use-intro.tsx                 # IntroProvider + useIntro: shared state for intro modal + BOTH drawers — info panel and How-it-works panel (open/close, dismissal persisted in localStorage `toa_intro_dismissed`)
   use-partner-nudge.tsx         # PartnerNudgeProvider + usePartnerNudge: event-driven nudge state machine (hidden → expanded after 2nd demo success → pill on minimize); dismissal persisted in localStorage `toa_partner_nudge_dismissed`
 lib/
-  api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route; getBillingState() fetches render-only billing context (falls back to BETA_BILLING_DEFAULTS)
+  api.ts                        # Centralized API client (30+ endpoints, authFetch with 401/402); tenant refactor adds validateConnection, fetchInstanceDetail, revalidate{My,User}Credential, CreateInvitationOptions; sendInvitationEmail() posts to the internal /api/send-invitation route; getBillingState() fetches render-only billing context (falls back to BETA_BILLING_DEFAULTS); voice adds transcribeAudio, fetchTtsVoices, fetchTtsPreview; branding adds uploadBrandLogo
   post-auth.ts                  # resolvePostAuthPath(meData) + onboarding-skip flag helpers (localStorage `toa_onboarding_skipped`)
+  seats.ts                      # deriveSeatState(seats) — single source of truth for paid/free seat availability in the invite form (selector vs auto-select vs disabled)
+  voice-prefs.ts                # Voice UI preferences in localStorage only (STT/TTS on-off, voice, speed, auto-send). NOT entitlements — the backend always re-validates
   types.ts                      # TypeScript interfaces (Message, Metadata, Action, Charts, Multi-tenant, Analytics; tenant refactor: OdooConnectionStatus, SeatType, InvitationMode, InstanceDetail/InstanceUser/InstanceInvitation, ValidateResult/ValidateErrorCode, InstanceCounts/InstanceSeats; Fase 0: BillingPhase, BillingState, MeOrg.is_founding_partner?, MeOrg.founder_rate_locked?; report-01: ReportTypeSelectionMetadata, PartnerFilterSelectionMetadata, SalespersonTypeSelectionMetadata, ContactTypeSelectionMetadata, PersonDisambiguationSelectionMetadata (kind: "person_disambiguation", role?, tooMany?), PersonRoleSelectionMetadata (kind: "person_role"), KindedSelectionMetadata union (all seven), report_combined action, FileAttachmentMetadata with pdf_base64; ActionLabels gains optional values?: ActionLabelValue[] for humanized read-only field display; report-offer: ReportOfferOption, ReportOfferSelectionMetadata (kind: "report_offer"), ActionContext gains optional domain?/total_count? for domain-based reports)
   invitation-email.ts           # Localized copy + HTML/text builder for the invitation email (es/en/fr/de/pt/it); content only — transport lives in app/api/send-invitation/route.ts
   supabase.ts                   # Supabase client singleton + IS_AUTH_ENABLED + getAccessToken
@@ -401,11 +415,36 @@ Individual alert displayed in the notification feed:
 - Click to dismiss or deep-link into chat with prompt injection
 
 ### ⌨️ ChatInput
-Auto-resizing textarea with image upload support:
+Auto-resizing textarea with image upload and voice support:
 - Paperclip button + file picker (`accept="image/*"`) are **temporarily hidden** (commented out, kept for future re-enable); the upload logic is preserved
 - Selected image shows as 64px thumbnail preview with X to remove
 - Supports sending text only, image only, or both together
 - Enter to send, Shift+Enter for newline
+- **Mic button** (STT) — recording state + manual stop; on stop it calls `/transcribe` and either fills the input or sends straight away, depending on the auto-send preference. Rendered only when the caller is entitled *and* has the local toggle on
+- **VoiceSettings popover** mounted inline, plus a stop-audio control while a TTS answer is playing
+- Accepts a `disabled` prop, used to block a CLIENT_USER whose Odoo Connection isn't active yet
+
+### 🎙️ VoiceSettings
+STT/TTS preferences popover (mounted inside `ChatInput`):
+- Mic toggle + auto-send-after-dictation toggle
+- TTS toggle, voice picker (catalog from `/voice/tts/voices`) and speed control
+- "Listen to a sample" preview button (`/voice/tts/preview` → raw MP3)
+- Preferences live in `localStorage` only (`lib/voice-prefs.ts`) — they are **preferences, not entitlements**; the backend re-validates every request server-side
+- Returns `null` when the caller has neither `voice_features.stt` nor `voice_features.tts`
+
+### 📘 HowItWorksPanel
+The second info drawer — Client-flavoured counterpart to `IntroPanel`:
+- Same drawer shape (right slide-in, focus trap, Esc-to-close, body scroll lock), state in `useIntro()`
+- Sections: hook, interactive example chips (clicking one starts a real chat), "seguro por diseño" card, connection CTA
+- Its sidebar entry (`HowItWorksSidebarItem`) is shown to **every** role, unlike the Builder-only intro item
+- Copy under the `HowItWorks.panel` namespace. A FAQ block exists in the file but is currently commented out
+
+### 🗂️ DomainCoverageCard
+One Odoo domain in the implementer manual (`/implementers`):
+- Model-name chips rendered in `font-technical` (`sale.order`, `account.move`, …)
+- Labelled sections: **Lectura** (always) then **Escritura confirmada** listing the concrete confirmed write actions — or "read-only for now" when the domain has none
+- Optional footer note for capabilities that are *not* confirmed end-to-end yet
+- **No binary read/write badge on purpose**: write support is uneven even inside one domain, so a badge would over-promise. Keep listing concrete actions when editing this
 
 ### 🕓 AuditHistoryPopover
 Action execution history timeline:
@@ -469,6 +508,8 @@ App loads → GET /me (no auth token)
 
 > Demo Mode lets visitors interact with the AI using a read-only Odoo demo instance — no account required. Unauthenticated users always land on `/chat` first; a "Sign in" link is visible in the sidebar bottom nav.
 
+**Registration is gated during the beta.** `/register` requires an access code matching `NEXT_PUBLIC_ACCESS_CODE` (falls back to `"odoopower"` when unset, so local/DEV keeps working). Until it matches, the submit button renders at `opacity-50` with `aria-disabled` and its handler returns early — deliberately *not* a real `disabled` attribute, so a click can open the shared `FoundingInfoModal` (program explainer, mailto-only CTA) instead of doing nothing. Visitors without a code get `mailto:` fallbacks. This is a funnel filter, **not** a security boundary: the check runs in the browser, and real authorization stays server-side.
+
 ### 🔑 Authenticated User (any role)
 
 ```
@@ -483,6 +524,8 @@ App loads → AuthProvider restores Supabase session
                                     (public paths exempt from redirect: /login, /register, /invite, /onboarding, /forgot-password, /reset-password)
          → 402 from any API call → show LimitReachedModal (no crash)
 ```
+
+**A CLIENT_USER without an active Connection cannot chat.** If the user is assigned to an instance whose `connection_status` is `unset` or `invalid` (and they are not in demo), both chat pages compute `isClientBlocked` and: show a warning banner linking to `/settings/odoo`, pass `disabled` to `ChatInput`, and redirect to `/settings/odoo` if a send is attempted anyway. That page renders a reduced view for Clients — `CredentialForm` receives `hideInstanceInfo` (no URL/DB block) and the "back to Settings" link is hidden, since a Client has no Settings page.
 
 ### 🛡️ Admin User
 
@@ -604,6 +647,8 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Odoo Connection** | `OdooConnectionStatus` = `unset` / `active` / `invalid` | Per-user, per-instance credential lifecycle (spec §4). `unset` = assigned but no valid key (blocking); `active` = validated; `invalid` = auth failed, flagged per user |
 | **Seats / Invitations** | `SeatType` (`paid`/`free`), `InvitationMode` (`invite_only`/`precreds`) | Invitations are per instance: pick a seat + whether the invitee loads their own key (invite_only) or the admin pre-loads it (precreds → active on accept) |
 | **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"`. Authed users with no active Connection also fall back to demo (banner CTA → setup) |
+| **Voice features** | `voice_features: { stt, tts }` on `MeResponse` | The **caller's effective** entitlement, computed server-side (per-user flag OR SUPERADMIN bypass, AND global kill switch, AND — for anonymous/demo — the backend demo flags). Gate all voice UI on this, never on the raw `stt_enabled`/`tts_enabled` admin flags. Org quotas `stt_slots_limit`/`tts_slots_limit` (-1 = unlimited, 0 = not contracted) are SUPERADMIN-managed; ADMINs grant the per-user flags within quota (409 `sttLimitReached`/`ttsLimitReached` on exhaustion). A third, independent layer is the user's own local toggle in `localStorage` |
+| **White-label branding** | `brand_name`, `brand_logo_url` (on `MeOrg`) | An uploaded org logo replaces the TheOdooAgent `Wordmark` in the sidebar header **for every role**. ADMINs upload from the Settings Org tab (`POST /admin/orgs/{id}/brand-logo`). The invite page shows the inviter's `brand_name` + instance `company_name`, so an invited end-client never sees who built the product |
 | **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over the **last AI message** only. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`), comment, and expected response. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |
 
 **Admin controls** are split across `/settings` and the dedicated routes:
@@ -612,6 +657,8 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 - Users: list, change role, toggle free/paid, remove (`/settings`); SOLITARY shows an upgrade banner
 - Invitations: created per instance with seat + mode (`/instances/[id]`); status list + cancel in `/settings`
 - Self-service: any user loads/edits/revalidates their own Odoo credentials (`/settings/odoo`)
+- White-label logo upload for the org (`/settings`, Org tab)
+- Per-user STT/TTS grants within the org's voice quota (`/settings`, Users tab); the org quotas themselves are superadmin-only
 
 ## 🔌 Communication Flow
 
@@ -692,6 +739,11 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | `GET` | `/admin/feedback/{id}` | Fetch single feedback report detail |
 | `PATCH` | `/admin/feedback/{id}` | Update report (status, admin_notes, is_hidden) |
 | `DELETE` | `/admin/feedback/{id}` | Delete feedback report |
+| `POST` | `/transcribe` | **STT** — FormData `{ file, language? }` → `{ text }`. Standalone: it never touches the chat/agent; the caller sends the resulting text through the normal stream afterwards |
+| `GET` | `/voice/tts/voices` | Active TTS provider's voice catalog → `{ provider, default_voice, voices: [{ id, label, lang }] }` |
+| `POST` | `/voice/tts/preview` | FormData `{ text (≤300 chars), voice?, speed? }` → raw MP3 (`audio/mpeg`), used by the voice picker's preview button |
+| `GET` | `/admin/voice/usage` | Aggregated STT/TTS usage (`?org_id=&date_from=&date_to=`) — superadmin only; metering foundation for usage-based billing |
+| `POST` | `/admin/orgs/{id}/brand-logo` | Upload the org's white-label logo (multipart `file`, png/jpeg/webp) → `{ brand_logo_url }`; 413/415/422 map to distinct inline errors |
 | `POST` | `/events` | Emit a landing funnel analytics event — body: `{ event, props, utm, session_id, ts }` (fire-and-forget, no auth required; auth token attached when available) |
 | `GET` | `/admin/events` | List analytics events (filterable by event, session_id, utm_source, utm_campaign, date range, has_user; paginated) — superadmin only |
 | `GET` | `/admin/events/stats` | Analytics stats dashboard: total, 24h, 7d, unique_sessions, by_event, funnel, by_utm_source, top_example_prompts, dismissals_by_reason — superadmin only |
@@ -803,6 +855,18 @@ When `labels.values` is present, `ActionProposalButton` renders the fields as a 
   "show": true
 }
 ```
+
+**Audio (TTS chunk — only when requested AND entitled):**
+```json
+{
+  "type": "audio",
+  "sequence": 1,
+  "audio_b64": "//uQxAAAAAAAAAAAAAAAAAAAAAAA…",
+  "mime": "audio/mpeg"
+}
+```
+
+Present only when the request body carried `tts` **and** the caller is entitled — otherwise the backend silently omits these events (it never errors, so the frontend can always send `tts` optimistically). Chunks are sequenced `1..N` and arrive after the text and structured events, once the graph's final state is known. They are enqueued into `useAudioPlayer` (Web Audio API, gapless, ordered by `sequence`) and **never rendered as chat content**. The spoken text is a deterministic backend-generated summary of the turn, not the literal chat text.
 
 **Error (terminal — backend graph failed mid-stream):**
 ```json
@@ -932,6 +996,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
 
 # Backend API base URL (default: http://localhost:8000)
 NEXT_PUBLIC_API_BASE=http://localhost:8000
+
+# Registration access code — gates /register during the Founding-Partners beta.
+# Unset falls back to "odoopower". Client-side funnel filter ONLY, never a
+# security boundary (real authorization is server-side).
+NEXT_PUBLIC_ACCESS_CODE=odoopower
 
 # Invitation email transport — server-side only (leave unset to disable email;
 # the invitation still gets created and the admin can copy the link manually)
@@ -1094,15 +1163,18 @@ Translations are located in `messages/[locale].json`.
 | `Odoo` | `Odoo.apiKeyHelper.*` — "how to generate your API key in Odoo" steps |
 | `PinnedInsights` | Pin/unpin tooltips, empty state, error messages |
 | `Notifications` | Alert feed, settings, time labels |
-| `Auth` | Login, register, DEV MODE bypass |
+| `Auth` | Login, register, DEV MODE bypass, password recovery + the `/register` access-code gate (`accessCodeLabel/Placeholder/Error`, `requestAccess`, `requestAccessEmail`) |
 | `Onboarding` | First-instance gate (configure now / keep demo) + two-block connect form, validation errors |
 | `LimitReachedModal` | 402 payment limit message |
 | `Invite` | Invitation acceptance (loading, success, error, expired) |
 | `LocaleSwitcher` | Language names |
-| `Intro` | Landing intro surfaces: `Intro.sidebarItem` (sidebar entry label), `Intro.modal.*` (welcome modal copy, example prompts, chips), `Intro.panel.*` (info drawer copy, sections, CTAs), `Intro.nudge.*` (partner reframe nudge: eyebrow, title, body, CTAs, pill/minimize labels) |
+| `Intro` | Landing intro surfaces: `Intro.sidebarItem` (sidebar entry label), `Intro.modal.*` (welcome modal copy, example prompts, chips), `Intro.panel.*` (info drawer copy, sections, CTAs — including `partner.manualLink` to the implementer manual), `Intro.nudge.*` (partner reframe nudge: eyebrow, title, body, CTAs, pill/minimize labels) |
+| `HowItWorks` | The second, Client-flavoured drawer: `HowItWorks.sidebarItem` + `HowItWorks.panel.*` (hook, example chips, "seguro por diseño" items, FAQ, connection CTA) |
+| `VoiceSettings` | STT/TTS preferences popover: mic + auto-send toggles, TTS toggle, voice/speed pickers, preview, stop-audio |
+| `ImplementerManual` | Technical manual at `/implementers`: hero, in-page nav, per-domain coverage (read + confirmed writes + "not yet" notes), security fact sheet, roadmap items and CTAs. Implementer-facing — hi/gu/ta/kn/mr carry English text. Odoo model names are NOT here (they live in the page's `DOMAINS` const so locales can't drift on them) |
 | `Builder.*` | Builder-voice strings — read via `useAudienceT("<ns>")` when role is ADMIN/SUPERADMIN. Includes `Builder.Trace` (LangGraph panel) and `Builder.ChatMessages` (e.g. typing indicator: "Ejecutando · query"). |
 | `Client.*` | Client-voice strings — read via `useAudienceT("<ns>")` when role is CLIENT_USER or anonymous. Includes `Client.ChatMessages`, `Client.ActionSuccess.<action>.<docType>` (success card headlines) and `Client.ActionProposal.verb.<action>.<docType>` (confirm-button labels). Every entry must have a `.generic` fallback. |
-| `FoundingPartner` | Badge label shown in the sidebar header for founding-partner orgs (`FoundingPartner.badge`) + free-beta clock copy (`clockDaysLeft`, `clockExpired`, `clockTooltip`) for `FounderClockPill`. Implementer-facing — hi/gu/ta/kn/mr carry English text. |
+| `FoundingPartner` | Badge label (`FoundingPartner.badge`) — note the badge itself is currently mounted nowhere, see `founding-partner-badge.tsx` — plus free-beta clock copy (`clockDaysLeft`, `clockExpired`, `clockTooltip`) for `FounderClockPill`. Implementer-facing — hi/gu/ta/kn/mr carry English text. |
 
 ---
 

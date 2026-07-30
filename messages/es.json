@@ -40,7 +40,8 @@
     "instances": "Instancias",
     "myConnection": "Mi conexión",
     "configureToChat": "Configurar para chatear",
-    "pricing": "Planes"
+    "pricing": "Planes",
+    "implementerManual": "Manual técnico"
   },
   "ChatGroups": {
     "today": "Hoy",
@@ -1005,7 +1006,8 @@
         "item2Body": "Gestionas todas las instancias de tus clientes desde un solo panel, aisladas.",
         "item3Label": "Cero instalación en el Odoo del cliente",
         "item3Body": "Conexión por API key estándar (XML-RPC). No se rompe en upgrades, sin mantenimiento.",
-        "cta": "Hablar con Martin"
+        "cta": "Hablar con Martin",
+        "manualLink": "Ver el manual técnico"
       },
       "secure": {
         "heading": "Seguro por diseño",
@@ -1258,5 +1260,171 @@
     "preview": "Escuchar ejemplo",
     "previewText": "Hola, así sueno yo.",
     "stopAudio": "Detener audio"
+  },
+  "ImplementerManual": {
+    "hero": {
+      "eyebrow": "Para implementadores de Odoo",
+      "title": "Manual técnico",
+      "subtitle": "Qué partes de Odoo cubre el agente hoy y con qué profundidad, cómo está construido por dentro, y qué estamos evaluando construir después. Escrito para quien instala y mantiene Odoo en producción para sus clientes.",
+      "updated": "Contenido verificado contra el sistema en producción"
+    },
+    "nav": {
+      "label": "Secciones de esta página",
+      "coverage": "Cobertura por dominio",
+      "security": "Seguridad y arquitectura",
+      "roadmap": "Roadmap abierto"
+    },
+    "coverage": {
+      "heading": "Cobertura funcional por dominio de Odoo",
+      "lead": "No es un chatbot genérico sobre Odoo. El requerimiento se resuelve mediante un motor determinista (keywords y reglas) que sabe exactamente qué modelos y campos tocar en cada dominio. El modelo de lenguaje (LLM) se utiliza únicamente al final para redactar la respuesta.",
+      "writeNote": "Toda operación de escritura, en cualquier dominio, pasa por una confirmación humana explícita antes de ejecutarse contra Odoo.",
+      "modelsLabel": "Modelos",
+      "readLabel": "Lectura",
+      "writeLabel": "Escritura confirmada",
+      "readOnlyLabel": "Por ahora, solo lectura: no hay escritura disponible en este dominio.",
+      "sales": {
+        "name": "Ventas / CRM",
+        "read": "Conteos, rankings (“los 5 productos más vendidos”) y agregaciones agrupadas por vendedor, equipo, categoría o mes. Filtros por fecha, incluida la fecha de cierre de oportunidades, y filtro por vendedor o cliente nombrado con desambiguación cuando hay varias coincidencias. Calcula tasa de conversión (win rate) y pipeline ponderado por probabilidad en el backend, nunca con el modelo de lenguaje. Entiende “mis oportunidades” y filtra por el usuario logueado.",
+        "w1": "Pedidos de venta: crear, editar, confirmar, cancelar y enviar por email",
+        "w2": "Oportunidades: cambiar de etapa, marcar ganada o perdida con motivo, asignar vendedor",
+        "w3": "Convertir un lead en oportunidad",
+        "w4": "Agendar una llamada o una reunión",
+        "limit": "Crear una oportunidad nueva desde cero por chat todavía no está disponible."
+      },
+      "finance": {
+        "name": "Finanzas",
+        "read": "Filtros de estado sobre facturas y notas de crédito (vencidas, pagadas, parciales, a cobrar, a pagar) y antigüedad de cobros en tramos de mora de 30, 60 y 90+ días, calculada en Python: no depende de módulos de Enterprise. Cualquier resultado se puede bajar en PDF o Excel con fila de totales.",
+        "w1": "Facturas: crear y editar",
+        "w2": "Facturas existentes: validar, cancelar y enviar por email"
+      },
+      "inventory": {
+        "name": "Inventario / Compras",
+        "read": "Catálogo con precio y existencia, filtro por disponibilidad de stock y ordenamiento por precio o por stock. Lectura sobre órdenes de compra, sus líneas y remitos.",
+        "w1": "Productos del catálogo: crear y editar",
+        "w2": "Órdenes de compra y remitos ya existentes: confirmar, cancelar, validar y enviar",
+        "limit": "Dar de alta una orden de compra nueva desde cero por chat todavía no está disponible."
+      },
+      "contacts": {
+        "name": "Contactos",
+        "read": "Distingue clientes, proveedores, empresas y personas. Búsqueda de nombre tolerante a acentos y mayúsculas, y para listados amplios ofrece filtrar por tipo antes de tirar todo el padrón.",
+        "w1": "Contactos: crear y editar",
+        "w2": "Clasificación automática (cliente, proveedor, empresa o solo contacto), resuelta con una pregunta corta cuando hace falta"
+      },
+      "hr": {
+        "name": "RRHH",
+        "read": "Legajo y roster de empleados, con nóminas y sus líneas. Las columnas se ajustan solas a lo que la instancia realmente tiene cargado: no muestra columnas vacías."
+      },
+      "projects": {
+        "name": "Proyectos",
+        "read": "Lectura profunda sobre proyectos, tareas y horas cargadas (timesheets).",
+        "w1": "Tareas ya existentes: acciones de flujo, por ejemplo marcarla como hecha",
+        "limit": "Dar de alta proyectos o tareas nuevas desde cero por chat todavía no está disponible."
+      },
+      "cross": {
+        "heading": "Capacidades transversales",
+        "memory": {
+          "label": "Conversación con memoria real",
+          "body": "Entiende referencias a la respuesta anterior —“¿y en marzo?”, “las vencidas de esas”, “dale, seguí”— sin que haya que repetir la consulta completa."
+        },
+        "languages": {
+          "label": "Multi-idioma",
+          "body": "El motor de conversación entiende y responde en español, inglés, francés, alemán, portugués e italiano. La interfaz suma hindi, gujarati, tamil, kannada y marathi: 11 idiomas en total."
+        },
+        "reports": {
+          "label": "Reportes en PDF y Excel",
+          "body": "Cualquier resultado se puede pedir como PDF o Excel, incluidos reportes agrupados —por vendedor, por mes— con fila de totales."
+        },
+        "adapts": {
+          "label": "Se adapta a instancias reales",
+          "body": "Detecta automáticamente la edición (Community, Enterprise, OCA) y la versión de Odoo, de la 14 a la 19. Si se pide algo que ese módulo o campo no tiene instalado, lo dice explícitamente en vez de inventar una respuesta."
+        },
+        "customModules": {
+          "label": "Tu ERP a medida, el agente lo entiende solo",
+          "body": "Si tenés módulos propios o de OCA, o campos hechos con Studio, el agente puede aprender a responder consultas sobre esos modelos leyendo los menús y las vistas que Odoo ya tiene: nombres, etiquetas y reglas de negocio declaradas en los filtros de búsqueda. Sin que nadie le enseñe nada a mano y sin configuración previa de tu lado."
+        }
+      }
+    },
+    "security": {
+      "heading": "Seguridad y arquitectura",
+      "lead": "Por qué un implementador puede confiar en conectar esto a la instancia productiva de un cliente.",
+      "confirm": {
+        "label": "Nada se ejecuta sin confirmación humana",
+        "body": "Para cualquier operación de escritura —crear o editar un registro, cambiar un estado— el agente arma una propuesta y la persona la tiene que confirmar explícitamente antes de que se ejecute contra Odoo. El agente nunca escribe por su cuenta.",
+        "note": "Esto aplica parejo a toda la escritura que el sistema soporta hoy, en todos los dominios: no existe una categoría de “escritura sin confirmar”. Lo que varía entre dominios es cuántas acciones de escritura hay disponibles todavía, nunca cuán seguras son."
+      },
+      "encryption": {
+        "label": "Credenciales cifradas, nunca en texto plano",
+        "body": "Cada API key de Odoo se guarda cifrada con Fernet, cifrado simétrico autenticado. Ni en la base ni en los logs queda la clave legible."
+      },
+      "perUser": {
+        "label": "Credenciales por usuario, no compartidas",
+        "body": "Cada persona se conecta con su propio usuario y API key de Odoo, así que el agente respeta los permisos que ya existen en Odoo para esa persona. No hay una credencial todopoderosa compartida por toda la organización."
+      },
+      "jwt": {
+        "label": "Autenticación por token en cada request",
+        "body": "Cada llamada a la API viaja con un JWT y su firma se verifica criptográficamente contra el JWKS del proveedor de identidad."
+      },
+      "tenancy": {
+        "label": "Aislamiento multi-tenant real",
+        "body": "Cada organización y cada conversación están aislados por identificador propio, con controles explícitos para que un usuario autenticado no pueda leer el historial ni los datos de otra organización u otro usuario adivinando un ID."
+      },
+      "readOnlyMode": {
+        "label": "Modo solo-lectura para sesiones de soporte",
+        "body": "Cuando alguien de soporte necesita mirar una instancia para diagnosticar, hay un modo que bloquea cualquier método de Odoo que no esté explícitamente permitido: lista blanca, no lista negra. Así ni un error humano ni un bug pueden terminar escribiendo en la base del cliente durante el soporte."
+      },
+      "ssrf": {
+        "label": "Protección contra URLs internas (SSRF)",
+        "body": "Al conectar una instancia, el sistema verifica que la URL apunte a una dirección pública real antes de intentar el handshake, y rechaza direcciones internas o privadas. Nadie puede usar el conector como puerta de entrada a una red interna."
+      },
+      "deterministic": {
+        "label": "Reglas primero, IA al final",
+        "body": "La clasificación de qué se está pidiendo se resuelve con reglas determinísticas. El modelo de lenguaje entra recién al final, para redactar: nunca para decidir qué escribir en Odoo ni para hacer cuentas. Los totales y los cálculos los hace el backend, para que ningún modelo pueda inventar un número."
+      },
+      "timeouts": {
+        "label": "Timeouts en cada llamada a Odoo",
+        "body": "Toda llamada XML-RPC tiene límite de tiempo. Si una instancia se cuelga, no se cuelga el agente con ella."
+      },
+      "errors": {
+        "label": "Los errores no exponen detalles internos",
+        "body": "Si algo falla, la persona ve un mensaje neutro y accionable. El detalle técnico queda solo en los logs del lado del servidor."
+      }
+    },
+    "roadmap": {
+      "heading": "Lo que estamos evaluando construir después",
+      "lead": "Esto no es un changelog ni una lista de promesas: es el menú abierto de los frentes que tenemos sobre la mesa hoy. No hay fechas comprometidas, y el orden lo define en buena medida lo que nos pidan los implementadores. Si algo de acá te desbloquea un cliente concreto, queremos saberlo.",
+      "queries": {
+        "label": "Más preguntas por dominio",
+        "body": "Márgenes por producto, categorías vía líneas de compra, país y geografía, etiquetas, almacenes en remitos. ¿Cuál te falta primero?"
+      },
+      "custom": {
+        "label": "Más profundidad en módulos propios y OCA",
+        "body": "Hoy el agente ya aprende solo el vocabulario de tus módulos custom; el paso siguiente es sumar más matices de filtro y reglas de negocio propias."
+      },
+      "typos": {
+        "label": "Tolerancia a errores de tipeo más amplia",
+        "body": "Hoy corrige tipeos en fechas, estados y tipo de consulta. La idea es extenderlo a más tipos de consulta."
+      },
+      "tracing": {
+        "label": "Trazabilidad más fina para diagnóstico",
+        "body": "Tiempos de respuesta por cada llamada a Odoo, no solo por paso del agente: útil cuando hay que mostrarle a un cliente dónde está la lentitud."
+      },
+      "progress": {
+        "label": "Progreso en vivo en operaciones largas",
+        "body": "Indicadores de conectando, en cola, ejecutando y validando, para que una consulta pesada no parezca colgada."
+      },
+      "hardening": {
+        "label": "Robustez interna de la plataforma",
+        "body": "Más pruebas automatizadas sobre la capa de administración y facturación del producto. No afecta a las instancias de tus clientes; es solidez nuestra."
+      },
+      "cta": "Contanos qué te serviría más",
+      "ctaNote": "Va directo por email a quien lo construye. Sin formularios ni tickets.",
+      "emailSubject": "Roadmap TheOdooAgent — feedback de implementador"
+    },
+    "closing": {
+      "heading": "¿Lo querés probar sobre una instancia real?",
+      "body": "Conectá una instancia con tu propio usuario de Odoo y probalo con datos reales antes de ofrecérselo a un cliente. La conexión es por API key: no instala módulos ni modifica la estructura de tu Odoo.",
+      "primary": "Conectar una instancia",
+      "secondary": "Ver planes"
+    }
   }
 }
