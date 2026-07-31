@@ -23,12 +23,9 @@ function formatClock(ms: number) {
 }
 
 /**
- * Compresses `src` into exactly `n` bars, keeping the PEAK of each bucket.
- * Averaging would flatten transients into a flat sausage once a bar covers
+ * Shrinks `src` into exactly `n` bars, keeping the PEAK of each bucket.
+ * Averaging would flatten transients into a flat sausage once one bar covers
  * dozens of samples; the peak preserves the shape of speech.
- *
- * Only ever called to shrink (src.length > n) — the waveform is never
- * upscaled, see `bars` below.
  */
 function bucketPeaks(src: number[], n: number): number[] {
   const out: number[] = new Array(n);
@@ -40,6 +37,26 @@ function bucketPeaks(src: number[], n: number): number[] {
       if (src[j] > peak) peak = src[j];
     }
     out[i] = peak;
+  }
+  return out;
+}
+
+/**
+ * Stretches `src` up to `n` bars by linear interpolation. Repeating each
+ * sample instead would draw a staircase (1s of audio = 20 samples over ~210
+ * bars = blocks of 10). Amplitude envelope is a continuous signal, so
+ * interpolating between samples is a reconstruction, not invented data.
+ */
+function interpolateTo(src: number[], n: number): number[] {
+  if (src.length === 1) return new Array<number>(n).fill(src[0]);
+  const out: number[] = new Array(n);
+  const last = src.length - 1;
+  for (let i = 0; i < n; i++) {
+    const pos = (i * last) / (n - 1);
+    const lo = Math.floor(pos);
+    const hi = Math.min(lo + 1, last);
+    const f = pos - lo;
+    out[i] = src[lo] * (1 - f) + src[hi] * f;
   }
   return out;
 }
@@ -128,22 +145,27 @@ export function VoiceRecorderBar({
   }, []);
 
   /**
-   * The waveform is NEVER upscaled. Two regimes, continuous at the crossover
-   * (when the history is exactly `slots` long both produce the same drawing):
+   * Two very different drawings, matching WhatsApp:
    *
-   *   history <= slots → draw it at natural density, one bar per sample. The
-   *                      track stays partly empty and the playhead dies where
-   *                      the recording actually ends.
-   *   history >  slots → live: window to the last `slots` (scrolls).
-   *                      paused: bucket the WHOLE history into `slots`.
+   *   recording → a TAPE running right-to-left. The newest sample is pinned to
+   *               the right edge and everything shifts one bar left on every
+   *               tick, from the very first sample. Nothing special happens
+   *               when the track fills up — the oldest bars just fall off the
+   *               left, because that motion was already happening. Whatever
+   *               isn't recorded yet is genuinely empty, no placeholder track.
+   *   paused    → the WHOLE recording resampled to exactly `slots`, always
+   *               spanning the full width: shrunk when it's longer, stretched
+   *               when it's shorter. The playhead therefore always sweeps end
+   *               to end, and bars map to time linearly in both regimes.
    *
-   * Either way bars map to time linearly, so `progress * bars.length` is the
-   * playhead — the mismatch that made playback drift is gone by construction.
+   * Resuming goes straight back to the live tape, showing the same fragment it
+   * had before the pause.
    */
   const bars = useMemo(() => {
-    if (slots === 0) return [];
-    if (levels.length <= slots) return levels;
-    return paused ? bucketPeaks(levels, slots) : levels.slice(-slots);
+    if (slots === 0 || levels.length === 0) return [];
+    if (!paused) return levels.slice(-slots);
+    if (levels.length === slots) return levels;
+    return levels.length > slots ? bucketPeaks(levels, slots) : interpolateTo(levels, slots);
   }, [levels, slots, paused]);
 
   const playedCount = paused ? Math.round(progress * bars.length) : bars.length;
@@ -184,32 +206,25 @@ export function VoiceRecorderBar({
 
         <div
           ref={trackRef}
-          className="flex flex-1 items-center overflow-hidden"
+          // justify-end pins "now" to the right edge while recording. Paused,
+          // bars.length === slots, so it fills the width and this is a no-op.
+          className="flex flex-1 items-center justify-end overflow-hidden"
           style={{ height: TRACK_H, gap: BAR_GAP }}
           role="img"
           aria-label={paused ? t("micPaused") : t("micRecording")}
         >
-          {Array.from({ length: slots }, (_, i) => {
-            const level = bars[i] ?? 0;
-            const recorded = i < bars.length;
-            // Empty slots stay visible as a flat track so a short recording
-            // reads as "partly filled" rather than as a rendering glitch.
-            const tone = !recorded
-              ? "bg-border"
-              : paused && i >= playedCount
-                ? "bg-text-muted"
-                : "bg-accent";
-            return (
-              <span
-                key={i}
-                className={`shrink-0 rounded-full ${tone}`}
-                style={{
-                  width: BAR_W,
-                  height: BAR_MIN_H + level * (TRACK_H - BAR_MIN_H),
-                }}
-              />
-            );
-          })}
+          {bars.map((level, i) => (
+            <span
+              key={i}
+              className={`shrink-0 rounded-full ${
+                !paused || i < playedCount ? "bg-accent" : "bg-text-muted"
+              }`}
+              style={{
+                width: BAR_W,
+                height: BAR_MIN_H + level * (TRACK_H - BAR_MIN_H),
+              }}
+            />
+          ))}
         </div>
 
         <VoiceSettings align="right" icon="settings" />
