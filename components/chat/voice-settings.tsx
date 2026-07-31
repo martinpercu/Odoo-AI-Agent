@@ -3,20 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { Volume2, VolumeX, Play, Loader2 } from "lucide-react";
+import { Volume2, VolumeX, Play, Loader2, Settings2 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { fetchTtsPreview, fetchTtsVoices } from "@/lib/api";
 import type { TtsVoice } from "@/lib/types";
 import {
-  getVoiceBoolPref,
   setVoiceBoolPref,
-  getVoicePref,
   setVoicePref,
   getVoiceForLang,
   setVoiceForLang,
   ttsLangBucket,
 } from "@/lib/voice-prefs";
+import { useVoiceBoolPref, useVoicePref } from "@/hooks/use-voice-prefs";
 
 const SPEED_OPTIONS = ["0.8", "1.0", "1.2"];
 
@@ -56,7 +55,16 @@ function PreviewButton({
  * at least one of the two features — server-side entitlement always wins;
  * these controls only decide whether an entitled user currently wants it on.
  */
-export function VoiceSettings() {
+interface VoiceSettingsProps {
+  /** Which edge the popover anchors to — "right" when the trigger sits at the
+   * end of a row (e.g. the recorder bar's top-right slot). */
+  align?: "left" | "right";
+  /** "volume" reflects the TTS on/off state; "settings" is the neutral gear
+   * used while recording, where a speaker icon would read as playback. */
+  icon?: "volume" | "settings";
+}
+
+export function VoiceSettings({ align = "left", icon = "volume" }: VoiceSettingsProps = {}) {
   const t = useTranslations("VoiceSettings");
   const locale = useLocale();
   const { meData } = useSession();
@@ -67,11 +75,13 @@ export function VoiceSettings() {
   const sttEntitled = meData?.voice_features?.stt ?? false;
   const ttsEntitled = meData?.voice_features?.tts ?? false;
 
-  const [sttOn, setSttOn] = useState(false);
-  const [autoSend, setAutoSend] = useState(true);
-  const [ttsOn, setTtsOn] = useState(false);
+  // Read straight from the pref store — no local mirror. A local copy would
+  // drift from the mic button in ChatInput, which reads the same store.
+  const sttOn = useVoiceBoolPref("stt", true);
+  const autoSend = useVoiceBoolPref("autoSend", true);
+  const ttsOn = useVoiceBoolPref("tts", false);
+  const speed = useVoicePref("speed", "1.0");
   const [voice, setVoice] = useState("");
-  const [speed, setSpeed] = useState("1.0");
   const [voices, setVoices] = useState<TtsVoice[]>([]);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
   const [previewing, setPreviewing] = useState(false);
@@ -84,14 +94,6 @@ export function VoiceSettings() {
   // With a single voice available for this language there is nothing to
   // choose: drop the picker and let the speed selector take its row.
   const showVoicePicker = !voicesLoaded || optionVoices.length > 1;
-
-  // Hydrate from localStorage once mounted (avoids SSR/client mismatch).
-  useEffect(() => {
-    setSttOn(getVoiceBoolPref("stt", true));
-    setAutoSend(getVoiceBoolPref("autoSend", true));
-    setTtsOn(getVoiceBoolPref("tts", false));
-    setSpeed(getVoicePref("speed", "1.0"));
-  }, []);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -136,16 +138,14 @@ export function VoiceSettings() {
 
   if (!sttEntitled && !ttsEntitled) return null;
 
+  // Writing to the store is enough — every reader re-renders from it.
   function toggleStt(value: boolean) {
-    setSttOn(value);
     setVoiceBoolPref("stt", value);
   }
   function toggleAutoSend(value: boolean) {
-    setAutoSend(value);
     setVoiceBoolPref("autoSend", value);
   }
   function toggleTts(value: boolean) {
-    setTtsOn(value);
     setVoiceBoolPref("tts", value);
   }
   function changeVoice(value: string) {
@@ -153,7 +153,6 @@ export function VoiceSettings() {
     setVoiceForLang(locale, value);
   }
   function changeSpeed(value: string) {
-    setSpeed(value);
     setVoicePref("speed", value);
   }
 
@@ -183,7 +182,9 @@ export function VoiceSettings() {
         aria-expanded={open}
         className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
       >
-        {ttsOn && ttsEntitled ? (
+        {icon === "settings" ? (
+          <Settings2 size={iconBtn - 4} strokeWidth={1.5} />
+        ) : ttsOn && ttsEntitled ? (
           <Volume2 size={iconBtn - 4} strokeWidth={1.5} />
         ) : (
           <VolumeX size={iconBtn - 4} strokeWidth={1.5} />
@@ -197,7 +198,7 @@ export function VoiceSettings() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute bottom-full left-0 mb-1 z-[60] w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-surface shadow-lg overflow-hidden"
+            className={`absolute bottom-full ${align === "right" ? "right-0" : "left-0"} mb-1 z-[60] w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-surface shadow-lg overflow-hidden`}
             role="dialog"
           >
             <div className="px-3 py-2 border-b border-border">

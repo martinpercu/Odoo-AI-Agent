@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSession } from "@/hooks/use-session";
 import { useToast } from "@/components/ui/error-toast";
 import { transcribeAudio } from "@/lib/api";
-import { getVoiceBoolPref } from "@/lib/voice-prefs";
+import { useVoiceBoolPref } from "@/hooks/use-voice-prefs";
 
 /** Agent-supported languages (see backend STT_FORCEABLE_LANGUAGES / root
  * CLAUDE.md — don't conflate with the UI's 11 locales). Anything else lets
@@ -24,9 +24,11 @@ export function useVoiceInput() {
   const locale = useLocale();
 
   const sttEntitled = meData?.voice_features?.stt ?? false;
-  const sttPrefOn = getVoiceBoolPref("stt", true);
+  // Reactive: VoiceSettings lives in a different branch of the tree, so a plain
+  // localStorage read here would not re-render when the user flips the toggle.
+  const sttPrefOn = useVoiceBoolPref("stt", true);
   const sttAvailable = sttEntitled && sttPrefOn;
-  const autoSendVoice = getVoiceBoolPref("autoSend", true);
+  const autoSendVoice = useVoiceBoolPref("autoSend", true);
 
   const onTranscribe = useCallback(
     async (blob: Blob): Promise<string | null> => {
