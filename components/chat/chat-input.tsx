@@ -89,6 +89,13 @@ export function ChatInput({
 
   const isRecordingUI = recorderState !== "idle";
 
+  // The voice-settings popover is reachable FROM the recorder bar, so the mic
+  // pref can be switched off mid-recording. Leaving the bar mounted for a
+  // feature the user just disabled is incoherent — drop the take.
+  useEffect(() => {
+    if (isRecordingUI && !sttAvailable) cancelRecording();
+  }, [isRecordingUI, sttAvailable, cancelRecording]);
+
   function handleMicClick() {
     // Must stay synchronous — it unlocks the TTS AudioContext inside the gesture.
     onBeforeRecord?.();
