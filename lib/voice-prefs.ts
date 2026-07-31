@@ -31,6 +31,7 @@ export function setVoicePref(key: VoicePrefKey, value: string): void {
   } catch {
     /* localStorage unavailable (private mode, quota) — silently no-op */
   }
+  emit();
 }
 
 export function getVoiceBoolPref(key: VoicePrefKey, fallback: boolean): boolean {
@@ -83,4 +84,46 @@ export function setVoiceForLang(locale: string, voiceId: string): void {
   } catch {
     /* localStorage unavailable (private mode, quota) — silently no-op */
   }
+  emit();
+}
+
+/* ---------------------------------------------------------------------------
+ * Reactivity
+ *
+ * These prefs are read from more than one place in the tree (the popover that
+ * writes them, and the chat page that decides whether to show the mic). Reading
+ * localStorage during render gives no way to notify the other readers, so a
+ * toggle only landed after some unrelated re-render. This turns the module into
+ * a proper external store — pair it with `useVoiceBoolPref` / `useVoicePref`
+ * (hooks/use-voice-prefs.ts), never with a bare get*() call inside a component
+ * body.
+ * ------------------------------------------------------------------------- */
+
+const listeners = new Set<() => void>();
+let storageBound = false;
+
+function emit(): void {
+  for (const listener of listeners) listener();
+}
+
+function onStorage(e: StorageEvent): void {
+  // e.key === null means the whole store was cleared.
+  const watched: string[] = [...Object.values(KEYS), VOICE_BY_LANG_KEY];
+  if (e.key === null || watched.includes(e.key)) emit();
+}
+
+/** Subscribe to any voice-pref change, including writes from another tab. */
+export function subscribeVoicePrefs(onChange: () => void): () => void {
+  listeners.add(onChange);
+  if (!storageBound && typeof window !== "undefined") {
+    window.addEventListener("storage", onStorage);
+    storageBound = true;
+  }
+  return () => {
+    listeners.delete(onChange);
+    if (listeners.size === 0 && storageBound) {
+      window.removeEventListener("storage", onStorage);
+      storageBound = false;
+    }
+  };
 }
