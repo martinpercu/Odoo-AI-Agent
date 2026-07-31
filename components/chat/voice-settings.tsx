@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { Volume2, VolumeX, Play, Loader2 } from "lucide-react";
+import { Volume2, VolumeX, Play, Loader2, Settings2 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { fetchTtsPreview, fetchTtsVoices } from "@/lib/api";
@@ -56,7 +56,16 @@ function PreviewButton({
  * at least one of the two features — server-side entitlement always wins;
  * these controls only decide whether an entitled user currently wants it on.
  */
-export function VoiceSettings() {
+interface VoiceSettingsProps {
+  /** Which edge the popover anchors to — "right" when the trigger sits at the
+   * end of a row (e.g. the recorder bar's top-right slot). */
+  align?: "left" | "right";
+  /** "volume" reflects the TTS on/off state; "settings" is the neutral gear
+   * used while recording, where a speaker icon would read as playback. */
+  icon?: "volume" | "settings";
+}
+
+export function VoiceSettings({ align = "left", icon = "volume" }: VoiceSettingsProps = {}) {
   const t = useTranslations("VoiceSettings");
   const locale = useLocale();
   const { meData } = useSession();
@@ -183,7 +192,9 @@ export function VoiceSettings() {
         aria-expanded={open}
         className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn text-text-secondary transition-colors hover:bg-raised hover:text-foreground"
       >
-        {ttsOn && ttsEntitled ? (
+        {icon === "settings" ? (
+          <Settings2 size={iconBtn - 4} strokeWidth={1.5} />
+        ) : ttsOn && ttsEntitled ? (
           <Volume2 size={iconBtn - 4} strokeWidth={1.5} />
         ) : (
           <VolumeX size={iconBtn - 4} strokeWidth={1.5} />
@@ -197,7 +208,7 @@ export function VoiceSettings() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute bottom-full left-0 mb-1 z-[60] w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-surface shadow-lg overflow-hidden"
+            className={`absolute bottom-full ${align === "right" ? "right-0" : "left-0"} mb-1 z-[60] w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-surface shadow-lg overflow-hidden`}
             role="dialog"
           >
             <div className="px-3 py-2 border-b border-border">
