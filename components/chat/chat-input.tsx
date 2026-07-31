@@ -7,6 +7,7 @@ import { Send, Square, Mic, MicOff, Loader2, /* Paperclip, */ X } from "lucide-r
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useVoiceRecorder } from "@/hooks/use-voice-recorder";
 import { VoiceSettings } from "@/components/chat/voice-settings";
+import { VoiceRecorderBar } from "@/components/chat/voice-recorder-bar";
 
 interface ChatInputProps {
   onSend: (message: string, image?: File) => void;
@@ -73,11 +74,25 @@ export function ChatInput({
     [onTranscribe, autoSendVoice, onSend]
   );
 
-  const { isRecording, micPermission, toggleRecording } = useVoiceRecorder(handleAudioReady);
+  const {
+    state: recorderState,
+    micPermission,
+    elapsedMs,
+    levels,
+    previewUrl,
+    start: startRecording,
+    pause: pauseRecording,
+    resume: resumeRecording,
+    cancel: cancelRecording,
+    finish: finishRecording,
+  } = useVoiceRecorder(handleAudioReady);
+
+  const isRecordingUI = recorderState !== "idle";
 
   function handleMicClick() {
+    // Must stay synchronous — it unlocks the TTS AudioContext inside the gesture.
     onBeforeRecord?.();
-    toggleRecording();
+    void startRecording();
   }
 
   // Cleanup preview URL on unmount or change
@@ -133,7 +148,11 @@ export function ChatInput({
   return (
     <div className="border-t border-border bg-base px-4 py-4">
       <div className="mx-auto max-w-3xl">
-        <div className="rounded-lg border border-border bg-surface shadow-sm transition-shadow focus-within:shadow-md focus-within:ring-2 focus-within:ring-accent/30">
+        <motion.div
+          layout
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          className="rounded-lg border border-border bg-surface shadow-sm transition-shadow focus-within:shadow-md focus-within:ring-2 focus-within:ring-accent/30"
+        >
           {/* Image preview */}
           <AnimatePresence>
             {imagePreview && (
@@ -187,90 +206,107 @@ export function ChatInput({
             )}
           </AnimatePresence>
 
-          <div className="flex items-end gap-2 p-2">
-            {/* Clip button — temporalmente oculto, dejar a tiro para futuro */}
-            {/*
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isStreaming || disabled}
-              className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
-              title={t("attachImage")}
-              aria-label={t("attachImage")}
+          {isRecordingUI ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
             >
-              <Paperclip size={iconBtn} strokeWidth={1.5} />
-            </button>
-            */}
-
-            <VoiceSettings />
-
-            <textarea
-              ref={textareaRef}
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-                adjustHeight();
-              }}
-              onKeyDown={handleKeyDown}
-              placeholder={t("placeholder")}
-              rows={1}
-              disabled={disabled}
-              className="max-h-50 min-h-input flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"
-            />
-
-            {sttAvailable && micPermission !== "unsupported" && (
+              <VoiceRecorderBar
+                paused={recorderState === "paused"}
+                elapsedMs={elapsedMs}
+                levels={levels}
+                previewUrl={previewUrl}
+                onCancel={cancelRecording}
+                onPause={pauseRecording}
+                onResume={resumeRecording}
+                onSend={finishRecording}
+              />
+            </motion.div>
+          ) : (
+            <div className="flex items-end gap-2 p-2">
+              {/* Clip button — temporalmente oculto, dejar a tiro para futuro */}
+              {/*
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
               <button
-                onClick={handleMicClick}
-                disabled={isStreaming || disabled || isTranscribing}
-                aria-label={isRecording ? t("micStop") : t("micStart")}
-                title={micPermission === "denied" ? t("micDenied") : undefined}
-                className={`flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn transition-colors disabled:opacity-40 ${
-                  isRecording
-                    ? "bg-error text-white hover:opacity-90"
-                    : micPermission === "denied"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isStreaming || disabled}
+                className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn text-text-secondary transition-colors hover:bg-raised hover:text-foreground disabled:opacity-40"
+                title={t("attachImage")}
+                aria-label={t("attachImage")}
+              >
+                <Paperclip size={iconBtn} strokeWidth={1.5} />
+              </button>
+              */}
+
+              <VoiceSettings />
+
+              <textarea
+                ref={textareaRef}
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  adjustHeight();
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder={isTranscribing ? t("transcribing") : t("placeholder")}
+                rows={1}
+                disabled={disabled}
+                className="max-h-50 min-h-input flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"
+              />
+
+              {sttAvailable && micPermission !== "unsupported" && (
+                <button
+                  onClick={handleMicClick}
+                  disabled={isStreaming || disabled || isTranscribing}
+                  aria-label={t("micStart")}
+                  title={micPermission === "denied" ? t("micDenied") : undefined}
+                  className={`flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn transition-colors disabled:opacity-40 ${
+                    micPermission === "denied"
                       ? "text-error hover:bg-raised"
                       : "text-text-secondary hover:bg-raised hover:text-foreground"
-                }`}
-              >
-                {isTranscribing ? (
-                  <Loader2 size={iconBtn - 4} strokeWidth={1.5} className="animate-spin" />
-                ) : micPermission === "denied" ? (
-                  <MicOff size={iconBtn - 4} strokeWidth={1.5} />
-                ) : (
-                  <Mic size={iconBtn - 4} strokeWidth={1.5} />
-                )}
-              </button>
-            )}
+                  }`}
+                >
+                  {isTranscribing ? (
+                    <Loader2 size={iconBtn - 4} strokeWidth={1.5} className="animate-spin" />
+                  ) : micPermission === "denied" ? (
+                    <MicOff size={iconBtn - 4} strokeWidth={1.5} />
+                  ) : (
+                    <Mic size={iconBtn - 4} strokeWidth={1.5} />
+                  )}
+                </button>
+              )}
 
-            {isStreaming ? (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-                onClick={onStop}
-                aria-label={t("stop")}
-                className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn bg-error text-white transition-colors hover:opacity-90"
-              >
-                <Square size={iconBtn - 4} strokeWidth={1.5} fill="currentColor" />
-              </motion.button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={!hasContent || disabled}
-                aria-label={t("send")}
-                className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn bg-accent text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:hover:bg-accent"
-              >
-                <Send size={iconBtn - 4} strokeWidth={1.5} />
-              </button>
-            )}
-          </div>
-        </div>
+              {isStreaming ? (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  onClick={onStop}
+                  aria-label={t("stop")}
+                  className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn bg-error text-white transition-colors hover:opacity-90"
+                >
+                  <Square size={iconBtn - 4} strokeWidth={1.5} fill="currentColor" />
+                </motion.button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!hasContent || disabled}
+                  aria-label={t("send")}
+                  className="flex h-btn-md w-btn-md shrink-0 items-center justify-center rounded-btn bg-accent text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:hover:bg-accent"
+                >
+                  <Send size={iconBtn - 4} strokeWidth={1.5} />
+                </button>
+              )}
+            </div>
+          )}
+        </motion.div>
       </div>
     </div>
   );
