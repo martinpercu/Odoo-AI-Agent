@@ -9,14 +9,13 @@ import { useIconSize } from "@/hooks/use-icon-size";
 import { fetchTtsPreview, fetchTtsVoices } from "@/lib/api";
 import type { TtsVoice } from "@/lib/types";
 import {
-  getVoiceBoolPref,
   setVoiceBoolPref,
-  getVoicePref,
   setVoicePref,
   getVoiceForLang,
   setVoiceForLang,
   ttsLangBucket,
 } from "@/lib/voice-prefs";
+import { useVoiceBoolPref, useVoicePref } from "@/hooks/use-voice-prefs";
 
 const SPEED_OPTIONS = ["0.8", "1.0", "1.2"];
 
@@ -76,11 +75,13 @@ export function VoiceSettings({ align = "left", icon = "volume" }: VoiceSettings
   const sttEntitled = meData?.voice_features?.stt ?? false;
   const ttsEntitled = meData?.voice_features?.tts ?? false;
 
-  const [sttOn, setSttOn] = useState(false);
-  const [autoSend, setAutoSend] = useState(true);
-  const [ttsOn, setTtsOn] = useState(false);
+  // Read straight from the pref store — no local mirror. A local copy would
+  // drift from the mic button in ChatInput, which reads the same store.
+  const sttOn = useVoiceBoolPref("stt", true);
+  const autoSend = useVoiceBoolPref("autoSend", true);
+  const ttsOn = useVoiceBoolPref("tts", false);
+  const speed = useVoicePref("speed", "1.0");
   const [voice, setVoice] = useState("");
-  const [speed, setSpeed] = useState("1.0");
   const [voices, setVoices] = useState<TtsVoice[]>([]);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
   const [previewing, setPreviewing] = useState(false);
@@ -93,14 +94,6 @@ export function VoiceSettings({ align = "left", icon = "volume" }: VoiceSettings
   // With a single voice available for this language there is nothing to
   // choose: drop the picker and let the speed selector take its row.
   const showVoicePicker = !voicesLoaded || optionVoices.length > 1;
-
-  // Hydrate from localStorage once mounted (avoids SSR/client mismatch).
-  useEffect(() => {
-    setSttOn(getVoiceBoolPref("stt", true));
-    setAutoSend(getVoiceBoolPref("autoSend", true));
-    setTtsOn(getVoiceBoolPref("tts", false));
-    setSpeed(getVoicePref("speed", "1.0"));
-  }, []);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -145,16 +138,14 @@ export function VoiceSettings({ align = "left", icon = "volume" }: VoiceSettings
 
   if (!sttEntitled && !ttsEntitled) return null;
 
+  // Writing to the store is enough — every reader re-renders from it.
   function toggleStt(value: boolean) {
-    setSttOn(value);
     setVoiceBoolPref("stt", value);
   }
   function toggleAutoSend(value: boolean) {
-    setAutoSend(value);
     setVoiceBoolPref("autoSend", value);
   }
   function toggleTts(value: boolean) {
-    setTtsOn(value);
     setVoiceBoolPref("tts", value);
   }
   function changeVoice(value: string) {
@@ -162,7 +153,6 @@ export function VoiceSettings({ align = "left", icon = "volume" }: VoiceSettings
     setVoiceForLang(locale, value);
   }
   function changeSpeed(value: string) {
-    setSpeed(value);
     setVoicePref("speed", value);
   }
 
