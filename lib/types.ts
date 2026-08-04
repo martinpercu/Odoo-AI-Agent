@@ -158,6 +158,23 @@ export interface AggReportSelectionMetadata {
   options: AggReportOption[];
 }
 
+// Stage drill-down: one chip per CRM stage. Clicking sends `value` as a normal
+// chat message (verbatim) — the same non-blocking pattern as report_offer.
+// `stageId`/`count` are informational only (React key / analytics) and must
+// never be sent to the backend.
+export interface StageDrilldownOption {
+  label: string;
+  value: string;
+  stageId: number;
+  count: number;
+}
+
+export interface StageDrilldownSelectionMetadata {
+  type: "selection_prompt";
+  kind: "stage_drilldown";
+  options: StageDrilldownOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
@@ -167,7 +184,8 @@ export type KindedSelectionMetadata =
   | PersonDisambiguationSelectionMetadata
   | PersonRoleSelectionMetadata
   | ReportOfferSelectionMetadata
-  | AggReportSelectionMetadata;
+  | AggReportSelectionMetadata
+  | StageDrilldownSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -214,6 +232,7 @@ export type MessageMetadata =
   | PersonRoleSelectionMetadata
   | ReportOfferSelectionMetadata
   | AggReportSelectionMetadata
+  | StageDrilldownSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
@@ -225,6 +244,7 @@ export interface Message {
   timestamp: Date;
   metadata?: MessageMetadata;
   charts?: ChartSSEEvent[];
+  recordLinks?: RecordLinksEvent[];
   imageUrl?: string;
   /** Whether to show "Powered by The Odoo Agent" watermark. Undefined = show (safe default). */
   watermark?: boolean;
@@ -306,6 +326,22 @@ export interface ExportSSEEvent {
   type: "export";
   export_url: string;
   filename: string;
+}
+
+// Clickable links to the underlying Odoo records the agent just listed
+// (record-links.md contract). Generic across models — `model` is technical
+// and must never be shown to the user; `url` is absolute and used verbatim.
+export interface OdooRecordLink {
+  id: number;
+  name: string;
+  url: string;
+}
+
+export interface RecordLinksEvent {
+  type: "record_links";
+  model: string; // technical — never display
+  tooltip: string; // already localized by the backend
+  records: OdooRecordLink[];
 }
 
 /** TTS audio chunk SSE event — see PLAN_STT_TTS.md Etapa 5. Emitted only when
