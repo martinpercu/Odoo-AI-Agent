@@ -10,6 +10,7 @@ import type {
   ActionSuccessMetadata,
   FileAttachmentMetadata,
   ChartSSEEvent,
+  RecordLinksEvent,
   ExcelExportMetadata,
   NoCredentialsMetadata,
 } from "@/lib/types";
@@ -373,6 +374,7 @@ export function useChat(chatId?: string, userId?: string) {
         let accumulated = "";
         let buffer = "";
         let charts: ChartSSEEvent[] = [];
+        let recordLinks: RecordLinksEvent[] = [];
         // Watermark: safe default = not show. Only shows when backend explicitly sends show: true.
         let showWatermark: boolean | undefined = undefined;
 
@@ -386,6 +388,7 @@ export function useChat(chatId?: string, userId?: string) {
           const snap = accumulated;
           const meta = lastMetadata;
           const chartSnap = charts;
+          const recordLinksSnap = recordLinks;
           const wm = showWatermark;
           updateChat(targetId, (c) => ({
             ...c,
@@ -396,6 +399,7 @@ export function useChat(chatId?: string, userId?: string) {
                     content: snap,
                     ...(meta && { metadata: meta }),
                     ...(chartSnap.length > 0 && { charts: chartSnap }),
+                    ...(recordLinksSnap.length > 0 && { recordLinks: recordLinksSnap }),
                     watermark: wm,
                   }
                 : m
@@ -469,6 +473,9 @@ export function useChat(chatId?: string, userId?: string) {
                     } else if (parsed.type === "chart") {
                       charts = [...charts, parsed as ChartSSEEvent];
                       text = "";
+                    } else if (parsed.type === "record_links") {
+                      recordLinks = [...recordLinks, parsed as RecordLinksEvent];
+                      text = "";
                     } else if (parsed.type === "export") {
                       metadata = {
                         type: "excel_export",
@@ -507,6 +514,7 @@ export function useChat(chatId?: string, userId?: string) {
                                 ...m,
                                 content: finalContent,
                                 ...(charts.length > 0 && { charts }),
+                                ...(recordLinks.length > 0 && { recordLinks }),
                                 watermark: showWatermark,
                               }
                             : m

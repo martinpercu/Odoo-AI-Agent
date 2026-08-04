@@ -21,7 +21,7 @@ A multi-tenant, **ChatGPT-style interface** that lets anyone query and manage th
 >
 > **This repo is the frontend.** The conversational intelligence — a **21-node LangGraph agent**, keyword-first/LLM-last pipeline, computed-facts engine, multi-tenant auth, OCR and proactive monitoring — lives in a separate backend service (private repo).
 >
-> ### 👉 **[Read the Backend Architecture →](DOCS/BACKEND_ARCHITECTURE.md)**
+> ### 👉 **[Read the Backend Architecture →](documents/BACKEND_ARCHITECTURE.md)**
 >
 > Agent flow diagram · node pipeline · query planning · multi-tenancy & RBAC · Stripe billing · OCR extraction · the full SSE event contract.
 
@@ -1186,7 +1186,7 @@ Translations are located in `messages/[locale].json`.
 
 The agent that powers every response — its 21-node LangGraph pipeline, query planning, computed-facts engine, OCR and multi-tenancy — is documented separately.
 
-**[📖 Read the Backend Architecture →](DOCS/BACKEND_ARCHITECTURE.md)**
+**[📖 Read the Backend Architecture →](documents/BACKEND_ARCHITECTURE.md)**
 
 Built with ❤️ using **Next.js 16 · React 19 · TypeScript · Tailwind CSS v4**
 

@@ -23,6 +23,8 @@ import { SelectionCard } from "./selection-card";
 import { ReportTypeCard } from "./report-type-card";
 import { ReportOfferCard } from "./report-offer-card";
 import { AggReportCard } from "./agg-report-card";
+import { StageDrilldownCard } from "./stage-drilldown-card";
+import { RecordLinksCard } from "./record-links-card";
 import { OdooFileCard } from "./odoo-file-card";
 import { OdooChartCard } from "./odoo-chart-card";
 import { ExcelExportCard } from "./excel-export-card";
@@ -211,6 +213,11 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                                 metadata={message.metadata}
                                 onPick={handleAggReport}
                               />
+                            ) : message.metadata.kind === "stage_drilldown" ? (
+                              <StageDrilldownCard
+                                metadata={message.metadata}
+                                onSelect={(value) => sendMessage(value)}
+                              />
                             ) : (
                               <ReportTypeCard
                                 metadata={message.metadata}
@@ -238,6 +245,13 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                       <>
                         {message.charts.map((chart, ci) => (
                           <OdooChartCard key={`chart-${ci}`} chart={chart} messageId={message.id} chartIndex={ci} />
+                        ))}
+                      </>
+                    )}
+                    {message.recordLinks && message.recordLinks.length > 0 && (
+                      <>
+                        {message.recordLinks.map((event, ri) => (
+                          <RecordLinksCard key={`record-links-${ri}`} event={event} />
                         ))}
                       </>
                     )}
