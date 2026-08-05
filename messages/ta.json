@@ -123,7 +123,15 @@
       "noData": "காட்ட தரவு இல்லை",
       "groupedBy": "குழுவாக்கம்:",
       "downloadExcel": "Excel பதிவிறக்கவும்",
-      "exportReady": "உங்கள் Excel கோப்பு தயாராக உள்ளது"
+      "exportReady": "உங்கள் Excel கோப்பு தயாராக உள்ளது",
+      "viewAs": {
+        "label": "இவ்வாறு காட்டு",
+        "bar": "பட்டை",
+        "line": "கோடு",
+        "pie": "வட்டம்",
+        "table": "அட்டவணை"
+      },
+      "others": "மற்றவை"
     },
     "actionProposal": {
       "editField": "திருத்தவும்",

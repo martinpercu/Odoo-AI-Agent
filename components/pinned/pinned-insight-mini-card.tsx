@@ -2,9 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { BarChart3, PieChart, TrendingUp, FileText, FileSpreadsheet, X, Download, RefreshCw } from "lucide-react";
+import { BarChart3, PieChart, TrendingUp, Table as TableIcon, FileText, FileSpreadsheet, X, Download, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { PinnedInsight } from "@/lib/types";
+import type { LucideIcon } from "lucide-react";
+import type { ChartSSEEvent, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -13,10 +14,11 @@ interface PinnedInsightMiniCardProps {
   pin: PinnedInsight;
 }
 
-const chartIcons = {
+const chartIcons: Record<ChartSSEEvent["chart_type"], LucideIcon> = {
   bar: BarChart3,
   pie: PieChart,
   line: TrendingUp,
+  table: TableIcon,
 };
 
 function formatTotal(total: number, format: string, symbol: string): string {

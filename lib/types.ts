@@ -314,7 +314,10 @@ export interface PinQueryContext {
 
 export interface ChartSSEEvent {
   type: "chart";
-  chart_type: "bar" | "pie" | "line";
+  // "table" is a user-requested format ("mostrámelo en tabla") — the backend
+  // sends the same aggregation payload and the card renders rows instead of a
+  // chart. Requested via helpers/chart_request.py on the backend.
+  chart_type: "bar" | "pie" | "line" | "table";
   title: string;
   data: ChartDataPoint[];
   meta: ChartMeta;

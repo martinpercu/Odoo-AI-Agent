@@ -123,7 +123,15 @@
       "noData": "No data to display",
       "groupedBy": "Grouped by",
       "downloadExcel": "Download Excel",
-      "exportReady": "Your Excel file is ready"
+      "exportReady": "Your Excel file is ready",
+      "viewAs": {
+        "label": "View as",
+        "bar": "Bars",
+        "line": "Line",
+        "pie": "Pie",
+        "table": "Table"
+      },
+      "others": "Others"
     },
     "actionProposal": {
       "editField": "Edit",

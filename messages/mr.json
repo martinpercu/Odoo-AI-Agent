@@ -123,7 +123,15 @@
       "noData": "दाखवण्यासाठी डेटा नाही",
       "groupedBy": "गटबद्ध",
       "downloadExcel": "Excel डाउनलोड करा",
-      "exportReady": "तुमची Excel फाइल तयार आहे"
+      "exportReady": "तुमची Excel फाइल तयार आहे",
+      "viewAs": {
+        "label": "असे पहा",
+        "bar": "बार",
+        "line": "रेषा",
+        "pie": "पाय",
+        "table": "तक्ता"
+      },
+      "others": "इतर"
     },
     "actionProposal": {
       "editField": "संपादित करा",

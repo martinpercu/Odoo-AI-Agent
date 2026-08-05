@@ -123,7 +123,15 @@
       "noData": "Aucune donnée à afficher",
       "groupedBy": "Groupé par",
       "downloadExcel": "Télécharger Excel",
-      "exportReady": "Votre fichier Excel est prêt"
+      "exportReady": "Votre fichier Excel est prêt",
+      "viewAs": {
+        "label": "Afficher en",
+        "bar": "Barres",
+        "line": "Courbe",
+        "pie": "Camembert",
+        "table": "Tableau"
+      },
+      "others": "Autres"
     },
     "actionProposal": {
       "editField": "Modifier",
