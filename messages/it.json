@@ -123,7 +123,15 @@
       "noData": "Nessun dato da visualizzare",
       "groupedBy": "Raggruppato per",
       "downloadExcel": "Scarica Excel",
-      "exportReady": "Il tuo file Excel è pronto"
+      "exportReady": "Il tuo file Excel è pronto",
+      "viewAs": {
+        "label": "Visualizza come",
+        "bar": "Barre",
+        "line": "Linea",
+        "pie": "Torta",
+        "table": "Tabella"
+      },
+      "others": "Altri"
     },
     "actionProposal": {
       "editField": "Modifica",

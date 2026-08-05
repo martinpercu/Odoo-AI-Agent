@@ -123,7 +123,15 @@
       "noData": "Keine Daten zum Anzeigen",
       "groupedBy": "Gruppiert nach",
       "downloadExcel": "Excel herunterladen",
-      "exportReady": "Ihre Excel-Datei ist fertig"
+      "exportReady": "Ihre Excel-Datei ist fertig",
+      "viewAs": {
+        "label": "Anzeigen als",
+        "bar": "Balken",
+        "line": "Linie",
+        "pie": "Kreis",
+        "table": "Tabelle"
+      },
+      "others": "Andere"
     },
     "actionProposal": {
       "editField": "Bearbeiten",

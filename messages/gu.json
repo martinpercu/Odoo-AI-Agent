@@ -123,7 +123,15 @@
       "noData": "દર્શાવવા ડેટા નથી",
       "groupedBy": "ગ્રૂપ:",
       "downloadExcel": "Excel ડાઉનલોડ કરો",
-      "exportReady": "તમારી Excel ફાઇલ તૈયાર છે"
+      "exportReady": "તમારી Excel ફાઇલ તૈયાર છે",
+      "viewAs": {
+        "label": "આ રીતે જુઓ",
+        "bar": "બાર",
+        "line": "રેખા",
+        "pie": "પાઇ",
+        "table": "કોષ્ટક"
+      },
+      "others": "અન્ય"
     },
     "actionProposal": {
       "editField": "સંપાદિત કરો",

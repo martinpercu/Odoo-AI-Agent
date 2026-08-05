@@ -123,7 +123,15 @@
       "noData": "ಪ್ರದರ್ಶಿಸಲು ಡೇಟಾ ಇಲ್ಲ",
       "groupedBy": "ಗುಂಪು ಮಾಡಲಾಗಿದೆ",
       "downloadExcel": "Excel ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
-      "exportReady": "ನಿಮ್ಮ Excel ಫೈಲ್ ಸಿದ್ಧವಾಗಿದೆ"
+      "exportReady": "ನಿಮ್ಮ Excel ಫೈಲ್ ಸಿದ್ಧವಾಗಿದೆ",
+      "viewAs": {
+        "label": "ಈ ರೀತಿ ನೋಡಿ",
+        "bar": "ಬಾರ್",
+        "line": "ರೇಖೆ",
+        "pie": "ಪೈ",
+        "table": "ಕೋಷ್ಟಕ"
+      },
+      "others": "ಇತರೆ"
     },
     "actionProposal": {
       "editField": "ಸಂಪಾದಿಸಿ",
