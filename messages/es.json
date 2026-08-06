@@ -41,7 +41,8 @@
     "myConnection": "Mi conexión",
     "configureToChat": "Configurar para chatear",
     "pricing": "Planes",
-    "implementerManual": "Manual técnico"
+    "implementerManual": "Manual técnico",
+    "routines": "Rutinas"
   },
   "ChatGroups": {
     "today": "Hoy",
@@ -1441,5 +1442,26 @@
       "primary": "Conectar una instancia",
       "secondary": "Ver planes"
     }
+  },
+  "Routines": {
+    "title": "Rutinas",
+    "subtitle": "Consultas pre-armadas que producen un entregable sobre tu instancia de Odoo.",
+    "catalog": "Catálogo",
+    "inProgress": "En curso",
+    "history": "Historial",
+    "run": "Ejecutar",
+    "rerun": "Volver a correr",
+    "regenerate": "Regenerar",
+    "download": "Descargar",
+    "running": "Ejecutando…",
+    "progress": "{done} de {total} pasos",
+    "stepCount": "{count} pasos",
+    "partialNote": "Algunos pasos no se pudieron completar. El informe se generó igual, con esas secciones anotadas.",
+    "emptyCatalog": "No hay Rutinas disponibles para esta instancia.",
+    "emptyHistory": "Todavía no corriste ninguna Rutina.",
+    "noInstance": "Conectá una instancia de Odoo para poder ejecutar Rutinas.",
+    "startFailed": "No se pudo iniciar la Rutina.",
+    "tooManyRuns": "Hay demasiadas Rutinas corriendo ahora mismo. Probá de nuevo en unos segundos.",
+    "downloadFailed": "No se pudo generar el archivo."
   }
 }

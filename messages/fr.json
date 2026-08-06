@@ -41,7 +41,8 @@
     "myConnection": "Ma connexion",
     "configureToChat": "Configurer pour discuter",
     "pricing": "Tarifs",
-    "implementerManual": "Manuel technique"
+    "implementerManual": "Manuel technique",
+    "routines": "Routines"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -1441,5 +1442,26 @@
       "primary": "Connecter une instance",
       "secondary": "Voir les offres"
     }
+  },
+  "Routines": {
+    "title": "Routines",
+    "subtitle": "Des requêtes prêtes à l'emploi qui produisent un livrable sur votre instance Odoo.",
+    "catalog": "Catalogue",
+    "inProgress": "En cours",
+    "history": "Historique",
+    "run": "Exécuter",
+    "rerun": "Relancer",
+    "regenerate": "Régénérer",
+    "download": "Télécharger",
+    "running": "Exécution…",
+    "progress": "{done} sur {total} étapes",
+    "stepCount": "{count} étapes",
+    "partialNote": "Certaines étapes n'ont pas pu être complétées. Le rapport a été généré, avec ces sections signalées.",
+    "emptyCatalog": "Aucune routine disponible pour cette instance.",
+    "emptyHistory": "Vous n'avez encore exécuté aucune routine.",
+    "noInstance": "Connectez une instance Odoo pour exécuter des routines.",
+    "startFailed": "Impossible de démarrer la routine.",
+    "tooManyRuns": "Trop de routines s'exécutent en ce moment. Réessayez dans quelques secondes.",
+    "downloadFailed": "Impossible de générer le fichier."
   }
 }

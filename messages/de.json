@@ -41,7 +41,8 @@
     "myConnection": "Meine Verbindung",
     "configureToChat": "Zum Chatten einrichten",
     "pricing": "Preise",
-    "implementerManual": "Technisches Handbuch"
+    "implementerManual": "Technisches Handbuch",
+    "routines": "Routinen"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -1441,5 +1442,26 @@
       "primary": "Instanz verbinden",
       "secondary": "Tarife ansehen"
     }
+  },
+  "Routines": {
+    "title": "Routinen",
+    "subtitle": "Vorgefertigte Abfragen, die ein Ergebnis zu Ihrer Odoo-Instanz liefern.",
+    "catalog": "Katalog",
+    "inProgress": "Läuft",
+    "history": "Verlauf",
+    "run": "Ausführen",
+    "rerun": "Erneut ausführen",
+    "regenerate": "Neu erzeugen",
+    "download": "Herunterladen",
+    "running": "Läuft…",
+    "progress": "{done} von {total} Schritten",
+    "stepCount": "{count} Schritte",
+    "partialNote": "Einige Schritte konnten nicht abgeschlossen werden. Der Bericht wurde trotzdem erstellt, diese Abschnitte sind vermerkt.",
+    "emptyCatalog": "Für diese Instanz sind keine Routinen verfügbar.",
+    "emptyHistory": "Sie haben noch keine Routine ausgeführt.",
+    "noInstance": "Verbinden Sie eine Odoo-Instanz, um Routinen auszuführen.",
+    "startFailed": "Die Routine konnte nicht gestartet werden.",
+    "tooManyRuns": "Derzeit laufen zu viele Routinen. Versuchen Sie es in ein paar Sekunden erneut.",
+    "downloadFailed": "Die Datei konnte nicht erzeugt werden."
   }
 }

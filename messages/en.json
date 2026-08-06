@@ -41,7 +41,8 @@
     "myConnection": "My connection",
     "configureToChat": "Set up to chat",
     "pricing": "Pricing",
-    "implementerManual": "Technical manual"
+    "implementerManual": "Technical manual",
+    "routines": "Routines"
   },
   "ChatGroups": {
     "today": "Today",
@@ -1441,5 +1442,26 @@
       "primary": "Connect an instance",
       "secondary": "See plans"
     }
+  },
+  "Routines": {
+    "title": "Routines",
+    "subtitle": "Pre-built queries that produce a deliverable about your Odoo instance.",
+    "catalog": "Catalog",
+    "inProgress": "In progress",
+    "history": "History",
+    "run": "Run",
+    "rerun": "Run again",
+    "regenerate": "Regenerate",
+    "download": "Download",
+    "running": "Running…",
+    "progress": "{done} of {total} steps",
+    "stepCount": "{count} steps",
+    "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
+    "emptyCatalog": "No routines are available for this instance.",
+    "emptyHistory": "You haven't run any routine yet.",
+    "noInstance": "Connect an Odoo instance to run routines.",
+    "startFailed": "The routine could not be started.",
+    "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
+    "downloadFailed": "The file could not be generated."
   }
 }

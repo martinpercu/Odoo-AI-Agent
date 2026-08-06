@@ -21,6 +21,7 @@ import {
   ChevronUp,
   Check,
   User as UserIcon,
+  ClipboardList,
 } from "lucide-react";
 
 import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
@@ -389,6 +390,12 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
 
             {/* Navigation links */}
             <div className="px-1">
+              {user && meData?.org && configs.length > 0 && (
+                <Link href="/rutinas" onClick={close} className={itemClass}>
+                  <ClipboardList size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("routines")}</span>
+                </Link>
+              )}
               {user && role === "ADMIN" && meData?.org && (
                 <Link href="/instances" onClick={close} className={itemClass}>
                   <Database size={iconInline} strokeWidth={1.5} className="shrink-0" />
