@@ -483,6 +483,11 @@
       "optional": "optional",
       "statusSaving": "Speichern...",
       "statusSaved": "Gespeichert"
+    },
+    "tabRoutines": "Routinen",
+    "routines": {
+      "title": "Wer welche Routine sieht",
+      "subtitle": "Geteilte Routinen sieht die gesamte Organisation, sofern du sie hier nicht einschränkst."
     }
   },
   "PinnedInsights": {
@@ -1511,6 +1516,107 @@
       "mismo_periodo_hace_2_anos": "Derselbe Zeitraum vor 2 Jahren",
       "mismo_periodo_hace_3_anos": "Derselbe Zeitraum vor 3 Jahren",
       "ninguno": "Ohne Vergleich"
+    },
+    "createNew": "Neue Routine",
+    "group": {
+      "system": "Vom System",
+      "org": "Von meiner Organisation",
+      "mine": "Meine",
+      "others": "Private von anderen (du verwaltest sie)"
+    },
+    "save": {
+      "cta": "Als Routine speichern",
+      "title": "Dieses Gespräch als Routine speichern",
+      "subtitle": "Wähle aus, welche Fragen aufgenommen werden. Du kannst sie später jederzeit alle zusammen ausführen.",
+      "nameLabel": "Name der Routine",
+      "namePlaceholder": "z.B. Monatsabschluss Vertrieb",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "selectedCount": "{count} ausgewählt",
+      "emptyConversation": "In diesem Gespräch gibt es noch keine Fragen.",
+      "nothingUsable": "Keine dieser Fragen kann bisher allein laufen. Jeder Schritt einer Routine läuft ohne das vorherige Gespräch und muss deshalb für sich verständlich sein.",
+      "llmWarning": "Diese Frage wird von einem Sprachmodell interpretiert: Sie funktioniert, aber das Ergebnis kann zwischen Läufen variieren.",
+      "loadFailed": "Wir konnten dieses Gespräch nicht lesen.",
+      "saveFailed": "Wir konnten die Routine nicht speichern.",
+      "noOrg": "Du brauchst eine Organisation, um Routinen zu speichern."
+    },
+    "actions": {
+      "fork": "Klonen",
+      "copySuffix": "{name} (Kopie)",
+      "edit": "Bearbeiten",
+      "share": "Teilen",
+      "unshare": "Geteilt",
+      "shareHint": "Mit deiner Organisation teilen. Jede Person führt sie mit ihrem eigenen Odoo-Zugang aus und sieht nur, was Odoo ihr erlaubt.",
+      "unshareHint": "Nicht mehr teilen: Sie gehört wieder nur dir.",
+      "delete": "Löschen",
+      "confirmDelete": "Diese Routine löschen?",
+      "confirmYes": "Ja, löschen",
+      "confirmNo": "Nein"
+    },
+    "editor": {
+      "newTitle": "Neue Routine",
+      "newSubtitle": "Schreibe die Fragen, die jedes Mal gestellt werden sollen. Jede muss für sich verständlich sein.",
+      "editTitle": "Routine bearbeiten",
+      "editSubtitle": "Ändere die Fragen, die Reihenfolge oder den Namen. Teste sie vor dem Speichern.",
+      "notAllowed": "Du kannst diese Routine nicht bearbeiten. Klone eine Kopie, um Änderungen vorzunehmen.",
+      "nameLabel": "Name",
+      "namePlaceholder": "z.B. Forderungs-Radar",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Optional: wofür sie ist",
+      "stepsTitle": "Fragen",
+      "stepsHint": "Eine pro Zeile, in der gewünschten Reihenfolge. Schreibe sie vollständig: Jede läuft ohne die vorherigen.",
+      "stepPlaceholder": "z.B. überfällige Rechnungen diesen Monat",
+      "stepAria": "Schritt {n}",
+      "addStep": "Frage hinzufügen",
+      "removeStep": "Entfernen",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "resolvesTo": "Fragt ab: {model}",
+      "assistTitle": "Nicht sicher, wo du anfangen sollst?",
+      "assistHint": "Sag uns, was du prüfen willst, und wir schlagen die Fragen vor. Danach kannst du sie beliebig bearbeiten.",
+      "assistPlaceholder": "z.B. jeden Montag die Forderungen prüfen",
+      "assistCta": "Vorschlagen",
+      "assistEmpty": "Wir konnten gerade keine Fragen vorschlagen. Schreibe sie von Hand — das funktioniert genauso.",
+      "dryRunTitle": "Vor dem Speichern testen",
+      "dryRunHint": "Führt die Fragen mit deinen echten Daten aus und zeigt, was jede heute zurückgeben würde. Es wird nichts gespeichert.",
+      "dryRunCta": "Testen",
+      "dryRunFailed": "Wir konnten den Test nicht ausführen.",
+      "dryRunBusy": "Zu viele Läufe gleichzeitig. Versuche es gleich noch einmal.",
+      "readyToSave": "Bereit zum Speichern.",
+      "nothingUsableYet": "Schreibe mindestens eine Frage, die für sich verständlich ist.",
+      "cancel": "Abbrechen",
+      "save": "Änderungen speichern",
+      "create": "Routine erstellen",
+      "saveFailed": "Wir konnten die Änderungen nicht speichern.",
+      "noUsableSteps": "Keine der Fragen kann allein laufen. Prüfe die Hinweise zu jeder.",
+      "versionNote": "Aktuelle Version: {version}. Das Ändern der Fragen erzeugt eine neue Version; frühere Läufe bleiben mit ihrer Version gespeichert.",
+      "stepStatus": {
+        "ok": "OK",
+        "error": "Fehlgeschlagen",
+        "skipped": "Nicht zutreffend",
+        "pending": "Ausstehend"
+      }
+    },
+    "grants": {
+      "dataNotice": "Eine Routine zu teilen teilt NICHT deine Daten: Jede Person führt sie mit ihrem eigenen Odoo-Zugang aus und sieht nur, was Odoo ihr erlaubt.",
+      "orgDefault": "Gesamte Organisation",
+      "nothingGrantable": "Es gibt noch keine geteilten Routinen zu verwalten.",
+      "privateTitle": "Private je Person",
+      "privateHint": "Sie können nicht pro Benutzer aktiviert werden: Ihr Autor (oder du) muss sie zuerst mit der Organisation teilen.",
+      "privateNotGrantable": "Das ist eine private Routine. Teile sie zuerst mit der Organisation.",
+      "loadFailed": "Wir konnten die Berechtigungen nicht laden.",
+      "saveFailed": "Wir konnten die Änderung nicht speichern.",
+      "value": {
+        "inherit": "Standard",
+        "on": "Ja",
+        "off": "Nein"
+      },
+      "scope": {
+        "system": "Vom System",
+        "org": "Mit der Organisation geteilt",
+        "private": "Privat"
+      },
+      "usersFailed": "Wir konnten die Benutzer der Organisation nicht laden. Was du unten siehst, kann unvollständig sein."
     }
   },
   "Chat": {

@@ -8,6 +8,7 @@ import { ChatMessages } from "@/components/chat/chat-messages";
 import { ChatInput } from "@/components/chat/chat-input";
 import { DemoBanner } from "@/components/chat/demo-banner";
 import { PartnerNudge } from "@/components/intro/partner-nudge";
+import { SaveAsRoutineButton } from "@/components/routines/save-as-routine-button";
 import { useChatContext } from "@/components/app-shell";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -57,6 +58,12 @@ export default function ChatPage({ params }: { params: Promise<{ locale: string;
           )}
           {hasMessages && (
             <ChatMessages messages={currentChat.messages} isStreaming={isStreaming} />
+          )}
+          {/* F1 — "guardar como Rutina". Va al PIE de la conversación, no en la barra
+              de entrada: el gesto ocurre al final, mirando lo que ya se contestó.
+              Oculto mientras se está respondiendo (la conversación todavía no terminó). */}
+          {!isStreaming && (
+            <SaveAsRoutineButton chatId={id} hasMessages={!!hasMessages} />
           )}
         </div>
       </div>

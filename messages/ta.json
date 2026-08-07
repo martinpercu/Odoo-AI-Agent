@@ -483,6 +483,11 @@
       "optional": "விருப்பமானது",
       "statusSaving": "சேமிக்கிறோம்...",
       "statusSaved": "சேமிக்கப்பட்டது"
+    },
+    "tabRoutines": "Routines",
+    "routines": {
+      "title": "Who sees each Routine",
+      "subtitle": "Shared Routines are visible to the whole organization unless you restrict them here."
     }
   },
   "PinnedInsights": {
@@ -1511,6 +1516,107 @@
       "mismo_periodo_hace_2_anos": "2 ஆண்டுகளுக்கு முன் அதே காலம்",
       "mismo_periodo_hace_3_anos": "3 ஆண்டுகளுக்கு முன் அதே காலம்",
       "ninguno": "ஒப்பீடு இல்லை"
+    },
+    "createNew": "New Routine",
+    "group": {
+      "system": "From the system",
+      "org": "From my organization",
+      "mine": "Mine",
+      "others": "Other people's private ones (you administer them)"
+    },
+    "save": {
+      "cta": "Save as Routine",
+      "title": "Save this conversation as a Routine",
+      "subtitle": "Pick which questions go in. You'll be able to run them all together whenever you want.",
+      "nameLabel": "Routine name",
+      "namePlaceholder": "e.g. Monthly commercial close",
+      "save": "Save",
+      "cancel": "Cancel",
+      "selectedCount": "{count} selected",
+      "emptyConversation": "There are no questions in this conversation yet.",
+      "nothingUsable": "None of these questions can run on their own yet. Every step of a Routine runs without the previous conversation, so it has to make sense by itself.",
+      "llmWarning": "This question is interpreted by a language model: it will work, but the result may vary between runs.",
+      "loadFailed": "We couldn't read this conversation.",
+      "saveFailed": "We couldn't save the Routine.",
+      "noOrg": "You need an organization to save Routines."
+    },
+    "actions": {
+      "fork": "Clone",
+      "copySuffix": "{name} (copy)",
+      "edit": "Edit",
+      "share": "Share",
+      "unshare": "Shared",
+      "shareHint": "Share with your organization. Each person runs it with their own Odoo access and sees only what Odoo allows them.",
+      "unshareHint": "Stop sharing it: it goes back to being only yours.",
+      "delete": "Delete",
+      "confirmDelete": "Delete this Routine?",
+      "confirmYes": "Yes, delete",
+      "confirmNo": "No"
+    },
+    "editor": {
+      "newTitle": "New Routine",
+      "newSubtitle": "Write the questions you want asked every time. Each one has to make sense on its own.",
+      "editTitle": "Edit Routine",
+      "editSubtitle": "Change the questions, the order or the name. Try it before saving.",
+      "notAllowed": "You can't edit this Routine. Clone a copy to make changes.",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Collections radar",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional: what it's for",
+      "stepsTitle": "Questions",
+      "stepsHint": "One per line, in the order you want them asked. Write them in full: each runs without the previous ones.",
+      "stepPlaceholder": "e.g. overdue invoices this month",
+      "stepAria": "Step {n}",
+      "addStep": "Add question",
+      "removeStep": "Remove",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "resolvesTo": "Queries: {model}",
+      "assistTitle": "Not sure where to start?",
+      "assistHint": "Tell us what you want to review and we'll propose the questions. Then edit them however you like.",
+      "assistPlaceholder": "e.g. review collections every Monday",
+      "assistCta": "Propose",
+      "assistEmpty": "We couldn't propose questions right now. Write them by hand — it works just the same.",
+      "dryRunTitle": "Try it before saving",
+      "dryRunHint": "Runs the questions against your real data and shows what each would return today. Nothing is saved.",
+      "dryRunCta": "Try it",
+      "dryRunFailed": "We couldn't run the test.",
+      "dryRunBusy": "Too many runs in progress. Try again in a moment.",
+      "readyToSave": "Ready to save.",
+      "nothingUsableYet": "Write at least one question that makes sense on its own.",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "create": "Create Routine",
+      "saveFailed": "We couldn't save the changes.",
+      "noUsableSteps": "None of the questions can run on their own. Check the notes on each one.",
+      "versionNote": "Current version: {version}. Changing the questions creates a new version; past runs stay stored with the version they ran with.",
+      "stepStatus": {
+        "ok": "OK",
+        "error": "Failed",
+        "skipped": "Not applicable",
+        "pending": "Pending"
+      }
+    },
+    "grants": {
+      "dataNotice": "Sharing a Routine does NOT share your data: each person runs it with their own Odoo access and sees only what Odoo lets them see.",
+      "orgDefault": "Whole organization",
+      "nothingGrantable": "There are no shared Routines to manage yet.",
+      "privateTitle": "Each person's private ones",
+      "privateHint": "They can't be enabled per user: their author (or you) has to share them with the organization first.",
+      "privateNotGrantable": "That's a private Routine. Share it with the organization first.",
+      "loadFailed": "We couldn't load the permissions.",
+      "saveFailed": "We couldn't save the change.",
+      "value": {
+        "inherit": "Default",
+        "on": "Yes",
+        "off": "No"
+      },
+      "scope": {
+        "system": "From the system",
+        "org": "Shared with the organization",
+        "private": "Private"
+      },
+      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete."
     }
   },
   "Chat": {

@@ -483,6 +483,11 @@
       "optional": "opcional",
       "statusSaving": "Guardando...",
       "statusSaved": "Guardado"
+    },
+    "tabRoutines": "Rutinas",
+    "routines": {
+      "title": "Quién ve cada Rutina",
+      "subtitle": "Las Rutinas compartidas las ve toda la organización salvo que las restrinjas acá."
     }
   },
   "PinnedInsights": {
@@ -1511,6 +1516,107 @@
       "mismo_periodo_hace_2_anos": "El mismo período hace 2 años",
       "mismo_periodo_hace_3_anos": "El mismo período hace 3 años",
       "ninguno": "Sin comparación"
+    },
+    "createNew": "Nueva Rutina",
+    "group": {
+      "system": "Del sistema",
+      "org": "De mi organización",
+      "mine": "Mías",
+      "others": "Privadas de otras personas (las administrás)"
+    },
+    "save": {
+      "cta": "Guardar como Rutina",
+      "title": "Guardar esta conversación como Rutina",
+      "subtitle": "Elegí qué preguntas entran. Después las vas a poder correr todas juntas cuando quieras.",
+      "nameLabel": "Nombre de la Rutina",
+      "namePlaceholder": "Ej: Cierre de mes comercial",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "selectedCount": "{count} seleccionadas",
+      "emptyConversation": "Todavía no hay preguntas en esta conversación.",
+      "nothingUsable": "Ninguna de estas preguntas puede correr sola todavía. Cada paso de una Rutina se ejecuta sin la conversación previa, así que tiene que entenderse por sí mismo.",
+      "llmWarning": "Esta pregunta se interpreta con un modelo de lenguaje: va a funcionar, pero el resultado puede variar entre corridas.",
+      "loadFailed": "No pudimos leer esta conversación.",
+      "saveFailed": "No pudimos guardar la Rutina.",
+      "noOrg": "Necesitás una organización para guardar Rutinas."
+    },
+    "actions": {
+      "fork": "Clonar",
+      "copySuffix": "{name} (copia)",
+      "edit": "Editar",
+      "share": "Compartir",
+      "unshare": "Compartida",
+      "shareHint": "Compartir con tu organización. Cada persona la corre con su propio acceso a Odoo y ve sólo lo que Odoo le permite.",
+      "unshareHint": "Dejar de compartirla: vuelve a ser sólo tuya.",
+      "delete": "Borrar",
+      "confirmDelete": "¿Borrar esta Rutina?",
+      "confirmYes": "Sí, borrar",
+      "confirmNo": "No"
+    },
+    "editor": {
+      "newTitle": "Nueva Rutina",
+      "newSubtitle": "Escribí las preguntas que querés que se hagan cada vez. Cada una tiene que entenderse sola.",
+      "editTitle": "Editar Rutina",
+      "editSubtitle": "Cambiá las preguntas, el orden o el nombre. Probala antes de guardar.",
+      "notAllowed": "No podés editar esta Rutina. Cloná una copia para hacerle cambios.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Ej: Radar de cobranzas",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Opcional: para qué sirve",
+      "stepsTitle": "Preguntas",
+      "stepsHint": "Una por línea, en el orden en que querés que se hagan. Escribilas completas: cada una se ejecuta sin las anteriores.",
+      "stepPlaceholder": "Ej: facturas vencidas de este mes",
+      "stepAria": "Paso {n}",
+      "addStep": "Agregar pregunta",
+      "removeStep": "Quitar",
+      "moveUp": "Subir",
+      "moveDown": "Bajar",
+      "resolvesTo": "Consulta: {model}",
+      "assistTitle": "¿No sabés por dónde empezar?",
+      "assistHint": "Contanos qué querés revisar y te proponemos las preguntas. Después las editás como quieras.",
+      "assistPlaceholder": "Ej: revisar cobranzas todos los lunes",
+      "assistCta": "Proponer",
+      "assistEmpty": "No pudimos proponer preguntas ahora. Escribilas a mano — funciona igual.",
+      "dryRunTitle": "Probala antes de guardar",
+      "dryRunHint": "Corre las preguntas con tus datos reales y te muestra qué devolvería cada una hoy. No guarda nada.",
+      "dryRunCta": "Probar",
+      "dryRunFailed": "No pudimos correr la prueba.",
+      "dryRunBusy": "Hay muchas corridas en curso. Probá de nuevo en un momento.",
+      "readyToSave": "Listo para guardar.",
+      "nothingUsableYet": "Escribí al menos una pregunta que se entienda sola.",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios",
+      "create": "Crear Rutina",
+      "saveFailed": "No pudimos guardar los cambios.",
+      "noUsableSteps": "Ninguna de las preguntas puede correr sola. Revisá los avisos de cada una.",
+      "versionNote": "Versión actual: {version}. Cambiar las preguntas crea una versión nueva; las corridas anteriores quedan guardadas con la versión con la que corrieron.",
+      "stepStatus": {
+        "ok": "OK",
+        "error": "Falló",
+        "skipped": "No aplica",
+        "pending": "Pendiente"
+      }
+    },
+    "grants": {
+      "dataNotice": "Compartir una Rutina NO comparte tus datos: cada persona la corre con su propio acceso a Odoo y ve sólo lo que Odoo le permite ver.",
+      "orgDefault": "Toda la organización",
+      "nothingGrantable": "Todavía no hay Rutinas compartidas para administrar.",
+      "privateTitle": "Privadas de cada persona",
+      "privateHint": "No se pueden habilitar por usuario: primero su autor (o vos) tiene que compartirlas con la organización.",
+      "privateNotGrantable": "Es una Rutina privada. Compartila primero con la organización.",
+      "loadFailed": "No pudimos cargar los permisos.",
+      "saveFailed": "No pudimos guardar el cambio.",
+      "value": {
+        "inherit": "Por defecto",
+        "on": "Sí",
+        "off": "No"
+      },
+      "scope": {
+        "system": "Del sistema",
+        "org": "Compartida con la organización",
+        "private": "Privada"
+      },
+      "usersFailed": "No pudimos leer los usuarios de la organización. Lo que ves abajo puede estar incompleto."
     }
   },
   "Chat": {
