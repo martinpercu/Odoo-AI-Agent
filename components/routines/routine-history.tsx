@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
+  ChevronDown,
   Download,
   Info,
   Loader2,
@@ -13,7 +14,8 @@ import {
 import { useTranslations } from "next-intl";
 
 import { fetchRoutineRun, regenerateRoutineRun } from "@/lib/api";
-import type { Routine, RoutineRunSummary } from "@/lib/types";
+import type { Routine, RoutineRunDetail, RoutineRunSummary } from "@/lib/types";
+import { RoutineResults } from "@/components/routines/routine-results";
 
 function downloadBase64Pdf(base64: string, filename: string) {
   const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
@@ -51,6 +53,18 @@ export function RoutineHistoryItem({
   const t = useTranslations("Routines");
   const [busy, setBusy] = useState<"download" | "regenerate" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Los números viven en el DETALLE, no en el listado (el listado sería enorme con
+  // 20 corridas). Se piden al desplegar: leer el resultado no debería costar una
+  // descarga de PDF.
+  const [expanded, setExpanded] = useState(false);
+  const [detail, setDetail] = useState<RoutineRunDetail | null>(null);
+
+  useEffect(() => {
+    if (!expanded || detail) return;
+    fetchRoutineRun(run.id).then((res) => {
+      if (res.success && res.run) setDetail(res.run);
+    });
+  }, [expanded, detail, run.id]);
 
   const failed = run.status === "error";
   const partial = run.status === "partial";
@@ -119,6 +133,34 @@ export function RoutineHistoryItem({
             <p className="mt-2 text-small text-red-500">{run.error}</p>
           )}
           {error && <p className="mt-2 text-small text-red-500">{error}</p>}
+
+          {!failed && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="mt-2 flex items-center gap-1 text-small text-accent transition-colors hover:text-accent-hover"
+            >
+              <ChevronDown
+                size={14}
+                strokeWidth={1.5}
+                className={`transition-transform ${expanded ? "rotate-180" : ""}`}
+                aria-hidden
+              />
+              {expanded ? t("hideResults") : t("showResults")}
+            </button>
+          )}
+
+          {expanded &&
+            (detail ? (
+              <RoutineResults run={detail} routine={routine} />
+            ) : (
+              <Loader2
+                size={16}
+                strokeWidth={1.5}
+                className="mt-3 animate-spin text-text-muted"
+              />
+            ))}
         </div>
 
         {!failed && (

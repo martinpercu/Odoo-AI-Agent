@@ -2418,6 +2418,8 @@ export async function fetchFeedbackReport(reportId: string): Promise<FetchFeedba
 export interface ListRoutinesResult {
   success: boolean;
   routines?: Routine[];
+  /** Las que esta instancia NO puede correr, con su motivo (§9). */
+  unavailable?: Routine[];
   error?: string;
 }
 
@@ -2437,7 +2439,15 @@ export async function listRoutines(
     if (configId) params.set("config_id", configId);
     const res = await authFetch(`${API_BASE}/routines?${params}`);
     const data = await res.json();
-    if (res.ok) return { success: true, routines: data.routines ?? [] };
+    // `unavailable` son las Rutinas que ESTA instancia no puede correr, con su
+    // motivo (§9: el catálogo explica lo que oculta). No se mezclan con las
+    // disponibles: no se ofertan, se explican.
+    if (res.ok)
+      return {
+        success: true,
+        routines: data.routines ?? [],
+        unavailable: data.unavailable ?? [],
+      };
     return { success: false, error: data.detail || "Failed to fetch routines" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;

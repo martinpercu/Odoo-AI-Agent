@@ -1455,13 +1455,62 @@
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
-    "stepCount": "{count} steps",
+    "stepCount": "{count, plural, one {# पायरी} other {# पायऱ्या}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
     "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
-    "downloadFailed": "The file could not be generated."
+    "downloadFailed": "The file could not be generated.",
+    "unavailableTitle": "या इन्स्टन्सवर उपलब्ध नाही",
+    "unavailable": {
+      "missing_model": "तुमच्या इन्स्टन्समध्ये {models} नाही.",
+      "unused_model": "तुमच्या इन्स्टन्समध्ये {models} मध्ये अद्याप डेटा नाही.",
+      "generic": "ही रुटीन तुमच्या इन्स्टन्सवर चालू शकत नाही."
+    },
+    "showResults": "निकाल पहा",
+    "hideResults": "निकाल लपवा",
+    "derivedFailed": "ही गणना करता आली नाही.",
+    "delta": {
+      "new": "तुलनेचा आधार नाही",
+      "flat": "बदल नाही",
+      "title": {
+        "up": "तुलना कालावधीच्या तुलनेत वाढले",
+        "down": "तुलना कालावधीच्या तुलनेत घटले",
+        "flat": "तुलना कालावधीप्रमाणेच",
+        "nuevo": "डेटा असलेला तुलना कालावधी नव्हता"
+      }
+    },
+    "attribution": {
+      "title": "बदलाचे कारण",
+      "rest": "उर्वरित, {count} मध्ये विभागलेले",
+      "empty": "वाटप करण्यासारखे काही नाही.",
+      "kind": {
+        "alta": "सुरू झाले",
+        "baja": "थांबले"
+      }
+    },
+    "period": {
+      "hoy": "आज",
+      "esta_semana": "हा आठवडा",
+      "semana_pasada": "मागील आठवडा",
+      "mes_actual": "हा महिना",
+      "mes_pasado": "मागील महिना",
+      "trimestre": "ही तिमाही",
+      "trimestre_pasado": "मागील तिमाही",
+      "anio": "हे वर्ष",
+      "anio_pasado": "मागील वर्ष",
+      "ultimos_30_dias": "मागील 30 दिवस",
+      "ultimos_60_dias": "मागील 60 दिवस",
+      "ultimos_90_dias": "मागील 90 दिवस"
+    },
+    "compare": {
+      "periodo_anterior": "मागील कालावधी",
+      "mismo_periodo_anio_anterior": "मागील वर्षाचा तोच कालावधी",
+      "mismo_periodo_hace_2_anos": "2 वर्षांपूर्वीचा तोच कालावधी",
+      "mismo_periodo_hace_3_anos": "3 वर्षांपूर्वीचा तोच कालावधी",
+      "ninguno": "तुलनेशिवाय"
+    }
   }
 }

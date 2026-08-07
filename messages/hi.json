@@ -1455,13 +1455,62 @@
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
-    "stepCount": "{count} steps",
+    "stepCount": "{count, plural, one {# चरण} other {# चरण}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
     "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
-    "downloadFailed": "The file could not be generated."
+    "downloadFailed": "The file could not be generated.",
+    "unavailableTitle": "इस इंस्टेंस पर उपलब्ध नहीं",
+    "unavailable": {
+      "missing_model": "आपके इंस्टेंस में {models} नहीं है।",
+      "unused_model": "आपके इंस्टेंस में {models} में अभी तक कोई डेटा नहीं है।",
+      "generic": "यह रूटीन आपके इंस्टेंस पर नहीं चल सकती।"
+    },
+    "showResults": "परिणाम देखें",
+    "hideResults": "परिणाम छिपाएँ",
+    "derivedFailed": "यह गणना नहीं की जा सकी।",
+    "delta": {
+      "new": "तुलना का आधार नहीं",
+      "flat": "कोई बदलाव नहीं",
+      "title": {
+        "up": "तुलना अवधि की तुलना में बढ़ा",
+        "down": "तुलना अवधि की तुलना में घटा",
+        "flat": "तुलना अवधि की तुलना में अपरिवर्तित",
+        "nuevo": "डेटा वाली कोई तुलना अवधि नहीं थी"
+      }
+    },
+    "attribution": {
+      "title": "बदलाव की वजह",
+      "rest": "बाकी, {count} में बँटा",
+      "empty": "बाँटने के लिए कुछ नहीं।",
+      "kind": {
+        "alta": "शुरू हुआ",
+        "baja": "बंद हुआ"
+      }
+    },
+    "period": {
+      "hoy": "आज",
+      "esta_semana": "यह सप्ताह",
+      "semana_pasada": "पिछला सप्ताह",
+      "mes_actual": "यह महीना",
+      "mes_pasado": "पिछला महीना",
+      "trimestre": "यह तिमाही",
+      "trimestre_pasado": "पिछली तिमाही",
+      "anio": "यह वर्ष",
+      "anio_pasado": "पिछला वर्ष",
+      "ultimos_30_dias": "पिछले 30 दिन",
+      "ultimos_60_dias": "पिछले 60 दिन",
+      "ultimos_90_dias": "पिछले 90 दिन"
+    },
+    "compare": {
+      "periodo_anterior": "पिछली अवधि",
+      "mismo_periodo_anio_anterior": "पिछले वर्ष की वही अवधि",
+      "mismo_periodo_hace_2_anos": "2 वर्ष पहले की वही अवधि",
+      "mismo_periodo_hace_3_anos": "3 वर्ष पहले की वही अवधि",
+      "ninguno": "बिना तुलना"
+    }
   }
 }

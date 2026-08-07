@@ -10,6 +10,7 @@ import type { Routine, RoutineRunSummary } from "@/lib/types";
 import { RoutineCard } from "@/components/routines/routine-card";
 import { RoutineHistoryItem } from "@/components/routines/routine-history";
 import { RoutineRunProgress } from "@/components/routines/routine-run-progress";
+import { RoutineUnavailableCard } from "@/components/routines/routine-unavailable";
 
 /**
  * La sección Rutinas (decisión D2).
@@ -23,6 +24,9 @@ export default function RoutinesPage() {
   const { activeConfigId, isConfigured } = useOdooConfig();
 
   const [routines, setRoutines] = useState<Routine[] | null>(null);
+  /** Las que esta instancia NO puede correr, con su motivo (§9: el catálogo
+   *  explica lo que oculta). No se ofertan — se explican. */
+  const [unavailable, setUnavailable] = useState<Routine[]>([]);
   const [runs, setRuns] = useState<RoutineRunSummary[]>([]);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [startingId, setStartingId] = useState<string | null>(null);
@@ -41,6 +45,7 @@ export default function RoutinesPage() {
   useEffect(() => {
     listRoutines(activeConfigId ?? undefined, locale).then((res) => {
       setRoutines(res.success && res.routines ? res.routines : []);
+      setUnavailable(res.success && res.unavailable ? res.unavailable : []);
     });
   }, [activeConfigId, locale]);
 
@@ -48,7 +53,7 @@ export default function RoutinesPage() {
     loadRuns();
   }, [loadRuns]);
 
-  const handleRun = async (routineId: string) => {
+  const handleRun = async (routineId: string, params: Record<string, unknown> = {}) => {
     if (!activeConfigId) return;
     setStartingId(routineId);
     setError(null);
@@ -57,7 +62,7 @@ export default function RoutinesPage() {
     fetchRoutine(routineId, activeConfigId, locale).then((det) => {
       if (det.success && det.routine) setRunningRoutine(det.routine);
     });
-    const res = await runRoutine(routineId, activeConfigId, {}, locale);
+    const res = await runRoutine(routineId, activeConfigId, params, locale);
     setStartingId(null);
     if (res.success && res.runId) {
       setActiveRunId(res.runId);
@@ -128,9 +133,24 @@ export default function RoutinesPage() {
                   routine={routine}
                   running={startingId === routine.id}
                   disabled={!isConfigured || activeRunId !== null}
-                  onRun={() => handleRun(routine.id)}
+                  onRun={(params) => handleRun(routine.id, params)}
                 />
               ))}
+            </div>
+          )}
+
+          {/* §9: el catálogo explica lo que oculta. Sin esto la Rutina simplemente
+              no está y el usuario no sabe qué le falta para tenerla. */}
+          {unavailable.length > 0 && (
+            <div className="mt-4">
+              <h3 className="mb-2 text-small font-medium text-text-muted">
+                {t("unavailableTitle")}
+              </h3>
+              <div className="space-y-3">
+                {unavailable.map((routine) => (
+                  <RoutineUnavailableCard key={routine.id} routine={routine} />
+                ))}
+              </div>
             </div>
           )}
         </section>

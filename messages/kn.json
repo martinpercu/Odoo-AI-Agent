@@ -1455,13 +1455,62 @@
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
-    "stepCount": "{count} steps",
+    "stepCount": "{count, plural, one {# ಹಂತ} other {# ಹಂತಗಳು}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
     "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
-    "downloadFailed": "The file could not be generated."
+    "downloadFailed": "The file could not be generated.",
+    "unavailableTitle": "ಈ ಇನ್‌ಸ್ಟನ್ಸ್‌ನಲ್ಲಿ ಲಭ್ಯವಿಲ್ಲ",
+    "unavailable": {
+      "missing_model": "ನಿಮ್ಮ ಇನ್‌ಸ್ಟನ್ಸ್‌ನಲ್ಲಿ {models} ಇಲ್ಲ.",
+      "unused_model": "ನಿಮ್ಮ ಇನ್‌ಸ್ಟನ್ಸ್‌ನಲ್ಲಿ {models} ನಲ್ಲಿ ಇನ್ನೂ ಡೇಟಾ ಇಲ್ಲ.",
+      "generic": "ಈ ರೂಟೀನ್ ನಿಮ್ಮ ಇನ್‌ಸ್ಟನ್ಸ್‌ನಲ್ಲಿ ಚಲಾಯಿಸಲಾಗದು."
+    },
+    "showResults": "ಫಲಿತಾಂಶಗಳನ್ನು ನೋಡಿ",
+    "hideResults": "ಫಲಿತಾಂಶಗಳನ್ನು ಮರೆಮಾಡಿ",
+    "derivedFailed": "ಈ ಲೆಕ್ಕಾಚಾರ ಮಾಡಲಾಗಲಿಲ್ಲ.",
+    "delta": {
+      "new": "ಹೋಲಿಕೆಯ ಆಧಾರವಿಲ್ಲ",
+      "flat": "ಬದಲಾವಣೆ ಇಲ್ಲ",
+      "title": {
+        "up": "ಹೋಲಿಕೆ ಅವಧಿಗಿಂತ ಹೆಚ್ಚಾಗಿದೆ",
+        "down": "ಹೋಲಿಕೆ ಅವಧಿಗಿಂತ ಕಡಿಮೆಯಾಗಿದೆ",
+        "flat": "ಹೋಲಿಕೆ ಅವಧಿಯಂತೆಯೇ",
+        "nuevo": "ಡೇಟಾ ಇರುವ ಹೋಲಿಕೆ ಅವಧಿ ಇರಲಿಲ್ಲ"
+      }
+    },
+    "attribution": {
+      "title": "ಬದಲಾವಣೆಗೆ ಕಾರಣ",
+      "rest": "ಉಳಿದದ್ದು, {count} ನಡುವೆ ಹಂಚಿಕೆ",
+      "empty": "ಹಂಚಲು ಏನೂ ಇಲ್ಲ.",
+      "kind": {
+        "alta": "ಪ್ರಾರಂಭವಾಯಿತು",
+        "baja": "ನಿಲ್ಲಿಸಿತು"
+      }
+    },
+    "period": {
+      "hoy": "ಇಂದು",
+      "esta_semana": "ಈ ವಾರ",
+      "semana_pasada": "ಕಳೆದ ವಾರ",
+      "mes_actual": "ಈ ತಿಂಗಳು",
+      "mes_pasado": "ಕಳೆದ ತಿಂಗಳು",
+      "trimestre": "ಈ ತ್ರೈಮಾಸಿಕ",
+      "trimestre_pasado": "ಕಳೆದ ತ್ರೈಮಾಸಿಕ",
+      "anio": "ಈ ವರ್ಷ",
+      "anio_pasado": "ಕಳೆದ ವರ್ಷ",
+      "ultimos_30_dias": "ಕಳೆದ 30 ದಿನಗಳು",
+      "ultimos_60_dias": "ಕಳೆದ 60 ದಿನಗಳು",
+      "ultimos_90_dias": "ಕಳೆದ 90 ದಿನಗಳು"
+    },
+    "compare": {
+      "periodo_anterior": "ಹಿಂದಿನ ಅವಧಿ",
+      "mismo_periodo_anio_anterior": "ಕಳೆದ ವರ್ಷದ ಅದೇ ಅವಧಿ",
+      "mismo_periodo_hace_2_anos": "2 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
+      "mismo_periodo_hace_3_anos": "3 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
+      "ninguno": "ಹೋಲಿಕೆ ಇಲ್ಲದೆ"
+    }
   }
 }
