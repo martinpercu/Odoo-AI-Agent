@@ -1512,5 +1512,20 @@
       "mismo_periodo_hace_3_anos": "3 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
       "ninguno": "ಹೋಲಿಕೆ ಇಲ್ಲದೆ"
     }
+  },
+  "Chat": {
+    "openInOdoo": "Odoo ನಲ್ಲಿ ತೆರೆ"
+  },
+  "Snapshot": {
+    "title": "ನಿಮ್ಮ ವ್ಯವಹಾರದ ಬಗ್ಗೆ ನನಗೆ ಈಗಾಗಲೇ ಇಷ್ಟು ಗೊತ್ತು",
+    "hint": "ಈ ಸಂಖ್ಯೆಗಳಲ್ಲಿ ಯಾವುದರ ಬಗ್ಗೆಯಾದರೂ ಕೇಳಿ.",
+    "model": {
+      "resPartner": "ಸಂಪರ್ಕಗಳು",
+      "productProduct": "ಉತ್ಪನ್ನಗಳು",
+      "saleOrder": "ಮಾರಾಟ",
+      "accountMove": "ಸರಕುಪಟ್ಟಿ",
+      "crmLead": "ಅವಕಾಶಗಳು",
+      "purchaseOrder": "ಖರೀದಿ"
+    }
   }
 }

@@ -14,6 +14,11 @@ import { useRouter, Link } from "@/i18n/navigation";
 import { DemoBanner } from "@/components/chat/demo-banner";
 import { PartnerNudge } from "@/components/intro/partner-nudge";
 
+const InstanceSnapshot = dynamic(
+  () => import("@/components/chat/instance-snapshot").then((m) => m.InstanceSnapshot),
+  { ssr: false }
+);
+
 const SuggestionCarousel = dynamic(
   () => import("@/components/chat/suggestion-carousel").then((m) => m.SuggestionCarousel),
   { ssr: false }
@@ -89,6 +94,11 @@ export default function NewChatPage() {
             <h2 className="mb-3 text-display">{t("heading")}</h2>
             <p className="text-body text-text-secondary">{t("subheading")}</p>
           </motion.div>
+
+          {/* Primer valor en 60 segundos (quick-wins §9): la hoja en blanco se
+              convierte en números reales de la propia instancia. Se renderiza sola
+              a nada si no hay datos que mostrar. */}
+          <InstanceSnapshot />
 
           <motion.div
             initial={{ opacity: 0 }}

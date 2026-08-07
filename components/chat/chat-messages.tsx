@@ -8,8 +8,8 @@ import { User, KeyRound, ArrowRight, Flag } from "lucide-react";
 import { MarkB, MarkI } from "@/components/AgentMark";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useAudienceT } from "@/hooks/use-audience-translations";
-import type { Message, AggReportOption } from "@/lib/types";
-import { executeAggReportAction } from "@/lib/api";
+import type { Message, AggReportOption, ReportOfferOption } from "@/lib/types";
+import { executeAggReportAction, executeListingExcelAction } from "@/lib/api";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -102,16 +102,15 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
     if (!res.success || !res.result) return;
     const b64 = res.result.format === "excel" ? res.result.xlsx_base64 : res.result.pdf_base64;
     if (!b64) return;
-    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-    const blob = new Blob([bytes], { type: res.result.mimetype });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = res.result.filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadBase64(b64, res.result.filename, res.result.mimetype);
+  }
+
+  /** Excel de un listado crudo (quick-wins §6). Misma descarga directa que `agg_report`. */
+  async function handleListingExcel(opt: ReportOfferOption) {
+    if (!currentChatId || !activeConfigId) return;
+    const res = await executeListingExcelAction(currentChatId, opt, activeConfigId, locale);
+    if (!res.success || !res.result?.xlsx_base64) return;
+    downloadBase64(res.result.xlsx_base64, res.result.filename, res.result.mimetype);
   }
 
   useEffect(() => {
@@ -207,6 +206,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                               <ReportOfferCard
                                 metadata={message.metadata}
                                 onAction={executeAction}
+                                onExcel={handleListingExcel}
                               />
                             ) : message.metadata.kind === "agg_report" ? (
                               <AggReportCard
@@ -294,4 +294,17 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
       <div ref={bottomRef} />
     </div>
   );
+}
+
+/** Descarga un archivo que el backend mandó en base64, sin tocar disco ni URLs. */
+function downloadBase64(base64: string, filename: string, mimetype: string) {
+  const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+  const url = URL.createObjectURL(new Blob([bytes], { type: mimetype }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }

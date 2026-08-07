@@ -44,6 +44,7 @@ import type {
   Routine,
   RoutineRunDetail,
   RoutineRunSummary,
+  ReportOfferOption,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -2584,5 +2585,71 @@ export async function fetchRoutine(
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Excel de un LISTADO crudo (quick-wins §6) → `{xlsx_base64, filename, mimetype}`.
+ *
+ * Hermano de `executeAggReportAction`: mismo endpoint `/action`, misma descarga
+ * directa por Blob. No pasa por el flujo de tarjeta de éxito — el usuario pidió un
+ * archivo, no una confirmación.
+ */
+export async function executeListingExcelAction(
+  chatId: string,
+  opt: ReportOfferOption,
+  configId: string,
+  locale: string
+): Promise<{
+  success: boolean;
+  result?: { xlsx_base64: string; filename: string; mimetype: string; record_count: number };
+  error?: string;
+}> {
+  try {
+    const res = await authFetch(`${API_BASE}/chat/${chatId}/action`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        config_id: configId,
+        language: locale,
+        action: "report_listing_excel",
+        context: {
+          action: "report_listing_excel",
+          model: opt.model,
+          vals: {},
+          domain: opt.domain,
+          total_count: opt.total_count,
+        },
+      }),
+    });
+    const data = await res.json();
+    if (data.status === "ok") return { success: true, result: data.result };
+    return { success: false, error: data.detail || data.message || "Action failed" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * `{modelo: cantidad}` de la instancia (quick-wins §7) — para filtrar las
+ * sugerencias del chat contra lo que el tenant realmente usa.
+ *
+ * **Best-effort y no bloqueante:** un fallo devuelve `{}`, que el filtro
+ * interpreta como "no lo sabemos" y muestra todas las sugerencias. Sugerir de más
+ * es mucho mejor que esconderle al usuario algo que sí podía preguntar.
+ */
+export async function fetchInstanceUsage(
+  configId: string
+): Promise<Record<string, number>> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/routines/instance-usage?config_id=${encodeURIComponent(configId)}`
+    );
+    if (!res.ok) return {};
+    const data = await res.json();
+    return (data.usage ?? {}) as Record<string, number>;
+  } catch {
+    return {};
   }
 }

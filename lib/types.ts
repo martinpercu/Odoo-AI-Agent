@@ -126,7 +126,12 @@ export interface PersonRoleSelectionMetadata {
 export interface ReportOfferOption {
   value: string;
   label: string;
-  action: "report";
+  /**
+   * `report` = el PDF plano de siempre. `report_listing_excel` = el mismo listado
+   * con TODAS sus columnas en un .xlsx (quick-wins §6): un PDF no se filtra, no se
+   * ordena y no se pega en otra planilla.
+   */
+  action: "report" | "report_listing_excel";
   model: string;
   vals: Record<string, unknown>;
   domain: unknown[];

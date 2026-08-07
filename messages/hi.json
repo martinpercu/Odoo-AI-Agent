@@ -1512,5 +1512,20 @@
       "mismo_periodo_hace_3_anos": "3 वर्ष पहले की वही अवधि",
       "ninguno": "बिना तुलना"
     }
+  },
+  "Chat": {
+    "openInOdoo": "Odoo में खोलें"
+  },
+  "Snapshot": {
+    "title": "आपके व्यवसाय के बारे में मुझे यह पहले से पता है",
+    "hint": "इनमें से किसी भी संख्या के बारे में मुझसे पूछें।",
+    "model": {
+      "resPartner": "संपर्क",
+      "productProduct": "उत्पाद",
+      "saleOrder": "बिक्री",
+      "accountMove": "चालान",
+      "crmLead": "अवसर",
+      "purchaseOrder": "खरीद"
+    }
   }
 }
