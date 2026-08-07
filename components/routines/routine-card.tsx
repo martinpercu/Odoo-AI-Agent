@@ -4,9 +4,13 @@ import { useState } from "react";
 import { Loader2, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import type { Routine } from "@/lib/types";
+import type { Routine, RoutineSchedule } from "@/lib/types";
 import { RoutineActions } from "@/components/routines/routine-actions";
 import { RoutineParams } from "@/components/routines/routine-params";
+import {
+  RoutineScheduleButton,
+  RoutineScheduleForm,
+} from "@/components/routines/routine-schedule-form";
 
 /**
  * Una Rutina del catálogo.
@@ -26,6 +30,8 @@ export function RoutineCard({
   running,
   disabled,
   onChanged,
+  configId,
+  onScheduled,
 }: {
   routine: Routine;
   onRun: (params: Record<string, unknown>) => void;
@@ -33,6 +39,10 @@ export function RoutineCard({
   disabled?: boolean;
   /** Fase 3: refrescar el catálogo después de clonar / compartir / borrar. */
   onChanged?: () => void;
+  /** Fase 4: la instancia contra la que se agenda. Sin ella no se puede agendar. */
+  configId?: string | null;
+  /** Fase 4: refrescar "Mis agendados". Ausente = no se ofrece agendar (demo). */
+  onScheduled?: (schedule: RoutineSchedule) => void;
 }) {
   const t = useTranslations("Routines");
   // Los defaults ya vienen adaptados por el backend a lo que ESTA instancia usa
@@ -40,6 +50,7 @@ export function RoutineCard({
   const [values, setValues] = useState<Record<string, unknown>>(() =>
     Object.fromEntries(routine.params.map((p) => [p.key, p.default]))
   );
+  const [scheduling, setScheduling] = useState(false);
 
   return (
     <div className="rounded-card border border-border bg-surface p-5">
@@ -65,20 +76,42 @@ export function RoutineCard({
           {t("stepCount", { count: routine.step_count })}
         </span>
         {onChanged && <RoutineActions routine={routine} onChanged={onChanged} />}
-        <button
-          type="button"
-          onClick={() => onRun(values)}
-          disabled={running || disabled}
-          className="flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {running ? (
-            <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
-          ) : (
-            <Play size={16} strokeWidth={1.5} />
+        <div className="flex items-center gap-2">
+          {onScheduled && (
+            <RoutineScheduleButton
+              open={scheduling}
+              disabled={running || disabled || !configId}
+              onClick={() => setScheduling((v) => !v)}
+            />
           )}
-          {t("run")}
-        </button>
+          <button
+            type="button"
+            onClick={() => onRun(values)}
+            disabled={running || disabled}
+            className="flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {running ? (
+              <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
+            ) : (
+              <Play size={16} strokeWidth={1.5} />
+            )}
+            {t("run")}
+          </button>
+        </div>
       </div>
+
+      {/* El panel va a lo ancho, DEBAJO de la fila: hereda los `values` que el usuario
+          tiene puestos arriba, porque agendar es "esto que acabo de armar, todos los
+          días" y no un formulario aparte donde volver a elegir período y comparación. */}
+      {scheduling && onScheduled && (
+        <RoutineScheduleForm
+          routineId={routine.id}
+          configId={configId ?? null}
+          params={values}
+          onCreated={onScheduled}
+          onClose={() => setScheduling(false)}
+        />
+      )}
     </div>
   );
 }

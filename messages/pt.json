@@ -1212,7 +1212,16 @@
     "subtitleClient": "Carregue seu usuário e chave de API para começar a conversar com os dados da sua empresa.",
     "subtitleAdmin": "Suas credenciais pessoais para cada instância com a qual você conversa.",
     "noInstance": "Nenhuma instância atribuída ainda.",
-    "backToSettings": "Voltar para configurações"
+    "backToSettings": "Voltar para configurações",
+    "timezoneTitle": "Fuso horário",
+    "timezoneSubtitle": "Define a que horas as Rotinas agendadas chegam até você.",
+    "timezoneInherit": "Usar o da minha organização",
+    "timezoneInheritWith": "Usar o da minha organização ({timezone})",
+    "timezoneSaved": "Salvo",
+    "timezoneEffective": "Seus agendamentos usam {timezone}.",
+    "timezoneUseDetected": "Usar o deste dispositivo ({timezone})",
+    "timezoneExistingNote": "Os agendamentos já criados mantêm o fuso horário com que foram criados.",
+    "timezoneFailed": "Não foi possível salvar o fuso horário."
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1617,7 +1626,51 @@
         "private": "Privada"
       },
       "usersFailed": "Não conseguimos carregar os usuários da organização. O que você vê abaixo pode estar incompleto."
-    }
+    },
+    "cancel": "Cancelar",
+    "schedule": "Agendar",
+    "scheduleTitle": "Receber por email",
+    "scheduleCadence": "Com que frequência",
+    "scheduleWeekday": "Que dia",
+    "scheduleDayOfMonth": "Que dia do mês",
+    "scheduleHour": "A que horas",
+    "scheduleDayNumber": "Dia {day}",
+    "scheduleShortMonthNote": "Nos meses mais curtos chega no último dia do mês.",
+    "scheduleTimezone": "Hora de {timezone}.",
+    "scheduleChangeTimezone": "Mudar fuso horário",
+    "scheduleDeliveryNote": "Você recebe um email com o resumo e o PDF anexo. Se num dia não houver dados, nada é enviado.",
+    "scheduleConfirm": "Agendar",
+    "scheduleFailed": "Não foi possível agendar.",
+    "scheduleNotAvailable": "Sua instância não pode rodar esta Rotina.",
+    "cadence": {
+      "daily": "Todos os dias",
+      "weekdays": "Dias úteis",
+      "weekly": "Toda semana",
+      "monthly": "Todo mês"
+    },
+    "weekday": {
+      "0": "Segunda",
+      "1": "Terça",
+      "2": "Quarta",
+      "3": "Quinta",
+      "4": "Sexta",
+      "5": "Sábado",
+      "6": "Domingo"
+    },
+    "mySchedules": "Meus agendamentos",
+    "schedulePaused": "Pausado",
+    "schedulePause": "Pausar",
+    "scheduleResume": "Retomar",
+    "scheduleDelete": "Excluir agendamento",
+    "scheduleDeleteConfirm": "Sim, excluir",
+    "scheduleNextRun": "Próximo envio: {when}",
+    "scheduleLastError": "O último envio falhou: {reason}",
+    "scheduleWhenSimple": "{cadence} às {hour}",
+    "scheduleWhenWeekly": "Toda {weekday} às {hour}",
+    "scheduleWhenMonthly": "Dia {day} de cada mês às {hour}",
+    "backToRoutines": "Voltar para Rotinas",
+    "runNotFoundTitle": "Não encontramos esta execução",
+    "runNotFoundBody": "Pode ter sido excluída, ou pode ser de outra pessoa: cada execução roda com as credenciais de quem a pediu, e só essa pessoa vê os resultados."
   },
   "Chat": {
     "openInOdoo": "Abrir no Odoo"

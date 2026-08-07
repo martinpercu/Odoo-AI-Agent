@@ -1212,7 +1212,16 @@
     "subtitleClient": "Saisissez votre nom d'utilisateur et votre clé API pour commencer à discuter avec les données de votre entreprise.",
     "subtitleAdmin": "Vos identifiants personnels pour chaque instance avec laquelle vous discutez.",
     "noInstance": "Aucune instance attribuée pour le moment.",
-    "backToSettings": "Retour aux paramètres"
+    "backToSettings": "Retour aux paramètres",
+    "timezoneTitle": "Fuseau horaire",
+    "timezoneSubtitle": "Détermine à quelle heure vos Routines programmées vous parviennent.",
+    "timezoneInherit": "Utiliser celui de mon organisation",
+    "timezoneInheritWith": "Utiliser celui de mon organisation ({timezone})",
+    "timezoneSaved": "Enregistré",
+    "timezoneEffective": "Vos programmations utilisent {timezone}.",
+    "timezoneUseDetected": "Utiliser celui de cet appareil ({timezone})",
+    "timezoneExistingNote": "Les programmations déjà créées conservent le fuseau horaire avec lequel elles ont été créées.",
+    "timezoneFailed": "Impossible d'enregistrer le fuseau horaire."
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1617,7 +1626,51 @@
         "private": "Privée"
       },
       "usersFailed": "Nous n'avons pas pu charger les utilisateurs de l'organisation. Ce qui suit peut être incomplet."
-    }
+    },
+    "cancel": "Annuler",
+    "schedule": "Programmer",
+    "scheduleTitle": "Le recevoir par e-mail",
+    "scheduleCadence": "À quelle fréquence",
+    "scheduleWeekday": "Quel jour",
+    "scheduleDayOfMonth": "Quel jour du mois",
+    "scheduleHour": "À quelle heure",
+    "scheduleDayNumber": "Le {day}",
+    "scheduleShortMonthNote": "Les mois plus courts, il arrive le dernier jour du mois.",
+    "scheduleTimezone": "Heure de {timezone}.",
+    "scheduleChangeTimezone": "Changer de fuseau horaire",
+    "scheduleDeliveryNote": "Vous recevez un e-mail avec le résumé et le PDF en pièce jointe. Sans données un jour donné, rien n'est envoyé.",
+    "scheduleConfirm": "Programmer",
+    "scheduleFailed": "Impossible de programmer.",
+    "scheduleNotAvailable": "Votre instance ne peut pas exécuter cette Routine.",
+    "cadence": {
+      "daily": "Tous les jours",
+      "weekdays": "Jours ouvrés",
+      "weekly": "Chaque semaine",
+      "monthly": "Chaque mois"
+    },
+    "weekday": {
+      "0": "Lundi",
+      "1": "Mardi",
+      "2": "Mercredi",
+      "3": "Jeudi",
+      "4": "Vendredi",
+      "5": "Samedi",
+      "6": "Dimanche"
+    },
+    "mySchedules": "Mes programmations",
+    "schedulePaused": "En pause",
+    "schedulePause": "Mettre en pause",
+    "scheduleResume": "Reprendre",
+    "scheduleDelete": "Supprimer la programmation",
+    "scheduleDeleteConfirm": "Oui, supprimer",
+    "scheduleNextRun": "Prochain envoi : {when}",
+    "scheduleLastError": "Le dernier envoi a échoué : {reason}",
+    "scheduleWhenSimple": "{cadence} à {hour}",
+    "scheduleWhenWeekly": "Chaque {weekday} à {hour}",
+    "scheduleWhenMonthly": "Le {day} de chaque mois à {hour}",
+    "backToRoutines": "Retour aux Routines",
+    "runNotFoundTitle": "Exécution introuvable",
+    "runNotFoundBody": "Elle a peut-être été supprimée, ou elle appartient à quelqu'un d'autre : chaque exécution utilise les identifiants de la personne qui l'a demandée, et elle seule en voit les résultats."
   },
   "Chat": {
     "openInOdoo": "Ouvrir dans Odoo"

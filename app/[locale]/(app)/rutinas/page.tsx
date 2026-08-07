@@ -7,11 +7,18 @@ import { ClipboardList, Loader2, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useSession } from "@/hooks/use-session";
-import { fetchRoutine, listRoutineRuns, listRoutines, runRoutine } from "@/lib/api";
-import type { Routine, RoutineRunSummary } from "@/lib/types";
+import {
+  fetchRoutine,
+  listMyRoutineSchedules,
+  listRoutineRuns,
+  listRoutines,
+  runRoutine,
+} from "@/lib/api";
+import type { Routine, RoutineRunSummary, RoutineSchedule } from "@/lib/types";
 import { RoutineCard } from "@/components/routines/routine-card";
 import { RoutineHistoryItem } from "@/components/routines/routine-history";
 import { RoutineRunProgress } from "@/components/routines/routine-run-progress";
+import { RoutineSchedulesSection } from "@/components/routines/routine-schedules";
 import { RoutineUnavailableCard } from "@/components/routines/routine-unavailable";
 
 /**
@@ -57,11 +64,22 @@ export default function RoutinesPage() {
    */
   const canAuthor = !!meData?.org?.id && !isDemoMode;
 
+  /**
+   * ¿Puede agendar? Hace falta una instancia propia: un agendado corre con las
+   * credenciales del dueño (invariante #3) y en demo las credenciales son NUESTRAS —
+   * mandarle a alguien un digest diario con datos de nuestra instancia de demostración
+   * sería presentarle números ajenos como si fueran su negocio.
+   */
+  const canSchedule = !!meData?.org?.id && !isDemoMode && isConfigured;
+
   const [routines, setRoutines] = useState<Routine[] | null>(null);
   /** Las que esta instancia NO puede correr, con su motivo (§9: el catálogo
    *  explica lo que oculta). No se ofertan — se explican. */
   const [unavailable, setUnavailable] = useState<Routine[]>([]);
   const [runs, setRuns] = useState<RoutineRunSummary[]>([]);
+  /** Fase 4 — los agendados del usuario. Corren con SUS credenciales, así que la lista
+   *  es personal: no existe una vista "los agendados de mi org". */
+  const [schedules, setSchedules] = useState<RoutineSchedule[]>([]);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [startingId, setStartingId] = useState<string | null>(null);
   /** La Rutina en curso, CON sus pasos (el catálogo no los trae). */
@@ -73,6 +91,13 @@ export default function RoutinesPage() {
       if (res.success && res.runs) setRuns(res.runs);
     });
   }, []);
+
+  const loadSchedules = useCallback(() => {
+    if (!canSchedule) return;
+    listMyRoutineSchedules().then((res) => {
+      if (res.success && res.schedules) setSchedules(res.schedules);
+    });
+  }, [canSchedule]);
 
   // El catálogo se pide CON el config_id: el backend lo filtra contra el
   // CapabilityProfile real de esa instancia (invariante #7). Los permisos (B1) los
@@ -93,6 +118,10 @@ export default function RoutinesPage() {
   useEffect(() => {
     loadRuns();
   }, [loadRuns]);
+
+  useEffect(() => {
+    loadSchedules();
+  }, [loadSchedules]);
 
   const handleRun = async (routineId: string, params: Record<string, unknown> = {}) => {
     if (!activeConfigId) return;
@@ -215,6 +244,8 @@ export default function RoutinesPage() {
                         disabled={!isConfigured || activeRunId !== null}
                         onRun={(params) => handleRun(routine.id, params)}
                         onChanged={canAuthor ? loadCatalog : undefined}
+                        configId={activeConfigId}
+                        onScheduled={canSchedule ? () => loadSchedules() : undefined}
                       />
                     ))}
                   </div>
@@ -238,6 +269,14 @@ export default function RoutinesPage() {
             </div>
           )}
         </section>
+
+        {/* Mis agendados (Fase 4 · F2) — arriba del historial: son lo que va a PASAR,
+            y el historial es lo que ya pasó. */}
+        <RoutineSchedulesSection
+          schedules={schedules}
+          routines={routineById}
+          onChanged={loadSchedules}
+        />
 
         {/* Historial */}
         <section>

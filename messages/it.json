@@ -1212,7 +1212,16 @@
     "subtitleClient": "Inserisci nome utente e chiave API per iniziare a chattare con i dati della tua azienda.",
     "subtitleAdmin": "Le tue credenziali personali per ogni istanza con cui chatti.",
     "noInstance": "Nessuna istanza assegnata ancora.",
-    "backToSettings": "Torna alle impostazioni"
+    "backToSettings": "Torna alle impostazioni",
+    "timezoneTitle": "Fuso orario",
+    "timezoneSubtitle": "Determina a che ora ti arrivano le Routine programmate.",
+    "timezoneInherit": "Usa quello della mia organizzazione",
+    "timezoneInheritWith": "Usa quello della mia organizzazione ({timezone})",
+    "timezoneSaved": "Salvato",
+    "timezoneEffective": "Le tue programmazioni usano {timezone}.",
+    "timezoneUseDetected": "Usa quello di questo dispositivo ({timezone})",
+    "timezoneExistingNote": "Le programmazioni già create mantengono il fuso orario con cui sono state create.",
+    "timezoneFailed": "Non è stato possibile salvare il fuso orario."
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1617,7 +1626,51 @@
         "private": "Privata"
       },
       "usersFailed": "Non siamo riusciti a caricare gli utenti dell'organizzazione. Quanto vedi sotto può essere incompleto."
-    }
+    },
+    "cancel": "Annulla",
+    "schedule": "Programma",
+    "scheduleTitle": "Ricevilo via email",
+    "scheduleCadence": "Con che frequenza",
+    "scheduleWeekday": "Quale giorno",
+    "scheduleDayOfMonth": "Quale giorno del mese",
+    "scheduleHour": "A che ora",
+    "scheduleDayNumber": "Il {day}",
+    "scheduleShortMonthNote": "Nei mesi più corti arriva l'ultimo giorno del mese.",
+    "scheduleTimezone": "Ora di {timezone}.",
+    "scheduleChangeTimezone": "Cambia fuso orario",
+    "scheduleDeliveryNote": "Ricevi un'email con il riepilogo e il PDF allegato. Se un giorno non ci sono dati, non viene inviato nulla.",
+    "scheduleConfirm": "Programma",
+    "scheduleFailed": "Non è stato possibile programmarlo.",
+    "scheduleNotAvailable": "La tua istanza non può eseguire questa Routine.",
+    "cadence": {
+      "daily": "Tutti i giorni",
+      "weekdays": "Giorni feriali",
+      "weekly": "Ogni settimana",
+      "monthly": "Ogni mese"
+    },
+    "weekday": {
+      "0": "Lunedì",
+      "1": "Martedì",
+      "2": "Mercoledì",
+      "3": "Giovedì",
+      "4": "Venerdì",
+      "5": "Sabato",
+      "6": "Domenica"
+    },
+    "mySchedules": "Le mie programmazioni",
+    "schedulePaused": "In pausa",
+    "schedulePause": "Metti in pausa",
+    "scheduleResume": "Riprendi",
+    "scheduleDelete": "Elimina programmazione",
+    "scheduleDeleteConfirm": "Sì, elimina",
+    "scheduleNextRun": "Prossimo invio: {when}",
+    "scheduleLastError": "L'ultimo invio non è riuscito: {reason}",
+    "scheduleWhenSimple": "{cadence} alle {hour}",
+    "scheduleWhenWeekly": "Ogni {weekday} alle {hour}",
+    "scheduleWhenMonthly": "Il {day} di ogni mese alle {hour}",
+    "backToRoutines": "Torna alle Routine",
+    "runNotFoundTitle": "Non troviamo questa esecuzione",
+    "runNotFoundBody": "Potrebbe essere stata eliminata, oppure appartiene a un'altra persona: ogni esecuzione usa le credenziali di chi l'ha richiesta, e solo quella persona ne vede i risultati."
   },
   "Chat": {
     "openInOdoo": "Apri in Odoo"
