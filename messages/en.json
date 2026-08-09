@@ -42,7 +42,8 @@
     "configureToChat": "Set up to chat",
     "pricing": "Pricing",
     "implementerManual": "Technical manual",
-    "routines": "Routines"
+    "routines": "Routines",
+    "dashboard": "Dashboard"
   },
   "ChatGroups": {
     "today": "Today",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "Pinned Insights",
-    "empty": "No pinned insights yet",
-    "emptyHint": "Pin charts and files from your conversations to keep them handy.",
-    "pinTooltip": "Pin to dashboard",
-    "unpinTooltip": "Unpin from dashboard",
-    "clearAll": "Clear all",
-    "chartPin": "Pinned chart",
-    "filePin": "Pinned file",
-    "excelPin": "Pinned export",
+    "title": "Dashboard",
+    "empty": "Your dashboard is empty",
+    "emptyHint": "Add charts and files from your conversations to keep them handy.",
+    "pinTooltip": "Add to dashboard",
+    "unpinTooltip": "Remove from dashboard",
+    "clearAll": "Clear dashboard",
+    "chartPin": "Dashboard chart",
+    "filePin": "Dashboard file",
+    "excelPin": "Dashboard export",
     "viewInChat": "View in chat",
-    "pinnedCount": "{count} pinned",
-    "errorPin": "Could not pin this item. Please try again.",
-    "errorUnpin": "Could not unpin this item. Please try again.",
-    "errorClear": "Could not clear pins. Please try again.",
+    "pinnedCount": "{count} on the dashboard",
+    "errorPin": "Could not add it to the dashboard. Try again.",
+    "errorUnpin": "Could not remove it from the dashboard. Try again.",
+    "errorClear": "Could not clear the dashboard. Try again.",
     "liveSection": "Live",
     "savedSection": "Saved",
     "saveTooltip": "Save insight",
@@ -512,7 +513,8 @@
     "liveBadge": "Live",
     "historicBadge": "Historic",
     "refreshTooltip": "Refresh data",
-    "downloadTooltip": "Download"
+    "downloadTooltip": "Download",
+    "openDashboard": "Open the dashboard"
   },
   "Notifications": {
     "title": "Alerts",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "Executing · query"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Your dashboard is empty",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Refresh all",
+      "refreshingAll": "Refreshing…",
+      "refresh": "Refresh this card",
+      "remove": "Remove from dashboard",
+      "download": "Download",
+      "clearAll": "Clear dashboard",
+      "period": {
+        "label": "Period",
+        "none": "Each card keeps its own",
+        "this_month": "This month",
+        "last_month": "Last month",
+        "this_quarter": "This quarter",
+        "this_year": "This year",
+        "last_12_months": "Last 12 months",
+        "applied": "Showing {start} to {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "failed": "Failed"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "The file could not be generated. Try again."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Build this dashboard",
+        "building": "Building…",
+        "failed": "The dashboard could not be built. Try again.",
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "Download"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Your numbers on one screen. Refresh them in one go and change their period.",
+      "empty": "Your dashboard is empty",
+      "emptyHint": "Add charts from your conversations, or build it in one click with one of the dashboards below.",
+      "refreshAll": "Refresh all",
+      "refreshingAll": "Refreshing…",
+      "refresh": "Refresh this card",
+      "remove": "Remove from dashboard",
+      "download": "Download",
+      "clearAll": "Clear dashboard",
+      "period": {
+        "label": "Period",
+        "none": "Each card keeps its own",
+        "this_month": "This month",
+        "last_month": "Last month",
+        "this_quarter": "This quarter",
+        "this_year": "This year",
+        "last_12_months": "Last 12 months",
+        "applied": "Showing {start} to {end}."
+      },
+      "badge": {
+        "live": "Live",
+        "historic": "Historic",
+        "noPeriod": "Not tied to a period",
+        "noPeriodHint": "This number is about today, not a date range: changing the period does not affect it."
+      },
+      "state": {
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "failed": "Failed"
+      },
+      "skipReason": {
+        "static": "It's a closed period: it doesn't change.",
+        "no_context": "It was saved before we could remember the query.",
+        "no_groupby": "There is no breakdown to recompute.",
+        "no_model": "We don't know where this number came from.",
+        "not_chart": "It's a saved file, not a query.",
+        "generic": "It didn't need refreshing."
+      },
+      "errorReason": {
+        "odoo_error": "We couldn't reach your system for this card.",
+        "chart_failed": "The query ran but returned nothing to chart.",
+        "unexpected": "Something went wrong with this card.",
+        "generic": "This card couldn't be refreshed."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "The file could not be generated. Try again."
+      },
+      "presets": {
+        "title": "Build your dashboard in one click",
+        "subtitle": "Pick the one that looks like your day and the cards are ready. You can change them afterwards.",
+        "apply": "Build this dashboard",
+        "building": "Building…",
+        "failed": "The dashboard could not be built. Try again.",
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
       }
     }
   },

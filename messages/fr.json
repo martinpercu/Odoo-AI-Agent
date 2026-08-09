@@ -42,7 +42,8 @@
     "configureToChat": "Configurer pour discuter",
     "pricing": "Tarifs",
     "implementerManual": "Manuel technique",
-    "routines": "Routines"
+    "routines": "Routines",
+    "dashboard": "Tableau de bord"
   },
   "ChatGroups": {
     "today": "Aujourd'hui",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "Insights épinglés",
-    "empty": "Aucun insight épinglé",
-    "emptyHint": "Épinglez des graphiques pour les garder à portée de main.",
-    "pinTooltip": "Épingler au tableau de bord",
-    "unpinTooltip": "Désépingler",
-    "clearAll": "Tout effacer",
-    "chartPin": "Graphique épinglé",
-    "filePin": "Fichier épinglé",
-    "excelPin": "Export épinglé",
+    "title": "Tableau de bord",
+    "empty": "Votre tableau de bord est vide",
+    "emptyHint": "Ajoutez les graphiques et fichiers de vos conversations pour les garder à portée de main.",
+    "pinTooltip": "Ajouter au tableau de bord",
+    "unpinTooltip": "Retirer du tableau de bord",
+    "clearAll": "Vider le tableau de bord",
+    "chartPin": "Graphique du tableau de bord",
+    "filePin": "Fichier du tableau de bord",
+    "excelPin": "Export du tableau de bord",
     "viewInChat": "Voir dans le chat",
-    "pinnedCount": "{count} épinglés",
-    "errorPin": "Erreur d'épinglage.",
-    "errorUnpin": "Erreur de désépinglage.",
-    "errorClear": "Erreur d'effacement.",
+    "pinnedCount": "{count} sur le tableau de bord",
+    "errorPin": "Impossible de l'ajouter au tableau de bord. Réessayez.",
+    "errorUnpin": "Impossible de le retirer du tableau de bord. Réessayez.",
+    "errorClear": "Impossible de vider le tableau de bord. Réessayez.",
     "liveSection": "En direct",
     "savedSection": "Enregistrés",
     "saveTooltip": "Enregistrer l'insight",
@@ -512,7 +513,8 @@
     "liveBadge": "En direct",
     "historicBadge": "Historique",
     "refreshTooltip": "Actualiser les données",
-    "downloadTooltip": "Télécharger"
+    "downloadTooltip": "Télécharger",
+    "openDashboard": "Ouvrir le tableau de bord"
   },
   "Notifications": {
     "title": "Alertes",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "Exécution · query"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Votre tableau de bord est vide",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Tout actualiser",
+      "refreshingAll": "Actualisation…",
+      "refresh": "Actualiser cette carte",
+      "remove": "Retirer du tableau de bord",
+      "download": "Télécharger",
+      "clearAll": "Vider le tableau de bord",
+      "period": {
+        "label": "Période",
+        "none": "Chaque carte garde la sienne",
+        "this_month": "Ce mois-ci",
+        "last_month": "Le mois dernier",
+        "this_quarter": "Ce trimestre",
+        "this_year": "Cette année",
+        "last_12_months": "12 derniers mois",
+        "applied": "Du {start} au {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Actualisé",
+        "unchanged": "Inchangé",
+        "failed": "Échec"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Le fichier n'a pas pu être généré. Réessayez."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Créer ce tableau de bord",
+        "building": "Création…",
+        "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
+        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "Télécharger"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "Tableau de bord",
+      "subtitle": "Vos chiffres sur un seul écran. Actualisez-les d'un coup et changez leur période.",
+      "empty": "Votre tableau de bord est vide",
+      "emptyHint": "Ajoutez les graphiques de vos conversations, ou créez-le en un clic avec l'un des tableaux ci-dessous.",
+      "refreshAll": "Tout actualiser",
+      "refreshingAll": "Actualisation…",
+      "refresh": "Actualiser cette carte",
+      "remove": "Retirer du tableau de bord",
+      "download": "Télécharger",
+      "clearAll": "Vider le tableau de bord",
+      "period": {
+        "label": "Période",
+        "none": "Chaque carte garde la sienne",
+        "this_month": "Ce mois-ci",
+        "last_month": "Le mois dernier",
+        "this_quarter": "Ce trimestre",
+        "this_year": "Cette année",
+        "last_12_months": "12 derniers mois",
+        "applied": "Du {start} au {end}."
+      },
+      "badge": {
+        "live": "En direct",
+        "historic": "Historique",
+        "noPeriod": "Indépendant de la période",
+        "noPeriodHint": "Ce chiffre concerne aujourd'hui, pas une plage de dates : changer la période ne le modifie pas."
+      },
+      "state": {
+        "updated": "Actualisé",
+        "unchanged": "Inchangé",
+        "failed": "Échec"
+      },
+      "skipReason": {
+        "static": "C'est une période close : elle ne change pas.",
+        "no_context": "Enregistré avant que nous puissions mémoriser la requête.",
+        "no_groupby": "Il n'y a pas de répartition à recalculer.",
+        "no_model": "Nous ne savons pas d'où vient ce chiffre.",
+        "not_chart": "C'est un fichier enregistré, pas une requête.",
+        "generic": "Pas besoin de l'actualiser."
+      },
+      "errorReason": {
+        "odoo_error": "Nous n'avons pas pu joindre votre système pour cette carte.",
+        "chart_failed": "La requête a fonctionné mais n'a rien renvoyé à afficher.",
+        "unexpected": "Un problème est survenu avec cette carte.",
+        "generic": "Cette carte n'a pas pu être actualisée."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Le fichier n'a pas pu être généré. Réessayez."
+      },
+      "presets": {
+        "title": "Créez votre tableau de bord en un clic",
+        "subtitle": "Choisissez celui qui ressemble à votre journée et les cartes sont prêtes. Vous pourrez les modifier ensuite.",
+        "apply": "Créer ce tableau de bord",
+        "building": "Création…",
+        "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
+        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
       }
     }
   },

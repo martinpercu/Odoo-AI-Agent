@@ -42,7 +42,8 @@
     "configureToChat": "Zum Chatten einrichten",
     "pricing": "Preise",
     "implementerManual": "Technisches Handbuch",
-    "routines": "Routinen"
+    "routines": "Routinen",
+    "dashboard": "Dashboard"
   },
   "ChatGroups": {
     "today": "Heute",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "Angepinnte Insights",
-    "empty": "Keine Insights angepinnt",
-    "emptyHint": "Pinnen Sie Diagramme an, um sie griffbereit zu haben.",
-    "pinTooltip": "An Dashboard pinnen",
-    "unpinTooltip": "Vom Dashboard lösen",
-    "clearAll": "Alle löschen",
-    "chartPin": "Angepinntes Diagramm",
-    "filePin": "Angepinnte Datei",
-    "excelPin": "Angepinnter Export",
-    "viewInChat": "Im Chat anzeigen",
-    "pinnedCount": "{count} angepinnt",
-    "errorPin": "Fehler beim Pinnen.",
-    "errorUnpin": "Fehler beim Lösen.",
-    "errorClear": "Fehler beim Löschen.",
+    "title": "Dashboard",
+    "empty": "Ihr Dashboard ist leer",
+    "emptyHint": "Fügen Sie Diagramme und Dateien aus Ihren Gesprächen hinzu, um sie griffbereit zu haben.",
+    "pinTooltip": "Zum Dashboard hinzufügen",
+    "unpinTooltip": "Vom Dashboard entfernen",
+    "clearAll": "Dashboard leeren",
+    "chartPin": "Dashboard-Diagramm",
+    "filePin": "Dashboard-Datei",
+    "excelPin": "Dashboard-Export",
+    "viewInChat": "Im Chat ansehen",
+    "pinnedCount": "{count} im Dashboard",
+    "errorPin": "Konnte nicht zum Dashboard hinzugefügt werden. Bitte erneut versuchen.",
+    "errorUnpin": "Konnte nicht vom Dashboard entfernt werden. Bitte erneut versuchen.",
+    "errorClear": "Das Dashboard konnte nicht geleert werden. Bitte erneut versuchen.",
     "liveSection": "Live",
     "savedSection": "Gespeichert",
     "saveTooltip": "Insight speichern",
@@ -512,7 +513,8 @@
     "liveBadge": "Live",
     "historicBadge": "Historisch",
     "refreshTooltip": "Daten aktualisieren",
-    "downloadTooltip": "Herunterladen"
+    "downloadTooltip": "Herunterladen",
+    "openDashboard": "Dashboard öffnen"
   },
   "Notifications": {
     "title": "Benachrichtigungen",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "Ausführen · query"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Ihr Dashboard ist leer",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Alle aktualisieren",
+      "refreshingAll": "Wird aktualisiert…",
+      "refresh": "Diese Karte aktualisieren",
+      "remove": "Vom Dashboard entfernen",
+      "download": "Herunterladen",
+      "clearAll": "Dashboard leeren",
+      "period": {
+        "label": "Zeitraum",
+        "none": "Jede Karte behält ihren",
+        "this_month": "Dieser Monat",
+        "last_month": "Letzter Monat",
+        "this_quarter": "Dieses Quartal",
+        "this_year": "Dieses Jahr",
+        "last_12_months": "Letzte 12 Monate",
+        "applied": "Vom {start} bis {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Aktualisiert",
+        "unchanged": "Unverändert",
+        "failed": "Fehlgeschlagen"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Die Datei konnte nicht erstellt werden. Bitte erneut versuchen."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Dieses Dashboard erstellen",
+        "building": "Wird erstellt…",
+        "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
+        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "Herunterladen"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Ihre Zahlen auf einem Bildschirm. Alle auf einmal aktualisieren und den Zeitraum umstellen.",
+      "empty": "Ihr Dashboard ist leer",
+      "emptyHint": "Fügen Sie Diagramme aus Ihren Gesprächen hinzu oder erstellen Sie es mit einem Klick über eines der Dashboards unten.",
+      "refreshAll": "Alle aktualisieren",
+      "refreshingAll": "Wird aktualisiert…",
+      "refresh": "Diese Karte aktualisieren",
+      "remove": "Vom Dashboard entfernen",
+      "download": "Herunterladen",
+      "clearAll": "Dashboard leeren",
+      "period": {
+        "label": "Zeitraum",
+        "none": "Jede Karte behält ihren",
+        "this_month": "Dieser Monat",
+        "last_month": "Letzter Monat",
+        "this_quarter": "Dieses Quartal",
+        "this_year": "Dieses Jahr",
+        "last_12_months": "Letzte 12 Monate",
+        "applied": "Vom {start} bis {end}."
+      },
+      "badge": {
+        "live": "Live",
+        "historic": "Historisch",
+        "noPeriod": "Zeitraumunabhängig",
+        "noPeriodHint": "Diese Zahl bezieht sich auf heute, nicht auf einen Datumsbereich: eine Änderung des Zeitraums wirkt sich nicht aus."
+      },
+      "state": {
+        "updated": "Aktualisiert",
+        "unchanged": "Unverändert",
+        "failed": "Fehlgeschlagen"
+      },
+      "skipReason": {
+        "static": "Ein abgeschlossener Zeitraum: er ändert sich nicht.",
+        "no_context": "Gespeichert, bevor wir die Abfrage merken konnten.",
+        "no_groupby": "Es gibt keine Aufschlüsselung zum Neuberechnen.",
+        "no_model": "Wir wissen nicht, woher diese Zahl stammt.",
+        "not_chart": "Eine gespeicherte Datei, keine Abfrage.",
+        "generic": "Eine Aktualisierung war nicht nötig."
+      },
+      "errorReason": {
+        "odoo_error": "Wir konnten Ihr System für diese Karte nicht erreichen.",
+        "chart_failed": "Die Abfrage lief, lieferte aber nichts zum Darstellen.",
+        "unexpected": "Mit dieser Karte ist etwas schiefgelaufen.",
+        "generic": "Diese Karte konnte nicht aktualisiert werden."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Die Datei konnte nicht erstellt werden. Bitte erneut versuchen."
+      },
+      "presets": {
+        "title": "Ihr Dashboard mit einem Klick",
+        "subtitle": "Wählen Sie das, was zu Ihrem Alltag passt — die Karten sind sofort da. Ändern können Sie sie danach.",
+        "apply": "Dieses Dashboard erstellen",
+        "building": "Wird erstellt…",
+        "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
+        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
       }
     }
   },

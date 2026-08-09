@@ -42,7 +42,8 @@
     "configureToChat": "Set up to chat",
     "pricing": "Pricing",
     "implementerManual": "Technical manual",
-    "routines": "Routines"
+    "routines": "Routines",
+    "dashboard": "डैशबोर्ड"
   },
   "ChatGroups": {
     "today": "आज",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "पिन की गई जानकारियां",
-    "empty": "अभी तक कोई पिन नहीं",
-    "emptyHint": "हमेशा उपलब्ध रखने के लिए बातचीत से चार्ट और फ़ाइलें पिन करें।",
-    "pinTooltip": "डैशबोर्ड पर पिन करें",
+    "title": "डैशबोर्ड",
+    "empty": "आपका डैशबोर्ड खाली है",
+    "emptyHint": "अपनी बातचीत के चार्ट और फ़ाइलें जोड़ें ताकि वे हमेशा पास रहें.",
+    "pinTooltip": "डैशबोर्ड में जोड़ें",
     "unpinTooltip": "डैशबोर्ड से हटाएं",
-    "clearAll": "सभी हटाएं",
-    "chartPin": "पिन किया गया चार्ट",
-    "filePin": "पिन की गई फ़ाइल",
-    "excelPin": "पिन किया गया एक्सपोर्ट",
+    "clearAll": "डैशबोर्ड खाली करें",
+    "chartPin": "डैशबोर्ड चार्ट",
+    "filePin": "डैशबोर्ड फ़ाइल",
+    "excelPin": "डैशबोर्ड निर्यात",
     "viewInChat": "चैट में देखें",
-    "pinnedCount": "{count} पिन",
-    "errorPin": "इस आइटम को पिन नहीं किया जा सका। फिर कोशिश करें।",
-    "errorUnpin": "इस आइटम को हटा नहीं सका। फिर कोशिश करें।",
-    "errorClear": "पिन हटा नहीं सके। फिर कोशिश करें।",
+    "pinnedCount": "डैशबोर्ड में {count}",
+    "errorPin": "डैशबोर्ड में नहीं जोड़ा जा सका. दोबारा कोशिश करें.",
+    "errorUnpin": "डैशबोर्ड से नहीं हटाया जा सका. दोबारा कोशिश करें.",
+    "errorClear": "डैशबोर्ड खाली नहीं हो सका. दोबारा कोशिश करें.",
     "liveSection": "लाइव",
     "savedSection": "सहेजे गए",
     "saveTooltip": "जानकारी सहेजें",
@@ -512,7 +513,8 @@
     "liveBadge": "लाइव",
     "historicBadge": "ऐतिहासिक",
     "refreshTooltip": "डेटा रिफ्रेश करें",
-    "downloadTooltip": "डाउनलोड करें"
+    "downloadTooltip": "डाउनलोड करें",
+    "openDashboard": "डैशबोर्ड खोलें"
   },
   "Notifications": {
     "title": "अलर्ट",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "निष्पादन · क्वेरी"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Your dashboard is empty",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Refresh all",
+      "refreshingAll": "Refreshing…",
+      "refresh": "Refresh this card",
+      "remove": "Remove from dashboard",
+      "download": "Download",
+      "clearAll": "Clear dashboard",
+      "period": {
+        "label": "Period",
+        "none": "Each card keeps its own",
+        "this_month": "This month",
+        "last_month": "Last month",
+        "this_quarter": "This quarter",
+        "this_year": "This year",
+        "last_12_months": "Last 12 months",
+        "applied": "Showing {start} to {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "failed": "Failed"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "The file could not be generated. Try again."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Build this dashboard",
+        "building": "Building…",
+        "failed": "The dashboard could not be built. Try again.",
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "डाउनलोड करें"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "डैशबोर्ड",
+      "subtitle": "आपके सारे आंकड़े एक ही स्क्रीन पर। एक साथ अपडेट करें और अवधि बदलें।",
+      "empty": "आपका डैशबोर्ड खाली है",
+      "emptyHint": "अपनी बातचीत के चार्ट यहां जोड़ें, या नीचे दिए डैशबोर्ड में से किसी एक से इसे एक क्लिक में बनाएं।",
+      "refreshAll": "सब अपडेट करें",
+      "refreshingAll": "अपडेट हो रहा है…",
+      "refresh": "यह कार्ड अपडेट करें",
+      "remove": "डैशबोर्ड से हटाएं",
+      "download": "डाउनलोड करें",
+      "clearAll": "डैशबोर्ड खाली करें",
+      "period": {
+        "label": "अवधि",
+        "none": "हर कार्ड की अपनी",
+        "this_month": "इस महीने",
+        "last_month": "पिछले महीने",
+        "this_quarter": "इस तिमाही",
+        "this_year": "इस साल",
+        "last_12_months": "पिछले 12 महीने",
+        "applied": "{start} से {end} तक दिखा रहे हैं।"
+      },
+      "badge": {
+        "live": "लाइव",
+        "historic": "ऐतिहासिक",
+        "noPeriod": "अवधि पर निर्भर नहीं",
+        "noPeriodHint": "यह आंकड़ा आज का है, किसी तारीख़ की सीमा का नहीं: अवधि बदलने से यह नहीं बदलता।"
+      },
+      "state": {
+        "updated": "अपडेट हुआ",
+        "unchanged": "कोई बदलाव नहीं",
+        "failed": "नहीं हो सका"
+      },
+      "skipReason": {
+        "static": "यह बंद अवधि है: यह नहीं बदलती।",
+        "no_context": "यह तब सहेजा गया जब हम प्रश्न याद नहीं रख पाते थे।",
+        "no_groupby": "दोबारा गिनने के लिए कोई विभाजन नहीं है।",
+        "no_model": "हमें नहीं पता यह आंकड़ा कहां से आया।",
+        "not_chart": "यह सहेजी गई फ़ाइल है, कोई प्रश्न नहीं।",
+        "generic": "इसे अपडेट करने की ज़रूरत नहीं थी।"
+      },
+      "errorReason": {
+        "odoo_error": "इस कार्ड के लिए हम आपके सिस्टम से जुड़ नहीं सके।",
+        "chart_failed": "प्रश्न चला लेकिन चार्ट के लिए कोई डेटा नहीं मिला।",
+        "unexpected": "इस कार्ड के साथ कुछ गड़बड़ हुई।",
+        "generic": "यह कार्ड अपडेट नहीं हो सका।"
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "फ़ाइल नहीं बन सकी। दोबारा कोशिश करें।"
+      },
+      "presets": {
+        "title": "एक क्लिक में अपना डैशबोर्ड बनाएं",
+        "subtitle": "जो आपके काम से मेल खाता हो उसे चुनें और कार्ड तैयार हो जाएंगे। बाद में बदल सकते हैं।",
+        "apply": "यह डैशबोर्ड बनाएं",
+        "building": "बन रहा है…",
+        "failed": "डैशबोर्ड नहीं बन सका। दोबारा कोशिश करें।",
+        "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।"
       }
     }
   },

@@ -22,6 +22,7 @@ import {
   Check,
   User as UserIcon,
   ClipboardList,
+  LayoutDashboard,
 } from "lucide-react";
 
 import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
@@ -390,6 +391,15 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
 
             {/* Navigation links */}
             <div className="px-1">
+              {/* El Tablero (Fase 5). No pide instancia configurada como Rutinas: las
+                  tarjetas ya están guardadas y se pueden mirar y exportar sin volver a
+                  consultar Odoo — sólo actualizar necesita la instancia. */}
+              {user && meData?.org && (
+                <Link href="/tablero" onClick={close} className={itemClass}>
+                  <LayoutDashboard size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("dashboard")}</span>
+                </Link>
+              )}
               {user && meData?.org && configs.length > 0 && (
                 <Link href="/rutinas" onClick={close} className={itemClass}>
                   <ClipboardList size={iconInline} strokeWidth={1.5} className="shrink-0" />

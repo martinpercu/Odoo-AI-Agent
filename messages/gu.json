@@ -42,7 +42,8 @@
     "configureToChat": "Set up to chat",
     "pricing": "Pricing",
     "implementerManual": "Technical manual",
-    "routines": "Routines"
+    "routines": "Routines",
+    "dashboard": "ડેશબોર્ડ"
   },
   "ChatGroups": {
     "today": "આજે",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "પિન કરેલ ઇનસાઇટ્સ",
-    "empty": "હજુ કોઈ પિન નથી",
-    "emptyHint": "સરળ ઍક્સેસ માટે વાર્તાલાપમાંથી ચાર્ટ અને ફાઇલો પિન કરો.",
-    "pinTooltip": "ડેશબોર્ડ પર પિન કરો",
-    "unpinTooltip": "ડેશબોર્ડમાંથી પિન દૂર કરો",
-    "clearAll": "બધા સાફ કરો",
-    "chartPin": "પિન કરેલ ચાર્ટ",
-    "filePin": "પિન કરેલ ફાઇલ",
-    "excelPin": "પિન કરેલ એક્સપોર્ટ",
-    "viewInChat": "ચૅટમાં જુઓ",
-    "pinnedCount": "{count} પિન",
-    "errorPin": "આ આઇટમ પિન કરી શક્યા નહીં. ફરી પ્રયાસ કરો.",
-    "errorUnpin": "આ આઇટમ પિન દૂર કરી શક્યા નહીં. ફરી પ્રયાસ કરો.",
-    "errorClear": "પિન સાફ કરી શક્યા નહીં. ફરી પ્રયાસ કરો.",
+    "title": "ડેશબોર્ડ",
+    "empty": "તમારું ડેશબોર્ડ ખાલી છે",
+    "emptyHint": "તમારી વાતચીતના ચાર્ટ અને ફાઇલો ઉમેરો જેથી તે હાથવગા રહે.",
+    "pinTooltip": "ડેશબોર્ડમાં ઉમેરો",
+    "unpinTooltip": "ડેશબોર્ડમાંથી દૂર કરો",
+    "clearAll": "ડેશબોર્ડ ખાલી કરો",
+    "chartPin": "ડેશબોર્ડ ચાર્ટ",
+    "filePin": "ડેશબોર્ડ ફાઇલ",
+    "excelPin": "ડેશબોર્ડ નિકાસ",
+    "viewInChat": "ચેટમાં જુઓ",
+    "pinnedCount": "ડેશબોર્ડમાં {count}",
+    "errorPin": "ડેશબોર્ડમાં ઉમેરી શકાયું નહીં. ફરી પ્રયાસ કરો.",
+    "errorUnpin": "ડેશબોર્ડમાંથી દૂર કરી શકાયું નહીં. ફરી પ્રયાસ કરો.",
+    "errorClear": "ડેશબોર્ડ ખાલી કરી શકાયું નહીં. ફરી પ્રયાસ કરો.",
     "liveSection": "લાઇવ",
     "savedSection": "સાચવેલ",
     "saveTooltip": "ઇનસાઇટ સાચવો",
@@ -512,7 +513,8 @@
     "liveBadge": "લાઇવ",
     "historicBadge": "ઐતિહાસિક",
     "refreshTooltip": "ડેટા રિફ્રેશ કરો",
-    "downloadTooltip": "ડાઉનલોડ કરો"
+    "downloadTooltip": "ડાઉનલોડ કરો",
+    "openDashboard": "ડેશબોર્ડ ખોલો"
   },
   "Notifications": {
     "title": "એલર્ટ",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "અમલ · ક્વેરી"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Your dashboard is empty",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Refresh all",
+      "refreshingAll": "Refreshing…",
+      "refresh": "Refresh this card",
+      "remove": "Remove from dashboard",
+      "download": "Download",
+      "clearAll": "Clear dashboard",
+      "period": {
+        "label": "Period",
+        "none": "Each card keeps its own",
+        "this_month": "This month",
+        "last_month": "Last month",
+        "this_quarter": "This quarter",
+        "this_year": "This year",
+        "last_12_months": "Last 12 months",
+        "applied": "Showing {start} to {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "failed": "Failed"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "The file could not be generated. Try again."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Build this dashboard",
+        "building": "Building…",
+        "failed": "The dashboard could not be built. Try again.",
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "ડાઉનલોડ કરો"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "ડેશબોર્ડ",
+      "subtitle": "તમારા બધા આંકડા એક જ સ્ક્રીન પર. એકસાથે અપડેટ કરો અને સમયગાળો બદલો.",
+      "empty": "તમારું ડેશબોર્ડ ખાલી છે",
+      "emptyHint": "તમારી વાતચીતના ચાર્ટ અહીં ઉમેરો, અથવા નીચેના ડેશબોર્ડમાંથી એકથી તેને એક ક્લિકમાં બનાવો.",
+      "refreshAll": "બધું અપડેટ કરો",
+      "refreshingAll": "અપડેટ થઈ રહ્યું છે…",
+      "refresh": "આ કાર્ડ અપડેટ કરો",
+      "remove": "ડેશબોર્ડમાંથી દૂર કરો",
+      "download": "ડાઉનલોડ કરો",
+      "clearAll": "ડેશબોર્ડ ખાલી કરો",
+      "period": {
+        "label": "સમયગાળો",
+        "none": "દરેક કાર્ડનો પોતાનો",
+        "this_month": "આ મહિને",
+        "last_month": "ગયા મહિને",
+        "this_quarter": "આ ત્રિમાસિક",
+        "this_year": "આ વર્ષે",
+        "last_12_months": "છેલ્લા 12 મહિના",
+        "applied": "{start} થી {end} સુધી બતાવી રહ્યા છીએ."
+      },
+      "badge": {
+        "live": "લાઇવ",
+        "historic": "ઐતિહાસિક",
+        "noPeriod": "સમયગાળા પર આધારિત નથી",
+        "noPeriodHint": "આ આંકડો આજનો છે, તારીખની શ્રેણીનો નહીં: સમયગાળો બદલવાથી તે બદલાતો નથી."
+      },
+      "state": {
+        "updated": "અપડેટ થયું",
+        "unchanged": "કોઈ ફેરફાર નહીં",
+        "failed": "થઈ શક્યું નહીં"
+      },
+      "skipReason": {
+        "static": "આ બંધ સમયગાળો છે: તે બદલાતો નથી.",
+        "no_context": "અમે પ્રશ્ન યાદ રાખી શકતા હતા તે પહેલાં સાચવ્યું હતું.",
+        "no_groupby": "ફરીથી ગણવા માટે કોઈ વિભાજન નથી.",
+        "no_model": "આ આંકડો ક્યાંથી આવ્યો તે અમને ખબર નથી.",
+        "not_chart": "આ સાચવેલી ફાઇલ છે, પ્રશ્ન નથી.",
+        "generic": "તેને અપડેટ કરવાની જરૂર નહોતી."
+      },
+      "errorReason": {
+        "odoo_error": "આ કાર્ડ માટે અમે તમારી સિસ્ટમ સાથે જોડાઈ શક્યા નહીં.",
+        "chart_failed": "પ્રશ્ન ચાલ્યો પણ ચાર્ટ માટે કોઈ ડેટા મળ્યો નહીં.",
+        "unexpected": "આ કાર્ડ સાથે કંઈક ખોટું થયું.",
+        "generic": "આ કાર્ડ અપડેટ થઈ શક્યું નહીં."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "ફાઇલ બની શકી નહીં. ફરી પ્રયાસ કરો."
+      },
+      "presets": {
+        "title": "એક ક્લિકમાં તમારું ડેશબોર્ડ બનાવો",
+        "subtitle": "તમારા કામ સાથે મેળ ખાતું હોય તે પસંદ કરો અને કાર્ડ તૈયાર થઈ જશે. પછી બદલી શકો છો.",
+        "apply": "આ ડેશબોર્ડ બનાવો",
+        "building": "બની રહ્યું છે…",
+        "failed": "ડેશબોર્ડ બની શક્યું નહીં. ફરી પ્રયાસ કરો.",
+        "tooManyRuns": "ઘણી પ્રક્રિયાઓ ચાલી રહી છે. થોડી સેકંડ રાહ જુઓ અને ફરી પ્રયાસ કરો."
       }
     }
   },

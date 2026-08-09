@@ -42,7 +42,8 @@
     "configureToChat": "Configurar para chatear",
     "pricing": "Planes",
     "implementerManual": "Manual técnico",
-    "routines": "Rutinas"
+    "routines": "Rutinas",
+    "dashboard": "Tablero"
   },
   "ChatGroups": {
     "today": "Hoy",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "Insights Fijados",
-    "empty": "Sin insights fijados",
-    "emptyHint": "Fija gráficos y archivos de tus conversaciones para tenerlos a mano.",
-    "pinTooltip": "Fijar al dashboard",
-    "unpinTooltip": "Desfijar del dashboard",
-    "clearAll": "Limpiar todo",
-    "chartPin": "Gráfico fijado",
-    "filePin": "Archivo fijado",
-    "excelPin": "Exportación fijada",
-    "viewInChat": "Ver en chat",
-    "pinnedCount": "{count} fijados",
-    "errorPin": "No se pudo fijar este elemento. Inténtalo de nuevo.",
-    "errorUnpin": "No se pudo desfijar este elemento. Inténtalo de nuevo.",
-    "errorClear": "No se pudieron limpiar los pins. Inténtalo de nuevo.",
+    "title": "Tablero",
+    "empty": "Tu tablero está vacío",
+    "emptyHint": "Agregá gráficos y archivos de tus conversaciones para tenerlos a mano.",
+    "pinTooltip": "Agregar al tablero",
+    "unpinTooltip": "Quitar del tablero",
+    "clearAll": "Vaciar tablero",
+    "chartPin": "Gráfico del tablero",
+    "filePin": "Archivo del tablero",
+    "excelPin": "Exportación del tablero",
+    "viewInChat": "Ver en el chat",
+    "pinnedCount": "{count} en el tablero",
+    "errorPin": "No se pudo agregar al tablero. Intentá de nuevo.",
+    "errorUnpin": "No se pudo quitar del tablero. Intentá de nuevo.",
+    "errorClear": "No se pudo vaciar el tablero. Intentá de nuevo.",
     "liveSection": "En vivo",
     "savedSection": "Guardados",
     "saveTooltip": "Guardar insight",
@@ -512,7 +513,8 @@
     "liveBadge": "En vivo",
     "historicBadge": "Histórico",
     "refreshTooltip": "Actualizar datos",
-    "downloadTooltip": "Descargar"
+    "downloadTooltip": "Descargar",
+    "openDashboard": "Abrir el tablero"
   },
   "Notifications": {
     "title": "Alertas",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "Ejecutando · query"
+    },
+    "Dashboard": {
+      "title": "Tablero de insights",
+      "subtitle": "Cada tarjeta re-ejecuta su query_context contra la instancia — read_group directo, sin grafo ni LLM.",
+      "empty": "Tu tablero está vacío",
+      "emptyHint": "Fijá gráficos desde el chat o corré una Rutina con compose.pin. El pin guarda modelo, dominio y groupby.",
+      "refreshAll": "Actualizar todo",
+      "refreshingAll": "Actualizando…",
+      "refresh": "Actualizar esta tarjeta",
+      "remove": "Quitar del tablero",
+      "download": "Descargar",
+      "clearAll": "Vaciar tablero",
+      "period": {
+        "label": "Período",
+        "none": "Cada tarjeta con el suyo",
+        "this_month": "Este mes",
+        "last_month": "El mes pasado",
+        "this_quarter": "Este trimestre",
+        "this_year": "Este año",
+        "last_12_months": "Últimos 12 meses",
+        "applied": "Mostrando del {start} al {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "Sin date_filter",
+        "noPeriodHint": "El query_context no tiene un date_filter reescribible, así que el override de período se ignora en vez de alterar el dominio."
+      },
+      "state": {
+        "updated": "Actualizado",
+        "unchanged": "Sin cambios",
+        "failed": "No se pudo"
+      },
+      "skipReason": {
+        "static": "chart_volatility la marcó static: período cerrado.",
+        "no_context": "Pin sin query_context (anterior a Fase 6).",
+        "no_groupby": "Sin groupby_fields no hay chart payload que rearmar.",
+        "no_model": "Falta primary_model en el query_context.",
+        "not_chart": "content_type distinto de chart.",
+        "generic": "Se salteó."
+      },
+      "errorReason": {
+        "odoo_error": "Falló el read_group contra la instancia.",
+        "chart_failed": "build_chart_payload devolvió None.",
+        "unexpected": "Excepción no prevista al refrescar.",
+        "generic": "No se pudo refrescar."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "No se pudo generar el archivo. Probá de nuevo."
+      },
+      "presets": {
+        "title": "Tableros preset por rol",
+        "subtitle": "Rutinas del catálogo cuyo compose es sólo pin. Corren con tus credenciales y dejan sus gráficos acá.",
+        "apply": "Armar este tablero",
+        "building": "Armando…",
+        "failed": "No se pudo armar el tablero. Probá de nuevo.",
+        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "Descargar"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "Tablero",
+      "subtitle": "Tus números, en una sola pantalla. Se actualizan de una y podés cambiarles el período.",
+      "empty": "Tu tablero está vacío",
+      "emptyHint": "Agregá al tablero los gráficos de tus conversaciones, o armalo de un click con uno de los tableros de abajo.",
+      "refreshAll": "Actualizar todo",
+      "refreshingAll": "Actualizando…",
+      "refresh": "Actualizar esta tarjeta",
+      "remove": "Quitar del tablero",
+      "download": "Descargar",
+      "clearAll": "Vaciar tablero",
+      "period": {
+        "label": "Período",
+        "none": "Cada tarjeta con el suyo",
+        "this_month": "Este mes",
+        "last_month": "El mes pasado",
+        "this_quarter": "Este trimestre",
+        "this_year": "Este año",
+        "last_12_months": "Últimos 12 meses",
+        "applied": "Mostrando del {start} al {end}."
+      },
+      "badge": {
+        "live": "En vivo",
+        "historic": "Histórico",
+        "noPeriod": "No depende del período",
+        "noPeriodHint": "Este número es de hoy, no de un rango de fechas: cambiar el período no lo modifica."
+      },
+      "state": {
+        "updated": "Actualizado",
+        "unchanged": "Sin cambios",
+        "failed": "No se pudo"
+      },
+      "skipReason": {
+        "static": "Es un período cerrado: no cambia.",
+        "no_context": "Se guardó antes de que pudiéramos recordar la consulta.",
+        "no_groupby": "No tiene un desglose que volver a calcular.",
+        "no_model": "No sabemos de dónde salió este número.",
+        "not_chart": "Es un archivo guardado, no una consulta.",
+        "generic": "No hacía falta actualizarla."
+      },
+      "errorReason": {
+        "odoo_error": "No pudimos conectarnos con tu sistema para esta tarjeta.",
+        "chart_failed": "La consulta corrió pero no devolvió datos para el gráfico.",
+        "unexpected": "Algo salió mal con esta tarjeta.",
+        "generic": "No se pudo actualizar esta tarjeta."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "No se pudo generar el archivo. Probá de nuevo."
+      },
+      "presets": {
+        "title": "Armá tu tablero de un click",
+        "subtitle": "Elegí el que se parezca a tu día y quedan las tarjetas listas. Después las cambiás.",
+        "apply": "Armar este tablero",
+        "building": "Armando…",
+        "failed": "No se pudo armar el tablero. Probá de nuevo.",
+        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar."
       }
     }
   },
