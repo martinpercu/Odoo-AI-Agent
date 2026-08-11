@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownRight, ArrowUpRight, Minus, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Minus, Sparkles, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import type { RoutinePctChange } from "@/lib/types";
@@ -82,11 +82,13 @@ export function RoutineValueCard({
   value,
   change,
   narrative,
+  note,
 }: {
   label: string;
   value: string;
   change?: RoutinePctChange;
   narrative?: string;
+  note?: string | null;
 }) {
   return (
     <div className="rounded-card border border-border bg-base p-4">
@@ -96,6 +98,12 @@ export function RoutineValueCard({
         {change && <RoutineDelta change={change} />}
       </div>
       {narrative && <p className="mt-2 text-small text-text-secondary">{narrative}</p>}
+      {note && (
+        <p className="mt-2 flex items-start gap-1.5 text-micro text-warning-solid">
+          <TriangleAlert size={14} strokeWidth={1.5} aria-hidden className="mt-px shrink-0" />
+          <span>{note}</span>
+        </p>
+      )}
     </div>
   );
 }

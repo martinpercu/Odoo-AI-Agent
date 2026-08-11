@@ -116,6 +116,7 @@ function ScalarCard({
         value={formatAmount(data.current ?? 0)}
         change={entry.data as unknown as RoutinePctChange}
         narrative={entry.narrative}
+        note={entry.note}
       />
     );
   }
@@ -126,6 +127,7 @@ function ScalarCard({
       label={label}
       value={data.formatted_magnitude ?? formatAmount(data.magnitude ?? 0)}
       narrative={entry.narrative}
+      note={entry.note}
     />
   );
 }

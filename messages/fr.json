@@ -1639,14 +1639,17 @@
       "anio_pasado": "L'année dernière",
       "ultimos_30_dias": "30 derniers jours",
       "ultimos_60_dias": "60 derniers jours",
-      "ultimos_90_dias": "90 derniers jours"
+      "ultimos_90_dias": "90 derniers jours",
+      "absolute": "Une période précise…",
+      "rolling": "N derniers jours…"
     },
     "compare": {
       "periodo_anterior": "La période précédente",
       "mismo_periodo_anio_anterior": "La même période l'an dernier",
       "mismo_periodo_hace_2_anos": "La même période il y a 2 ans",
       "mismo_periodo_hace_3_anos": "La même période il y a 3 ans",
-      "ninguno": "Sans comparaison"
+      "ninguno": "Sans comparaison",
+      "absolute": "Une période précise…"
     },
     "createNew": "Nouvelle routine",
     "group": {
@@ -1792,7 +1795,14 @@
     "scheduleWhenMonthly": "Le {day} de chaque mois à {hour}",
     "backToRoutines": "Retour aux Routines",
     "runNotFoundTitle": "Exécution introuvable",
-    "runNotFoundBody": "Elle a peut-être été supprimée, ou elle appartient à quelqu'un d'autre : chaque exécution utilise les identifiants de la personne qui l'a demandée, et elle seule en voit les résultats."
+    "runNotFoundBody": "Elle a peut-être été supprimée, ou elle appartient à quelqu'un d'autre : chaque exécution utilise les identifiants de la personne qui l'a demandée, et elle seule en voit les résultats.",
+    "periodPicker": {
+      "unit": "Unité",
+      "month": "Mois",
+      "quarter": "Trimestre",
+      "year": "Année",
+      "days": "jours"
+    }
   },
   "Chat": {
     "openInOdoo": "Ouvrir dans Odoo"

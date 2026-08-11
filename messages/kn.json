@@ -1639,14 +1639,17 @@
       "anio_pasado": "ಕಳೆದ ವರ್ಷ",
       "ultimos_30_dias": "ಕಳೆದ 30 ದಿನಗಳು",
       "ultimos_60_dias": "ಕಳೆದ 60 ದಿನಗಳು",
-      "ultimos_90_dias": "ಕಳೆದ 90 ದಿನಗಳು"
+      "ultimos_90_dias": "ಕಳೆದ 90 ದಿನಗಳು",
+      "absolute": "ನಿರ್ದಿಷ್ಟ ಅವಧಿ…",
+      "rolling": "ಕಳೆದ N ದಿನಗಳು…"
     },
     "compare": {
       "periodo_anterior": "ಹಿಂದಿನ ಅವಧಿ",
       "mismo_periodo_anio_anterior": "ಕಳೆದ ವರ್ಷದ ಅದೇ ಅವಧಿ",
       "mismo_periodo_hace_2_anos": "2 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
       "mismo_periodo_hace_3_anos": "3 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
-      "ninguno": "ಹೋಲಿಕೆ ಇಲ್ಲದೆ"
+      "ninguno": "ಹೋಲಿಕೆ ಇಲ್ಲದೆ",
+      "absolute": "ನಿರ್ದಿಷ್ಟ ಅವಧಿ…"
     },
     "createNew": "New Routine",
     "group": {
@@ -1792,7 +1795,14 @@
     "scheduleWhenMonthly": "Day {day} of every month at {hour}",
     "backToRoutines": "Back to Routines",
     "runNotFoundTitle": "We couldn't find this run",
-    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results."
+    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results.",
+    "periodPicker": {
+      "unit": "ಘಟಕ",
+      "month": "ತಿಂಗಳು",
+      "quarter": "ತ್ರೈಮಾಸಿಕ",
+      "year": "ವರ್ಷ",
+      "days": "ದಿನಗಳು"
+    }
   },
   "Chat": {
     "openInOdoo": "Odoo ನಲ್ಲಿ ತೆರೆ"

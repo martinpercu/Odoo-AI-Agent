@@ -1639,14 +1639,17 @@
       "anio_pasado": "கடந்த ஆண்டு",
       "ultimos_30_dias": "கடந்த 30 நாட்கள்",
       "ultimos_60_dias": "கடந்த 60 நாட்கள்",
-      "ultimos_90_dias": "கடந்த 90 நாட்கள்"
+      "ultimos_90_dias": "கடந்த 90 நாட்கள்",
+      "absolute": "ஒரு குறிப்பிட்ட காலம்…",
+      "rolling": "கடந்த N நாட்கள்…"
     },
     "compare": {
       "periodo_anterior": "முந்தைய காலம்",
       "mismo_periodo_anio_anterior": "கடந்த ஆண்டின் அதே காலம்",
       "mismo_periodo_hace_2_anos": "2 ஆண்டுகளுக்கு முன் அதே காலம்",
       "mismo_periodo_hace_3_anos": "3 ஆண்டுகளுக்கு முன் அதே காலம்",
-      "ninguno": "ஒப்பீடு இல்லை"
+      "ninguno": "ஒப்பீடு இல்லை",
+      "absolute": "ஒரு குறிப்பிட்ட காலம்…"
     },
     "createNew": "New Routine",
     "group": {
@@ -1792,7 +1795,14 @@
     "scheduleWhenMonthly": "Day {day} of every month at {hour}",
     "backToRoutines": "Back to Routines",
     "runNotFoundTitle": "We couldn't find this run",
-    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results."
+    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results.",
+    "periodPicker": {
+      "unit": "அலகு",
+      "month": "மாதம்",
+      "quarter": "காலாண்டு",
+      "year": "ஆண்டு",
+      "days": "நாட்கள்"
+    }
   },
   "Chat": {
     "openInOdoo": "Odoo இல் திற"

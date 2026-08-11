@@ -1191,6 +1191,14 @@ export interface RoutineResultEntry {
   reason: string | null;
   /** La frase de negocio ya armada por el backend (B7). El front NO la reescribe. */
   narrative?: string;
+  /**
+   * ⚠️ **`note` no es `reason`.** `reason` explica por qué NO hay número; `note`
+   * acompaña a uno bien calculado que se puede leer mal — hoy el único caso es
+   * comparar dos períodos de largo distinto, posible desde que los dos se eligen
+   * por separado. Lo decide el backend (`params.comparison_mismatch`); el front lo
+   * muestra y **no** recalcula la regla.
+   */
+  note?: string | null;
   duration_ms?: number;
 }
 

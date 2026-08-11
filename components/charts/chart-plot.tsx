@@ -122,9 +122,23 @@ export const PIE_MAX_SLICES = 6;
  * and pinned the truncated set. The payload always carries every group; only the
  * pie rendering folds the tail.
  *
- * Points arrive in the aggregation's own order (usually descending by value), so
- * the tail is whatever falls past the head. `meta.total` is untouched: the footer
- * keeps showing the real global total.
+ * ⚠️ Folding the tail is only defensible because the points arrive RANKED, and
+ * that is a backend guarantee, not a hope: `sort_groups_by_metric` orders the
+ * groups right after the `read_group` (odoo_executor, and pin_refresh for a
+ * refreshed pin). It is needed because `read_group` returns groups in the
+ * comodel's own `_order` — a `user_id` breakdown comes back ALPHABETICAL — and
+ * this function slices by POSITION. While that order was merely assumed, a
+ * "ventas por vendedor" with 12 sellers folded the three biggest into a 91%
+ * "Otros" slice (2026-08-10).
+ *
+ * The guarantee has three deliberate exceptions, all orders that mean something
+ * by themselves: a date groupby (chronological), a `crm.lead` stage breakdown
+ * (funnel sequence) and any `top_n` (already ranked by Odoo, possibly ASCENDING
+ * on purpose — "los que menos vendieron"). The first two never reach a pie as a
+ * ranking anyway; if a pie is ever rendered over one of them, the tail is a
+ * positional tail and not a small one — sort here before slicing.
+ *
+ * `meta.total` is untouched: the footer keeps showing the real global total.
  */
 export function collapseForPie(
   data: ChartSSEEvent["data"],

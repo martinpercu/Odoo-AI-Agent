@@ -1639,14 +1639,17 @@
       "anio_pasado": "Letztes Jahr",
       "ultimos_30_dias": "Letzte 30 Tage",
       "ultimos_60_dias": "Letzte 60 Tage",
-      "ultimos_90_dias": "Letzte 90 Tage"
+      "ultimos_90_dias": "Letzte 90 Tage",
+      "absolute": "Ein bestimmter Zeitraum…",
+      "rolling": "Letzte N Tage…"
     },
     "compare": {
       "periodo_anterior": "Der vorherige Zeitraum",
       "mismo_periodo_anio_anterior": "Derselbe Zeitraum im Vorjahr",
       "mismo_periodo_hace_2_anos": "Derselbe Zeitraum vor 2 Jahren",
       "mismo_periodo_hace_3_anos": "Derselbe Zeitraum vor 3 Jahren",
-      "ninguno": "Ohne Vergleich"
+      "ninguno": "Ohne Vergleich",
+      "absolute": "Ein bestimmter Zeitraum…"
     },
     "createNew": "Neue Routine",
     "group": {
@@ -1792,7 +1795,14 @@
     "scheduleWhenMonthly": "Am {day}. jedes Monats um {hour}",
     "backToRoutines": "Zurück zu Routinen",
     "runNotFoundTitle": "Diesen Durchlauf gibt es nicht",
-    "runNotFoundBody": "Er wurde vielleicht gelöscht, oder er gehört jemand anderem: jeder Durchlauf läuft mit den Zugangsdaten der Person, die ihn angefordert hat, und nur diese Person sieht die Ergebnisse."
+    "runNotFoundBody": "Er wurde vielleicht gelöscht, oder er gehört jemand anderem: jeder Durchlauf läuft mit den Zugangsdaten der Person, die ihn angefordert hat, und nur diese Person sieht die Ergebnisse.",
+    "periodPicker": {
+      "unit": "Einheit",
+      "month": "Monat",
+      "quarter": "Quartal",
+      "year": "Jahr",
+      "days": "Tage"
+    }
   },
   "Chat": {
     "openInOdoo": "In Odoo öffnen"

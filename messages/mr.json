@@ -1639,14 +1639,17 @@
       "anio_pasado": "मागील वर्ष",
       "ultimos_30_dias": "मागील 30 दिवस",
       "ultimos_60_dias": "मागील 60 दिवस",
-      "ultimos_90_dias": "मागील 90 दिवस"
+      "ultimos_90_dias": "मागील 90 दिवस",
+      "absolute": "विशिष्ट कालावधी…",
+      "rolling": "मागील N दिवस…"
     },
     "compare": {
       "periodo_anterior": "मागील कालावधी",
       "mismo_periodo_anio_anterior": "मागील वर्षाचा तोच कालावधी",
       "mismo_periodo_hace_2_anos": "2 वर्षांपूर्वीचा तोच कालावधी",
       "mismo_periodo_hace_3_anos": "3 वर्षांपूर्वीचा तोच कालावधी",
-      "ninguno": "तुलनेशिवाय"
+      "ninguno": "तुलनेशिवाय",
+      "absolute": "विशिष्ट कालावधी…"
     },
     "createNew": "New Routine",
     "group": {
@@ -1792,7 +1795,14 @@
     "scheduleWhenMonthly": "Day {day} of every month at {hour}",
     "backToRoutines": "Back to Routines",
     "runNotFoundTitle": "We couldn't find this run",
-    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results."
+    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results.",
+    "periodPicker": {
+      "unit": "एकक",
+      "month": "महिना",
+      "quarter": "तिमाही",
+      "year": "वर्ष",
+      "days": "दिवस"
+    }
   },
   "Chat": {
     "openInOdoo": "Odoo मध्ये उघडा"

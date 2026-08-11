@@ -1639,14 +1639,17 @@
       "anio_pasado": "L'anno scorso",
       "ultimos_30_dias": "Ultimi 30 giorni",
       "ultimos_60_dias": "Ultimi 60 giorni",
-      "ultimos_90_dias": "Ultimi 90 giorni"
+      "ultimos_90_dias": "Ultimi 90 giorni",
+      "absolute": "Un periodo specifico…",
+      "rolling": "Ultimi N giorni…"
     },
     "compare": {
       "periodo_anterior": "Il periodo precedente",
       "mismo_periodo_anio_anterior": "Lo stesso periodo dell'anno scorso",
       "mismo_periodo_hace_2_anos": "Lo stesso periodo 2 anni fa",
       "mismo_periodo_hace_3_anos": "Lo stesso periodo 3 anni fa",
-      "ninguno": "Senza confronto"
+      "ninguno": "Senza confronto",
+      "absolute": "Un periodo specifico…"
     },
     "createNew": "Nuova Routine",
     "group": {
@@ -1792,7 +1795,14 @@
     "scheduleWhenMonthly": "Il {day} di ogni mese alle {hour}",
     "backToRoutines": "Torna alle Routine",
     "runNotFoundTitle": "Non troviamo questa esecuzione",
-    "runNotFoundBody": "Potrebbe essere stata eliminata, oppure appartiene a un'altra persona: ogni esecuzione usa le credenziali di chi l'ha richiesta, e solo quella persona ne vede i risultati."
+    "runNotFoundBody": "Potrebbe essere stata eliminata, oppure appartiene a un'altra persona: ogni esecuzione usa le credenziali di chi l'ha richiesta, e solo quella persona ne vede i risultati.",
+    "periodPicker": {
+      "unit": "Unità",
+      "month": "Mese",
+      "quarter": "Trimestre",
+      "year": "Anno",
+      "days": "giorni"
+    }
   },
   "Chat": {
     "openInOdoo": "Apri in Odoo"
