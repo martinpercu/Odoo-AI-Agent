@@ -220,22 +220,36 @@ export function ChartTypeSwitcher({
  * truncating is a chart-axis concession. It always shows EVERY row — the pie's
  * "others" collapse is a pie problem, and the table is where the user goes to see
  * the tail it folded.
+ *
+ * `height` must match whatever the sibling `ChartPlot` uses in the same card
+ * (280 default in the chat card, 200 in the Tablero) — the other three view
+ * types (bar/line/pie) always render at that fixed height, so a table with its
+ * own taller cap broke height-parity between cards in the Tablero grid, and
+ * inside a single chat card switching to table view visibly shifted the bubble
+ * and moved the scroll position. Fixed height (not a max), so a short table
+ * doesn't collapse below it either — it just leaves the same blank space a
+ * sparse pie/bar chart would.
  */
 export function ChartTable({
   data,
   meta,
   compact = false,
+  height = 280,
 }: {
   data: ChartSSEEvent["data"];
   meta: ChartSSEEvent["meta"];
   /** Narrow card: drop the % column so the two columns that matter fit without
       a horizontal scroll. The share is the derived value, so it is the one to go. */
   compact?: boolean;
+  height?: number;
 }) {
   const total = data.reduce((acc, d) => acc + (d.value ?? 0), 0);
 
   return (
-    <div className="max-h-[320px] min-w-0 overflow-auto rounded-md border border-border">
+    <div
+      style={{ height }}
+      className="min-w-0 overflow-auto rounded-md border border-border"
+    >
       <table className="w-full table-fixed border-collapse text-left">
         <thead className="sticky top-0 bg-raised">
           <tr>

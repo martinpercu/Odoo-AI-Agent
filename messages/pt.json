@@ -24,7 +24,8 @@
     "deleteChat": "Excluir conversa",
     "confirmDeleteChat": "Excluir?",
     "yes": "Sim",
-    "no": "Não"
+    "no": "Não",
+    "instanceBadge": "Instância"
   },
   "UserMenu": {
     "guest": "Convidado",
@@ -403,7 +404,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "Limite de cota STT atingido — contate seu provedor",
       "ttsLimitReached": "Limite de cota TTS atingido — contate seu provedor",
-      "voiceToggleError": "Não foi possível atualizar a preferência de voz"
+      "voiceToggleError": "Não foi possível atualizar a preferência de voz",
+      "routineAuthor": "Cria Rotinas",
+      "toggleRoutineAuthor": "Permitir que esta pessoa crie e edite Rotinas",
+      "routineAuthorError": "Não foi possível atualizar a permissão de Rotinas"
     },
     "credentials": {
       "sectionTitle": "Minhas Credenciais Odoo",
@@ -1587,14 +1591,12 @@
     "history": "Histórico",
     "run": "Executar",
     "rerun": "Executar de novo",
-    "regenerate": "Regenerar",
     "download": "Baixar",
     "running": "Executando…",
     "progress": "{done} de {total} etapas",
     "stepCount": "{count, plural, one {# passo} other {# passos}}",
     "partialNote": "Algumas etapas não puderam ser concluídas. O relatório foi gerado mesmo assim, com essas seções anotadas.",
     "emptyCatalog": "Não há rotinas disponíveis para esta instância.",
-    "emptyHistory": "Você ainda não executou nenhuma rotina.",
     "noInstance": "Conecte uma instância Odoo para executar rotinas.",
     "startFailed": "Não foi possível iniciar a rotina.",
     "tooManyRuns": "Há rotinas demais em execução agora. Tente de novo em alguns segundos.",
@@ -1750,7 +1752,8 @@
         "org": "Compartilhada com a organização",
         "private": "Privada"
       },
-      "usersFailed": "Não conseguimos carregar os usuários da organização. O que você vê abaixo pode estar incompleto."
+      "usersFailed": "Não conseguimos carregar os usuários da organização. O que você vê abaixo pode estar incompleto.",
+      "inheritMeaning": "«Por defeito» significa agora: visível para os administradores da sua organização e invisível para os clientes. Para que um cliente veja uma Rotina, coloque «Sim» na linha dele."
     },
     "cancel": "Cancelar",
     "schedule": "Agendar",
@@ -1802,6 +1805,24 @@
       "quarter": "Trimestre",
       "year": "Ano",
       "days": "dias"
+    },
+    "rerunUnavailable": "Esta Rotina já não está disponível.",
+    "deletedRoutine": "Rotina eliminada",
+    "deleteRun": "Apagar do histórico",
+    "deleteRunConfirm": "Apagar?",
+    "deleteRunFailed": "Não foi possível apagar a execução.",
+    "clearHistory": "Limpar histórico",
+    "clearHistoryConfirm": "Apagar tudo?",
+    "clearHistoryFailed": "Não foi possível limpar o histórico.",
+    "confirmYes": "Sim",
+    "confirmNo": "Não",
+    "runOn": "Executar em",
+    "rerunOn": "Executar de novo em {instance}",
+    "notAvailableOnInstance": "Esta Rotina não está disponível em {instance}.",
+    "runConfirm": {
+      "title": "Executar na instância",
+      "otherInstance": "Outra instância",
+      "confirm": "Confirmar"
     }
   },
   "Chat": {

@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { AlertCircle, ArrowLeft, Download, Info, Loader2, RefreshCw } from "lucide-react";
+import { AlertCircle, ArrowLeft, Download, Info, Loader2, Server } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
+import { useSession } from "@/hooks/use-session";
 import { fetchRoutine, fetchRoutineRun, regenerateRoutineRun } from "@/lib/api";
+import { instanceLabelById } from "@/lib/instance-label";
 import type { Routine, RoutineRunDetail } from "@/lib/types";
 import { RoutineResults } from "@/components/routines/routine-results";
 
@@ -29,6 +31,7 @@ export default function RoutineRunDetailPage() {
   const locale = useLocale();
   const params = useParams<{ runId: string }>();
   const runId = params?.runId;
+  const { meData } = useSession();
 
   const [run, setRun] = useState<RoutineRunDetail | null>(null);
   const [routine, setRoutine] = useState<Routine | undefined>();
@@ -127,6 +130,13 @@ export default function RoutineRunDetailPage() {
 
   const when = run.finished_at || run.started_at;
   const failed = run.status === "error";
+  // Sólo el implementador: un CLIENT_USER tiene una sola instancia y nombrarla no
+  // distingue nada (mismo criterio que la tarjeta del historial).
+  const role = meData?.user?.role;
+  const instanceName =
+    role === "ADMIN" || role === "SUPERADMIN"
+      ? instanceLabelById(meData?.odoo_configs, run.config_id)
+      : null;
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -135,38 +145,44 @@ export default function RoutineRunDetailPage() {
 
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="truncate text-heading">{routine?.name ?? run.routine_id}</h1>
+            <h1 className="truncate text-heading">{routine?.name ?? t("deletedRoutine")}</h1>
             <p className="mt-1 text-small text-text-muted">
               {when ? new Date(when).toLocaleString() : ""}
               {run.step_total
                 ? ` · ${t("progress", { done: run.step_done, total: run.step_total })}`
                 : ""}
             </p>
+            {/* Contra qué instancia corrió. Acá importa MÁS que en el historial: a esta
+                pantalla se llega desde el link de un mail, muchas veces desde otro
+                dispositivo y sin el contexto de la app alrededor. */}
+            {instanceName && (
+              <p className="mt-1 flex items-center gap-1.5 text-micro text-text-secondary">
+                <Server size={13} strokeWidth={1.5} className="shrink-0" aria-hidden />
+                <span className="truncate">{instanceName}</span>
+              </p>
+            )}
           </div>
 
+          {/* Un solo botón (2026-08-12): "Regenerar" hacía lo mismo que "Descargar"
+              —un PDF bajado, sin tocar Odoo— y `download(false)` ya cae al regenerado
+              cuando el archivo expiró. Ver `routine-history.tsx` para el razonamiento
+              completo; las dos pantallas tienen que ofrecer lo mismo, si no el link del
+              digest lleva a una versión distinta de la misma corrida. */}
           {!failed && (
             <div className="flex shrink-0 items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => download(false)}
                 disabled={busy}
-                title={t("download")}
+                aria-label={t("download")}
                 className="flex h-btn-sm items-center gap-1.5 rounded-btn border border-border px-2.5 text-small transition-colors hover:bg-raised/60 disabled:opacity-50"
               >
                 {busy ? (
                   <Loader2 size={15} strokeWidth={1.5} className="animate-spin" />
                 ) : (
-                  <Download size={15} strokeWidth={1.5} />
+                  <Download size={15} strokeWidth={1.5} aria-hidden />
                 )}
-              </button>
-              <button
-                type="button"
-                onClick={() => download(true)}
-                disabled={busy}
-                title={t("regenerate")}
-                className="flex h-btn-sm items-center gap-1.5 rounded-btn border border-border px-2.5 text-small transition-colors hover:bg-raised/60 disabled:opacity-50"
-              >
-                <RefreshCw size={15} strokeWidth={1.5} />
+                <span className="hidden sm:inline">{t("download")}</span>
               </button>
             </div>
           )}

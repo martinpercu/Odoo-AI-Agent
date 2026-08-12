@@ -18,6 +18,7 @@ import { MarkB, Wordmark } from "@/components/AgentMark";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useSession } from "@/hooks/use-session";
 import { UserMenu } from "@/components/chat/user-menu";
+import { ActiveInstanceBadge } from "@/components/chat/active-instance-badge";
 import type { ChatGroup } from "@/lib/types";
 
 interface SidebarProps {
@@ -114,6 +115,12 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
           </button>
         )}
       </div>
+
+      {/* Contra qué instancia estás trabajando (sólo implementadores; se esconde solo
+          cuando no aplica). Va ACÁ, entre la marca y "Nueva consulta": es el contexto
+          bajo el que se lee todo lo que sigue, así que tiene que estar antes de la
+          acción que abre una consulta nueva, no después. */}
+      <ActiveInstanceBadge collapsed={collapsed} />
 
       {/* New Chat Button */}
       <div className="p-3">

@@ -24,7 +24,8 @@
     "deleteChat": "Supprimer la conversation",
     "confirmDeleteChat": "Supprimer ?",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "instanceBadge": "Instance"
   },
   "UserMenu": {
     "guest": "Invité",
@@ -403,7 +404,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "Quota STT atteint — contactez votre fournisseur",
       "ttsLimitReached": "Quota TTS atteint — contactez votre fournisseur",
-      "voiceToggleError": "Impossible de mettre à jour la préférence vocale"
+      "voiceToggleError": "Impossible de mettre à jour la préférence vocale",
+      "routineAuthor": "Crée des Routines",
+      "toggleRoutineAuthor": "Autoriser cette personne à créer et modifier des Routines",
+      "routineAuthorError": "Impossible de mettre à jour l'autorisation Routines"
     },
     "credentials": {
       "sectionTitle": "Mes identifiants Odoo",
@@ -1587,14 +1591,12 @@
     "history": "Historique",
     "run": "Exécuter",
     "rerun": "Relancer",
-    "regenerate": "Régénérer",
     "download": "Télécharger",
     "running": "Exécution…",
     "progress": "{done} sur {total} étapes",
     "stepCount": "{count, plural, one {# étape} other {# étapes}}",
     "partialNote": "Certaines étapes n'ont pas pu être complétées. Le rapport a été généré, avec ces sections signalées.",
     "emptyCatalog": "Aucune routine disponible pour cette instance.",
-    "emptyHistory": "Vous n'avez encore exécuté aucune routine.",
     "noInstance": "Connectez une instance Odoo pour exécuter des routines.",
     "startFailed": "Impossible de démarrer la routine.",
     "tooManyRuns": "Trop de routines s'exécutent en ce moment. Réessayez dans quelques secondes.",
@@ -1750,7 +1752,8 @@
         "org": "Partagée avec l'organisation",
         "private": "Privée"
       },
-      "usersFailed": "Nous n'avons pas pu charger les utilisateurs de l'organisation. Ce qui suit peut être incomplet."
+      "usersFailed": "Nous n'avons pas pu charger les utilisateurs de l'organisation. Ce qui suit peut être incomplet.",
+      "inheritMeaning": "« Par défaut » signifie désormais : visible pour les administrateurs de votre organisation et masqué pour les clients. Pour qu'un client voie une Routine, mettez « Oui » sur sa ligne."
     },
     "cancel": "Annuler",
     "schedule": "Programmer",
@@ -1802,6 +1805,24 @@
       "quarter": "Trimestre",
       "year": "Année",
       "days": "jours"
+    },
+    "rerunUnavailable": "Cette Routine n'est plus disponible.",
+    "deletedRoutine": "Routine supprimée",
+    "deleteRun": "Supprimer de l'historique",
+    "deleteRunConfirm": "Supprimer ?",
+    "deleteRunFailed": "Impossible de supprimer l'exécution.",
+    "clearHistory": "Vider l'historique",
+    "clearHistoryConfirm": "Tout supprimer ?",
+    "clearHistoryFailed": "Impossible de vider l'historique.",
+    "confirmYes": "Oui",
+    "confirmNo": "Non",
+    "runOn": "Exécuter sur",
+    "rerunOn": "Relancer sur {instance}",
+    "notAvailableOnInstance": "Cette Routine n'est pas disponible sur {instance}.",
+    "runConfirm": {
+      "title": "Exécuter sur l'instance",
+      "otherInstance": "Une autre instance",
+      "confirm": "Confirmer"
     }
   },
   "Chat": {

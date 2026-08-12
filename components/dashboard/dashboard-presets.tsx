@@ -6,6 +6,7 @@ import { Loader2, Sparkles } from "lucide-react";
 
 import { listRoutines, runRoutine } from "@/lib/api";
 import { useAudienceT } from "@/hooks/use-audience-translations";
+import { RoutineIcon } from "@/components/routines/routine-icon";
 import type { Routine } from "@/lib/types";
 
 /**
@@ -114,7 +115,7 @@ export function DashboardPresets({ configId, onApplied, disabled }: DashboardPre
             className="flex flex-col gap-2 rounded-card border border-border bg-surface p-4"
           >
             <div className="flex items-center gap-2">
-              {preset.icon && <span aria-hidden>{preset.icon}</span>}
+              <RoutineIcon name={preset.icon} size={18} className="shrink-0 text-accent" />
               <h3 className="min-w-0 flex-1 text-body font-semibold text-foreground">
                 {preset.name}
               </h3>

@@ -209,7 +209,7 @@ function ChartCard({
             {tChart("noData")}
           </p>
         ) : viewType === "table" ? (
-          <ChartTable data={chart.data} meta={chart.meta} compact />
+          <ChartTable data={chart.data} meta={chart.meta} compact height={200} />
         ) : (
           <ChartPlot
             data={chart.data}

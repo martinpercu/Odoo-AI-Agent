@@ -24,7 +24,8 @@
     "deleteChat": "बातचीत हटाएं",
     "confirmDeleteChat": "हटाएं?",
     "yes": "हाँ",
-    "no": "नहीं"
+    "no": "नहीं",
+    "instanceBadge": "इंस्टेंस"
   },
   "UserMenu": {
     "guest": "अतिथि",
@@ -403,7 +404,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "STT quota limit reached — contact your provider",
       "ttsLimitReached": "TTS quota limit reached — contact your provider",
-      "voiceToggleError": "Couldn't update the voice preference"
+      "voiceToggleError": "Couldn't update the voice preference",
+      "routineAuthor": "Authors Routines",
+      "toggleRoutineAuthor": "Allow this person to create and edit Routines",
+      "routineAuthorError": "Could not update the Routines permission"
     },
     "credentials": {
       "sectionTitle": "मेरे Odoo क्रेडेंशियल",
@@ -1586,15 +1590,13 @@
     "inProgress": "In progress",
     "history": "History",
     "run": "Run",
-    "rerun": "Run again",
-    "regenerate": "Regenerate",
-    "download": "Download",
+    "rerun": "फिर से चलाएँ",
+    "download": "डाउनलोड करें",
     "running": "Running…",
     "progress": "{done} of {total} steps",
     "stepCount": "{count, plural, one {# चरण} other {# चरण}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
-    "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
@@ -1750,7 +1752,8 @@
         "org": "Shared with the organization",
         "private": "Private"
       },
-      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete."
+      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete.",
+      "inheritMeaning": "“Default” now means: visible to your organization's administrators, and hidden from clients. To let a client see a Routine, set it to “Yes” in their row."
     },
     "cancel": "Cancel",
     "schedule": "Schedule",
@@ -1802,6 +1805,24 @@
       "quarter": "तिमाही",
       "year": "वर्ष",
       "days": "दिन"
+    },
+    "rerunUnavailable": "यह रूटीन अब उपलब्ध नहीं है।",
+    "deletedRoutine": "हटाई गई रूटीन",
+    "deleteRun": "इतिहास से हटाएँ",
+    "deleteRunConfirm": "हटाएँ?",
+    "deleteRunFailed": "रन नहीं हटाया जा सका।",
+    "clearHistory": "इतिहास साफ़ करें",
+    "clearHistoryConfirm": "सब कुछ हटाएँ?",
+    "clearHistoryFailed": "इतिहास साफ़ नहीं किया जा सका।",
+    "confirmYes": "हाँ",
+    "confirmNo": "नहीं",
+    "runOn": "इस पर चलाएँ",
+    "rerunOn": "{instance} पर फिर से चलाएँ",
+    "notAvailableOnInstance": "यह रूटीन {instance} पर उपलब्ध नहीं है।",
+    "runConfirm": {
+      "title": "इस इंस्टेंस पर चलाएँ",
+      "otherInstance": "दूसरा इंस्टेंस",
+      "confirm": "पुष्टि करें"
     }
   },
   "Chat": {

@@ -24,7 +24,8 @@
     "deleteChat": "உரையாடலை நீக்கவும்",
     "confirmDeleteChat": "நீக்கவா?",
     "yes": "ஆம்",
-    "no": "இல்லை"
+    "no": "இல்லை",
+    "instanceBadge": "நிகழ்வு"
   },
   "UserMenu": {
     "guest": "விருந்தினர்",
@@ -403,7 +404,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "STT quota limit reached — contact your provider",
       "ttsLimitReached": "TTS quota limit reached — contact your provider",
-      "voiceToggleError": "Couldn't update the voice preference"
+      "voiceToggleError": "Couldn't update the voice preference",
+      "routineAuthor": "Authors Routines",
+      "toggleRoutineAuthor": "Allow this person to create and edit Routines",
+      "routineAuthorError": "Could not update the Routines permission"
     },
     "credentials": {
       "sectionTitle": "என் Odoo சான்றுகள்",
@@ -1586,15 +1590,13 @@
     "inProgress": "In progress",
     "history": "History",
     "run": "Run",
-    "rerun": "Run again",
-    "regenerate": "Regenerate",
-    "download": "Download",
+    "rerun": "மீண்டும் இயக்கு",
+    "download": "பதிவிறக்கு",
     "running": "Running…",
     "progress": "{done} of {total} steps",
     "stepCount": "{count, plural, one {# படி} other {# படிகள்}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
-    "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
@@ -1750,7 +1752,8 @@
         "org": "Shared with the organization",
         "private": "Private"
       },
-      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete."
+      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete.",
+      "inheritMeaning": "“Default” now means: visible to your organization's administrators, and hidden from clients. To let a client see a Routine, set it to “Yes” in their row."
     },
     "cancel": "Cancel",
     "schedule": "Schedule",
@@ -1802,6 +1805,24 @@
       "quarter": "காலாண்டு",
       "year": "ஆண்டு",
       "days": "நாட்கள்"
+    },
+    "rerunUnavailable": "இந்த வழக்கம் இனி கிடைக்காது.",
+    "deletedRoutine": "நீக்கப்பட்ட வழக்கம்",
+    "deleteRun": "வரலாற்றிலிருந்து நீக்கு",
+    "deleteRunConfirm": "நீக்கவா?",
+    "deleteRunFailed": "இயக்கத்தை நீக்க முடியவில்லை.",
+    "clearHistory": "வரலாற்றை அழி",
+    "clearHistoryConfirm": "அனைத்தையும் நீக்கவா?",
+    "clearHistoryFailed": "வரலாற்றை அழிக்க முடியவில்லை.",
+    "confirmYes": "ஆம்",
+    "confirmNo": "இல்லை",
+    "runOn": "இதில் இயக்கு",
+    "rerunOn": "{instance} இல் மீண்டும் இயக்கு",
+    "notAvailableOnInstance": "இந்த வழக்கம் {instance} இல் கிடைக்கவில்லை.",
+    "runConfirm": {
+      "title": "இந்த நிகழ்வில் இயக்கு",
+      "otherInstance": "வேறு நிகழ்வு",
+      "confirm": "உறுதிப்படுத்து"
     }
   },
   "Chat": {

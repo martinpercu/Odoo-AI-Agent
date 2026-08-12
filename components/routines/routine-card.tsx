@@ -4,9 +4,11 @@ import { useState } from "react";
 import { Loader2, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import type { Routine, RoutineSchedule } from "@/lib/types";
+import type { OdooConfigSummary, Routine, RoutineSchedule } from "@/lib/types";
 import { RoutineActions } from "@/components/routines/routine-actions";
+import { RoutineIcon } from "@/components/routines/routine-icon";
 import { RoutineParams } from "@/components/routines/routine-params";
+import { RoutineRunConfirm } from "@/components/routines/routine-run-confirm";
 import {
   RoutineScheduleButton,
   RoutineScheduleForm,
@@ -32,9 +34,10 @@ export function RoutineCard({
   onChanged,
   configId,
   onScheduled,
+  instances,
 }: {
   routine: Routine;
-  onRun: (params: Record<string, unknown>) => void;
+  onRun: (params: Record<string, unknown>, configId: string) => void;
   running: boolean;
   disabled?: boolean;
   /** Fase 3: refrescar el catálogo después de clonar / compartir / borrar. */
@@ -43,6 +46,14 @@ export function RoutineCard({
   configId?: string | null;
   /** Fase 4: refrescar "Mis agendados". Ausente = no se ofrece agendar (demo). */
   onScheduled?: (schedule: RoutineSchedule) => void;
+  /**
+   * Instancias entre las que se puede elegir al ejecutar (2026-08-12).
+   *
+   * **Con una sola no se pregunta nada**: el popup de confirmación se saltea y "Ejecutar"
+   * corre derecho. Preguntar entre una opción es fricción pura, y es exactamente el caso
+   * del `CLIENT_USER`, para quien este paso no existe.
+   */
+  instances?: OdooConfigSummary[];
 }) {
   const t = useTranslations("Routines");
   // Los defaults ya vienen adaptados por el backend a lo que ESTA instancia usa
@@ -52,12 +63,25 @@ export function RoutineCard({
   );
   const [scheduling, setScheduling] = useState(false);
 
+  /**
+   * ¿Está abierto el popup de "¿contra qué instancia?" (`RoutineRunConfirm`)?
+   *
+   * ⚠️ **No hay estado de "instancia elegida" en la tarjeta, y es a propósito.** La
+   * versión anterior tenía un desplegable acá con su propio `runOn`, y esa elección
+   * quedaba congelada: cambiar de instancia desde el menú lateral no se reflejaba en
+   * ninguna tarjeta. La instancia la resuelve el popup **al abrirse**, contra la activa
+   * de ese momento — sin estado que sobreviva, no hay nada que pueda quedar viejo.
+   */
+  const [confirming, setConfirming] = useState(false);
+
+  const pickable = instances ?? [];
+  // Con 0 o 1 instancia no hay nada que preguntar: se corre contra la activa.
+  const needsConfirm = pickable.length > 1;
+
   return (
     <div className="rounded-card border border-border bg-surface p-5">
       <div className="mb-2 flex items-start gap-3">
-        <span className="shrink-0 text-[22px] leading-none" aria-hidden>
-          {routine.icon || "📋"}
-        </span>
+        <RoutineIcon name={routine.icon} className="shrink-0 text-text-muted" />
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-subheading">{routine.name}</h3>
           <p className="mt-1 text-small text-text-muted">{routine.description}</p>
@@ -86,8 +110,10 @@ export function RoutineCard({
           )}
           <button
             type="button"
-            onClick={() => onRun(values)}
-            disabled={running || disabled}
+            onClick={() =>
+              needsConfirm ? setConfirming(true) : configId && onRun(values, configId)
+            }
+            disabled={running || disabled || (!needsConfirm && !configId)}
             className="flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             {running ? (
@@ -112,6 +138,18 @@ export function RoutineCard({
           onClose={() => setScheduling(false)}
         />
       )}
+
+      <RoutineRunConfirm
+        open={confirming}
+        onClose={() => setConfirming(false)}
+        onConfirm={(chosen) => {
+          setConfirming(false);
+          onRun(values, chosen);
+        }}
+        routineName={routine.name}
+        instances={pickable}
+        activeConfigId={configId ?? null}
+      />
     </div>
   );
 }
