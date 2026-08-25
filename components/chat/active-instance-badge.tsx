@@ -44,7 +44,7 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
   // recuperable sin expandir.
   if (collapsed) {
     return (
-      <div className="px-3 pt-3">
+      <div className="border-b border-sidebar-border px-3 pb-3 pt-3">
         <div
           className="flex h-btn-md items-center justify-center rounded-btn bg-sidebar-hover"
           title={`${t("instanceBadge")}: ${name}`}
@@ -57,7 +57,7 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
   }
 
   return (
-    <div className="px-3 pt-3">
+    <div className="border-b border-sidebar-border px-3 pb-3 pt-3">
       <div className="flex items-center gap-3 rounded-btn bg-sidebar-hover px-3 py-2">
         <Server
           size={iconBtn}
