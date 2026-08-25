@@ -1,6 +1,7 @@
 "use client";
 
-import { Server } from "lucide-react";
+import { useState } from "react";
+import { ArrowBigRight, Server } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { useIconSize } from "@/hooks/use-icon-size";
@@ -31,14 +32,23 @@ import { instanceLabel } from "@/lib/instance-label";
 export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean }) {
   const t = useTranslations("Sidebar");
   const { meData } = useSession();
-  const { configs, activeConfigId, isDemoMode } = useOdooConfig();
+  const { configs, activeConfigId, setActiveConfigId, isDemoMode } = useOdooConfig();
   const iconBtn = useIconSize("button");
 
   const role = meData?.user?.role;
   const isBuilder = role === "ADMIN" || role === "SUPERADMIN";
   const name = instanceLabel(configs.find((c) => c.id === activeConfigId));
 
+  const [arrowHover, setArrowHover] = useState(false);
+
   if (!isBuilder || isDemoMode || !name) return null;
+
+  function handleCycleNext() {
+    if (configs.length < 2) return;
+    const idx = configs.findIndex((c) => c.id === activeConfigId);
+    const next = configs[(idx + 1) % configs.length];
+    if (next) setActiveConfigId(next.id);
+  }
 
   // Colapsado queda sólo el ícono; el nombre viaja en el `title` para que siga siendo
   // recuperable sin expandir.
@@ -65,9 +75,23 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           className="shrink-0 text-accent"
           aria-hidden
         />
-        <span className="block truncate text-center text-body font-medium text-foreground" title={name}>
+        <span
+          className="min-w-0 flex-1 truncate text-center text-body font-medium text-foreground"
+          title={name}
+        >
           {name}
         </span>
+        <button
+          type="button"
+          onClick={handleCycleNext}
+          onMouseEnter={() => setArrowHover(true)}
+          onMouseLeave={() => setArrowHover(false)}
+          disabled={configs.length < 2}
+          aria-label="Cambiar instancia"
+          className="shrink-0 rounded-btn p-1 text-foreground transition-colors hover:bg-raised hover:text-accent disabled:opacity-40"
+        >
+          <ArrowBigRight size={iconBtn} strokeWidth={arrowHover ? 2 : 1.5} />
+        </button>
       </div>
     </div>
   );
