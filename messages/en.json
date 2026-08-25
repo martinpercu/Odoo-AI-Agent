@@ -25,7 +25,9 @@
     "confirmDeleteChat": "Delete?",
     "yes": "Yes",
     "no": "No",
-    "instanceBadge": "Instance"
+    "instanceBadge": "Instance",
+    "otherInstances": "{count, plural, one {# chat in another instance} other {# chats in other instances}}",
+    "onlyActiveInstance": "Show only the active instance"
   },
   "UserMenu": {
     "guest": "Guest",

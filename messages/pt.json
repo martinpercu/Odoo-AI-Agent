@@ -25,7 +25,9 @@
     "confirmDeleteChat": "Excluir?",
     "yes": "Sim",
     "no": "Não",
-    "instanceBadge": "Instância"
+    "instanceBadge": "Instância",
+    "otherInstances": "{count, plural, one {# conversa em outra instância} other {# conversas em outras instâncias}}",
+    "onlyActiveInstance": "Ver apenas a instância ativa"
   },
   "UserMenu": {
     "guest": "Convidado",

@@ -25,7 +25,9 @@
     "confirmDeleteChat": "हटवायचे?",
     "yes": "होय",
     "no": "नाही",
-    "instanceBadge": "इन्स्टन्स"
+    "instanceBadge": "इन्स्टन्स",
+    "otherInstances": "{count, plural, one {इतर इन्स्टन्समध्ये # चॅट} other {इतर इन्स्टन्समध्ये # चॅट}}",
+    "onlyActiveInstance": "फक्त सक्रिय इन्स्टन्स दाखवा"
   },
   "UserMenu": {
     "guest": "पाहुणे",

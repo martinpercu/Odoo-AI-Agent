@@ -25,7 +25,9 @@
     "confirmDeleteChat": "Löschen?",
     "yes": "Ja",
     "no": "Nein",
-    "instanceBadge": "Instanz"
+    "instanceBadge": "Instanz",
+    "otherInstances": "{count, plural, one {# Chat in einer anderen Instanz} other {# Chats in anderen Instanzen}}",
+    "onlyActiveInstance": "Nur die aktive Instanz anzeigen"
   },
   "UserMenu": {
     "guest": "Gast",

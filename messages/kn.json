@@ -25,7 +25,9 @@
     "confirmDeleteChat": "ಅಳಿಸುವುದೇ?",
     "yes": "ಹೌದು",
     "no": "ಇಲ್ಲ",
-    "instanceBadge": "ಇನ್‌ಸ್ಟನ್ಸ್"
+    "instanceBadge": "ಇನ್‌ಸ್ಟನ್ಸ್",
+    "otherInstances": "{count, plural, one {ಇತರ ಇನ್‌ಸ್ಟನ್ಸ್‌ಗಳಲ್ಲಿ # ಚಾಟ್} other {ಇತರ ಇನ್‌ಸ್ಟನ್ಸ್‌ಗಳಲ್ಲಿ # ಚಾಟ್‌ಗಳು}}",
+    "onlyActiveInstance": "ಸಕ್ರಿಯ ಇನ್‌ಸ್ಟನ್ಸ್ ಮಾತ್ರ ತೋರಿಸಿ"
   },
   "UserMenu": {
     "guest": "ಅತಿಥಿ",

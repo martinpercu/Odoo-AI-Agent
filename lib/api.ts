@@ -155,24 +155,42 @@ export async function fetchMe(): Promise<FetchMeResult> {
 export interface FetchConversationsResult {
   success: boolean;
   conversations?: ServerConversation[];
+  /** Cuántas vinieron en ESTA página (no el total). */
   count?: number;
+  /** Cuántas matchean el filtro en total — de acá sale si hay más páginas. */
+  total?: number;
+  /** Cuántas quedaron afuera por ser de OTRA instancia (0 sin filtro). */
+  otherCount?: number;
   error?: string;
 }
 
+/**
+ * Historial lateral del usuario.
+ *
+ * ⚠️ **El filtro por instancia lo hace el backend**, no este cliente: la lista se pagina de
+ * a 50, así que filtrar la página ya traída deja el sidebar vacío teniendo chats (los 50 más
+ * recientes pueden ser todos de otra instancia) y rompe "cargar más". Mandar `configId` en
+ * la query es la única forma de que las 50 sean 50 útiles.
+ *
+ * `"demo"` no es un UUID: el backend lo ignora y devuelve todo, que es lo correcto.
+ */
 export async function fetchMyConversations(
   limit = 50,
-  offset = 0
+  offset = 0,
+  configId?: string | null
 ): Promise<FetchConversationsResult> {
   try {
-    const res = await authFetch(
-      `${API_BASE}/me/conversations?limit=${limit}&offset=${offset}`
-    );
+    const qs = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (configId) qs.set("config_id", configId);
+    const res = await authFetch(`${API_BASE}/me/conversations?${qs.toString()}`);
     const data = await res.json();
     if (res.ok)
       return {
         success: true,
         conversations: data.conversations ?? data,
         count: data.count,
+        total: data.total,
+        otherCount: data.other_count,
       };
     return { success: false, error: data.detail || "Failed to fetch conversations" };
   } catch (err) {

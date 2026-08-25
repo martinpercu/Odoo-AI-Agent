@@ -17,6 +17,8 @@ import {
 import { MarkB, Wordmark } from "@/components/AgentMark";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useSession } from "@/hooks/use-session";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { instanceLabel } from "@/lib/instance-label";
 import { UserMenu } from "@/components/chat/user-menu";
 import { ActiveInstanceBadge } from "@/components/chat/active-instance-badge";
 import type { ChatGroup } from "@/lib/types";
@@ -29,9 +31,24 @@ interface SidebarProps {
   onLoadMore: () => void;
   hasMore: boolean;
   onDeleteChat: (id: string) => Promise<{ success: boolean }>;
+  /** Chats del usuario en otras instancias, escondidos por el filtro. 0 = no hay nada que ofrecer. */
+  otherInstancesCount: number;
+  showAllInstances: boolean;
+  onToggleAllInstances: (next: boolean) => void;
 }
 
-export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, onLoadMore, hasMore, onDeleteChat }: SidebarProps) {
+export function Sidebar({
+  chatGroups,
+  currentChatId,
+  onNewChat,
+  onSelectChat,
+  onLoadMore,
+  hasMore,
+  onDeleteChat,
+  otherInstancesCount,
+  showAllInstances,
+  onToggleAllInstances,
+}: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -41,12 +58,20 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
   const iconBtn = useIconSize("button");
   const iconInline = useIconSize("inline");
   const { meData } = useSession();
+  const { configs } = useOdooConfig();
 
   const sessionReady = meData !== null;
   const brandLogoUrl = meData?.org?.brand_logo_url ?? null;
   const brandName = meData?.org?.brand_name ?? null;
 
   const displayGroups = chatGroups;
+
+  // Con el filtro puesto todos los chats son de la instancia activa y nombrarla en cada
+  // fila sería ruido; en "ver todos" la etiqueta es lo único que distingue de quién es cada
+  // conversación. Un chat sin instancia (viejo o de demo) no lleva etiqueta: inventarle una
+  // sería afirmar algo que no sabemos.
+  const instanceNameFor = (configId?: string | null) =>
+    showAllInstances && configId ? instanceLabel(configs.find((c) => c.id === configId)) : null;
 
   async function handleDeleteChat(id: string) {
     setDeletingId(id);
@@ -182,7 +207,14 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
                       onKeyDown={(e) => { if (e.key === "Enter") { onSelectChat(chat.id); setMobileOpen(false); } }}
                     >
                       <MessageSquare size={iconInline} strokeWidth={1.5} className="shrink-0 opacity-60" />
-                      <span className="truncate flex-1 text-left">{chat.title || t("newConversation")}</span>
+                      <span className="min-w-0 flex-1 text-left">
+                        <span className="block truncate">{chat.title || t("newConversation")}</span>
+                        {instanceNameFor(chat.configId) && (
+                          <span className="block truncate text-micro text-text-muted">
+                            {instanceNameFor(chat.configId)}
+                          </span>
+                        )}
+                      </span>
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(chat.id); }}
@@ -205,6 +237,25 @@ export function Sidebar({ chatGroups, currentChatId, onNewChat, onSelectChat, on
             className="w-full rounded-md px-2.5 py-2 text-center text-small text-text-secondary hover:bg-sidebar-hover transition-colors"
           >
             {t("loadMore")}
+          </button>
+        )}
+
+        {/*
+          ⭐ El escape del filtro por instancia. El historial se muestra filtrado por la
+          instancia activa, y esta línea es lo que impide que eso se lea como "perdí mis
+          chats": dice CUÁNTOS quedaron afuera y los trae con un click. Esconder sin decirlo
+          es lo que convierte un filtro útil en un bug reportado.
+          Sólo aparece cuando hay algo que ofrecer — con una sola instancia (el caso del
+          CLIENT_USER) el contador es 0 y esto no existe.
+        */}
+        {!collapsed && (showAllInstances || otherInstancesCount > 0) && (
+          <button
+            onClick={() => onToggleAllInstances(!showAllInstances)}
+            className="mt-1 w-full rounded-md px-2.5 py-2 text-left text-small text-text-muted hover:bg-sidebar-hover hover:text-text-secondary transition-colors"
+          >
+            {showAllInstances
+              ? t("onlyActiveInstance")
+              : t("otherInstances", { count: otherInstancesCount })}
           </button>
         )}
 

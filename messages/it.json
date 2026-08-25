@@ -25,7 +25,9 @@
     "confirmDeleteChat": "Eliminare?",
     "yes": "Sì",
     "no": "No",
-    "instanceBadge": "Istanza"
+    "instanceBadge": "Istanza",
+    "otherInstances": "{count, plural, one {# chat in un'altra istanza} other {# chat in altre istanze}}",
+    "onlyActiveInstance": "Mostra solo l'istanza attiva"
   },
   "UserMenu": {
     "guest": "Ospite",

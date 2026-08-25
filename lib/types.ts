@@ -259,6 +259,14 @@ export interface Chat {
   id: string;
   /** DB conversation ID — needed for DELETE and other endpoints that use the real DB id, not thread_id */
   conversationId?: string;
+  /**
+   * La instancia Odoo contra la que se habló este chat, estampada por el backend en el
+   * primer mensaje. Abrir el chat SELECCIONA esta instancia (ver `AppShell`), así que el
+   * cartel del sidebar y el `config_id` del stream siempre coinciden con lo que se está
+   * leyendo. ⚠️ `null`/`undefined` es "no sabemos" (chats anteriores al estampado, o demo),
+   * NO "ninguna": esos no cambian la instancia activa y se listan siempre.
+   */
+  configId?: string | null;
   title: string;
   messages: Message[];
   createdAt: Date;
@@ -792,6 +800,8 @@ export interface ServerConversation {
   thread_id: string;
   title: string | null;
   last_message_at: string;
+  /** Instancia del chat. `null` = no se pudo determinar (chat viejo o demo) — se lista igual. */
+  odoo_config_id?: string | null;
 }
 
 export interface OdooConfigItem {

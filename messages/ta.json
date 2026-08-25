@@ -25,7 +25,9 @@
     "confirmDeleteChat": "நீக்கவா?",
     "yes": "ஆம்",
     "no": "இல்லை",
-    "instanceBadge": "நிகழ்வு"
+    "instanceBadge": "நிகழ்வு",
+    "otherInstances": "{count, plural, one {மற்ற நிகழ்வுகளில் # உரையாடல்} other {மற்ற நிகழ்வுகளில் # உரையாடல்கள்}}",
+    "onlyActiveInstance": "செயலில் உள்ள நிகழ்வை மட்டும் காட்டு"
   },
   "UserMenu": {
     "guest": "விருந்தினர்",

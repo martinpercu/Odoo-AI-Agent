@@ -25,7 +25,9 @@
     "confirmDeleteChat": "ડિલીટ કરો?",
     "yes": "હા",
     "no": "ના",
-    "instanceBadge": "ઇન્સ્ટન્સ"
+    "instanceBadge": "ઇન્સ્ટન્સ",
+    "otherInstances": "{count, plural, one {અન્ય ઇન્સ્ટન્સમાં # ચેટ} other {અન્ય ઇન્સ્ટન્સમાં # ચેટ}}",
+    "onlyActiveInstance": "ફક્ત સક્રિય ઇન્સ્ટન્સ બતાવો"
   },
   "UserMenu": {
     "guest": "મહેમાન",

@@ -25,6 +25,7 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 
+import { useChatContext } from "@/components/app-shell";
 import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
 import { HowItWorksSidebarItem } from "@/components/intro/how-it-works-sidebar-item";
 import { useAuth } from "@/hooks/use-auth";
@@ -62,6 +63,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const { user, logout, updateUserLang } = useAuth();
   const { meData } = useSession();
   const { configs, activeConfigId, setActiveConfigId } = useOdooConfig();
+  const { setCurrentChatId, setShowAllInstances, stopStreaming } = useChatContext();
   const iconInline = useIconSize("inline");
 
   const [open, setOpen] = useState(false);
@@ -106,9 +108,28 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
     close();
   }
 
+  /**
+   * Elegir instancia acá es empezar a trabajar sobre OTRA base.
+   *
+   * ⭐ Por eso además de cambiar la activa **sale del chat abierto**: ese chat pertenece a la
+   * instancia anterior (abrirlo la volvería a seleccionar, ver `AppShell`), así que dejarlo
+   * en pantalla mostraría una conversación de una empresa con el cartel de otra — que es
+   * exactamente la confusión que este cambio viene a cerrar. Se cae al chat vacío, que es lo
+   * único que no pertenece a ninguna instancia todavía.
+   *
+   * ⚠️ Sólo se navega si estamos DENTRO de un chat: cambiar de cliente desde el Tablero o
+   * desde Rutinas tiene que dejarte donde estabas, viendo los datos del nuevo.
+   */
   function selectInstance(id: string) {
     setActiveConfigId(id);
     setSub(null);
+    setShowAllInstances(false);   // "ver todos" es una mirada puntual, no un modo
+    if (pathname.startsWith("/chat/")) {
+      stopStreaming();            // no dejar una respuesta de la instancia vieja llegando
+      setCurrentChatId(undefined);
+      router.push("/chat");
+      close();
+    }
   }
 
   const role = meData?.user?.role;
