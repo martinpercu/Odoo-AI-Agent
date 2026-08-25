@@ -65,7 +65,7 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           className="shrink-0 text-accent"
           aria-hidden
         />
-        <span className="block truncate text-center text-small font-medium text-foreground" title={name}>
+        <span className="block truncate text-center text-body font-medium text-foreground" title={name}>
           {name}
         </span>
       </div>
