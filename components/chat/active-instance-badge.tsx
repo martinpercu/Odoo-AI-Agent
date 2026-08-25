@@ -32,7 +32,7 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
   const t = useTranslations("Sidebar");
   const { meData } = useSession();
   const { configs, activeConfigId, isDemoMode } = useOdooConfig();
-  const iconInline = useIconSize("inline");
+  const iconBtn = useIconSize("button");
 
   const role = meData?.user?.role;
   const isBuilder = role === "ADMIN" || role === "SUPERADMIN";
@@ -49,7 +49,7 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           className="flex h-btn-md items-center justify-center rounded-btn bg-sidebar-hover"
           title={`${t("instanceBadge")}: ${name}`}
         >
-          <Server size={iconInline} strokeWidth={1.5} className="text-accent" aria-hidden />
+          <Server size={iconBtn} strokeWidth={1.5} className="text-accent" aria-hidden />
           <span className="sr-only">{`${t("instanceBadge")}: ${name}`}</span>
         </div>
       </div>
@@ -58,20 +58,15 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
 
   return (
     <div className="px-3 pt-3">
-      <div className="flex items-center gap-2.5 rounded-btn bg-sidebar-hover px-3 py-2">
+      <div className="flex items-center gap-3 rounded-btn bg-sidebar-hover px-3 py-2">
         <Server
-          size={iconInline}
+          size={iconBtn}
           strokeWidth={1.5}
           className="shrink-0 text-accent"
           aria-hidden
         />
-        <span className="min-w-0">
-          <span className="block text-micro uppercase tracking-wide text-text-secondary">
-            {t("instanceBadge")}
-          </span>
-          <span className="block truncate text-small font-medium text-foreground" title={name}>
-            {name}
-          </span>
+        <span className="block truncate text-center text-small font-medium text-foreground" title={name}>
+          {name}
         </span>
       </div>
     </div>
