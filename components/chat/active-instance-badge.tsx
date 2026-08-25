@@ -39,9 +39,12 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
   const isBuilder = role === "ADMIN" || role === "SUPERADMIN";
   const name = instanceLabel(configs.find((c) => c.id === activeConfigId));
 
-  const [arrowHover, setArrowHover] = useState(false);
+  const [textHover, setTextHover] = useState(false);
+  const [btnHover, setBtnHover] = useState(false);
 
   if (!isBuilder || isDemoMode || !name) return null;
+
+  const isActive = textHover || btnHover;
 
   function handleCycleNext() {
     if (configs.length < 2) return;
@@ -76,21 +79,23 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           aria-hidden
         />
         <span
-          className="min-w-0 flex-1 truncate text-center text-body font-medium text-foreground"
+          className="min-w-0 flex-1 cursor-default truncate text-center text-body font-medium text-foreground"
           title={name}
+          onMouseEnter={() => { if (configs.length >= 2) setTextHover(true); }}
+          onMouseLeave={() => setTextHover(false)}
         >
           {name}
         </span>
         <button
           type="button"
           onClick={handleCycleNext}
-          onMouseEnter={() => setArrowHover(true)}
-          onMouseLeave={() => setArrowHover(false)}
+          onMouseEnter={() => { if (configs.length >= 2) setBtnHover(true); }}
+          onMouseLeave={() => setBtnHover(false)}
           disabled={configs.length < 2}
           aria-label="Cambiar instancia"
-          className="shrink-0 rounded-btn p-1 text-foreground transition-colors hover:bg-raised hover:text-accent disabled:opacity-40"
+          className={`shrink-0 rounded-btn p-1 transition-colors disabled:opacity-40 ${isActive ? "bg-raised text-accent" : "text-foreground"}`}
         >
-          <ArrowBigRight size={iconBtn} strokeWidth={arrowHover ? 2 : 1.5} />
+          <ArrowBigRight size={iconBtn} strokeWidth={btnHover ? 2.5 : 1.5} />
         </button>
       </div>
     </div>
