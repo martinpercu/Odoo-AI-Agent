@@ -34,7 +34,7 @@ import { instanceLabel } from "@/lib/instance-label";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
-import { routing } from "@/i18n/routing";
+import { VISIBLE_LOCALES } from "@/i18n/routing";
 
 interface UserMenuProps {
   collapsed?: boolean;
@@ -255,7 +255,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute bottom-0 left-full z-50 ml-1 max-h-[60vh] w-44 overflow-y-auto rounded-card border border-border bg-surface py-1 shadow-lg"
                 >
-                  {routing.locales.map((loc) => (
+                  {VISIBLE_LOCALES.map((loc) => (
                     <button
                       key={loc}
                       onClick={() => switchLocale(loc)}
@@ -522,7 +522,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                       transition={{ duration: 0.15, ease: "easeOut" }}
                       className="absolute bottom-0 left-full z-50 ml-1 max-h-[60vh] w-44 overflow-y-auto rounded-card border border-border bg-surface py-1 shadow-lg"
                     >
-                      {routing.locales.map((loc) => (
+                      {VISIBLE_LOCALES.map((loc) => (
                         <button
                           key={loc}
                           onClick={() => switchLocale(loc)}

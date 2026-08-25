@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useSession } from "@/hooks/use-session";
 import { useAuth } from "@/hooks/use-auth";
-import { routing } from "@/i18n/routing";
+import { VISIBLE_LOCALES } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import {
   Building2,
@@ -2739,7 +2739,7 @@ function HeaderActions() {
         </button>
         {localeOpen && (
           <div className="absolute right-0 top-full z-20 mt-1 w-36 rounded-lg border border-sidebar-border bg-surface py-1 shadow-lg">
-            {routing.locales.map((loc) => (
+            {VISIBLE_LOCALES.map((loc) => (
               <button
                 key={loc}
                 onClick={() => switchLocale(loc)}
