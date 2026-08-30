@@ -42,7 +42,8 @@
     "configureToChat": "Set up to chat",
     "pricing": "Pricing",
     "implementerManual": "Technical manual",
-    "routines": "Routines"
+    "routines": "Routines",
+    "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
   },
   "ChatGroups": {
     "today": "ಇಂದು",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "ಪಿನ್ ಮಾಡಿದ ಒಳನೋಟಗಳು",
-    "empty": "ಇನ್ನೂ ಯಾವುದೇ ಪಿನ್ ಮಾಡಿದ ಒಳನೋಟಗಳಿಲ್ಲ",
-    "emptyHint": "ಚಾರ್ಟ್‌ಗಳು ಮತ್ತು ಫೈಲ್‌ಗಳನ್ನು ನಿಮ್ಮ ಸಂಭಾಷಣೆಗಳಿಂದ ಪಿನ್ ಮಾಡಿ ಸುಲಭವಾಗಿ ಪ್ರವೇಶಿಸಿ.",
-    "pinTooltip": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಪಿನ್ ಮಾಡಿ",
-    "unpinTooltip": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ಪಿನ್ ತೆಗೆಯಿರಿ",
-    "clearAll": "ಎಲ್ಲಾ ತೆರವುಗೊಳಿಸಿ",
-    "chartPin": "ಪಿನ್ ಮಾಡಿದ ಚಾರ್ಟ್",
-    "filePin": "ಪಿನ್ ಮಾಡಿದ ಫೈಲ್",
-    "excelPin": "ಪಿನ್ ಮಾಡಿದ ರಫ್ತು",
-    "viewInChat": "ಚಾಟ್‌ನಲ್ಲಿ ವೀಕ್ಷಿಸಿ",
-    "pinnedCount": "{count} ಪಿನ್ ಮಾಡಲಾಗಿದೆ",
-    "errorPin": "ಈ ಐಟಂ ಅನ್ನು ಪಿನ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-    "errorUnpin": "ಈ ಐಟಂ ಅನ್ನು ಪಿನ್ ತೆಗೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-    "errorClear": "ಪಿನ್‌ಗಳನ್ನು ತೆರವುಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "title": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    "empty": "ನಿಮ್ಮ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಖಾಲಿಯಾಗಿದೆ",
+    "emptyHint": "ನಿಮ್ಮ ಸಂಭಾಷಣೆಗಳ ಚಾರ್ಟ್‌ಗಳು ಮತ್ತು ಕಡತಗಳನ್ನು ಸೇರಿಸಿ, ಅವು ಕೈಗೆಟುಕುವಂತೆ ಇರಲಿ.",
+    "pinTooltip": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೇರಿಸಿ",
+    "unpinTooltip": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ತೆಗೆದುಹಾಕಿ",
+    "clearAll": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಖಾಲಿ ಮಾಡಿ",
+    "chartPin": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಚಾರ್ಟ್",
+    "filePin": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಕಡತ",
+    "excelPin": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಫ್ತು",
+    "viewInChat": "ಚಾಟ್‌ನಲ್ಲಿ ನೋಡಿ",
+    "pinnedCount": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ {count}",
+    "errorPin": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೇರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "errorUnpin": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ತೆಗೆದುಹಾಕಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "errorClear": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಖಾಲಿ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     "liveSection": "ನೇರ",
     "savedSection": "ಉಳಿಸಿದ",
     "saveTooltip": "ಒಳನೋಟ ಉಳಿಸಿ",
@@ -512,7 +513,8 @@
     "liveBadge": "ನೇರ",
     "historicBadge": "ಐತಿಹಾಸಿಕ",
     "refreshTooltip": "ಡೇಟಾ ನವೀಕರಿಸಿ",
-    "downloadTooltip": "ಡೌನ್‌ಲೋಡ್"
+    "downloadTooltip": "ಡೌನ್‌ಲೋಡ್",
+    "openDashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ"
   },
   "Notifications": {
     "title": "ಎಚ್ಚರಿಕೆಗಳು",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "ಕಾರ್ಯಗತಗೊಳಿಸಲಾಗುತ್ತಿದೆ · ಪ್ರಶ್ನೆ"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Your dashboard is empty",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Refresh all",
+      "refreshingAll": "Refreshing…",
+      "refresh": "Refresh this card",
+      "remove": "Remove from dashboard",
+      "download": "Download",
+      "clearAll": "Clear dashboard",
+      "period": {
+        "label": "Period",
+        "none": "Each card keeps its own",
+        "this_month": "This month",
+        "last_month": "Last month",
+        "this_quarter": "This quarter",
+        "this_year": "This year",
+        "last_12_months": "Last 12 months",
+        "applied": "Showing {start} to {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "failed": "Failed"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "The file could not be generated. Try again."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Build this dashboard",
+        "building": "Building…",
+        "failed": "The dashboard could not be built. Try again.",
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "ಡೌನ್‌ಲೋಡ್"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+      "subtitle": "ನಿಮ್ಮ ಎಲ್ಲಾ ಅಂಕಿಅಂಶಗಳು ಒಂದೇ ಪರದೆಯಲ್ಲಿ. ಒಟ್ಟಿಗೆ ನವೀಕರಿಸಿ ಮತ್ತು ಅವಧಿಯನ್ನು ಬದಲಾಯಿಸಿ.",
+      "empty": "ನಿಮ್ಮ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಖಾಲಿಯಾಗಿದೆ",
+      "emptyHint": "ನಿಮ್ಮ ಸಂಭಾಷಣೆಗಳ ಚಾರ್ಟ್‌ಗಳನ್ನು ಸೇರಿಸಿ, ಅಥವಾ ಕೆಳಗಿನ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗಳಲ್ಲಿ ಒಂದರಿಂದ ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ರಚಿಸಿ.",
+      "refreshAll": "ಎಲ್ಲವನ್ನೂ ನವೀಕರಿಸಿ",
+      "refreshingAll": "ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ…",
+      "refresh": "ಈ ಕಾರ್ಡ್ ನವೀಕರಿಸಿ",
+      "remove": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ತೆಗೆದುಹಾಕಿ",
+      "download": "ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
+      "clearAll": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಖಾಲಿ ಮಾಡಿ",
+      "period": {
+        "label": "ಅವಧಿ",
+        "none": "ಪ್ರತಿ ಕಾರ್ಡ್‌ಗೆ ತನ್ನದೇ",
+        "this_month": "ಈ ತಿಂಗಳು",
+        "last_month": "ಕಳೆದ ತಿಂಗಳು",
+        "this_quarter": "ಈ ತ್ರೈಮಾಸಿಕ",
+        "this_year": "ಈ ವರ್ಷ",
+        "last_12_months": "ಕಳೆದ 12 ತಿಂಗಳು",
+        "applied": "{start} ರಿಂದ {end} ವರೆಗೆ ತೋರಿಸಲಾಗುತ್ತಿದೆ."
+      },
+      "badge": {
+        "live": "ಲೈವ್",
+        "historic": "ಐತಿಹಾಸಿಕ",
+        "noPeriod": "ಅವಧಿಯನ್ನು ಅವಲಂಬಿಸಿಲ್ಲ",
+        "noPeriodHint": "ಈ ಸಂಖ್ಯೆ ಇಂದಿನದು, ದಿನಾಂಕ ವ್ಯಾಪ್ತಿಯದ್ದಲ್ಲ: ಅವಧಿ ಬದಲಾಯಿಸಿದರೆ ಇದು ಬದಲಾಗುವುದಿಲ್ಲ."
+      },
+      "state": {
+        "updated": "ನವೀಕರಿಸಲಾಗಿದೆ",
+        "unchanged": "ಬದಲಾವಣೆ ಇಲ್ಲ",
+        "failed": "ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
+      },
+      "skipReason": {
+        "static": "ಇದು ಮುಚ್ಚಿದ ಅವಧಿ: ಇದು ಬದಲಾಗುವುದಿಲ್ಲ.",
+        "no_context": "ಪ್ರಶ್ನೆಯನ್ನು ನೆನಪಿಡುವ ಮೊದಲೇ ಇದನ್ನು ಉಳಿಸಲಾಗಿತ್ತು.",
+        "no_groupby": "ಮರುಲೆಕ್ಕ ಮಾಡಲು ಯಾವುದೇ ವಿಭಜನೆ ಇಲ್ಲ.",
+        "no_model": "ಈ ಸಂಖ್ಯೆ ಎಲ್ಲಿಂದ ಬಂತೆಂದು ನಮಗೆ ಗೊತ್ತಿಲ್ಲ.",
+        "not_chart": "ಇದು ಉಳಿಸಿದ ಕಡತ, ಪ್ರಶ್ನೆಯಲ್ಲ.",
+        "generic": "ಇದನ್ನು ನವೀಕರಿಸುವ ಅಗತ್ಯವಿರಲಿಲ್ಲ."
+      },
+      "errorReason": {
+        "odoo_error": "ಈ ಕಾರ್ಡ್‌ಗಾಗಿ ನಿಮ್ಮ ವ್ಯವಸ್ಥೆಯನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.",
+        "chart_failed": "ಪ್ರಶ್ನೆ ನಡೆಯಿತು ಆದರೆ ಚಾರ್ಟ್‌ಗೆ ಯಾವುದೇ ಮಾಹಿತಿ ಬರಲಿಲ್ಲ.",
+        "unexpected": "ಈ ಕಾರ್ಡ್‌ನಲ್ಲಿ ಏನೋ ತಪ್ಪಾಯಿತು.",
+        "generic": "ಈ ಕಾರ್ಡ್ ನವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "ಕಡತ ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+      },
+      "presets": {
+        "title": "ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಿ",
+        "subtitle": "ನಿಮ್ಮ ಕೆಲಸಕ್ಕೆ ಹೊಂದುವುದನ್ನು ಆರಿಸಿ, ಕಾರ್ಡ್‌ಗಳು ಸಿದ್ಧವಾಗುತ್ತವೆ. ನಂತರ ಬದಲಾಯಿಸಬಹುದು.",
+        "apply": "ಈ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಿ",
+        "building": "ರಚಿಸಲಾಗುತ್ತಿದೆ…",
+        "failed": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+        "tooManyRuns": "ಹಲವು ಕಾರ್ಯಗಳು ನಡೆಯುತ್ತಿವೆ. ಕೆಲವು ಕ್ಷಣ ಕಾದು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
       }
     }
   },

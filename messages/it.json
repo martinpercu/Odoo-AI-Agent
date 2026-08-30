@@ -42,7 +42,8 @@
     "configureToChat": "Configura per chattare",
     "pricing": "Prezzi",
     "implementerManual": "Manuale tecnico",
-    "routines": "Routine"
+    "routines": "Routine",
+    "dashboard": "Cruscotto"
   },
   "ChatGroups": {
     "today": "Oggi",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "Insight salvati",
-    "empty": "Nessun insight salvato",
-    "emptyHint": "Salva grafici e file dalle conversazioni per averli sempre a portata di mano.",
-    "pinTooltip": "Aggiungi alla dashboard",
-    "unpinTooltip": "Rimuovi dalla dashboard",
-    "clearAll": "Rimuovi tutti",
-    "chartPin": "Grafico salvato",
-    "filePin": "File salvato",
-    "excelPin": "Export salvato",
-    "viewInChat": "Visualizza nella chat",
-    "pinnedCount": "{count} salvati",
-    "errorPin": "Impossibile salvare questo elemento. Riprova.",
-    "errorUnpin": "Impossibile rimuovere questo elemento. Riprova.",
-    "errorClear": "Impossibile rimuovere i pin. Riprova.",
+    "title": "Cruscotto",
+    "empty": "Il tuo cruscotto è vuoto",
+    "emptyHint": "Aggiungi grafici e file delle tue conversazioni per averli sempre a portata di mano.",
+    "pinTooltip": "Aggiungi al cruscotto",
+    "unpinTooltip": "Rimuovi dal cruscotto",
+    "clearAll": "Svuota il cruscotto",
+    "chartPin": "Grafico del cruscotto",
+    "filePin": "File del cruscotto",
+    "excelPin": "Esportazione del cruscotto",
+    "viewInChat": "Vedi nella chat",
+    "pinnedCount": "{count} nel cruscotto",
+    "errorPin": "Non è stato possibile aggiungerlo al cruscotto. Riprova.",
+    "errorUnpin": "Non è stato possibile rimuoverlo dal cruscotto. Riprova.",
+    "errorClear": "Non è stato possibile svuotare il cruscotto. Riprova.",
     "liveSection": "Live",
     "savedSection": "Salvati",
     "saveTooltip": "Salva insight",
@@ -512,7 +513,8 @@
     "liveBadge": "Live",
     "historicBadge": "Storico",
     "refreshTooltip": "Aggiorna dati",
-    "downloadTooltip": "Scarica"
+    "downloadTooltip": "Scarica",
+    "openDashboard": "Apri il cruscotto"
   },
   "Notifications": {
     "title": "Avvisi",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "Esecuzione · query"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Il tuo cruscotto è vuoto",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Aggiorna tutto",
+      "refreshingAll": "Aggiornamento…",
+      "refresh": "Aggiorna questa scheda",
+      "remove": "Rimuovi dal cruscotto",
+      "download": "Scarica",
+      "clearAll": "Svuota il cruscotto",
+      "period": {
+        "label": "Periodo",
+        "none": "Ogni scheda con il suo",
+        "this_month": "Questo mese",
+        "last_month": "Il mese scorso",
+        "this_quarter": "Questo trimestre",
+        "this_year": "Quest'anno",
+        "last_12_months": "Ultimi 12 mesi",
+        "applied": "Dal {start} al {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Aggiornato",
+        "unchanged": "Invariato",
+        "failed": "Non riuscito"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Non è stato possibile generare il file. Riprova."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Crea questo cruscotto",
+        "building": "Creazione…",
+        "failed": "Non è stato possibile creare il cruscotto. Riprova.",
+        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "Scarica"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "Cruscotto",
+      "subtitle": "I tuoi numeri in una sola schermata. Si aggiornano tutti insieme e puoi cambiarne il periodo.",
+      "empty": "Il tuo cruscotto è vuoto",
+      "emptyHint": "Aggiungi i grafici delle tue conversazioni, oppure crealo con un clic da uno dei cruscotti qui sotto.",
+      "refreshAll": "Aggiorna tutto",
+      "refreshingAll": "Aggiornamento…",
+      "refresh": "Aggiorna questa scheda",
+      "remove": "Rimuovi dal cruscotto",
+      "download": "Scarica",
+      "clearAll": "Svuota il cruscotto",
+      "period": {
+        "label": "Periodo",
+        "none": "Ogni scheda con il suo",
+        "this_month": "Questo mese",
+        "last_month": "Il mese scorso",
+        "this_quarter": "Questo trimestre",
+        "this_year": "Quest'anno",
+        "last_12_months": "Ultimi 12 mesi",
+        "applied": "Dal {start} al {end}."
+      },
+      "badge": {
+        "live": "In diretta",
+        "historic": "Storico",
+        "noPeriod": "Non dipende dal periodo",
+        "noPeriodHint": "Questo numero è di oggi, non di un intervallo di date: cambiare il periodo non lo modifica."
+      },
+      "state": {
+        "updated": "Aggiornato",
+        "unchanged": "Invariato",
+        "failed": "Non riuscito"
+      },
+      "skipReason": {
+        "static": "È un periodo chiuso: non cambia.",
+        "no_context": "Salvato prima che potessimo ricordare la query.",
+        "no_groupby": "Non c'è una ripartizione da ricalcolare.",
+        "no_model": "Non sappiamo da dove arriva questo numero.",
+        "not_chart": "È un file salvato, non una query.",
+        "generic": "Non serviva aggiornarla."
+      },
+      "errorReason": {
+        "odoo_error": "Non siamo riusciti a raggiungere il tuo sistema per questa scheda.",
+        "chart_failed": "La query è andata a buon fine ma non ha restituito dati da rappresentare.",
+        "unexpected": "Qualcosa è andato storto con questa scheda.",
+        "generic": "Non è stato possibile aggiornare questa scheda."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Non è stato possibile generare il file. Riprova."
+      },
+      "presets": {
+        "title": "Crea il tuo cruscotto con un clic",
+        "subtitle": "Scegli quello che assomiglia alla tua giornata e le schede sono pronte. Poi le puoi cambiare.",
+        "apply": "Crea questo cruscotto",
+        "building": "Creazione…",
+        "failed": "Non è stato possibile creare il cruscotto. Riprova.",
+        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
       }
     }
   },

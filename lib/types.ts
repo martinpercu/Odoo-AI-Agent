@@ -311,10 +311,48 @@ export type PinVolatility = "variable" | "static";
 export interface PinQueryContext {
   primary_model?: string;
   dynamic_domain?: unknown[];
-  date_filter?: { start?: string; end?: string };
+  date_filter?: { start?: string; end?: string; field?: string; period?: string };
   groupby_fields?: string[];
   classified_areas?: string[];
   volatility?: PinVolatility;
+}
+
+/**
+ * El período global del Tablero (Fase 5 · §3.1). Rango ABSOLUTO, nunca una frase: el
+ * selector lo resuelve acá y el backend lo aplica tal cual. Mandar "este trimestre"
+ * obligaría al backend a interpretar texto en un endpoint que no pasa por el agente.
+ */
+export interface DashboardPeriod {
+  start: string; // YYYY-MM-DD
+  end: string;   // YYYY-MM-DD
+}
+
+/**
+ * Qué se puede hacer con una tarjeta, **decidido por el backend** (`pin_refresh.describe`).
+ *
+ * ⚠️ No recalcular esto en el front. `date_dependent: false` no es "no tiene fecha": es
+ * el veredicto de que reparametrizar este pin daría un número silenciosamente
+ * equivocado (un dominio con operadores lógicos no se puede reescribir sin romperlo).
+ * Duplicar la regla en TypeScript es cómo la UI termina prometiendo una
+ * reparametrización que el backend ignora.
+ */
+export interface PinRefreshability {
+  /** Se puede volver a ejecutar y rearmar el gráfico. */
+  refreshable?: boolean;
+  /** El selector de período global lo afecta. */
+  date_dependent?: boolean;
+}
+
+/** El resultado de refrescar UNA tarjeta dentro de "actualizar todo". */
+export interface DashboardRefreshResult {
+  pin_id: string;
+  status: "ok" | "skipped" | "error";
+  /** Código, no frase: `static` · `no_context` · `no_groupby` · `odoo_error` … */
+  reason?: string;
+  date_dependent?: boolean;
+  override_applied?: boolean;
+  payload?: ChartSSEEvent;
+  refreshed_at?: string;
 }
 
 export interface ChartSSEEvent {
@@ -384,7 +422,7 @@ export interface EntitySearchResult {
 
 // ---- Pinned Insights ----
 
-export interface PinnedChart {
+export interface PinnedChart extends PinRefreshability {
   kind: "chart";
   id: string;
   pinnedAt: string;

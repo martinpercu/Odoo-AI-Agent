@@ -4,6 +4,8 @@ import type {
   ActionResult,
   AggReportOption,
   PinnedInsight,
+  DashboardPeriod,
+  DashboardRefreshResult,
   ChartSSEEvent,
   FileAttachmentMetadata,
   ExcelExportMetadata,
@@ -1296,6 +1298,11 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       chartIndex,
       chart: payload as ChartSSEEvent,
       ...(queryContext && { query_context: queryContext }),
+      // Fase 5 — el veredicto viene resuelto del backend (`pin_refresh.describe`);
+      // acá sólo se transporta. Sólo `/me/pins` los manda: en el resto quedan
+      // `undefined` y el consumidor cae a su default.
+      ...(typeof r.refreshable === "boolean" && { refreshable: r.refreshable }),
+      ...(typeof r.date_dependent === "boolean" && { date_dependent: r.date_dependent }),
     };
   }
 
@@ -1589,6 +1596,10 @@ export interface RefreshPinResult {
   success: boolean;
   new_payload?: ChartSSEEvent;
   refreshed_at?: string;
+  /** §3.1 — si es `false`, el período global NO afecta a esta tarjeta. */
+  dateDependent?: boolean;
+  /** ¿Se llegó a aplicar el override en ESTE refresh? */
+  overrideApplied?: boolean;
   error?: string;
 }
 
@@ -1596,26 +1607,124 @@ export async function refreshPin(
   chatId: string,
   pinId: string,
   configId: string,
-  language: string
+  language: string,
+  /** Fase 5 — el período global del Tablero. Se ignora en un pin atemporal. */
+  period?: DashboardPeriod
 ): Promise<RefreshPinResult> {
   try {
     const res = await authFetch(`${API_BASE}/chat/${chatId}/pin/${pinId}/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ config_id: configId, language }),
+      body: JSON.stringify({
+        config_id: configId,
+        language,
+        ...(period && { date_override: period }),
+      }),
     });
 
     const data = await res.json();
 
     if (res.ok && data.status === "ok") {
+      // ⚠️ El payload viene bajo `pin`, no en la raíz. Leerlo de `data.new_payload`
+      // (como hacía esta función) devolvía `undefined` con `success: true`: el
+      // hook no encontraba nada que setear y el botón de refrescar giraba y no
+      // cambiaba el número. Un refresh que dice que anduvo y no anduvo es peor
+      // que uno que falla.
       return {
         success: true,
-        new_payload: data.new_payload,
-        refreshed_at: data.refreshed_at,
+        new_payload: data.pin?.payload ?? data.new_payload,
+        refreshed_at: data.pin?.refreshed_at ?? data.refreshed_at,
+        dateDependent: data.pin?.date_dependent,
+        overrideApplied: data.pin?.override_applied,
       };
     }
 
     return { success: false, error: extractError(data.detail, "Refresh failed") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+// ---- Tablero (PLAN_RUTINAS Fase 5) ----
+
+export interface RefreshAllPinsResult {
+  success: boolean;
+  results?: DashboardRefreshResult[];
+  ok?: number;
+  skipped?: number;
+  error?: string;
+}
+
+/**
+ * "Actualizar todo" — un solo viaje para el Tablero entero.
+ *
+ * ⚠️ El backend responde **200 con el detalle por tarjeta**, no un error global: un pin
+ * roto no interrumpe a los demás. `success: false` acá significa que falló el pedido
+ * entero (auth, instancia inalcanzable), no que falló una tarjeta.
+ */
+export async function refreshAllPins(
+  configId: string,
+  language: string,
+  period?: DashboardPeriod,
+  pinIds?: string[]
+): Promise<RefreshAllPinsResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/pins/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        config_id: configId,
+        language,
+        ...(period && { date_override: period }),
+        ...(pinIds && { pin_ids: pinIds }),
+      }),
+    });
+    const data = await res.json();
+    if (res.ok && data.status === "ok") {
+      return { success: true, results: data.results ?? [], ok: data.ok, skipped: data.skipped };
+    }
+    return { success: false, error: extractError(data.detail, "Refresh failed") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: "Network error: Could not connect to backend" };
+  }
+}
+
+export interface ExportDashboardResult {
+  success: boolean;
+  base64?: string;
+  filename?: string;
+  mimetype?: string;
+  error?: string;
+}
+
+/**
+ * Exportar el Tablero. **No consulta Odoo**: compone lo que ya está guardado en cada
+ * tarjeta (misma división que A7 hace con las Rutinas — *Actualizar* trae números
+ * nuevos, *Exportar* imprime los que hay).
+ */
+export async function exportDashboard(
+  format: "pdf" | "excel",
+  language: string,
+  pinIds?: string[]
+): Promise<ExportDashboardResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/pins/export`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ format, language, ...(pinIds && { pin_ids: pinIds }) }),
+    });
+    const data = await res.json();
+    if (res.ok && data.status === "ok") {
+      return {
+        success: true,
+        base64: format === "pdf" ? data.pdf_base64 : data.xlsx_base64,
+        filename: data.filename,
+        mimetype: data.mimetype,
+      };
+    }
+    return { success: false, error: extractError(data.detail, "Export failed") };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };

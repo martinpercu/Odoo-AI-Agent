@@ -19,7 +19,9 @@ import {
   deletePin as apiDeletePin,
   deleteAllMyPins as apiDeleteAllMyPins,
   refreshPin as apiRefreshPin,
+  refreshAllPins as apiRefreshAllPins,
 } from "@/lib/api";
+import type { DashboardPeriod, DashboardRefreshResult } from "@/lib/types";
 import { useToast } from "@/components/ui/error-toast";
 
 const MAX_PINS = 20;
@@ -38,7 +40,9 @@ interface PinnedInsightsContextType {
   getPinId: (kind: string, identifier: string) => string | undefined;
   loadPins: (chatId: string) => void;
   loadAllPins: () => Promise<void>;
-  refreshPin: (pinId: string, chatId: string) => Promise<void>;
+  refreshPin: (pinId: string, chatId: string, period?: DashboardPeriod) => Promise<void>;
+  /** "Actualizar todo" del Tablero (Fase 5 · F3). Devuelve el estado POR TARJETA. */
+  refreshAll: (period?: DashboardPeriod) => Promise<DashboardRefreshResult[]>;
 }
 
 const PinnedInsightsContext = createContext<PinnedInsightsContextType | null>(null);
@@ -330,8 +334,8 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
   );
 
   const refreshPin = useCallback(
-    async (pinId: string, chatId: string) => {
-      const result = await apiRefreshPin(chatId, pinId, activeConfigId ?? "", locale);
+    async (pinId: string, chatId: string, period?: DashboardPeriod) => {
+      const result = await apiRefreshPin(chatId, pinId, activeConfigId ?? "", locale, period);
       if (!result.success) {
         showError(result.error || t("errorPin"));
         return;
@@ -345,6 +349,41 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
           )
         );
       }
+    },
+    [showError, t, activeConfigId, locale]
+  );
+
+  /**
+   * "Actualizar todo" — UN viaje para el Tablero entero (Fase 5 · F3).
+   *
+   * ⭐ **No hay rollback y es deliberado.** Cada tarjeta se resuelve sola en el backend:
+   * las que salieron bien se aplican, las que fallaron conservan su número anterior y su
+   * motivo se devuelve al llamador para que lo pinte EN la tarjeta. Volver todo atrás
+   * porque una instancia tardó de más tiraría 19 actualizaciones buenas.
+   */
+  const refreshAll = useCallback(
+    async (period?: DashboardPeriod): Promise<DashboardRefreshResult[]> => {
+      const result = await apiRefreshAllPins(activeConfigId ?? "", locale, period);
+      if (!result.success || !result.results) {
+        showError(result.error || t("errorPin"));
+        return [];
+      }
+      const fresh = new Map(
+        result.results
+          .filter((r) => r.status === "ok" && r.payload)
+          .map((r) => [r.pin_id, r])
+      );
+      if (fresh.size > 0) {
+        setPins((prev) =>
+          prev.map((p) => {
+            const hit = fresh.get(p.id);
+            return hit && p.kind === "chart"
+              ? { ...p, chart: hit.payload!, pinnedAt: hit.refreshed_at || p.pinnedAt }
+              : p;
+          })
+        );
+      }
+      return result.results;
     },
     [showError, t, activeConfigId, locale]
   );
@@ -381,6 +420,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         loadPins,
         loadAllPins,
         refreshPin,
+        refreshAll,
       }}
     >
       {children}

@@ -42,7 +42,8 @@
     "configureToChat": "Set up to chat",
     "pricing": "Pricing",
     "implementerManual": "Technical manual",
-    "routines": "Routines"
+    "routines": "Routines",
+    "dashboard": "டாஷ்போர்டு"
   },
   "ChatGroups": {
     "today": "இன்று",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "பின் செய்யப்பட்ட நுண்ணறிவுகள்",
-    "empty": "இன்னும் பின் செய்யப்பட்ட நுண்ணறிவுகள் இல்லை",
-    "emptyHint": "எளிதான அணுகலுக்காக உரையாடல்களிலிருந்து விளக்கப்படங்கள் மற்றும் கோப்புகளை பின் செய்யவும்.",
-    "pinTooltip": "டாஷ்போர்டில் பின் செய்யவும்",
-    "unpinTooltip": "டாஷ்போர்டிலிருந்து பின் நீக்கவும்",
-    "clearAll": "அனைத்தையும் அழிக்கவும்",
-    "chartPin": "பின் செய்யப்பட்ட விளக்கப்படம்",
-    "filePin": "பின் செய்யப்பட்ட கோப்பு",
-    "excelPin": "பின் செய்யப்பட்ட ஏற்றுமதி",
-    "viewInChat": "அரட்டையில் காண்க",
-    "pinnedCount": "{count} பின் செய்யப்பட்டன",
-    "errorPin": "இந்த உருப்படியை பின் செய்ய முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
-    "errorUnpin": "இந்த உருப்படியை பின் நீக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
-    "errorClear": "பின்களை அழிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    "title": "டாஷ்போர்டு",
+    "empty": "உங்கள் டாஷ்போர்டு காலியாக உள்ளது",
+    "emptyHint": "உங்கள் உரையாடல்களின் வரைபடங்களையும் கோப்புகளையும் சேர்த்து கையருகில் வைத்துக்கொள்ளுங்கள்.",
+    "pinTooltip": "டாஷ்போர்டில் சேர்",
+    "unpinTooltip": "டாஷ்போர்டிலிருந்து அகற்று",
+    "clearAll": "டாஷ்போர்டைக் காலி செய்",
+    "chartPin": "டாஷ்போர்டு வரைபடம்",
+    "filePin": "டாஷ்போர்டு கோப்பு",
+    "excelPin": "டாஷ்போர்டு ஏற்றுமதி",
+    "viewInChat": "அரட்டையில் பார்",
+    "pinnedCount": "டாஷ்போர்டில் {count}",
+    "errorPin": "டாஷ்போர்டில் சேர்க்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    "errorUnpin": "டாஷ்போர்டிலிருந்து அகற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    "errorClear": "டாஷ்போர்டைக் காலி செய்ய முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
     "liveSection": "நேரடி",
     "savedSection": "சேமிக்கப்பட்டது",
     "saveTooltip": "நுண்ணறிவை சேமிக்கவும்",
@@ -512,7 +513,8 @@
     "liveBadge": "நேரடி",
     "historicBadge": "வரலாற்று",
     "refreshTooltip": "தரவை புதுப்பிக்கவும்",
-    "downloadTooltip": "பதிவிறக்கவும்"
+    "downloadTooltip": "பதிவிறக்கவும்",
+    "openDashboard": "டாஷ்போர்டைத் திற"
   },
   "Notifications": {
     "title": "எச்சரிக்கைகள்",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "செயல்படுத்துகிறது · வினவல்"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "Your dashboard is empty",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Refresh all",
+      "refreshingAll": "Refreshing…",
+      "refresh": "Refresh this card",
+      "remove": "Remove from dashboard",
+      "download": "Download",
+      "clearAll": "Clear dashboard",
+      "period": {
+        "label": "Period",
+        "none": "Each card keeps its own",
+        "this_month": "This month",
+        "last_month": "Last month",
+        "this_quarter": "This quarter",
+        "this_year": "This year",
+        "last_12_months": "Last 12 months",
+        "applied": "Showing {start} to {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "failed": "Failed"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "The file could not be generated. Try again."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Build this dashboard",
+        "building": "Building…",
+        "failed": "The dashboard could not be built. Try again.",
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "பதிவிறக்கவும்"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "டாஷ்போர்டு",
+      "subtitle": "உங்கள் எண்கள் அனைத்தும் ஒரே திரையில். ஒரே சமயத்தில் புதுப்பித்து காலகட்டத்தை மாற்றலாம்.",
+      "empty": "உங்கள் டாஷ்போர்டு காலியாக உள்ளது",
+      "emptyHint": "உங்கள் உரையாடல்களின் வரைபடங்களைச் சேர்க்கவும், அல்லது கீழே உள்ள டாஷ்போர்டுகளில் ஒன்றைக் கொண்டு ஒரே சொடுக்கில் உருவாக்கவும்.",
+      "refreshAll": "அனைத்தையும் புதுப்பி",
+      "refreshingAll": "புதுப்பிக்கிறது…",
+      "refresh": "இந்த அட்டையைப் புதுப்பி",
+      "remove": "டாஷ்போர்டிலிருந்து அகற்று",
+      "download": "பதிவிறக்கு",
+      "clearAll": "டாஷ்போர்டைக் காலி செய்",
+      "period": {
+        "label": "காலகட்டம்",
+        "none": "ஒவ்வொரு அட்டையும் அதனுடையது",
+        "this_month": "இந்த மாதம்",
+        "last_month": "கடந்த மாதம்",
+        "this_quarter": "இந்த காலாண்டு",
+        "this_year": "இந்த ஆண்டு",
+        "last_12_months": "கடந்த 12 மாதங்கள்",
+        "applied": "{start} முதல் {end} வரை காட்டப்படுகிறது."
+      },
+      "badge": {
+        "live": "நேரலை",
+        "historic": "வரலாற்று",
+        "noPeriod": "காலகட்டத்தைச் சார்ந்தது அல்ல",
+        "noPeriodHint": "இந்த எண் இன்றையது, தேதி வரம்பினுடையது அல்ல: காலகட்டத்தை மாற்றுவது இதை மாற்றாது."
+      },
+      "state": {
+        "updated": "புதுப்பிக்கப்பட்டது",
+        "unchanged": "மாற்றம் இல்லை",
+        "failed": "முடியவில்லை"
+      },
+      "skipReason": {
+        "static": "இது மூடப்பட்ட காலகட்டம்: இது மாறாது.",
+        "no_context": "வினவலை நினைவில் வைக்க முடியும் முன்பே சேமிக்கப்பட்டது.",
+        "no_groupby": "மீண்டும் கணக்கிட பிரிவு எதுவும் இல்லை.",
+        "no_model": "இந்த எண் எங்கிருந்து வந்தது என்று தெரியவில்லை.",
+        "not_chart": "இது சேமித்த கோப்பு, வினவல் அல்ல.",
+        "generic": "இதைப் புதுப்பிக்க வேண்டியதில்லை."
+      },
+      "errorReason": {
+        "odoo_error": "இந்த அட்டைக்காக உங்கள் அமைப்பைத் தொடர்பு கொள்ள முடியவில்லை.",
+        "chart_failed": "வினவல் இயங்கியது ஆனால் வரைபடத்திற்கு தரவு எதுவும் திரும்பவில்லை.",
+        "unexpected": "இந்த அட்டையில் ஏதோ தவறு நடந்தது.",
+        "generic": "இந்த அட்டையைப் புதுப்பிக்க முடியவில்லை."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "கோப்பை உருவாக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்."
+      },
+      "presets": {
+        "title": "ஒரே சொடுக்கில் உங்கள் டாஷ்போர்டை உருவாக்குங்கள்",
+        "subtitle": "உங்கள் வேலைக்குப் பொருந்துவதைத் தேர்ந்தெடுங்கள், அட்டைகள் தயாராகிவிடும். பிறகு மாற்றலாம்.",
+        "apply": "இந்த டாஷ்போர்டை உருவாக்கு",
+        "building": "உருவாக்குகிறது…",
+        "failed": "டாஷ்போர்டை உருவாக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+        "tooManyRuns": "பல செயல்கள் இயங்குகின்றன. சில வினாடிகள் காத்திருந்து மீண்டும் முயற்சிக்கவும்."
       }
     }
   },

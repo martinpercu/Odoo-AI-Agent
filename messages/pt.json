@@ -42,7 +42,8 @@
     "configureToChat": "Configurar para conversar",
     "pricing": "Planos",
     "implementerManual": "Manual técnico",
-    "routines": "Rotinas"
+    "routines": "Rotinas",
+    "dashboard": "Painel"
   },
   "ChatGroups": {
     "today": "Hoje",
@@ -491,20 +492,20 @@
     }
   },
   "PinnedInsights": {
-    "title": "Insights Fixados",
-    "empty": "Nenhum insight fixado",
-    "emptyHint": "Fixe gráficos e arquivos para mantê-los à mão.",
-    "pinTooltip": "Fixar no painel",
-    "unpinTooltip": "Desafixar do painel",
-    "clearAll": "Limpar tudo",
-    "chartPin": "Gráfico fixado",
-    "filePin": "Arquivo fixado",
-    "excelPin": "Exportação fixada",
+    "title": "Painel",
+    "empty": "O seu painel está vazio",
+    "emptyHint": "Adicione gráficos e ficheiros das suas conversas para os ter à mão.",
+    "pinTooltip": "Adicionar ao painel",
+    "unpinTooltip": "Remover do painel",
+    "clearAll": "Limpar painel",
+    "chartPin": "Gráfico do painel",
+    "filePin": "Ficheiro do painel",
+    "excelPin": "Exportação do painel",
     "viewInChat": "Ver no chat",
-    "pinnedCount": "{count} fixados",
-    "errorPin": "Não foi possível fixar.",
-    "errorUnpin": "Não foi possível desafixar.",
-    "errorClear": "Não foi possível limpar os itens.",
+    "pinnedCount": "{count} no painel",
+    "errorPin": "Não foi possível adicionar ao painel. Tente novamente.",
+    "errorUnpin": "Não foi possível remover do painel. Tente novamente.",
+    "errorClear": "Não foi possível limpar o painel. Tente novamente.",
     "liveSection": "Ao vivo",
     "savedSection": "Salvos",
     "saveTooltip": "Salvar insight",
@@ -512,7 +513,8 @@
     "liveBadge": "Ao vivo",
     "historicBadge": "Histórico",
     "refreshTooltip": "Atualizar dados",
-    "downloadTooltip": "Baixar"
+    "downloadTooltip": "Baixar",
+    "openDashboard": "Abrir o painel"
   },
   "Notifications": {
     "title": "Alertas",
@@ -919,6 +921,66 @@
     },
     "ChatMessages": {
       "typingIndicator": "Executando · query"
+    },
+    "Dashboard": {
+      "title": "Insights dashboard",
+      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "empty": "O seu painel está vazio",
+      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "refreshAll": "Atualizar tudo",
+      "refreshingAll": "A atualizar…",
+      "refresh": "Atualizar este cartão",
+      "remove": "Remover do painel",
+      "download": "Descarregar",
+      "clearAll": "Limpar painel",
+      "period": {
+        "label": "Período",
+        "none": "Cada cartão com o seu",
+        "this_month": "Este mês",
+        "last_month": "O mês passado",
+        "this_quarter": "Este trimestre",
+        "this_year": "Este ano",
+        "last_12_months": "Últimos 12 meses",
+        "applied": "A mostrar de {start} a {end}."
+      },
+      "badge": {
+        "live": "variable",
+        "historic": "static",
+        "noPeriod": "No date_filter",
+        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+      },
+      "state": {
+        "updated": "Atualizado",
+        "unchanged": "Sem alterações",
+        "failed": "Falhou"
+      },
+      "skipReason": {
+        "static": "chart_volatility marked it static: closed period.",
+        "no_context": "Pin with no query_context (pre-Phase 6).",
+        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
+        "no_model": "primary_model missing from the query_context.",
+        "not_chart": "content_type is not chart.",
+        "generic": "Skipped."
+      },
+      "errorReason": {
+        "odoo_error": "The read_group against the instance failed.",
+        "chart_failed": "build_chart_payload returned None.",
+        "unexpected": "Unhandled exception while refreshing.",
+        "generic": "Could not refresh."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Não foi possível gerar o ficheiro. Tente novamente."
+      },
+      "presets": {
+        "title": "Role dashboard presets",
+        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "apply": "Montar este painel",
+        "building": "A montar…",
+        "failed": "Não foi possível montar o painel. Tente novamente.",
+        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
+      }
     }
   },
   "Client": {
@@ -968,6 +1030,66 @@
         "report": {
           "generic": "Baixar"
         }
+      }
+    },
+    "Dashboard": {
+      "title": "Painel",
+      "subtitle": "Os seus números num só ecrã. Atualize-os de uma vez e mude o período.",
+      "empty": "O seu painel está vazio",
+      "emptyHint": "Adicione os gráficos das suas conversas, ou monte-o num clique com um dos painéis abaixo.",
+      "refreshAll": "Atualizar tudo",
+      "refreshingAll": "A atualizar…",
+      "refresh": "Atualizar este cartão",
+      "remove": "Remover do painel",
+      "download": "Descarregar",
+      "clearAll": "Limpar painel",
+      "period": {
+        "label": "Período",
+        "none": "Cada cartão com o seu",
+        "this_month": "Este mês",
+        "last_month": "O mês passado",
+        "this_quarter": "Este trimestre",
+        "this_year": "Este ano",
+        "last_12_months": "Últimos 12 meses",
+        "applied": "A mostrar de {start} a {end}."
+      },
+      "badge": {
+        "live": "Ao vivo",
+        "historic": "Histórico",
+        "noPeriod": "Não depende do período",
+        "noPeriodHint": "Este número é de hoje, não de um intervalo de datas: mudar o período não o altera."
+      },
+      "state": {
+        "updated": "Atualizado",
+        "unchanged": "Sem alterações",
+        "failed": "Falhou"
+      },
+      "skipReason": {
+        "static": "É um período fechado: não muda.",
+        "no_context": "Foi guardado antes de conseguirmos memorizar a consulta.",
+        "no_groupby": "Não tem uma repartição para recalcular.",
+        "no_model": "Não sabemos de onde veio este número.",
+        "not_chart": "É um ficheiro guardado, não uma consulta.",
+        "generic": "Não precisava de ser atualizado."
+      },
+      "errorReason": {
+        "odoo_error": "Não conseguimos ligar ao seu sistema para este cartão.",
+        "chart_failed": "A consulta correu mas não devolveu dados para o gráfico.",
+        "unexpected": "Algo correu mal com este cartão.",
+        "generic": "Não foi possível atualizar este cartão."
+      },
+      "export": {
+        "pdf": "PDF",
+        "excel": "Excel",
+        "failed": "Não foi possível gerar o ficheiro. Tente novamente."
+      },
+      "presets": {
+        "title": "Monte o seu painel num clique",
+        "subtitle": "Escolha o que se parece com o seu dia e os cartões ficam prontos. Depois pode alterá-los.",
+        "apply": "Montar este painel",
+        "building": "A montar…",
+        "failed": "Não foi possível montar o painel. Tente novamente.",
+        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
       }
     }
   },

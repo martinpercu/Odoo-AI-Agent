@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pin, PanelRightClose, Trash2, Bell } from "lucide-react";
+import { Pin, PanelRightClose, Trash2, Bell, Maximize2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useNotifications } from "@/hooks/use-notifications";
@@ -13,7 +13,7 @@ import { useSession } from "@/hooks/use-session";
 import { usePathname } from "@/i18n/navigation";
 import { PinnedInsightMiniCard } from "@/components/pinned/pinned-insight-mini-card";
 import { NotificationFeed } from "@/components/notifications/notification-feed";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import type { AppNotification, PinnedChart, PinnedInsight } from "@/lib/types";
 
 function isLivePin(pin: PinnedInsight): boolean {
@@ -117,19 +117,35 @@ export function PinnedSidebar() {
         <span className="flex-1 truncate text-body font-semibold text-foreground">
           {activeTab === "pins" ? tPins("title") : tNotif("title")}
         </span>
-        {activeTab === "pins" && pins.length > 0 && (
+        {activeTab === "pins" && (
           <>
-            <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
-              {pins.length}
-            </span>
-            <button
-              onClick={() => clearAll()}
-              className="rounded-md p-1.5 text-text-secondary transition-colors hover:bg-error-subtle hover:text-error"
-              title={tPins("clearAll")}
-              aria-label={tPins("clearAll")}
+            {pins.length > 0 && (
+              <span className="rounded-md bg-accent-subtle px-2 py-0.5 text-micro font-medium text-accent">
+                {pins.length}
+              </span>
+            )}
+            {/* Fase 5: este panel es el acceso RÁPIDO mientras conversás; el Tablero es
+                donde los números se ven. Sin esta puerta la sección nueva sólo se
+                alcanza desde el menú de usuario, que no es donde uno la busca estando
+                parado justo sobre sus pins. */}
+            <Link
+              href="/tablero"
+              className="rounded-md p-1.5 text-text-secondary transition-colors hover:bg-sidebar-active hover:text-accent"
+              title={tPins("openDashboard")}
+              aria-label={tPins("openDashboard")}
             >
-              <Trash2 size={14} strokeWidth={1.5} />
-            </button>
+              <Maximize2 size={14} strokeWidth={1.5} />
+            </Link>
+            {pins.length > 0 && (
+              <button
+                onClick={() => clearAll()}
+                className="rounded-md p-1.5 text-text-secondary transition-colors hover:bg-error-subtle hover:text-error"
+                title={tPins("clearAll")}
+                aria-label={tPins("clearAll")}
+              >
+                <Trash2 size={14} strokeWidth={1.5} />
+              </button>
+            )}
           </>
         )}
         <button
