@@ -483,6 +483,11 @@
       "optional": "optionnel",
       "statusSaving": "Enregistrement...",
       "statusSaved": "Enregistré"
+    },
+    "tabRoutines": "Routines",
+    "routines": {
+      "title": "Qui voit quelle routine",
+      "subtitle": "Les routines partagées sont visibles par toute l'organisation, sauf restriction ici."
     }
   },
   "PinnedInsights": {
@@ -1511,6 +1516,107 @@
       "mismo_periodo_hace_2_anos": "La même période il y a 2 ans",
       "mismo_periodo_hace_3_anos": "La même période il y a 3 ans",
       "ninguno": "Sans comparaison"
+    },
+    "createNew": "Nouvelle routine",
+    "group": {
+      "system": "Du système",
+      "org": "De mon organisation",
+      "mine": "Les miennes",
+      "others": "Privées d'autres personnes (vous les administrez)"
+    },
+    "save": {
+      "cta": "Enregistrer comme routine",
+      "title": "Enregistrer cette conversation comme routine",
+      "subtitle": "Choisissez les questions à inclure. Vous pourrez les exécuter toutes ensemble quand vous voudrez.",
+      "nameLabel": "Nom de la routine",
+      "namePlaceholder": "Ex : Clôture commerciale mensuelle",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "selectedCount": "{count} sélectionnées",
+      "emptyConversation": "Il n'y a pas encore de questions dans cette conversation.",
+      "nothingUsable": "Aucune de ces questions ne peut encore fonctionner seule. Chaque étape d'une routine s'exécute sans la conversation précédente, elle doit donc se comprendre d'elle-même.",
+      "llmWarning": "Cette question est interprétée par un modèle de langage : elle fonctionnera, mais le résultat peut varier d'une exécution à l'autre.",
+      "loadFailed": "Nous n'avons pas pu lire cette conversation.",
+      "saveFailed": "Nous n'avons pas pu enregistrer la routine.",
+      "noOrg": "Vous avez besoin d'une organisation pour enregistrer des routines."
+    },
+    "actions": {
+      "fork": "Cloner",
+      "copySuffix": "{name} (copie)",
+      "edit": "Modifier",
+      "share": "Partager",
+      "unshare": "Partagée",
+      "shareHint": "Partager avec votre organisation. Chaque personne l'exécute avec son propre accès Odoo et ne voit que ce qu'Odoo lui autorise.",
+      "unshareHint": "Arrêter de la partager : elle redevient uniquement la vôtre.",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer cette routine ?",
+      "confirmYes": "Oui, supprimer",
+      "confirmNo": "Non"
+    },
+    "editor": {
+      "newTitle": "Nouvelle routine",
+      "newSubtitle": "Écrivez les questions que vous voulez poser à chaque fois. Chacune doit se comprendre d'elle-même.",
+      "editTitle": "Modifier la routine",
+      "editSubtitle": "Modifiez les questions, l'ordre ou le nom. Testez-la avant d'enregistrer.",
+      "notAllowed": "Vous ne pouvez pas modifier cette routine. Clonez-en une copie pour la modifier.",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Ex : Radar des encaissements",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Facultatif : à quoi elle sert",
+      "stepsTitle": "Questions",
+      "stepsHint": "Une par ligne, dans l'ordre souhaité. Écrivez-les en entier : chacune s'exécute sans les précédentes.",
+      "stepPlaceholder": "Ex : factures échues ce mois-ci",
+      "stepAria": "Étape {n}",
+      "addStep": "Ajouter une question",
+      "removeStep": "Retirer",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "resolvesTo": "Interroge : {model}",
+      "assistTitle": "Vous ne savez pas par où commencer ?",
+      "assistHint": "Dites-nous ce que vous voulez examiner et nous proposerons les questions. Vous pourrez ensuite les modifier.",
+      "assistPlaceholder": "Ex : examiner les encaissements chaque lundi",
+      "assistCta": "Proposer",
+      "assistEmpty": "Nous n'avons pas pu proposer de questions pour le moment. Écrivez-les à la main, cela fonctionne aussi bien.",
+      "dryRunTitle": "Testez-la avant d'enregistrer",
+      "dryRunHint": "Exécute les questions sur vos données réelles et montre ce que chacune renverrait aujourd'hui. Rien n'est enregistré.",
+      "dryRunCta": "Tester",
+      "dryRunFailed": "Nous n'avons pas pu lancer le test.",
+      "dryRunBusy": "Trop d'exécutions en cours. Réessayez dans un instant.",
+      "readyToSave": "Prêt à enregistrer.",
+      "nothingUsableYet": "Écrivez au moins une question qui se comprend d'elle-même.",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "create": "Créer la routine",
+      "saveFailed": "Nous n'avons pas pu enregistrer les modifications.",
+      "noUsableSteps": "Aucune des questions ne peut fonctionner seule. Vérifiez les remarques pour chacune.",
+      "versionNote": "Version actuelle : {version}. Modifier les questions crée une nouvelle version ; les exécutions passées restent enregistrées avec leur version.",
+      "stepStatus": {
+        "ok": "OK",
+        "error": "Échec",
+        "skipped": "Non applicable",
+        "pending": "En attente"
+      }
+    },
+    "grants": {
+      "dataNotice": "Partager une routine ne partage PAS vos données : chaque personne l'exécute avec son propre accès Odoo et ne voit que ce qu'Odoo lui autorise.",
+      "orgDefault": "Toute l'organisation",
+      "nothingGrantable": "Il n'y a pas encore de routines partagées à gérer.",
+      "privateTitle": "Privées de chaque personne",
+      "privateHint": "Elles ne peuvent pas être activées par utilisateur : leur auteur (ou vous) doit d'abord les partager avec l'organisation.",
+      "privateNotGrantable": "C'est une routine privée. Partagez-la d'abord avec l'organisation.",
+      "loadFailed": "Nous n'avons pas pu charger les permissions.",
+      "saveFailed": "Nous n'avons pas pu enregistrer la modification.",
+      "value": {
+        "inherit": "Par défaut",
+        "on": "Oui",
+        "off": "Non"
+      },
+      "scope": {
+        "system": "Du système",
+        "org": "Partagée avec l'organisation",
+        "private": "Privée"
+      },
+      "usersFailed": "Nous n'avons pas pu charger les utilisateurs de l'organisation. Ce qui suit peut être incomplet."
     }
   },
   "Chat": {

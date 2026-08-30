@@ -29,8 +29,10 @@ import {
   ArrowRight,
   BookSearch,
   ImagePlus,
+  ClipboardList,
 } from "lucide-react";
 import { InstanceInspector } from "@/components/odoo/instance-inspector";
+import { RoutineGrantsMatrixPanel } from "@/components/routines/routine-grants-matrix";
 import { FounderClockPill } from "@/components/ui/founder-clock-pill";
 import { MarkB, Wordmark } from "@/components/AgentMark";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
@@ -1251,13 +1253,16 @@ function FeedbackSection() {
 
 // ---- Main Settings Page ----
 
-type SettingsTab = "org" | "instances" | "users" | "feedback";
+type SettingsTab = "org" | "instances" | "users" | "routines" | "feedback";
 
 const TAB_CONFIG: { id: SettingsTab; icon: React.ReactNode; labelKey: string }[] = [
-  { id: "org",       icon: <Building2 size={16} strokeWidth={1.5} />, labelKey: "tabOrg" },
-  { id: "instances", icon: <Database  size={16} strokeWidth={1.5} />, labelKey: "tabInstances" },
-  { id: "users",     icon: <Users     size={16} strokeWidth={1.5} />, labelKey: "tabUsers" },
-  { id: "feedback",  icon: <Flag      size={16} strokeWidth={1.5} />, labelKey: "tabFeedback" },
+  { id: "org",       icon: <Building2     size={16} strokeWidth={1.5} />, labelKey: "tabOrg" },
+  { id: "instances", icon: <Database      size={16} strokeWidth={1.5} />, labelKey: "tabInstances" },
+  { id: "users",     icon: <Users         size={16} strokeWidth={1.5} />, labelKey: "tabUsers" },
+  // Fase 3 · F4 — quién ve cada Rutina. Va junto a Usuarios porque es una decisión
+  // sobre PERSONAS, no sobre el catálogo: el catálogo se gestiona en `/rutinas`.
+  { id: "routines",  icon: <ClipboardList size={16} strokeWidth={1.5} />, labelKey: "tabRoutines" },
+  { id: "feedback",  icon: <Flag          size={16} strokeWidth={1.5} />, labelKey: "tabFeedback" },
 ];
 
 export default function SettingsPage() {
@@ -1274,7 +1279,9 @@ export default function SettingsPage() {
     meData?.org?.is_founding_partner === true && !meData?.org?.founder_since;
 
   const visibleTabs = awaitingFirstInstance
-    ? TAB_CONFIG.filter((t) => t.id !== "users" && t.id !== "feedback")
+    ? TAB_CONFIG.filter(
+        (t) => t.id !== "users" && t.id !== "feedback" && t.id !== "routines"
+      )
     : TAB_CONFIG;
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("org");
@@ -1426,6 +1433,20 @@ export default function SettingsPage() {
                   {hasOrg && <SentInvitationsSection />}
                 </>
               )
+            )}
+
+            {/* ---- TAB: Rutinas (Fase 3 · F4) ---- */}
+            {activeTab === "routines" && isAdmin && hasOrg && (
+              <CollapsibleCard
+                icon={<ClipboardList size={18} strokeWidth={1.5} />}
+                title={t("routines.title")}
+                subheader={
+                  <p className="text-small text-text-muted">{t("routines.subtitle")}</p>
+                }
+                defaultOpen
+              >
+                <RoutineGrantsMatrixPanel orgId={meData!.org!.id} />
+              </CollapsibleCard>
             )}
 
             {/* ---- TAB: Feedback ---- */}

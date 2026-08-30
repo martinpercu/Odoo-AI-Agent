@@ -5,6 +5,7 @@ import { Loader2, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import type { Routine } from "@/lib/types";
+import { RoutineActions } from "@/components/routines/routine-actions";
 import { RoutineParams } from "@/components/routines/routine-params";
 
 /**
@@ -24,11 +25,14 @@ export function RoutineCard({
   onRun,
   running,
   disabled,
+  onChanged,
 }: {
   routine: Routine;
   onRun: (params: Record<string, unknown>) => void;
   running: boolean;
   disabled?: boolean;
+  /** Fase 3: refrescar el catálogo después de clonar / compartir / borrar. */
+  onChanged?: () => void;
 }) {
   const t = useTranslations("Routines");
   // Los defaults ya vienen adaptados por el backend a lo que ESTA instancia usa
@@ -56,10 +60,11 @@ export function RoutineCard({
         onChange={(key, value) => setValues((prev) => ({ ...prev, [key]: value }))}
       />
 
-      <div className="mt-4 flex items-center justify-between gap-3">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <span className="text-small text-text-muted">
           {t("stepCount", { count: routine.step_count })}
         </span>
+        {onChanged && <RoutineActions routine={routine} onChanged={onChanged} />}
         <button
           type="button"
           onClick={() => onRun(values)}

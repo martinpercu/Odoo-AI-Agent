@@ -44,6 +44,12 @@ import type {
   Routine,
   RoutineRunDetail,
   RoutineRunSummary,
+  RoutineConversationReview,
+  RoutineDryRun,
+  RoutineGrant,
+  RoutineGrantsMatrix,
+  RoutineScope,
+  RoutineStepReview,
   ReportOfferOption,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
@@ -2651,5 +2657,351 @@ export async function fetchInstanceUsage(
     return (data.usage ?? {}) as Record<string, number>;
   } catch {
     return {};
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Rutinas — autoría y permisos (PLAN_RUTINAS Fase 3)
+// ---------------------------------------------------------------------------
+
+/**
+ * Resultado de un endpoint de autoría.
+ *
+ * ⚠️ `rejected` NO es un error: es la lista de frases que no pueden ser un paso, **con su
+ * motivo**. La Rutina se creó igual con las que sí sirven. El front las muestra como
+ * aviso, nunca como falla — descartar la creación entera porque una de cinco preguntas
+ * era un follow-up sería el peor final posible para el camino primario de la fase.
+ */
+export interface RoutineMutationResult {
+  success: boolean;
+  routine?: Routine;
+  rejected?: RoutineStepReview[];
+  /** `422` con ningún paso utilizable: acá viaja el porqué de cada uno. */
+  rejectedAll?: RoutineStepReview[];
+  errorCode?: string;
+  error?: string;
+}
+
+async function routineMutation(
+  path: string,
+  init: RequestInit
+): Promise<RoutineMutationResult> {
+  try {
+    const res = await authFetch(`${API_BASE}${path}`, {
+      headers: { "Content-Type": "application/json" },
+      ...init,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
+      const { rejected, ...routine } = data ?? {};
+      return { success: true, routine: routine as Routine, rejected: rejected ?? [] };
+    }
+    const detail = data?.detail;
+    if (detail && typeof detail === "object") {
+      return {
+        success: false,
+        errorCode: detail.error_code,
+        rejectedAll: detail.rejected ?? undefined,
+        error: detail.message ?? detail.error_code,
+      };
+    }
+    return { success: false, error: detail || "Routine request failed" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface CreateRoutineOptions {
+  name: string;
+  steps: string[];
+  description?: string;
+  icon?: string;
+  scope?: RoutineScope;
+  language?: string;
+  /** Informativo: contra qué instancia se escribió. **Nunca** filtra ni gatea (D6). */
+  configId?: string;
+}
+
+/** Crea una Rutina. **Cualquiera de la org puede** — `CLIENT_USER` incluido (D3). */
+export async function createRoutine(
+  opt: CreateRoutineOptions
+): Promise<RoutineMutationResult> {
+  return routineMutation("/routines", {
+    method: "POST",
+    body: JSON.stringify({
+      name: opt.name,
+      steps: opt.steps,
+      description: opt.description ?? "",
+      icon: opt.icon ?? "🧭",
+      scope: opt.scope ?? "private",
+      language: opt.language ?? "es",
+      config_id: opt.configId ?? null,
+    }),
+  });
+}
+
+/**
+ * Dictamina cada mensaje de un chat **sin crear nada** (F1).
+ *
+ * Se llama al ABRIR el selector, no al guardar: enterarse de que la mitad de lo que
+ * seleccionaste no servía después de ponerle nombre a la Rutina es la peor secuencia
+ * posible. Con esto los checkboxes ya salen deshabilitados y con su motivo.
+ */
+export async function reviewConversationForRoutine(
+  chatId: string,
+  language = "es"
+): Promise<{ success: boolean; review?: RoutineConversationReview; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/review-conversation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, language }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, review: data };
+    return { success: false, error: data?.detail || "Failed to review conversation" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** Guarda una conversación como Rutina — el camino primario de la fase (§3.1). */
+export async function createRoutineFromConversation(opt: {
+  chatId: string;
+  name: string;
+  messageIds: string[];
+  scope?: RoutineScope;
+  language?: string;
+  configId?: string;
+}): Promise<RoutineMutationResult> {
+  return routineMutation("/routines/from-conversation", {
+    method: "POST",
+    body: JSON.stringify({
+      chat_id: opt.chatId,
+      name: opt.name,
+      message_ids: opt.messageIds,
+      scope: opt.scope ?? "private",
+      language: opt.language ?? "es",
+      config_id: opt.configId ?? null,
+    }),
+  });
+}
+
+/** Edita una Rutina (autor o ADMIN). Mandar `steps` **incrementa la versión** (§10). */
+export async function updateRoutine(
+  routineId: string,
+  patch: {
+    name?: string;
+    steps?: string[];
+    description?: string;
+    icon?: string;
+    scope?: RoutineScope;
+    language?: string;
+  }
+): Promise<RoutineMutationResult> {
+  return routineMutation(`/routines/${routineId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ language: "es", ...patch }),
+  });
+}
+
+export async function deleteRoutine(
+  routineId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/${routineId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json().catch(() => ({}));
+    return { success: false, error: data?.detail || "Failed to delete routine" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Clona una Rutina en una copia propia (§3.2).
+ *
+ * ⚠️ La copia queda **independiente para siempre** ([D8]): cuando mejoremos la del
+ * catálogo, las copias no se tocan. No existe "actualizar desde la original" y no está
+ * previsto que exista — sorprender a alguien cambiándole una Rutina que funcionaba es
+ * peor que dejarla vieja.
+ */
+export async function forkRoutine(
+  routineId: string,
+  name?: string,
+  language = "es"
+): Promise<RoutineMutationResult> {
+  return routineMutation(`/routines/${routineId}/fork`, {
+    method: "POST",
+    body: JSON.stringify({ name: name ?? null, language }),
+  });
+}
+
+/**
+ * Compartir = pasar de `private` a `org`. Lo puede hacer el autor **o el ADMIN**.
+ *
+ * Recién compartida es **visible para todos** salvo que el admin la restrinja: el
+ * default deliberado de §3.4 — restringir por defecto haría que compartir no sirva de
+ * nada.
+ */
+export async function shareRoutine(
+  routineId: string,
+  shared: boolean
+): Promise<{ success: boolean; scope?: RoutineScope; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/${routineId}/share`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ shared }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, scope: data.scope };
+    return { success: false, error: data?.detail || "Failed to share routine" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** Autoría asistida (B7): el agente propone pasos para un objetivo en prosa. */
+export async function proposeRoutineSteps(
+  goal: string,
+  language = "es"
+): Promise<{ success: boolean; steps?: RoutineStepReview[]; assisted?: boolean }> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/propose`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal, language }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok)
+      return { success: true, steps: data.steps ?? [], assisted: data.assisted };
+    return { success: false };
+  } catch {
+    // Sin LLM disponible la lista vuelve vacía: la autoría asistida es el
+    // COMPLEMENTO, nunca el camino crítico (§3.3).
+    return { success: false };
+  }
+}
+
+/**
+ * Corre los pasos sin persistir nada y devuelve qué daría cada uno HOY (B5, §3.3).
+ *
+ * Es la salvaguarda que hace segura la autoría: convierte "esta frase parece razonable"
+ * en "esta frase devuelve esto". **Toma un lugar de concurrencia** igual que una corrida
+ * real (A8), así que puede dar `429`.
+ */
+export async function dryRunRoutine(opt: {
+  configId: string;
+  routineId?: string;
+  steps?: string[];
+  params?: Record<string, unknown>;
+  language?: string;
+}): Promise<{
+  success: boolean;
+  result?: RoutineDryRun;
+  rateLimited?: boolean;
+  error?: string;
+}> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/dry-run`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        config_id: opt.configId,
+        routine_id: opt.routineId ?? null,
+        steps: opt.steps ?? [],
+        params: opt.params ?? {},
+        language: opt.language ?? "es",
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, result: data };
+    if (res.status === 429) return { success: false, rateLimited: true };
+    return { success: false, error: data?.detail?.message || "Dry-run failed" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** La matriz Rutina × usuario del ADMIN (F4). */
+export async function fetchRoutineGrants(
+  orgId: string,
+  language = "es"
+): Promise<{ success: boolean; matrix?: RoutineGrantsMatrix; error?: string }> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${orgId}/routines/grants?language=${language}`
+    );
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, matrix: data };
+    return { success: false, error: data?.detail || "Failed to fetch grants" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Habilita/deshabilita una Rutina para un usuario, o para toda la org.
+ *
+ * ⚠️ `enabled: null` **borra** el grant en vez de apagarlo — el usuario vuelve a heredar
+ * el default de la org y, si no hay, el `scope`. Son tres estados distintos; no los
+ * colapses en un booleano al llamar.
+ */
+export async function setRoutineGrant(opt: {
+  orgId: string;
+  routineId: string;
+  userId?: string | null;
+  enabled: boolean | null;
+}): Promise<{ success: boolean; grants?: RoutineGrant[]; errorCode?: string }> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/admin/orgs/${opt.orgId}/routines/${opt.routineId}/grants`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: opt.userId ?? null, enabled: opt.enabled }),
+      }
+    );
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, grants: data.grants ?? [] };
+    return { success: false, errorCode: data?.detail?.error_code };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false };
+  }
+}
+
+/**
+ * Dictamina frases sueltas mientras se escriben (F3) — sin crear nada.
+ *
+ * El hermano de `reviewConversationForRoutine` para el editor. Es puro del lado del
+ * backend (sin red, sin Odoo, sin LLM), así que es barato llamarlo con debounce.
+ */
+export async function reviewRoutineSteps(
+  steps: string[],
+  language = "es"
+): Promise<RoutineStepReview[]> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/review-steps`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ steps, language }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.steps ?? []) as RoutineStepReview[];
+  } catch {
+    // Un fallo de red no puede bloquear el editor: se guarda igual y el backend
+    // revalida — la validación de acá es una ayuda, no la puerta.
+    return [];
   }
 }

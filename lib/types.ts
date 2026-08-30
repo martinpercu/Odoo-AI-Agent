@@ -950,11 +950,21 @@ export interface RoutineUnavailableReason {
   models: string[];
 }
 
+/**
+ * El alcance de una Rutina (Fase 3, §3.4). Determina el grupo del catálogo:
+ * **Del sistema · De mi organización · Mías**.
+ *
+ * ⚠️ `private` NO significa "fuera de la organización": la Rutina pertenece igual a la
+ * org ([D6](../../PLAN_RUTINAS/DECISIONES.md#d6)), con la visibilidad restringida al
+ * autor. Por eso el ADMIN también la ve — administrarla es su atribución.
+ */
+export type RoutineScope = "system" | "org" | "private";
+
 /** Una Rutina del catálogo, ya localizada por el backend. */
 export interface Routine {
   id: string;
   version: number;
-  scope: "system" | "org" | "private";
+  scope: RoutineScope;
   audience: "builder" | "client";
   icon: string;
   name: string;
@@ -964,7 +974,123 @@ export interface Routine {
   /** Sólo presente cuando se pidió el catálogo con un `config_id`. */
   available?: boolean;
   unavailable_reason?: RoutineUnavailableReason;
-  steps?: Array<{ key: string; kind: "ask" | "probe"; label: string }>;
+  /** `ask` sólo viaja cuando el llamador puede EDITAR la Rutina (F3). */
+  steps?: Array<{ key: string; kind: "ask" | "probe"; label: string; ask?: string }>;
+
+  // -- Fase 3: autoría y permisos ------------------------------------------
+  /** `tenant_user.id` del autor. `null` en las del sistema. */
+  created_by?: string | null;
+  /** La escribió el usuario que está mirando. Ordena el grupo "Mías". */
+  is_mine?: boolean;
+  /** Puede editarla / borrarla / compartirla: **autor o ADMIN** (§3.4). */
+  can_manage?: boolean;
+  updated_at?: string | null;
+}
+
+// --- Autoría (Fase 3, B4/B7) ------------------------------------------------
+
+/**
+ * Por qué un mensaje NO puede ser un paso.
+ *
+ * ⚠️ `followup` es el veredicto que implementa la decisión
+ * [A9](../../PLAN_RUTINAS/DECISIONES.md#a9): un turno que depende del anterior
+ * **se rechaza**, no se expande. Cada paso corre en su propio thread, sin historia.
+ */
+export type RoutineStepVerdict =
+  | "ok"
+  | "followup"
+  | "not_business"
+  | "write"
+  | "unresolved"
+  | "empty"
+  | "too_long";
+
+/**
+ * El dictamen del backend sobre UN mensaje.
+ *
+ * `reason` ya viene redactado (ES/EN) y **dice qué hacer**, no sólo que no se puede —
+ * es lo que A9 pide a cambio de haber elegido rechazar en vez de expandir. El front lo
+ * muestra tal cual: reescribirlo acá en 11 locales garantizaría que diverja del criterio
+ * real del validador.
+ */
+export interface RoutineStepReview {
+  text: string;
+  verdict: RoutineStepVerdict;
+  usable: boolean;
+  reason_code: string | null;
+  reason: string | null;
+  /** El modelo de Odoo que la frase resuelve. De acá sale el `requires` (§3.1.4). */
+  model: string | null;
+  area: string | null;
+  classified_by: "keyword" | "llm" | null;
+  warnings: string[];
+  /** Sólo en `reviewConversation`: el id del mensaje del historial del chat. */
+  message_id?: string;
+}
+
+export interface RoutineConversationReview {
+  chat_id: string;
+  messages: RoutineStepReview[];
+  usable_count: number;
+}
+
+/** Lo que devuelve un `dry-run` por cada paso (B5, §3.3). */
+export interface RoutineDryRunStep {
+  key: string;
+  label: string;
+  status: RoutineStepStatus;
+  reason: string | null;
+  duration_ms: number | null;
+  /** La respuesta en prosa, tal como la daría el chat. */
+  answer: string | null;
+  record_count: number | null;
+  has_chart: boolean;
+}
+
+export interface RoutineDryRun {
+  status: RoutineRunStatus;
+  steps: RoutineDryRunStep[];
+}
+
+// --- Permisos (Fase 3, B1/B6) -----------------------------------------------
+
+/**
+ * Un grant **tal cual está guardado**.
+ *
+ * ⚠️ Que NO exista la fila y que exista en `false` son cosas distintas: sin fila el
+ * usuario hereda el default de la org y, si tampoco hay, el `scope`. La matriz del
+ * ADMIN tiene que poder expresar los tres estados, así que no colapses esto en un
+ * booleano.
+ */
+export interface RoutineGrant {
+  routine_id: string;
+  org_id: string;
+  /** `null` = el default para toda la organización. */
+  user_id: string | null;
+  enabled: boolean;
+  updated_by: string | null;
+  updated_at: string | null;
+}
+
+export interface RoutineGrantUser {
+  id: string;
+  email: string;
+  name: string | null;
+  role: string;
+}
+
+export interface RoutineGrantsMatrix {
+  org_id: string;
+  /** `grantable: false` = es `private`; compartila primero (§3.4). */
+  routines: Array<Routine & { grantable: boolean }>;
+  users: RoutineGrantUser[];
+  grants: RoutineGrant[];
+  /**
+   * ⚠️ `false` = **no se pudieron leer** los usuarios, que NO es lo mismo que "la org no
+   * tiene otros usuarios" — y en pantalla se ven igual. Sin este flag, una matriz rota
+   * se dibuja entera, sin una sola fila por usuario, y parece que funciona.
+   */
+  users_ok?: boolean;
 }
 
 /**
