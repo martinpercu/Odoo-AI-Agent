@@ -927,6 +927,22 @@ export interface RoutineParam {
   default: unknown;
   label: Record<string, string>;
   choices?: string[] | null;
+  /**
+   * `valor → texto localizado`. El valor de un `choice` es una clave de MÁQUINA
+   * (`"ventas"`): lo que se le muestra al usuario sale de acá, no del valor.
+   */
+  choice_labels?: Record<string, Record<string, string>> | null;
+  choice_models?: Record<string, string> | null;
+}
+
+/**
+ * Por qué la instancia NO puede correr una Rutina (§9: el catálogo explica lo que
+ * oculta). Llega como **código + modelos**, no como frase: el backend habla 6
+ * idiomas y el front 11, así que la redacción vive de este lado.
+ */
+export interface RoutineUnavailableReason {
+  code: "missing_model" | "unused_model";
+  models: string[];
 }
 
 /** Una Rutina del catálogo, ya localizada por el backend. */
@@ -942,6 +958,7 @@ export interface Routine {
   params: RoutineParam[];
   /** Sólo presente cuando se pidió el catálogo con un `config_id`. */
   available?: boolean;
+  unavailable_reason?: RoutineUnavailableReason;
   steps?: Array<{ key: string; kind: "ask" | "probe"; label: string }>;
 }
 
@@ -974,19 +991,55 @@ export interface RoutineRunSummary {
   error: string | null;
 }
 
+/**
+ * Una entrada de `results`: un PASO o un DERIVADO. Comparten forma a propósito —
+ * `compose` los referencia en el mismo espacio de nombres (`"actual+variacion"`).
+ */
+export interface RoutineResultEntry {
+  key: string;
+  kind: string;
+  /** Sólo en los derivados: qué operación produjo el dato. */
+  op?: string;
+  status: RoutineStepStatus;
+  data: Record<string, unknown>;
+  reason: string | null;
+  /** La frase de negocio ya armada por el backend (B7). El front NO la reescribe. */
+  narrative?: string;
+  duration_ms?: number;
+}
+
+/** El dato de un `pct_change`, tal como lo produce `routine_ops`. */
+export interface RoutinePctChange {
+  pct: number | null;
+  /** `"nuevo"` = no había base contra la cual comparar. NO es "+100%". */
+  direction: "up" | "down" | "flat" | "nuevo";
+  abs_diff: number;
+  previous: number;
+  current: number;
+}
+
+/** Un contribuyente de una `attribution`. */
+export interface RoutineContribution {
+  label: string;
+  delta: number;
+  before: number;
+  after: number;
+  /** `alta` = empezó · `baja` = dejó · `cambio` = estaba en los dos períodos. */
+  kind: "alta" | "baja" | "cambio";
+}
+
+export interface RoutineAttribution {
+  total_delta: number;
+  direction: "up" | "down" | "flat";
+  top: RoutineContribution[];
+  /** La cola AGREGADA. Omitirla haría parecer que los primeros son todo. */
+  rest: { count: number; delta: number };
+  group_count: number;
+}
+
 export interface RoutineRunDetail extends RoutineRunSummary {
   progress: Record<string, RoutineStepStatus>;
-  results: Record<
-    string,
-    {
-      key: string;
-      kind: string;
-      status: RoutineStepStatus;
-      data: Record<string, unknown>;
-      reason: string | null;
-      duration_ms?: number;
-    }
-  >;
+  results: Record<string, RoutineResultEntry>;
   params: Record<string, unknown>;
   routine_version?: number;
   /** El archivo sólo viaja en el detalle, nunca en el listado. */

@@ -1455,13 +1455,62 @@
     "download": "Télécharger",
     "running": "Exécution…",
     "progress": "{done} sur {total} étapes",
-    "stepCount": "{count} étapes",
+    "stepCount": "{count, plural, one {# étape} other {# étapes}}",
     "partialNote": "Certaines étapes n'ont pas pu être complétées. Le rapport a été généré, avec ces sections signalées.",
     "emptyCatalog": "Aucune routine disponible pour cette instance.",
     "emptyHistory": "Vous n'avez encore exécuté aucune routine.",
     "noInstance": "Connectez une instance Odoo pour exécuter des routines.",
     "startFailed": "Impossible de démarrer la routine.",
     "tooManyRuns": "Trop de routines s'exécutent en ce moment. Réessayez dans quelques secondes.",
-    "downloadFailed": "Impossible de générer le fichier."
+    "downloadFailed": "Impossible de générer le fichier.",
+    "unavailableTitle": "Non disponibles sur cette instance",
+    "unavailable": {
+      "missing_model": "Votre instance ne dispose pas de {models}.",
+      "unused_model": "Votre instance n'a pas encore de données dans {models}.",
+      "generic": "Cette routine ne peut pas s'exécuter sur votre instance."
+    },
+    "showResults": "Voir les résultats",
+    "hideResults": "Masquer les résultats",
+    "derivedFailed": "Ce calcul n'a pas pu être effectué.",
+    "delta": {
+      "new": "pas de base de comparaison",
+      "flat": "stable",
+      "title": {
+        "up": "En hausse par rapport à la période de comparaison",
+        "down": "En baisse par rapport à la période de comparaison",
+        "flat": "Stable par rapport à la période de comparaison",
+        "nuevo": "Aucune période de comparaison avec des données"
+      }
+    },
+    "attribution": {
+      "title": "Ce qui explique le changement",
+      "rest": "Le reste, réparti entre {count}",
+      "empty": "Rien à attribuer.",
+      "kind": {
+        "alta": "a démarré",
+        "baja": "a arrêté"
+      }
+    },
+    "period": {
+      "hoy": "Aujourd'hui",
+      "esta_semana": "Cette semaine",
+      "semana_pasada": "La semaine dernière",
+      "mes_actual": "Ce mois-ci",
+      "mes_pasado": "Le mois dernier",
+      "trimestre": "Ce trimestre",
+      "trimestre_pasado": "Le trimestre dernier",
+      "anio": "Cette année",
+      "anio_pasado": "L'année dernière",
+      "ultimos_30_dias": "30 derniers jours",
+      "ultimos_60_dias": "60 derniers jours",
+      "ultimos_90_dias": "90 derniers jours"
+    },
+    "compare": {
+      "periodo_anterior": "La période précédente",
+      "mismo_periodo_anio_anterior": "La même période l'an dernier",
+      "mismo_periodo_hace_2_anos": "La même période il y a 2 ans",
+      "mismo_periodo_hace_3_anos": "La même période il y a 3 ans",
+      "ninguno": "Sans comparaison"
+    }
   }
 }

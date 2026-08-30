@@ -1455,13 +1455,62 @@
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
-    "stepCount": "{count} steps",
+    "stepCount": "{count, plural, one {# step} other {# steps}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
     "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
-    "downloadFailed": "The file could not be generated."
+    "downloadFailed": "The file could not be generated.",
+    "unavailableTitle": "Not available on this instance",
+    "unavailable": {
+      "missing_model": "Your instance does not have {models}.",
+      "unused_model": "Your instance has no data in {models} yet.",
+      "generic": "This routine can't run on your instance."
+    },
+    "showResults": "View results",
+    "hideResults": "Hide results",
+    "derivedFailed": "This calculation could not be made.",
+    "delta": {
+      "new": "no comparison base",
+      "flat": "unchanged",
+      "title": {
+        "up": "Up vs. the comparison period",
+        "down": "Down vs. the comparison period",
+        "flat": "Unchanged vs. the comparison period",
+        "nuevo": "There was no comparison period with data"
+      }
+    },
+    "attribution": {
+      "title": "What explains the change",
+      "rest": "The rest, spread across {count}",
+      "empty": "Nothing to attribute.",
+      "kind": {
+        "alta": "started",
+        "baja": "stopped"
+      }
+    },
+    "period": {
+      "hoy": "Today",
+      "esta_semana": "This week",
+      "semana_pasada": "Last week",
+      "mes_actual": "This month",
+      "mes_pasado": "Last month",
+      "trimestre": "This quarter",
+      "trimestre_pasado": "Last quarter",
+      "anio": "This year",
+      "anio_pasado": "Last year",
+      "ultimos_30_dias": "Last 30 days",
+      "ultimos_60_dias": "Last 60 days",
+      "ultimos_90_dias": "Last 90 days"
+    },
+    "compare": {
+      "periodo_anterior": "The previous period",
+      "mismo_periodo_anio_anterior": "The same period last year",
+      "mismo_periodo_hace_2_anos": "The same period 2 years ago",
+      "mismo_periodo_hace_3_anos": "The same period 3 years ago",
+      "ninguno": "No comparison"
+    }
   }
 }

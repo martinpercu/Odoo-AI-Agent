@@ -1455,13 +1455,62 @@
     "download": "Scarica",
     "running": "In esecuzione…",
     "progress": "{done} di {total} passi",
-    "stepCount": "{count} passi",
+    "stepCount": "{count, plural, one {# passaggio} other {# passaggi}}",
     "partialNote": "Alcuni passi non sono stati completati. Il report è stato generato comunque, con quelle sezioni annotate.",
     "emptyCatalog": "Nessuna routine disponibile per questa istanza.",
     "emptyHistory": "Non hai ancora eseguito nessuna routine.",
     "noInstance": "Collega un'istanza Odoo per eseguire le routine.",
     "startFailed": "Impossibile avviare la routine.",
     "tooManyRuns": "Ci sono troppe routine in esecuzione. Riprova tra qualche secondo.",
-    "downloadFailed": "Impossibile generare il file."
+    "downloadFailed": "Impossibile generare il file.",
+    "unavailableTitle": "Non disponibili su questa istanza",
+    "unavailable": {
+      "missing_model": "La tua istanza non ha {models}.",
+      "unused_model": "La tua istanza non ha ancora dati in {models}.",
+      "generic": "Questa Routine non può essere eseguita sulla tua istanza."
+    },
+    "showResults": "Vedi risultati",
+    "hideResults": "Nascondi risultati",
+    "derivedFailed": "Questo calcolo non è stato possibile.",
+    "delta": {
+      "new": "nessuna base di confronto",
+      "flat": "invariato",
+      "title": {
+        "up": "In aumento rispetto al periodo di confronto",
+        "down": "In calo rispetto al periodo di confronto",
+        "flat": "Invariato rispetto al periodo di confronto",
+        "nuevo": "Non c'era un periodo di confronto con dati"
+      }
+    },
+    "attribution": {
+      "title": "Cosa spiega il cambiamento",
+      "rest": "Il resto, distribuito tra {count}",
+      "empty": "Nulla da attribuire.",
+      "kind": {
+        "alta": "ha iniziato",
+        "baja": "ha smesso"
+      }
+    },
+    "period": {
+      "hoy": "Oggi",
+      "esta_semana": "Questa settimana",
+      "semana_pasada": "La settimana scorsa",
+      "mes_actual": "Questo mese",
+      "mes_pasado": "Il mese scorso",
+      "trimestre": "Questo trimestre",
+      "trimestre_pasado": "Il trimestre scorso",
+      "anio": "Quest'anno",
+      "anio_pasado": "L'anno scorso",
+      "ultimos_30_dias": "Ultimi 30 giorni",
+      "ultimos_60_dias": "Ultimi 60 giorni",
+      "ultimos_90_dias": "Ultimi 90 giorni"
+    },
+    "compare": {
+      "periodo_anterior": "Il periodo precedente",
+      "mismo_periodo_anio_anterior": "Lo stesso periodo dell'anno scorso",
+      "mismo_periodo_hace_2_anos": "Lo stesso periodo 2 anni fa",
+      "mismo_periodo_hace_3_anos": "Lo stesso periodo 3 anni fa",
+      "ninguno": "Senza confronto"
+    }
   }
 }

@@ -1455,13 +1455,62 @@
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
-    "stepCount": "{count} steps",
+    "stepCount": "{count, plural, one {# படி} other {# படிகள்}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
     "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
-    "downloadFailed": "The file could not be generated."
+    "downloadFailed": "The file could not be generated.",
+    "unavailableTitle": "இந்த நிகழ்வில் கிடைக்கவில்லை",
+    "unavailable": {
+      "missing_model": "உங்கள் நிகழ்வில் {models} இல்லை.",
+      "unused_model": "உங்கள் நிகழ்வில் {models} இல் இன்னும் தரவு இல்லை.",
+      "generic": "இந்த வழக்கத்தை உங்கள் நிகழ்வில் இயக்க முடியாது."
+    },
+    "showResults": "முடிவுகளைப் பார்",
+    "hideResults": "முடிவுகளை மறை",
+    "derivedFailed": "இந்தக் கணக்கீட்டைச் செய்ய முடியவில்லை.",
+    "delta": {
+      "new": "ஒப்பீட்டு அடிப்படை இல்லை",
+      "flat": "மாற்றம் இல்லை",
+      "title": {
+        "up": "ஒப்பீட்டுக் காலத்தை விட அதிகரித்தது",
+        "down": "ஒப்பீட்டுக் காலத்தை விடக் குறைந்தது",
+        "flat": "ஒப்பீட்டுக் காலத்தைப் போலவே",
+        "nuevo": "தரவுள்ள ஒப்பீட்டுக் காலம் இல்லை"
+      }
+    },
+    "attribution": {
+      "title": "மாற்றத்திற்கான காரணம்",
+      "rest": "மீதி, {count} இடையே பங்கிடப்பட்டது",
+      "empty": "ஒதுக்க எதுவும் இல்லை.",
+      "kind": {
+        "alta": "தொடங்கியது",
+        "baja": "நிறுத்தியது"
+      }
+    },
+    "period": {
+      "hoy": "இன்று",
+      "esta_semana": "இந்த வாரம்",
+      "semana_pasada": "கடந்த வாரம்",
+      "mes_actual": "இந்த மாதம்",
+      "mes_pasado": "கடந்த மாதம்",
+      "trimestre": "இந்தக் காலாண்டு",
+      "trimestre_pasado": "கடந்த காலாண்டு",
+      "anio": "இந்த ஆண்டு",
+      "anio_pasado": "கடந்த ஆண்டு",
+      "ultimos_30_dias": "கடந்த 30 நாட்கள்",
+      "ultimos_60_dias": "கடந்த 60 நாட்கள்",
+      "ultimos_90_dias": "கடந்த 90 நாட்கள்"
+    },
+    "compare": {
+      "periodo_anterior": "முந்தைய காலம்",
+      "mismo_periodo_anio_anterior": "கடந்த ஆண்டின் அதே காலம்",
+      "mismo_periodo_hace_2_anos": "2 ஆண்டுகளுக்கு முன் அதே காலம்",
+      "mismo_periodo_hace_3_anos": "3 ஆண்டுகளுக்கு முன் அதே காலம்",
+      "ninguno": "ஒப்பீடு இல்லை"
+    }
   }
 }

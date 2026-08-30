@@ -1455,13 +1455,62 @@
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
-    "stepCount": "{count} steps",
+    "stepCount": "{count, plural, one {# પગલું} other {# પગલાં}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
     "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
-    "downloadFailed": "The file could not be generated."
+    "downloadFailed": "The file could not be generated.",
+    "unavailableTitle": "આ ઇન્સ્ટન્સ પર ઉપલબ્ધ નથી",
+    "unavailable": {
+      "missing_model": "તમારા ઇન્સ્ટન્સમાં {models} નથી.",
+      "unused_model": "તમારા ઇન્સ્ટન્સમાં {models} માં હજી ડેટા નથી.",
+      "generic": "આ રૂટિન તમારા ઇન્સ્ટન્સ પર ચાલી શકતી નથી."
+    },
+    "showResults": "પરિણામો જુઓ",
+    "hideResults": "પરિણામો છુપાવો",
+    "derivedFailed": "આ ગણતરી થઈ શકી નથી.",
+    "delta": {
+      "new": "સરખામણીનો આધાર નથી",
+      "flat": "કોઈ ફેરફાર નથી",
+      "title": {
+        "up": "સરખામણી સમયગાળા કરતાં વધ્યું",
+        "down": "સરખામણી સમયગાળા કરતાં ઘટ્યું",
+        "flat": "સરખામણી સમયગાળા જેટલું જ",
+        "nuevo": "ડેટા સાથેનો કોઈ સરખામણી સમયગાળો ન હતો"
+      }
+    },
+    "attribution": {
+      "title": "ફેરફારનું કારણ",
+      "rest": "બાકીનું, {count} વચ્ચે વહેંચાયેલું",
+      "empty": "ફાળવવા જેવું કંઈ નથી.",
+      "kind": {
+        "alta": "શરૂ થયું",
+        "baja": "બંધ થયું"
+      }
+    },
+    "period": {
+      "hoy": "આજે",
+      "esta_semana": "આ અઠવાડિયું",
+      "semana_pasada": "ગયું અઠવાડિયું",
+      "mes_actual": "આ મહિનો",
+      "mes_pasado": "ગયો મહિનો",
+      "trimestre": "આ ત્રિમાસિક",
+      "trimestre_pasado": "ગયું ત્રિમાસિક",
+      "anio": "આ વર્ષ",
+      "anio_pasado": "ગયું વર્ષ",
+      "ultimos_30_dias": "છેલ્લા 30 દિવસ",
+      "ultimos_60_dias": "છેલ્લા 60 દિવસ",
+      "ultimos_90_dias": "છેલ્લા 90 દિવસ"
+    },
+    "compare": {
+      "periodo_anterior": "અગાઉનો સમયગાળો",
+      "mismo_periodo_anio_anterior": "ગયા વર્ષનો એ જ સમયગાળો",
+      "mismo_periodo_hace_2_anos": "2 વર્ષ પહેલાંનો એ જ સમયગાળો",
+      "mismo_periodo_hace_3_anos": "3 વર્ષ પહેલાંનો એ જ સમયગાળો",
+      "ninguno": "સરખામણી વગર"
+    }
   }
 }
