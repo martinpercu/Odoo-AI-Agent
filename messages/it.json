@@ -41,7 +41,8 @@
     "myConnection": "La mia connessione",
     "configureToChat": "Configura per chattare",
     "pricing": "Prezzi",
-    "implementerManual": "Manuale tecnico"
+    "implementerManual": "Manuale tecnico",
+    "routines": "Routine"
   },
   "ChatGroups": {
     "today": "Oggi",
@@ -1441,5 +1442,26 @@
       "primary": "Collega un'istanza",
       "secondary": "Vedi i piani"
     }
+  },
+  "Routines": {
+    "title": "Routine",
+    "subtitle": "Interrogazioni pronte che producono un risultato sulla tua istanza Odoo.",
+    "catalog": "Catalogo",
+    "inProgress": "In corso",
+    "history": "Cronologia",
+    "run": "Esegui",
+    "rerun": "Esegui di nuovo",
+    "regenerate": "Rigenera",
+    "download": "Scarica",
+    "running": "In esecuzione…",
+    "progress": "{done} di {total} passi",
+    "stepCount": "{count} passi",
+    "partialNote": "Alcuni passi non sono stati completati. Il report è stato generato comunque, con quelle sezioni annotate.",
+    "emptyCatalog": "Nessuna routine disponibile per questa istanza.",
+    "emptyHistory": "Non hai ancora eseguito nessuna routine.",
+    "noInstance": "Collega un'istanza Odoo per eseguire le routine.",
+    "startFailed": "Impossibile avviare la routine.",
+    "tooManyRuns": "Ci sono troppe routine in esecuzione. Riprova tra qualche secondo.",
+    "downloadFailed": "Impossibile generare il file."
   }
 }

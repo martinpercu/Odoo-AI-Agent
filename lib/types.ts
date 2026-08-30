@@ -913,3 +913,83 @@ export interface AnalyticsEventsStats {
   top_example_prompts: Array<{ prompt_id: string; count: number }>;
   dismissals_by_reason: Record<string, number>;
 }
+
+// ---------------------------------------------------------------------------
+// Rutinas (PLAN_RUTINAS Fase 1)
+// ---------------------------------------------------------------------------
+// Espejo del contrato del backend (`src/api/routines/models.py`). Si cambia allá,
+// cambia acá: son las dos mitades de la misma cosa.
+
+/** Un parámetro que el usuario elige al correr una Rutina. */
+export interface RoutineParam {
+  key: string;
+  type: "period" | "compare_with" | "number" | "choice";
+  default: unknown;
+  label: Record<string, string>;
+  choices?: string[] | null;
+}
+
+/** Una Rutina del catálogo, ya localizada por el backend. */
+export interface Routine {
+  id: string;
+  version: number;
+  scope: "system" | "org" | "private";
+  audience: "builder" | "client";
+  icon: string;
+  name: string;
+  description: string;
+  step_count: number;
+  params: RoutineParam[];
+  /** Sólo presente cuando se pidió el catálogo con un `config_id`. */
+  available?: boolean;
+  steps?: Array<{ key: string; kind: "ask" | "probe"; label: string }>;
+}
+
+/**
+ * Estado de una corrida.
+ *
+ * ⚠️ `partial` es de PRIMERA CLASE, no un error: es el estado normal de una corrida
+ * fail-open donde 7 de 8 pasos salieron bien. **La UI lo muestra como éxito con nota.**
+ */
+export type RoutineRunStatus = "queued" | "running" | "done" | "partial" | "error";
+
+/** Estado de un paso. `skipped` = la instancia no lo soporta, no es una falla. */
+export type RoutineStepStatus = "pending" | "ok" | "error" | "skipped";
+
+export interface RoutineArtifact {
+  filename?: string;
+  mimetype?: string;
+}
+
+export interface RoutineRunSummary {
+  id: string;
+  routine_id: string;
+  status: RoutineRunStatus;
+  config_id: string;
+  started_at: string | null;
+  finished_at: string | null;
+  step_total: number;
+  step_done: number;
+  artifacts: Record<string, RoutineArtifact>;
+  error: string | null;
+}
+
+export interface RoutineRunDetail extends RoutineRunSummary {
+  progress: Record<string, RoutineStepStatus>;
+  results: Record<
+    string,
+    {
+      key: string;
+      kind: string;
+      status: RoutineStepStatus;
+      data: Record<string, unknown>;
+      reason: string | null;
+      duration_ms?: number;
+    }
+  >;
+  params: Record<string, unknown>;
+  routine_version?: number;
+  /** El archivo sólo viaja en el detalle, nunca en el listado. */
+  pdf_base64?: string;
+  filename?: string;
+}

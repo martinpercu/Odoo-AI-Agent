@@ -41,6 +41,9 @@ import type {
   InvitationMode,
   OdooConnectionStatus,
   TtsVoicesResult,
+  Routine,
+  RoutineRunDetail,
+  RoutineRunSummary,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
 
@@ -2402,6 +2405,172 @@ export async function fetchFeedbackReport(reportId: string): Promise<FetchFeedba
     const data = await res.json();
     if (res.ok) return { success: true, report: data.report };
     return { success: false, error: data.detail || "Failed to fetch report" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Rutinas (PLAN_RUTINAS Fase 1)
+// ---------------------------------------------------------------------------
+
+export interface ListRoutinesResult {
+  success: boolean;
+  routines?: Routine[];
+  error?: string;
+}
+
+/**
+ * El catálogo visible para el usuario.
+ *
+ * Pasar `configId` es importante: el backend filtra contra el `CapabilityProfile` real
+ * de esa instancia (invariante #7 del programa — nada se oferta si la instancia no lo
+ * soporta). Sin él devuelve todo, porque no hay instancia contra la cual medir.
+ */
+export async function listRoutines(
+  configId?: string,
+  language = "es"
+): Promise<ListRoutinesResult> {
+  try {
+    const params = new URLSearchParams({ language });
+    if (configId) params.set("config_id", configId);
+    const res = await authFetch(`${API_BASE}/routines?${params}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, routines: data.routines ?? [] };
+    return { success: false, error: data.detail || "Failed to fetch routines" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface RunRoutineResult {
+  success: boolean;
+  runId?: string;
+  /** `429` = tope de corridas simultáneas (A8). Es una espera, no una falla. */
+  rateLimited?: boolean;
+  error?: string;
+}
+
+export async function runRoutine(
+  routineId: string,
+  configId: string,
+  params: Record<string, unknown> = {},
+  language = "es"
+): Promise<RunRoutineResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/${routineId}/run`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ config_id: configId, params, language }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, runId: data.run_id };
+    if (res.status === 429) return { success: false, rateLimited: true, error: "too_many_runs" };
+    const detail = typeof data.detail === "string" ? data.detail : data.detail?.error_code;
+    return { success: false, error: detail || "Failed to start routine" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface RoutineRunResult {
+  success: boolean;
+  run?: RoutineRunDetail;
+  error?: string;
+}
+
+/** Estado + progreso de una corrida. Es lo que el front pollea cada 2s. */
+export async function fetchRoutineRun(runId: string): Promise<RoutineRunResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/runs/${runId}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, run: data };
+    return { success: false, error: data.detail || "Failed to fetch run" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface ListRoutineRunsResult {
+  success: boolean;
+  runs?: RoutineRunSummary[];
+  error?: string;
+}
+
+export async function listRoutineRuns(limit = 20): Promise<ListRoutineRunsResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/runs?limit=${limit}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, runs: data.runs ?? [] };
+    return { success: false, error: data.detail || "Failed to fetch runs" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface RegenerateRunResult {
+  success: boolean;
+  pdfBase64?: string;
+  filename?: string;
+  error?: string;
+}
+
+/**
+ * Rearma el entregable **desde los resultados guardados** — instantáneo, sin tocar Odoo
+ * (decisión A7). Es el botón *Regenerar*, distinto de *Volver a correr*: los archivos
+ * viven ~10 minutos, los resultados quedan.
+ */
+export async function regenerateRoutineRun(
+  runId: string,
+  language = "es"
+): Promise<RegenerateRunResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/runs/${runId}/regenerate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ language }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok)
+      return { success: true, pdfBase64: data.pdf_base64, filename: data.filename };
+    return { success: false, error: data.detail || "Failed to regenerate" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export interface FetchRoutineResult {
+  success: boolean;
+  routine?: Routine;
+  error?: string;
+}
+
+/**
+ * Definición de una Rutina, **con sus pasos localizados**.
+ *
+ * El catálogo (`listRoutines`) no los trae a propósito: con 20 Rutinas × 12 pasos sería
+ * una carga inútil en una pantalla que sólo muestra tarjetas. La barra de progreso sí los
+ * necesita — sin ellos muestra las claves crudas (`clientes_sin_vat`) en vez de "Clientes
+ * sin identificación fiscal", y el progreso paso a paso deja de comunicar nada.
+ */
+export async function fetchRoutine(
+  routineId: string,
+  configId?: string,
+  language = "es"
+): Promise<FetchRoutineResult> {
+  try {
+    const params = new URLSearchParams({ language });
+    if (configId) params.set("config_id", configId);
+    const res = await authFetch(`${API_BASE}/routines/${routineId}?${params}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, routine: data };
+    return { success: false, error: data.detail || "Failed to fetch routine" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
