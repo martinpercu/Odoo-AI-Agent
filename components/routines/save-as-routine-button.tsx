@@ -7,6 +7,7 @@ import { ClipboardList } from "lucide-react";
 import { SaveAsRoutineModal } from "@/components/routines/save-as-routine-modal";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useSession } from "@/hooks/use-session";
+import { ROUTINES_VISIBLE } from "@/lib/feature-flags";
 
 /**
  * El punto de entrada del camino primario de la Fase 3: *"esto, todos los meses"*.
@@ -42,6 +43,7 @@ export function SaveAsRoutineButton({
   const { activeConfigId, isDemoMode } = useOdooConfig();
   const { meData } = useSession();
 
+  if (!ROUTINES_VISIBLE) return null;
   if (!hasMessages || isDemoMode || !meData?.org?.id) return null;
   if (!meData?.routines?.can_author) return null;
 

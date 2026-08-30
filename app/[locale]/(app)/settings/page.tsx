@@ -38,6 +38,7 @@ import { MarkB, Wordmark } from "@/components/AgentMark";
 import { AdminUserCredentialsModal } from "@/components/settings/admin-user-credentials-modal";
 import { AdminInvitationCredentialsModal } from "@/components/settings/admin-invitation-credentials-modal";
 import { useSession } from "@/hooks/use-session";
+import { ROUTINES_VISIBLE } from "@/lib/feature-flags";
 import {
   updateOrg,
   uploadBrandLogo,
@@ -1314,11 +1315,13 @@ export default function SettingsPage() {
   const awaitingFirstInstance =
     meData?.org?.is_founding_partner === true && !meData?.org?.founder_since;
 
-  const visibleTabs = awaitingFirstInstance
-    ? TAB_CONFIG.filter(
-        (t) => t.id !== "users" && t.id !== "feedback" && t.id !== "routines"
-      )
-    : TAB_CONFIG;
+  const visibleTabs = (
+    awaitingFirstInstance
+      ? TAB_CONFIG.filter(
+          (t) => t.id !== "users" && t.id !== "feedback" && t.id !== "routines"
+        )
+      : TAB_CONFIG
+  ).filter((t) => ROUTINES_VISIBLE || t.id !== "routines");
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("org");
 
