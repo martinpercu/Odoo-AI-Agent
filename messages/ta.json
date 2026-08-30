@@ -1212,7 +1212,16 @@
     "subtitleClient": "Load your username and API key to start chatting with your company's data.",
     "subtitleAdmin": "Your personal credentials for each instance you chat with.",
     "noInstance": "No instance assigned yet.",
-    "backToSettings": "Back to settings"
+    "backToSettings": "Back to settings",
+    "timezoneTitle": "Time zone",
+    "timezoneSubtitle": "Sets what time your scheduled Routines reach you.",
+    "timezoneInherit": "Use my organization's",
+    "timezoneInheritWith": "Use my organization's ({timezone})",
+    "timezoneSaved": "Saved",
+    "timezoneEffective": "Your schedules use {timezone}.",
+    "timezoneUseDetected": "Use this device's ({timezone})",
+    "timezoneExistingNote": "Schedules you already created keep the time zone they were created with.",
+    "timezoneFailed": "Could not save the time zone."
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1617,7 +1626,51 @@
         "private": "Private"
       },
       "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete."
-    }
+    },
+    "cancel": "Cancel",
+    "schedule": "Schedule",
+    "scheduleTitle": "Have it emailed to you",
+    "scheduleCadence": "How often",
+    "scheduleWeekday": "Which day",
+    "scheduleDayOfMonth": "Which day of the month",
+    "scheduleHour": "At what time",
+    "scheduleDayNumber": "Day {day}",
+    "scheduleShortMonthNote": "In shorter months it arrives on the last day of the month.",
+    "scheduleTimezone": "{timezone} time.",
+    "scheduleChangeTimezone": "Change time zone",
+    "scheduleDeliveryNote": "You get an email with the summary and the PDF attached. If there is no data on a given day, nothing is sent.",
+    "scheduleConfirm": "Schedule it",
+    "scheduleFailed": "Could not schedule it.",
+    "scheduleNotAvailable": "Your instance can't run this Routine.",
+    "cadence": {
+      "daily": "Every day",
+      "weekdays": "Weekdays",
+      "weekly": "Every week",
+      "monthly": "Every month"
+    },
+    "weekday": {
+      "0": "Monday",
+      "1": "Tuesday",
+      "2": "Wednesday",
+      "3": "Thursday",
+      "4": "Friday",
+      "5": "Saturday",
+      "6": "Sunday"
+    },
+    "mySchedules": "My schedules",
+    "schedulePaused": "Paused",
+    "schedulePause": "Pause",
+    "scheduleResume": "Resume",
+    "scheduleDelete": "Delete schedule",
+    "scheduleDeleteConfirm": "Yes, delete",
+    "scheduleNextRun": "Next delivery: {when}",
+    "scheduleLastError": "The last delivery failed: {reason}",
+    "scheduleWhenSimple": "{cadence} at {hour}",
+    "scheduleWhenWeekly": "Every {weekday} at {hour}",
+    "scheduleWhenMonthly": "Day {day} of every month at {hour}",
+    "backToRoutines": "Back to Routines",
+    "runNotFoundTitle": "We couldn't find this run",
+    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results."
   },
   "Chat": {
     "openInOdoo": "Odoo இல் திற"

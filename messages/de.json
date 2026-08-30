@@ -1212,7 +1212,16 @@
     "subtitleClient": "Gib deinen Benutzernamen und API-Schlüssel ein, um mit den Daten deines Unternehmens zu chatten.",
     "subtitleAdmin": "Deine persönlichen Zugangsdaten für jede Instanz, mit der du chattest.",
     "noInstance": "Noch keine Instanz zugewiesen.",
-    "backToSettings": "Zurück zu den Einstellungen"
+    "backToSettings": "Zurück zu den Einstellungen",
+    "timezoneTitle": "Zeitzone",
+    "timezoneSubtitle": "Legt fest, wann dich geplante Routinen erreichen.",
+    "timezoneInherit": "Die meiner Organisation verwenden",
+    "timezoneInheritWith": "Die meiner Organisation verwenden ({timezone})",
+    "timezoneSaved": "Gespeichert",
+    "timezoneEffective": "Deine Planungen verwenden {timezone}.",
+    "timezoneUseDetected": "Die dieses Geräts verwenden ({timezone})",
+    "timezoneExistingNote": "Bereits erstellte Planungen behalten die Zeitzone, mit der sie angelegt wurden.",
+    "timezoneFailed": "Zeitzone konnte nicht gespeichert werden."
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1617,7 +1626,51 @@
         "private": "Privat"
       },
       "usersFailed": "Wir konnten die Benutzer der Organisation nicht laden. Was du unten siehst, kann unvollständig sein."
-    }
+    },
+    "cancel": "Abbrechen",
+    "schedule": "Planen",
+    "scheduleTitle": "Per E-Mail zuschicken lassen",
+    "scheduleCadence": "Wie oft",
+    "scheduleWeekday": "An welchem Tag",
+    "scheduleDayOfMonth": "An welchem Tag im Monat",
+    "scheduleHour": "Um wie viel Uhr",
+    "scheduleDayNumber": "Am {day}.",
+    "scheduleShortMonthNote": "In kürzeren Monaten kommt es am letzten Tag des Monats.",
+    "scheduleTimezone": "Uhrzeit in {timezone}.",
+    "scheduleChangeTimezone": "Zeitzone ändern",
+    "scheduleDeliveryNote": "Du bekommst eine E-Mail mit der Übersicht und dem PDF im Anhang. Gibt es an einem Tag keine Daten, wird nichts verschickt.",
+    "scheduleConfirm": "Planen",
+    "scheduleFailed": "Planen nicht möglich.",
+    "scheduleNotAvailable": "Deine Instanz kann diese Routine nicht ausführen.",
+    "cadence": {
+      "daily": "Jeden Tag",
+      "weekdays": "Werktags",
+      "weekly": "Jede Woche",
+      "monthly": "Jeden Monat"
+    },
+    "weekday": {
+      "0": "Montag",
+      "1": "Dienstag",
+      "2": "Mittwoch",
+      "3": "Donnerstag",
+      "4": "Freitag",
+      "5": "Samstag",
+      "6": "Sonntag"
+    },
+    "mySchedules": "Meine Planungen",
+    "schedulePaused": "Pausiert",
+    "schedulePause": "Pausieren",
+    "scheduleResume": "Fortsetzen",
+    "scheduleDelete": "Planung löschen",
+    "scheduleDeleteConfirm": "Ja, löschen",
+    "scheduleNextRun": "Nächster Versand: {when}",
+    "scheduleLastError": "Der letzte Versand ist fehlgeschlagen: {reason}",
+    "scheduleWhenSimple": "{cadence} um {hour}",
+    "scheduleWhenWeekly": "Jeden {weekday} um {hour}",
+    "scheduleWhenMonthly": "Am {day}. jedes Monats um {hour}",
+    "backToRoutines": "Zurück zu Routinen",
+    "runNotFoundTitle": "Diesen Durchlauf gibt es nicht",
+    "runNotFoundBody": "Er wurde vielleicht gelöscht, oder er gehört jemand anderem: jeder Durchlauf läuft mit den Zugangsdaten der Person, die ihn angefordert hat, und nur diese Person sieht die Ergebnisse."
   },
   "Chat": {
     "openInOdoo": "In Odoo öffnen"

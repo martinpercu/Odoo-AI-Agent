@@ -471,6 +471,12 @@ export interface MeUser {
   /** Admin-granted entitlement flags (voice features). See VoiceFeatures. */
   stt_enabled?: boolean;
   tts_enabled?: boolean;
+  /**
+   * IANA timezone the user PICKED (Fase 4). `null` = they never picked one and
+   * inherit the org's default — which is NOT the same as picking UTC. Read the
+   * resolved value from `MeResponse.timezone`, not from here.
+   */
+  timezone?: string | null;
 }
 
 /**
@@ -513,6 +519,11 @@ export interface MeOrg {
   brand_name?: string | null;
   /** White-label logo URL shown to clients. */
   brand_logo_url?: string | null;
+  /**
+   * Default IANA timezone for members who never picked their own (Fase 4).
+   * ADMIN-set. `null` = no default → the backend's global fallback applies.
+   */
+  default_timezone?: string | null;
 }
 
 export interface MeSubscription {
@@ -657,6 +668,12 @@ export interface MeResponse {
   odoo_configs: OdooConfigSummary[];
   demo_available?: boolean;
   voice_features?: VoiceFeatures;
+  /**
+   * The EFFECTIVE timezone the backend will use to interpret "at 8:00" for this
+   * user's schedules (own → org default → global). Always a resolvable IANA name.
+   * Gate scheduling UI on this, never on `user.timezone` (which can be null).
+   */
+  timezone?: string;
 }
 
 // ---- Billing state (Fase 0 — Founding Partners, spec §5/§6) ----
@@ -1176,4 +1193,45 @@ export interface RoutineRunDetail extends RoutineRunSummary {
   /** El archivo sólo viaja en el detalle, nunca en el listado. */
   pdf_base64?: string;
   filename?: string;
+}
+
+// --- Agendado (Fase 4) ------------------------------------------------------
+
+/**
+ * Cadencias soportadas. `"event"` (alertas por umbral) está reservada en el backend
+ * pero **no implementada** — no agregarla acá hasta que exista del otro lado.
+ */
+export type RoutineCadence = "daily" | "weekdays" | "weekly" | "monthly";
+
+/**
+ * Un agendado. **Es del USUARIO, no de la organización**: corre con SUS credenciales de
+ * Odoo (invariante #3), así que dos personas que agendan la misma Rutina reciben lo que
+ * su propio Odoo les deja ver. Por eso no existe una vista "los agendados de mi org".
+ */
+export interface RoutineSchedule {
+  id: string;
+  routine_id: string;
+  org_id: string | null;
+  user_id: string;
+  odoo_config_id: string;
+  params: Record<string, unknown>;
+  language: string;
+  cadence: RoutineCadence;
+  /** 0-23 **en la zona horaria del agendado**, no en la del browser. */
+  hour_local: number;
+  /** 0 = lunes … 6 = domingo (convención de Python, la misma que usa el cálculo). */
+  weekday: number | null;
+  day_of_month: number | null;
+  /** IANA, congelada al agendar: mudarse de zona no re-agenda lo ya creado. */
+  timezone: string;
+  channel: "email";
+  is_active: boolean;
+  last_run_at: string | null;
+  last_run_id: string | null;
+  /** El motivo del último envío fallido. `null` = la última corrida salió bien. */
+  last_error: string | null;
+  /** Precalculado por el backend, en UTC. El front lo muestra, no lo recalcula. */
+  next_run_at: string;
+  created_at: string;
+  updated_at: string;
 }

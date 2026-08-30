@@ -50,6 +50,8 @@ import type {
   RoutineGrantsMatrix,
   RoutineScope,
   RoutineStepReview,
+  RoutineCadence,
+  RoutineSchedule,
   ReportOfferOption,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
@@ -3003,5 +3005,166 @@ export async function reviewRoutineSteps(
     // Un fallo de red no puede bloquear el editor: se guarda igual y el backend
     // revalida — la validación de acá es una ayuda, no la puerta.
     return [];
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Agendado de Rutinas (Fase 4)
+// ---------------------------------------------------------------------------
+
+export interface RoutineSchedulesResult {
+  success: boolean;
+  schedules?: RoutineSchedule[];
+  error?: string;
+}
+
+export interface RoutineScheduleResult {
+  success: boolean;
+  schedule?: RoutineSchedule;
+  error?: string;
+  /** La instancia dejó de cumplir `requires` (409) — no se puede agendar. */
+  notAvailable?: boolean;
+}
+
+/** "Mis agendados". Sólo los del llamador: cada uno corre con SUS credenciales. */
+export async function listMyRoutineSchedules(
+  routineId?: string
+): Promise<RoutineSchedulesResult> {
+  try {
+    const qs = routineId ? `?routine_id=${encodeURIComponent(routineId)}` : "";
+    const res = await authFetch(`${API_BASE}/routines/schedules${qs}`);
+    const data = await res.json();
+    if (res.ok) return { success: true, schedules: data.schedules ?? [] };
+    return { success: false, error: data.detail || "Failed to fetch schedules" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Agenda una Rutina.
+ *
+ * ⚠️ **No mandar `timezone` es lo normal**: sin ese campo el backend resuelve la del
+ * perfil del usuario (`resolve_user_timezone`). Mandar la del browser
+ * (`Intl.DateTimeFormat().resolvedOptions().timeZone`) haría que agendar desde un
+ * aeropuerto fijara el digest en la zona del aeropuerto.
+ */
+export async function createRoutineSchedule(opt: {
+  routineId: string;
+  configId: string;
+  cadence: RoutineCadence;
+  hourLocal: number;
+  params?: Record<string, unknown>;
+  language?: string;
+  weekday?: number | null;
+  dayOfMonth?: number | null;
+  timezone?: string;
+}): Promise<RoutineScheduleResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/routines/${encodeURIComponent(opt.routineId)}/schedule`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          config_id: opt.configId,
+          cadence: opt.cadence,
+          hour_local: opt.hourLocal,
+          params: opt.params ?? {},
+          language: opt.language ?? "es",
+          weekday: opt.weekday ?? null,
+          day_of_month: opt.dayOfMonth ?? null,
+          ...(opt.timezone ? { timezone: opt.timezone } : {}),
+        }),
+      }
+    );
+    const data = await res.json();
+    if (res.ok) return { success: true, schedule: data };
+    if (res.status === 409) return { success: false, notAvailable: true };
+    return { success: false, error: extractError(data.detail, "Failed to save schedule") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/** Edita un agendado propio. Incluye el on/off (`isActive`). */
+export async function updateRoutineSchedule(
+  scheduleId: string,
+  patch: {
+    cadence?: RoutineCadence;
+    hourLocal?: number;
+    params?: Record<string, unknown>;
+    language?: string;
+    weekday?: number | null;
+    dayOfMonth?: number | null;
+    timezone?: string;
+    isActive?: boolean;
+  }
+): Promise<RoutineScheduleResult> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/schedules/${scheduleId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...(patch.cadence !== undefined ? { cadence: patch.cadence } : {}),
+        ...(patch.hourLocal !== undefined ? { hour_local: patch.hourLocal } : {}),
+        ...(patch.params !== undefined ? { params: patch.params } : {}),
+        ...(patch.language !== undefined ? { language: patch.language } : {}),
+        ...(patch.weekday !== undefined ? { weekday: patch.weekday } : {}),
+        ...(patch.dayOfMonth !== undefined ? { day_of_month: patch.dayOfMonth } : {}),
+        ...(patch.timezone !== undefined ? { timezone: patch.timezone } : {}),
+        ...(patch.isActive !== undefined ? { is_active: patch.isActive } : {}),
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) return { success: true, schedule: data };
+    return { success: false, error: extractError(data.detail, "Failed to save schedule") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+export async function deleteRoutineSchedule(
+  scheduleId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/schedules/${scheduleId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json().catch(() => ({}));
+    return { success: false, error: extractError(data.detail, "Failed to save schedule") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Fija (o limpia, con `null`) la zona horaria del usuario.
+ *
+ * Es lo que decide a qué hora llega un digest. `null` NO es "UTC": devuelve al usuario
+ * al default de su organización, que es un estado distinto y visible en el selector.
+ */
+export async function setMyTimezone(
+  timezone: string | null
+): Promise<{ success: boolean; timezone?: string | null; effective?: string; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/me/timezone`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ timezone }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return { success: true, timezone: data.timezone, effective: data.effective_timezone };
+    }
+    return { success: false, error: extractError(data.detail, "Failed to save schedule") };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
   }
 }
