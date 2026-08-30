@@ -25,10 +25,12 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 
+import { useChatContext } from "@/components/app-shell";
 import { IntroSidebarItem } from "@/components/intro/intro-sidebar-item";
 import { HowItWorksSidebarItem } from "@/components/intro/how-it-works-sidebar-item";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
+import { instanceLabel } from "@/lib/instance-label";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
@@ -61,6 +63,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   const { user, logout, updateUserLang } = useAuth();
   const { meData } = useSession();
   const { configs, activeConfigId, setActiveConfigId } = useOdooConfig();
+  const { setCurrentChatId, setShowAllInstances, stopStreaming } = useChatContext();
   const iconInline = useIconSize("inline");
 
   const [open, setOpen] = useState(false);
@@ -105,9 +108,28 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
     close();
   }
 
+  /**
+   * Elegir instancia acá es empezar a trabajar sobre OTRA base.
+   *
+   * ⭐ Por eso además de cambiar la activa **sale del chat abierto**: ese chat pertenece a la
+   * instancia anterior (abrirlo la volvería a seleccionar, ver `AppShell`), así que dejarlo
+   * en pantalla mostraría una conversación de una empresa con el cartel de otra — que es
+   * exactamente la confusión que este cambio viene a cerrar. Se cae al chat vacío, que es lo
+   * único que no pertenece a ninguna instancia todavía.
+   *
+   * ⚠️ Sólo se navega si estamos DENTRO de un chat: cambiar de cliente desde el Tablero o
+   * desde Rutinas tiene que dejarte donde estabas, viendo los datos del nuevo.
+   */
   function selectInstance(id: string) {
     setActiveConfigId(id);
     setSub(null);
+    setShowAllInstances(false);   // "ver todos" es una mirada puntual, no un modo
+    if (pathname.startsWith("/chat/")) {
+      stopStreaming();            // no dejar una respuesta de la instancia vieja llegando
+      setCurrentChatId(undefined);
+      router.push("/chat");
+      close();
+    }
   }
 
   const role = meData?.user?.role;
@@ -133,7 +155,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
   }
 
   const secondaryLine = role === "CLIENT_USER"
-    ? (activeConfig?.company_name ?? "")
+    ? (instanceLabel(activeConfig) ?? "")
     : (meData?.org?.name ?? "");
 
   const itemClass =
@@ -327,7 +349,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                     <span className="min-w-0 flex-1">
                       <span className="block text-micro text-text-muted">{t("instance")}</span>
                       <span className="block truncate">
-                        {activeConfig?.company_name || activeConfig?.label || "—"}
+                        {instanceLabel(activeConfig) ?? "—"}
                       </span>
                     </span>
                     <ChevronRight
@@ -348,7 +370,7 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                       >
                         {configs.map((config) => {
                           const ready = isChatReady(config);
-                          const title = config.company_name || config.label;
+                          const title = instanceLabel(config) ?? config.label;
                           const showLabel = !!config.label && config.label !== title;
                           return (
                             <button
@@ -400,7 +422,18 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
                   <span className="flex-1">{t("dashboard")}</span>
                 </Link>
               )}
-              {user && meData?.org && configs.length > 0 && (
+              {/* Rutinas. ⚠️ **`visible_count === 0` esconde la sección** (2026-08-12):
+                  desde que el cliente arranca sin ninguna habilitada, el link llevaba a
+                  una pantalla vacía que sólo comunica "acá no hay nada para vos".
+                  Aparece sola en cuanto el ADMIN le habilita una, o en cuanto el propio
+                  cliente crea la suya (si le dieron el permiso).
+                  ⚠️ El conteo lo resuelve el backend (`/me` → `routines.visible_count`)
+                  con la misma regla que el catálogo; acá NO se recalcula. Y `null` es
+                  "no se pudo contar", que se trata como "mostralo": esconderle la sección
+                  a alguien que sí tiene Rutinas por un error de base es peor que un link
+                  de más. */}
+              {user && meData?.org && configs.length > 0 &&
+                meData?.routines?.visible_count !== 0 && (
                 <Link href="/rutinas" onClick={close} className={itemClass}>
                   <ClipboardList size={iconInline} strokeWidth={1.5} className="shrink-0" />
                   <span className="flex-1">{t("routines")}</span>

@@ -24,7 +24,10 @@
     "deleteChat": "Eliminar conversación",
     "confirmDeleteChat": "¿Eliminar?",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "instanceBadge": "Instancia",
+    "otherInstances": "{count, plural, one {# chat de otra instancia} other {# chats de otras instancias}}",
+    "onlyActiveInstance": "Ver sólo la instancia activa"
   },
   "UserMenu": {
     "guest": "Invitado",
@@ -374,7 +377,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "Límite de cupos STT alcanzado — contactá a tu proveedor",
       "ttsLimitReached": "Límite de cupos TTS alcanzado — contactá a tu proveedor",
-      "voiceToggleError": "No se pudo actualizar la preferencia de voz"
+      "voiceToggleError": "No se pudo actualizar la preferencia de voz",
+      "routineAuthor": "Crea Rutinas",
+      "toggleRoutineAuthor": "Permitir que esta persona cree y edite Rutinas",
+      "routineAuthorError": "No se pudo actualizar el permiso de Rutinas"
     },
     "credentials": {
       "sectionTitle": "Mis Credenciales Odoo",
@@ -1587,14 +1593,12 @@
     "history": "Historial",
     "run": "Ejecutar",
     "rerun": "Volver a correr",
-    "regenerate": "Regenerar",
     "download": "Descargar",
     "running": "Ejecutando…",
     "progress": "{done} de {total} pasos",
     "stepCount": "{count, plural, one {# paso} other {# pasos}}",
     "partialNote": "Algunos pasos no se pudieron completar. El informe se generó igual, con esas secciones anotadas.",
     "emptyCatalog": "No hay Rutinas disponibles para esta instancia.",
-    "emptyHistory": "Todavía no corriste ninguna Rutina.",
     "noInstance": "Conectá una instancia de Odoo para poder ejecutar Rutinas.",
     "startFailed": "No se pudo iniciar la Rutina.",
     "tooManyRuns": "Hay demasiadas Rutinas corriendo ahora mismo. Probá de nuevo en unos segundos.",
@@ -1639,14 +1643,17 @@
       "anio_pasado": "El año pasado",
       "ultimos_30_dias": "Últimos 30 días",
       "ultimos_60_dias": "Últimos 60 días",
-      "ultimos_90_dias": "Últimos 90 días"
+      "ultimos_90_dias": "Últimos 90 días",
+      "absolute": "Un período específico…",
+      "rolling": "Últimos N días…"
     },
     "compare": {
       "periodo_anterior": "El período anterior",
       "mismo_periodo_anio_anterior": "El mismo período del año pasado",
       "mismo_periodo_hace_2_anos": "El mismo período hace 2 años",
       "mismo_periodo_hace_3_anos": "El mismo período hace 3 años",
-      "ninguno": "Sin comparación"
+      "ninguno": "Sin comparación",
+      "absolute": "Un período específico…"
     },
     "createNew": "Nueva Rutina",
     "group": {
@@ -1747,7 +1754,8 @@
         "org": "Compartida con la organización",
         "private": "Privada"
       },
-      "usersFailed": "No pudimos leer los usuarios de la organización. Lo que ves abajo puede estar incompleto."
+      "usersFailed": "No pudimos leer los usuarios de la organización. Lo que ves abajo puede estar incompleto.",
+      "inheritMeaning": "«Por defecto» ahora significa: visible para los administradores de tu organización, e invisible para los clientes. Para que un cliente vea una Rutina, ponela en «Sí» en su fila."
     },
     "cancel": "Cancelar",
     "schedule": "Agendar",
@@ -1792,7 +1800,32 @@
     "scheduleWhenMonthly": "El {day} de cada mes a las {hour}",
     "backToRoutines": "Volver a Rutinas",
     "runNotFoundTitle": "No encontramos esta corrida",
-    "runNotFoundBody": "Puede que se haya borrado, o que sea de otra persona: cada corrida se ejecuta con las credenciales de quien la pidió y sólo esa persona ve sus resultados."
+    "runNotFoundBody": "Puede que se haya borrado, o que sea de otra persona: cada corrida se ejecuta con las credenciales de quien la pidió y sólo esa persona ve sus resultados.",
+    "periodPicker": {
+      "unit": "Unidad",
+      "month": "Mes",
+      "quarter": "Trimestre",
+      "year": "Año",
+      "days": "días"
+    },
+    "rerunUnavailable": "Esta Rutina ya no está disponible.",
+    "deletedRoutine": "Rutina eliminada",
+    "deleteRun": "Borrar del historial",
+    "deleteRunConfirm": "¿Borrar?",
+    "deleteRunFailed": "No se pudo borrar la corrida.",
+    "clearHistory": "Vaciar historial",
+    "clearHistoryConfirm": "¿Borrar todo?",
+    "clearHistoryFailed": "No se pudo vaciar el historial.",
+    "confirmYes": "Sí",
+    "confirmNo": "No",
+    "runOn": "Correr sobre",
+    "rerunOn": "Volver a correr sobre {instance}",
+    "notAvailableOnInstance": "Esta Rutina no está disponible en {instance}.",
+    "runConfirm": {
+      "title": "Ejecutar contra la instancia",
+      "otherInstance": "Otra instancia",
+      "confirm": "Confirmar"
+    }
   },
   "Chat": {
     "openInOdoo": "Abrir en Odoo"

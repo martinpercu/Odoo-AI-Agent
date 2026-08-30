@@ -24,7 +24,10 @@
     "deleteChat": "Gespräch löschen",
     "confirmDeleteChat": "Löschen?",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "instanceBadge": "Instanz",
+    "otherInstances": "{count, plural, one {# Chat in einer anderen Instanz} other {# Chats in anderen Instanzen}}",
+    "onlyActiveInstance": "Nur die aktive Instanz anzeigen"
   },
   "UserMenu": {
     "guest": "Gast",
@@ -403,7 +406,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "STT-Kontingent erreicht — wenden Sie sich an Ihren Anbieter",
       "ttsLimitReached": "TTS-Kontingent erreicht — wenden Sie sich an Ihren Anbieter",
-      "voiceToggleError": "Die Sprachpräferenz konnte nicht aktualisiert werden"
+      "voiceToggleError": "Die Sprachpräferenz konnte nicht aktualisiert werden",
+      "routineAuthor": "Erstellt Routinen",
+      "toggleRoutineAuthor": "Dieser Person erlauben, Routinen zu erstellen und zu bearbeiten",
+      "routineAuthorError": "Die Routinen-Berechtigung konnte nicht aktualisiert werden"
     },
     "credentials": {
       "sectionTitle": "Meine Odoo-Anmeldedaten",
@@ -1587,14 +1593,12 @@
     "history": "Verlauf",
     "run": "Ausführen",
     "rerun": "Erneut ausführen",
-    "regenerate": "Neu erzeugen",
     "download": "Herunterladen",
     "running": "Läuft…",
     "progress": "{done} von {total} Schritten",
     "stepCount": "{count, plural, one {# Schritt} other {# Schritte}}",
     "partialNote": "Einige Schritte konnten nicht abgeschlossen werden. Der Bericht wurde trotzdem erstellt, diese Abschnitte sind vermerkt.",
     "emptyCatalog": "Für diese Instanz sind keine Routinen verfügbar.",
-    "emptyHistory": "Sie haben noch keine Routine ausgeführt.",
     "noInstance": "Verbinden Sie eine Odoo-Instanz, um Routinen auszuführen.",
     "startFailed": "Die Routine konnte nicht gestartet werden.",
     "tooManyRuns": "Derzeit laufen zu viele Routinen. Versuchen Sie es in ein paar Sekunden erneut.",
@@ -1639,14 +1643,17 @@
       "anio_pasado": "Letztes Jahr",
       "ultimos_30_dias": "Letzte 30 Tage",
       "ultimos_60_dias": "Letzte 60 Tage",
-      "ultimos_90_dias": "Letzte 90 Tage"
+      "ultimos_90_dias": "Letzte 90 Tage",
+      "absolute": "Ein bestimmter Zeitraum…",
+      "rolling": "Letzte N Tage…"
     },
     "compare": {
       "periodo_anterior": "Der vorherige Zeitraum",
       "mismo_periodo_anio_anterior": "Derselbe Zeitraum im Vorjahr",
       "mismo_periodo_hace_2_anos": "Derselbe Zeitraum vor 2 Jahren",
       "mismo_periodo_hace_3_anos": "Derselbe Zeitraum vor 3 Jahren",
-      "ninguno": "Ohne Vergleich"
+      "ninguno": "Ohne Vergleich",
+      "absolute": "Ein bestimmter Zeitraum…"
     },
     "createNew": "Neue Routine",
     "group": {
@@ -1747,7 +1754,8 @@
         "org": "Mit der Organisation geteilt",
         "private": "Privat"
       },
-      "usersFailed": "Wir konnten die Benutzer der Organisation nicht laden. Was du unten siehst, kann unvollständig sein."
+      "usersFailed": "Wir konnten die Benutzer der Organisation nicht laden. Was du unten siehst, kann unvollständig sein.",
+      "inheritMeaning": "„Standard“ bedeutet jetzt: sichtbar für die Administratoren Ihrer Organisation und unsichtbar für Kunden. Damit ein Kunde eine Routine sieht, setzen Sie in seiner Zeile „Ja“."
     },
     "cancel": "Abbrechen",
     "schedule": "Planen",
@@ -1792,7 +1800,32 @@
     "scheduleWhenMonthly": "Am {day}. jedes Monats um {hour}",
     "backToRoutines": "Zurück zu Routinen",
     "runNotFoundTitle": "Diesen Durchlauf gibt es nicht",
-    "runNotFoundBody": "Er wurde vielleicht gelöscht, oder er gehört jemand anderem: jeder Durchlauf läuft mit den Zugangsdaten der Person, die ihn angefordert hat, und nur diese Person sieht die Ergebnisse."
+    "runNotFoundBody": "Er wurde vielleicht gelöscht, oder er gehört jemand anderem: jeder Durchlauf läuft mit den Zugangsdaten der Person, die ihn angefordert hat, und nur diese Person sieht die Ergebnisse.",
+    "periodPicker": {
+      "unit": "Einheit",
+      "month": "Monat",
+      "quarter": "Quartal",
+      "year": "Jahr",
+      "days": "Tage"
+    },
+    "rerunUnavailable": "Diese Routine ist nicht mehr verfügbar.",
+    "deletedRoutine": "Gelöschte Routine",
+    "deleteRun": "Aus dem Verlauf löschen",
+    "deleteRunConfirm": "Löschen?",
+    "deleteRunFailed": "Der Lauf konnte nicht gelöscht werden.",
+    "clearHistory": "Verlauf leeren",
+    "clearHistoryConfirm": "Alles löschen?",
+    "clearHistoryFailed": "Der Verlauf konnte nicht geleert werden.",
+    "confirmYes": "Ja",
+    "confirmNo": "Nein",
+    "runOn": "Ausführen auf",
+    "rerunOn": "Erneut ausführen auf {instance}",
+    "notAvailableOnInstance": "Diese Routine ist auf {instance} nicht verfügbar.",
+    "runConfirm": {
+      "title": "Ausführen auf der Instanz",
+      "otherInstance": "Andere Instanz",
+      "confirm": "Bestätigen"
+    }
   },
   "Chat": {
     "openInOdoo": "In Odoo öffnen"

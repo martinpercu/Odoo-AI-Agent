@@ -24,7 +24,10 @@
     "deleteChat": "ಸಂಭಾಷಣೆ ಅಳಿಸಿ",
     "confirmDeleteChat": "ಅಳಿಸುವುದೇ?",
     "yes": "ಹೌದು",
-    "no": "ಇಲ್ಲ"
+    "no": "ಇಲ್ಲ",
+    "instanceBadge": "ಇನ್‌ಸ್ಟನ್ಸ್",
+    "otherInstances": "{count, plural, one {ಇತರ ಇನ್‌ಸ್ಟನ್ಸ್‌ಗಳಲ್ಲಿ # ಚಾಟ್} other {ಇತರ ಇನ್‌ಸ್ಟನ್ಸ್‌ಗಳಲ್ಲಿ # ಚಾಟ್‌ಗಳು}}",
+    "onlyActiveInstance": "ಸಕ್ರಿಯ ಇನ್‌ಸ್ಟನ್ಸ್ ಮಾತ್ರ ತೋರಿಸಿ"
   },
   "UserMenu": {
     "guest": "ಅತಿಥಿ",
@@ -403,7 +406,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "STT quota limit reached — contact your provider",
       "ttsLimitReached": "TTS quota limit reached — contact your provider",
-      "voiceToggleError": "Couldn't update the voice preference"
+      "voiceToggleError": "Couldn't update the voice preference",
+      "routineAuthor": "Authors Routines",
+      "toggleRoutineAuthor": "Allow this person to create and edit Routines",
+      "routineAuthorError": "Could not update the Routines permission"
     },
     "credentials": {
       "sectionTitle": "ನನ್ನ Odoo ರುಜುವಾತುಗಳು",
@@ -1586,15 +1592,13 @@
     "inProgress": "In progress",
     "history": "History",
     "run": "Run",
-    "rerun": "Run again",
-    "regenerate": "Regenerate",
-    "download": "Download",
+    "rerun": "ಮತ್ತೆ ಚಲಾಯಿಸಿ",
+    "download": "ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
     "running": "Running…",
     "progress": "{done} of {total} steps",
     "stepCount": "{count, plural, one {# ಹಂತ} other {# ಹಂತಗಳು}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
-    "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
@@ -1639,14 +1643,17 @@
       "anio_pasado": "ಕಳೆದ ವರ್ಷ",
       "ultimos_30_dias": "ಕಳೆದ 30 ದಿನಗಳು",
       "ultimos_60_dias": "ಕಳೆದ 60 ದಿನಗಳು",
-      "ultimos_90_dias": "ಕಳೆದ 90 ದಿನಗಳು"
+      "ultimos_90_dias": "ಕಳೆದ 90 ದಿನಗಳು",
+      "absolute": "ನಿರ್ದಿಷ್ಟ ಅವಧಿ…",
+      "rolling": "ಕಳೆದ N ದಿನಗಳು…"
     },
     "compare": {
       "periodo_anterior": "ಹಿಂದಿನ ಅವಧಿ",
       "mismo_periodo_anio_anterior": "ಕಳೆದ ವರ್ಷದ ಅದೇ ಅವಧಿ",
       "mismo_periodo_hace_2_anos": "2 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
       "mismo_periodo_hace_3_anos": "3 ವರ್ಷಗಳ ಹಿಂದಿನ ಅದೇ ಅವಧಿ",
-      "ninguno": "ಹೋಲಿಕೆ ಇಲ್ಲದೆ"
+      "ninguno": "ಹೋಲಿಕೆ ಇಲ್ಲದೆ",
+      "absolute": "ನಿರ್ದಿಷ್ಟ ಅವಧಿ…"
     },
     "createNew": "New Routine",
     "group": {
@@ -1747,7 +1754,8 @@
         "org": "Shared with the organization",
         "private": "Private"
       },
-      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete."
+      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete.",
+      "inheritMeaning": "“Default” now means: visible to your organization's administrators, and hidden from clients. To let a client see a Routine, set it to “Yes” in their row."
     },
     "cancel": "Cancel",
     "schedule": "Schedule",
@@ -1792,7 +1800,32 @@
     "scheduleWhenMonthly": "Day {day} of every month at {hour}",
     "backToRoutines": "Back to Routines",
     "runNotFoundTitle": "We couldn't find this run",
-    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results."
+    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results.",
+    "periodPicker": {
+      "unit": "ಘಟಕ",
+      "month": "ತಿಂಗಳು",
+      "quarter": "ತ್ರೈಮಾಸಿಕ",
+      "year": "ವರ್ಷ",
+      "days": "ದಿನಗಳು"
+    },
+    "rerunUnavailable": "ಈ ದಿನಚರಿ ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ.",
+    "deletedRoutine": "ಅಳಿಸಲಾದ ದಿನಚರಿ",
+    "deleteRun": "ಇತಿಹಾಸದಿಂದ ಅಳಿಸಿ",
+    "deleteRunConfirm": "ಅಳಿಸುವುದೇ?",
+    "deleteRunFailed": "ರನ್ ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ.",
+    "clearHistory": "ಇತಿಹಾಸ ತೆರವುಗೊಳಿಸಿ",
+    "clearHistoryConfirm": "ಎಲ್ಲವನ್ನೂ ಅಳಿಸುವುದೇ?",
+    "clearHistoryFailed": "ಇತಿಹಾಸವನ್ನು ತೆರವುಗೊಳಿಸಲಾಗಲಿಲ್ಲ.",
+    "confirmYes": "ಹೌದು",
+    "confirmNo": "ಇಲ್ಲ",
+    "runOn": "ಇದರಲ್ಲಿ ಚಲಾಯಿಸಿ",
+    "rerunOn": "{instance} ನಲ್ಲಿ ಮತ್ತೆ ಚಲಾಯಿಸಿ",
+    "notAvailableOnInstance": "ಈ ದಿನಚರಿ {instance} ನಲ್ಲಿ ಲಭ್ಯವಿಲ್ಲ.",
+    "runConfirm": {
+      "title": "ಈ ಇನ್‌ಸ್ಟನ್ಸ್‌ನಲ್ಲಿ ಚಲಾಯಿಸಿ",
+      "otherInstance": "ಬೇರೆ ಇನ್‌ಸ್ಟನ್ಸ್",
+      "confirm": "ದೃಢೀಕರಿಸಿ"
+    }
   },
   "Chat": {
     "openInOdoo": "Odoo ನಲ್ಲಿ ತೆರೆ"

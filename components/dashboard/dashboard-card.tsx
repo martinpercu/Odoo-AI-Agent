@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 
 import type { DashboardRefreshResult, PinnedChart, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
+import { useAudienceT } from "@/hooks/use-audience-translations";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import {
@@ -57,7 +58,7 @@ interface DashboardCardProps {
 }
 
 export function DashboardCard({ pin, refreshState, period }: DashboardCardProps) {
-  const t = useTranslations("Dashboard");
+  const t = useAudienceT("Dashboard");
   const tChart = useTranslations("ChatMessages.chart");
   const { unpin, refreshPin } = usePinnedInsights();
   const { isDemoMode, activeConfig } = useOdooConfig();
@@ -208,7 +209,7 @@ function ChartCard({
             {tChart("noData")}
           </p>
         ) : viewType === "table" ? (
-          <ChartTable data={chart.data} meta={chart.meta} compact />
+          <ChartTable data={chart.data} meta={chart.meta} compact height={200} />
         ) : (
           <ChartPlot
             data={chart.data}
@@ -331,7 +332,7 @@ function Badge({
 
 /** Un Excel o un PDF fijado: no es una consulta viva, es un archivo guardado. */
 function DocumentCard({ pin }: { pin: PinnedInsight }) {
-  const t = useTranslations("Dashboard");
+  const t = useAudienceT("Dashboard");
   const { unpin } = usePinnedInsights();
   if (pin.kind === "chart" || !pin.metadata) return null;
 

@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ClipboardList, Loader2, Plus } from "lucide-react";
+import { ClipboardList, Loader2, Plus, Trash2 } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useSession } from "@/hooks/use-session";
 import {
+  deleteAllRoutineRuns,
   fetchRoutine,
   listMyRoutineSchedules,
   listRoutineRuns,
@@ -15,6 +16,7 @@ import {
   runRoutine,
 } from "@/lib/api";
 import type { Routine, RoutineRunSummary, RoutineSchedule } from "@/lib/types";
+import { instanceLabelById } from "@/lib/instance-label";
 import { RoutineCard } from "@/components/routines/routine-card";
 import { RoutineHistoryItem } from "@/components/routines/routine-history";
 import { RoutineRunProgress } from "@/components/routines/routine-run-progress";
@@ -56,13 +58,41 @@ export default function RoutinesPage() {
   const { activeConfigId, isConfigured, isDemoMode } = useOdooConfig();
   const { meData } = useSession();
 
+  const role = meData?.user?.role;
+  const isBuilder = role === "ADMIN" || role === "SUPERADMIN";
+
   /**
-   * ¿Puede escribir Rutinas? **No hay gate de rol** — cualquiera de la organización,
-   * `CLIENT_USER` incluido (D3). Lo único que hace falta es una org: una Rutina de
-   * usuario siempre pertenece a una ([D6]), y en demo se guardaría contra una org que el
-   * visitante no tiene.
+   * Las instancias entre las que un implementador puede elegir al ejecutar.
+   *
+   * ⚠️ Sólo las que tienen la Conexión del llamador en `active`: una Rutina corre con SUS
+   * credenciales (invariante #3), así que ofrecer una instancia donde todavía no cargó su
+   * API key es ofrecer una corrida que va a fallar recién después del spinner.
+   *
+   * Para un `CLIENT_USER` la lista queda vacía a propósito: tiene una sola instancia y el
+   * paso de elegir no existe para él.
    */
-  const canAuthor = !!meData?.org?.id && !isDemoMode;
+  const selectableInstances = useMemo(
+    () =>
+      isBuilder && !isDemoMode
+        ? (meData?.odoo_configs ?? []).filter((c) => c.connection_status === "active")
+        : [],
+    [isBuilder, isDemoMode, meData?.odoo_configs]
+  );
+
+  /**
+   * ¿Puede escribir Rutinas?
+   *
+   * ⚠️ **Desde 2026-08-12 hace falta permiso**, otorgado por el ADMIN por usuario y
+   * apagado por defecto. Antes bastaba con tener org (D3: "crear puede cualquiera de la
+   * organización"); ese default le ponía al cliente final una herramienta de
+   * implementador delante sin que nadie lo decidiera.
+   *
+   * Se lee el valor YA RESUELTO por el backend (`routines.can_author`), que contempla al
+   * implementador por rol. Recalcularlo acá es cómo aparece un botón que el backend
+   * contesta con 403. Sigue haciendo falta una org (D6) y no valer en demo, donde se
+   * guardaría contra una org que el visitante no tiene.
+   */
+  const canAuthor = !!meData?.org?.id && !isDemoMode && !!meData?.routines?.can_author;
 
   /**
    * ¿Puede agendar? Hace falta una instancia propia: un agendado corre con las
@@ -85,6 +115,9 @@ export default function RoutinesPage() {
   /** La Rutina en curso, CON sus pasos (el catálogo no los trae). */
   const [runningRoutine, setRunningRoutine] = useState<Routine | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /** "Vaciar el historial": confirmación en línea + su estado de envío. */
+  const [clearingHistory, setClearingHistory] = useState(false);
+  const [clearBusy, setClearBusy] = useState(false);
 
   const loadRuns = useCallback(() => {
     listRoutineRuns().then((res) => {
@@ -123,23 +156,59 @@ export default function RoutinesPage() {
     loadSchedules();
   }, [loadSchedules]);
 
-  const handleRun = async (routineId: string, params: Record<string, unknown> = {}) => {
-    if (!activeConfigId) return;
+  /**
+   * Dispara una corrida. `configId` es explícito y **no cae a la instancia activa por
+   * defecto**: quien llama siempre sabe contra qué instancia quiere correr — la tarjeta
+   * porque el usuario la eligió, el historial porque la corrida original la registró — y
+   * un default silencioso acá es cómo un "volver a correr" termina consultando la base
+   * de otro cliente.
+   */
+  const handleRun = async (
+    routineId: string,
+    params: Record<string, unknown> = {},
+    configId?: string | null
+  ) => {
+    const target = configId ?? activeConfigId;
+    if (!target) return;
     setStartingId(routineId);
     setError(null);
     // Los pasos localizados sólo vienen en el detalle, no en el catálogo — y sin ellos la
     // barra de progreso muestra las claves crudas y en el orden que devuelva el JSONB.
-    fetchRoutine(routineId, activeConfigId, locale).then((det) => {
+    fetchRoutine(routineId, target, locale).then((det) => {
       if (det.success && det.routine) setRunningRoutine(det.routine);
     });
-    const res = await runRoutine(routineId, activeConfigId, params, locale);
+    const res = await runRoutine(routineId, target, params, locale);
     setStartingId(null);
     if (res.success && res.runId) {
       setActiveRunId(res.runId);
       return;
     }
     // 429 = tope de corridas simultáneas (A8). Es una espera, no una falla.
-    setError(res.rateLimited ? t("tooManyRuns") : t("startFailed"));
+    if (res.rateLimited) return setError(t("tooManyRuns"));
+    // 409 = la instancia elegida no cumple el `requires`. Desde que se puede elegir
+    // instancia esto es esperable —el catálogo se filtró contra la ACTIVA— y el mensaje
+    // tiene que nombrarla, si no el usuario no sabe cuál cambiar.
+    if (res.notAvailable) {
+      return setError(
+        t("notAvailableOnInstance", {
+          instance: instanceLabelById(meData?.odoo_configs, target) ?? "",
+        })
+      );
+    }
+    setError(t("startFailed"));
+  };
+
+  const handleClearHistory = async () => {
+    setClearBusy(true);
+    setError(null);
+    const res = await deleteAllRoutineRuns();
+    setClearBusy(false);
+    setClearingHistory(false);
+    if (res.success) {
+      setRuns([]);
+      return;
+    }
+    setError(t("clearHistoryFailed"));
   };
 
   const handleFinished = () => {
@@ -242,9 +311,10 @@ export default function RoutinesPage() {
                         routine={routine}
                         running={startingId === routine.id}
                         disabled={!isConfigured || activeRunId !== null}
-                        onRun={(params) => handleRun(routine.id, params)}
+                        onRun={(params, configId) => handleRun(routine.id, params, configId)}
                         onChanged={canAuthor ? loadCatalog : undefined}
                         configId={activeConfigId}
+                        instances={selectableInstances}
                         onScheduled={canSchedule ? () => loadSchedules() : undefined}
                       />
                     ))}
@@ -278,27 +348,77 @@ export default function RoutinesPage() {
           onChanged={loadSchedules}
         />
 
-        {/* Historial */}
+        {/* Historial. ⚠️ **La sección entera desaparece cuando no hay corridas** — antes
+            quedaba el título "Historial" sobre una tarjeta que decía "todavía no
+            corriste ninguna Rutina", o sea dos elementos de interfaz para comunicar
+            que no hay nada. En una pantalla cuyo problema declarado es el exceso de
+            información, el estado vacío más honesto es no ocupar lugar. */}
+        {runs.length > 0 && (
         <section>
-          <h2 className="mb-3 text-subheading">{t("history")}</h2>
-          {runs.length === 0 ? (
-            <p className="rounded-card border border-border bg-surface p-4 text-small text-text-muted">
-              {t("emptyHistory")}
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {runs.map((run) => (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-subheading">{t("history")}</h2>
+            {/* "Vaciar el historial" sólo aparece cuando hay algo que vaciar, y pide
+                confirmación en línea. Es irreversible: borra las corridas y sus
+                checkpoints, aunque NO los pins que las Rutinas hayan dejado en el
+                Tablero (viven por Rutina, no por corrida). */}
+            {clearingHistory ? (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-small text-text-muted">{t("clearHistoryConfirm")}</span>
+                  <button
+                    type="button"
+                    onClick={handleClearHistory}
+                    disabled={clearBusy}
+                    className="flex h-btn-sm items-center rounded-btn border border-error/40 px-2.5 text-small text-error transition-colors hover:bg-error-subtle disabled:opacity-50"
+                  >
+                    {clearBusy ? (
+                      <Loader2 size={15} strokeWidth={1.5} className="animate-spin" />
+                    ) : (
+                      t("confirmYes")
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setClearingHistory(false)}
+                    disabled={clearBusy}
+                    className="flex h-btn-sm items-center rounded-btn border border-border px-2.5 text-small transition-colors hover:bg-raised disabled:opacity-50"
+                  >
+                    {t("confirmNo")}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setClearingHistory(true)}
+                  /* `text-text-secondary` y no `text-text-muted`: en muted se leía como
+                   deshabilitado, y un botón que parece apagado o no se toca o se toca
+                   dos veces. Sigue siendo de baja jerarquía —es destructivo— y recién
+                   en hover se pone rojo. */
+                className="flex h-btn-sm items-center gap-1.5 rounded-btn border border-border px-3 text-small text-text-secondary transition-colors hover:bg-raised hover:text-error"
+                >
+                <Trash2 size={16} strokeWidth={1.5} aria-hidden />
+                {t("clearHistory")}
+              </button>
+            )}
+          </div>
+          <div className="space-y-3">
+            {runs.map((run) => (
                 <RoutineHistoryItem
                   key={run.id}
                   run={run}
                   routine={routineById.get(run.routine_id)}
+                  instanceName={
+                    isBuilder ? instanceLabelById(meData?.odoo_configs, run.config_id) : null
+                  }
                   rerunning={startingId === run.routine_id}
-                  onRerun={() => handleRun(run.routine_id)}
+                  onRerun={() => handleRun(run.routine_id, {}, run.config_id)}
+                  onDeleted={() =>
+                    setRuns((prev) => prev.filter((r) => r.id !== run.id))
+                  }
                 />
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
         </section>
+        )}
       </div>
     </div>
   );

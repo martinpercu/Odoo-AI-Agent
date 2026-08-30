@@ -524,6 +524,21 @@ function UsersSection() {
     }
   }
 
+  /** El permiso de escribir Rutinas. Sin cupo detrás: no puede fallar por límite. */
+  async function handleAuthorToggle(userId: string, value: boolean) {
+    if (!orgId) return;
+    setVoiceToggleError(null);
+    const result = await updateOrgUser(orgId, userId, { can_author_routines: value });
+    if (result.success) {
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, can_author_routines: value } : u))
+      );
+    } else {
+      setVoiceToggleError(result.error ?? t("admin.routineAuthorError"));
+      setTimeout(() => setVoiceToggleError(null), 6000);
+    }
+  }
+
   async function handleRemove(userId: string) {
     if (!orgId) return;
     await removeOrgUser(orgId, userId);
@@ -692,6 +707,27 @@ function UsersSection() {
                       title={t("admin.toggleTts")}
                     >
                       {t("admin.tts")}
+                    </button>
+                  )}
+
+                  {/* Rutinas — permiso de AUTORÍA (2026-08-12).
+                      ⚠️ No tiene cupo de org detrás, a diferencia de STT/TTS: no consume
+                      nada, es una atribución. Por eso no se gatea en un
+                      `featureAvailable` ni puede devolver un "límite alcanzado".
+                      ⚠️ Sólo se muestra para CLIENT_USER: un ADMIN puede por rol y el
+                      toggle no haría nada — un control que no cambia nada enseña a
+                      desconfiar de los que sí. */}
+                  {user.role === "CLIENT_USER" && (
+                    <button
+                      onClick={() => handleAuthorToggle(user.id, !user.can_author_routines)}
+                      className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
+                        user.can_author_routines
+                          ? "bg-accent-subtle text-accent"
+                          : "bg-raised text-text-secondary"
+                      }`}
+                      title={t("admin.toggleRoutineAuthor")}
+                    >
+                      {t("admin.routineAuthor")}
                     </button>
                   )}
 
@@ -1438,7 +1474,7 @@ export default function SettingsPage() {
             {/* ---- TAB: Rutinas (Fase 3 · F4) ---- */}
             {activeTab === "routines" && isAdmin && hasOrg && (
               <CollapsibleCard
-                icon={<ClipboardList size={18} strokeWidth={1.5} />}
+                icon={<ClipboardList size={20} strokeWidth={1.5} className="text-accent" />}
                 title={t("routines.title")}
                 subheader={
                   <p className="text-small text-text-muted">{t("routines.subtitle")}</p>

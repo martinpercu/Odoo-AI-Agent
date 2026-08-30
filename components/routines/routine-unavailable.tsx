@@ -4,6 +4,7 @@ import { Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import type { Routine } from "@/lib/types";
+import { RoutineIcon } from "@/components/routines/routine-icon";
 
 /**
  * Una Rutina que ESTA instancia no puede correr (PLAN_RUTINAS Fase 2, F1).
@@ -23,9 +24,7 @@ export function RoutineUnavailableCard({ routine }: { routine: Routine }) {
   return (
     <div className="rounded-card border border-dashed border-border bg-surface/50 p-5">
       <div className="flex items-start gap-3">
-        <span className="shrink-0 text-[22px] leading-none opacity-40" aria-hidden>
-          {routine.icon || "📋"}
-        </span>
+        <RoutineIcon name={routine.icon} className="shrink-0 opacity-40 text-text-muted" />
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-subheading text-text-muted">{routine.name}</h3>
           <p className="mt-1 text-small text-text-muted">{routine.description}</p>

@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Info, Loader2 } from "lucide-react";
 
 import { fetchRoutineGrants, setRoutineGrant } from "@/lib/api";
+import { RoutineIcon } from "@/components/routines/routine-icon";
 import type { RoutineGrant, RoutineGrantsMatrix } from "@/lib/types";
 
 /**
@@ -20,6 +21,13 @@ import type { RoutineGrant, RoutineGrantsMatrix } from "@/lib/types";
  *
  * Sin el estado "heredado" el admin no puede deshacer una decisión: sólo puede cambiarla
  * por la contraria. Por eso cada celda es un selector de tres, no un toggle.
+ *
+ * ⚠️ **"Heredado" cambió de significado el 2026-08-12 y la pantalla tiene que decirlo.**
+ * Antes resolvía a *visible* (el `scope` alcanzaba); ahora resuelve a *visible para los
+ * implementadores, **invisible para los clientes***. El estado se ve idéntico y significa
+ * lo contrario para la mitad de la gente de la org, así que sin el cartel el admin lee
+ * "Por defecto" y da por hecho que su cliente la está viendo. Es el mismo modo de falla
+ * que `users_ok` vino a cerrar: dos situaciones opuestas que se dibujan igual.
  *
  * ⭐ **El default de la org es la primera columna**, y es la que se usa el 90% de las
  * veces: *"esta Rutina la ve todo el mundo / nadie"*. Las columnas por usuario son la
@@ -100,6 +108,13 @@ export function RoutineGrantsMatrixPanel({ orgId }: { orgId: string }) {
         {t("dataNotice")}
       </p>
 
+      {/* Qué significa hoy "Por defecto". Va arriba de la matriz y no en un tooltip:
+          es la premisa para leer TODA la pantalla, no una aclaración de una celda. */}
+      <p className="flex items-start gap-2 rounded-card border border-border bg-surface p-3 text-small text-text-muted">
+        <Info size={15} strokeWidth={1.5} className="mt-0.5 shrink-0 text-warning-solid" />
+        {t("inheritMeaning")}
+      </p>
+
       {error && (
         <p className="text-small text-error" role="alert">
           {error}
@@ -115,9 +130,7 @@ export function RoutineGrantsMatrixPanel({ orgId }: { orgId: string }) {
           {grantable.map((routine) => (
             <div key={routine.id} className="rounded-card border border-border bg-surface p-4">
               <div className="flex items-start gap-2">
-                <span className="text-[18px] leading-none" aria-hidden>
-                  {routine.icon || "📋"}
-                </span>
+                <RoutineIcon name={routine.icon} size={18} className="shrink-0 text-text-muted" />
                 <div className="min-w-0 flex-1">
                   <h4 className="truncate text-small font-medium">{routine.name}</h4>
                   <p className="text-micro text-text-muted">
@@ -170,8 +183,9 @@ export function RoutineGrantsMatrixPanel({ orgId }: { orgId: string }) {
             {matrix.routines
               .filter((r) => !r.grantable)
               .map((r) => (
-                <li key={r.id} className="text-small text-text-muted">
-                  {r.icon || "📋"} {r.name}
+                <li key={r.id} className="flex items-center gap-1.5 text-small text-text-muted">
+                  <RoutineIcon name={r.icon} size={14} className="shrink-0" />
+                  {r.name}
                 </li>
               ))}
           </ul>

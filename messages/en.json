@@ -24,7 +24,10 @@
     "deleteChat": "Delete conversation",
     "confirmDeleteChat": "Delete?",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "instanceBadge": "Instance",
+    "otherInstances": "{count, plural, one {# chat in another instance} other {# chats in other instances}}",
+    "onlyActiveInstance": "Show only the active instance"
   },
   "UserMenu": {
     "guest": "Guest",
@@ -403,7 +406,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "STT quota limit reached — contact your provider",
       "ttsLimitReached": "TTS quota limit reached — contact your provider",
-      "voiceToggleError": "Couldn't update the voice preference"
+      "voiceToggleError": "Couldn't update the voice preference",
+      "routineAuthor": "Authors Routines",
+      "toggleRoutineAuthor": "Allow this person to create and edit Routines",
+      "routineAuthorError": "Could not update the Routines permission"
     },
     "credentials": {
       "sectionTitle": "My Odoo Credentials",
@@ -1587,14 +1593,12 @@
     "history": "History",
     "run": "Run",
     "rerun": "Run again",
-    "regenerate": "Regenerate",
     "download": "Download",
     "running": "Running…",
     "progress": "{done} of {total} steps",
     "stepCount": "{count, plural, one {# step} other {# steps}}",
     "partialNote": "Some steps could not be completed. The report was generated anyway, with those sections noted.",
     "emptyCatalog": "No routines are available for this instance.",
-    "emptyHistory": "You haven't run any routine yet.",
     "noInstance": "Connect an Odoo instance to run routines.",
     "startFailed": "The routine could not be started.",
     "tooManyRuns": "Too many routines are running right now. Try again in a few seconds.",
@@ -1639,14 +1643,17 @@
       "anio_pasado": "Last year",
       "ultimos_30_dias": "Last 30 days",
       "ultimos_60_dias": "Last 60 days",
-      "ultimos_90_dias": "Last 90 days"
+      "ultimos_90_dias": "Last 90 days",
+      "absolute": "A specific period…",
+      "rolling": "Last N days…"
     },
     "compare": {
       "periodo_anterior": "The previous period",
       "mismo_periodo_anio_anterior": "The same period last year",
       "mismo_periodo_hace_2_anos": "The same period 2 years ago",
       "mismo_periodo_hace_3_anos": "The same period 3 years ago",
-      "ninguno": "No comparison"
+      "ninguno": "No comparison",
+      "absolute": "A specific period…"
     },
     "createNew": "New Routine",
     "group": {
@@ -1747,7 +1754,8 @@
         "org": "Shared with the organization",
         "private": "Private"
       },
-      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete."
+      "usersFailed": "We couldn't load the organization's users. What you see below may be incomplete.",
+      "inheritMeaning": "“Default” now means: visible to your organization's administrators, and hidden from clients. To let a client see a Routine, set it to “Yes” in their row."
     },
     "cancel": "Cancel",
     "schedule": "Schedule",
@@ -1792,7 +1800,32 @@
     "scheduleWhenMonthly": "Day {day} of every month at {hour}",
     "backToRoutines": "Back to Routines",
     "runNotFoundTitle": "We couldn't find this run",
-    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results."
+    "runNotFoundBody": "It may have been deleted, or it may belong to someone else: every run executes with the credentials of whoever asked for it, and only that person sees its results.",
+    "periodPicker": {
+      "unit": "Unit",
+      "month": "Month",
+      "quarter": "Quarter",
+      "year": "Year",
+      "days": "days"
+    },
+    "rerunUnavailable": "This Routine is no longer available.",
+    "deletedRoutine": "Deleted Routine",
+    "deleteRun": "Delete from history",
+    "deleteRunConfirm": "Delete?",
+    "deleteRunFailed": "Could not delete the run.",
+    "clearHistory": "Clear history",
+    "clearHistoryConfirm": "Delete everything?",
+    "clearHistoryFailed": "Could not clear the history.",
+    "confirmYes": "Yes",
+    "confirmNo": "No",
+    "runOn": "Run on",
+    "rerunOn": "Run again on {instance}",
+    "notAvailableOnInstance": "This Routine isn't available on {instance}.",
+    "runConfirm": {
+      "title": "Run against the instance",
+      "otherInstance": "Another instance",
+      "confirm": "Confirm"
+    }
   },
   "Chat": {
     "openInOdoo": "Open in Odoo"

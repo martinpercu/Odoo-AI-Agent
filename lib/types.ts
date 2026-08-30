@@ -259,6 +259,14 @@ export interface Chat {
   id: string;
   /** DB conversation ID — needed for DELETE and other endpoints that use the real DB id, not thread_id */
   conversationId?: string;
+  /**
+   * La instancia Odoo contra la que se habló este chat, estampada por el backend en el
+   * primer mensaje. Abrir el chat SELECCIONA esta instancia (ver `AppShell`), así que el
+   * cartel del sidebar y el `config_id` del stream siempre coinciden con lo que se está
+   * leyendo. ⚠️ `null`/`undefined` es "no sabemos" (chats anteriores al estampado, o demo),
+   * NO "ninguna": esos no cambian la instancia activa y se listan siempre.
+   */
+  configId?: string | null;
   title: string;
   messages: Message[];
   createdAt: Date;
@@ -515,6 +523,13 @@ export interface MeUser {
    * resolved value from `MeResponse.timezone`, not from here.
    */
   timezone?: string | null;
+  /**
+   * RAW admin-granted flag: may this user WRITE Routines? Same shape as
+   * `stt_enabled`/`tts_enabled` — gate the UI on the RESOLVED
+   * `MeResponse.routines.can_author`, which also covers the implementer's
+   * role-based access. This one is only for rendering the admin's own toggle.
+   */
+  can_author_routines?: boolean;
 }
 
 /**
@@ -604,6 +619,11 @@ export interface OdooConfigSummary {
   is_active: boolean;
   has_credentials?: boolean;
   // Instance metadata captured on validation (spec §2.1/§2.3).
+  /** User-facing name chosen by the implementer (P2.1). The backend has always sent
+   *  it in `/me`; it was missing from this type, so every screen fell through to
+   *  `company_name`. Read it via `instanceLabel()` (`lib/instance-label.ts`), never
+   *  directly — that helper owns the one precedence shared with the backend. */
+  display_name?: string | null;
   company_name?: string | null;
   odoo_version?: string | null;
   // Status of the *caller's own* Connection on this instance (null = no Connection).
@@ -712,6 +732,32 @@ export interface MeResponse {
    * Gate scheduling UI on this, never on `user.timezone` (which can be null).
    */
   timezone?: string;
+  /** Routine access, resolved server-side. See {@link RoutinesAccess}. */
+  routines?: RoutinesAccess;
+}
+
+/**
+ * What the caller can do with Routines — **two independent axes**, both decided
+ * by the backend (2026-08-12).
+ *
+ * ⚠️ Do NOT re-derive either one in TypeScript. `can_author` folds the role in
+ * with the admin-granted flag, and `visible_count` runs the same
+ * `resolve_visibility` the catalog runs (grants, scope, ownership). A second
+ * implementation here is how the UI ends up offering a button the backend
+ * answers with a 403, or hiding a section that does have content.
+ *
+ * `visible_count` exists so the nav can gate on it WITHOUT calling
+ * `GET /routines` — that endpoint can trigger a usage measurement against the
+ * client's own Odoo instance, and paying an ERP round-trip to decide whether to
+ * draw a sidebar link is not a trade we make.
+ *
+ * `null` means "couldn't count" (a DB hiccup), NOT "zero". Treat it as
+ * "show it" — hiding the section on an error would strand someone who does have
+ * Routines. Same fail-open doctrine the catalog applies to grants.
+ */
+export interface RoutinesAccess {
+  can_author: boolean;
+  visible_count: number | null;
 }
 
 // ---- Billing state (Fase 0 — Founding Partners, spec §5/§6) ----
@@ -754,6 +800,8 @@ export interface ServerConversation {
   thread_id: string;
   title: string | null;
   last_message_at: string;
+  /** Instancia del chat. `null` = no se pudo determinar (chat viejo o demo) — se lista igual. */
+  odoo_config_id?: string | null;
 }
 
 export interface OdooConfigItem {
@@ -773,6 +821,8 @@ export interface OrgUser {
   created_at: string;
   stt_enabled?: boolean;
   tts_enabled?: boolean;
+  /** May this user WRITE Routines? Admin-granted, defaults to false. */
+  can_author_routines?: boolean;
 }
 
 export interface Invitation {
@@ -1021,6 +1071,9 @@ export interface Routine {
   version: number;
   scope: RoutineScope;
   audience: "builder" | "client";
+  /** Nombre de un componente Lucide (ej. "TrendingUp"). Free-text: puede traer el
+   *  emoji viejo de una Rutina de usuario ya guardada — resolver siempre vía
+   *  `RoutineIcon` (components/routines/routine-icon.tsx), nunca renderizar crudo. */
   icon: string;
   name: string;
   description: string;
@@ -1191,6 +1244,14 @@ export interface RoutineResultEntry {
   reason: string | null;
   /** La frase de negocio ya armada por el backend (B7). El front NO la reescribe. */
   narrative?: string;
+  /**
+   * ⚠️ **`note` no es `reason`.** `reason` explica por qué NO hay número; `note`
+   * acompaña a uno bien calculado que se puede leer mal — hoy el único caso es
+   * comparar dos períodos de largo distinto, posible desde que los dos se eligen
+   * por separado. Lo decide el backend (`params.comparison_mismatch`); el front lo
+   * muestra y **no** recalcula la regla.
+   */
+  note?: string | null;
   duration_ms?: number;
 }
 

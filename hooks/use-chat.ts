@@ -64,6 +64,19 @@ function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * ¿Quedan más conversaciones después de esta página?
+ *
+ * Se decide con el TOTAL que manda el backend, no con el tamaño de la página: `count` es
+ * cuántas vinieron (nunca más que el `limit`), así que compararlo contra el limit daba
+ * siempre `false` y el botón "cargar más" no aparecía nunca. Sin `total` (backend viejo)
+ * queda la única pista disponible: una página llena sugiere que hay más.
+ */
+function hasMoreAfter(total: number | undefined, pageSize: number, offset: number): boolean {
+  const seen = offset + pageSize;
+  return total != null ? total > seen : pageSize === 50;
+}
+
 export function useChat(chatId?: string, userId?: string) {
   const chatsRef = useRef<Chat[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
@@ -86,6 +99,11 @@ export function useChat(chatId?: string, userId?: string) {
   const [serverOffset, setServerOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [traceEntries, setTraceEntries] = useState<TraceEntry[]>([]);
+  // Historial filtrado por instancia: cuántos chats quedaron afuera y si el usuario
+  // pidió verlos igual. `showAllInstances` NO se persiste — es una mirada puntual
+  // ("¿dónde había quedado eso del otro cliente?"), no un modo en el que se trabaja.
+  const [otherInstancesCount, setOtherInstancesCount] = useState(0);
+  const [showAllInstances, setShowAllInstances] = useState(false);
 
   const currentChat =
     chats.find((c) => c.id === currentChatId) ??
@@ -110,10 +128,19 @@ export function useChat(chatId?: string, userId?: string) {
     });
   }, []);
 
-  // Display list: server list merged with any optimistic local-only chats
+  // Display list: server list merged with any optimistic local-only chats.
+  //
+  // ⚠️ La lista del server ya viene filtrada por instancia, pero la optimista no la toca
+  // nadie: sin este filtro, un chat empezado en esta sesión seguía visible después de
+  // cambiar de instancia — el único de la lista que no pertenecía a la instancia que dice
+  // el cartel, que es exactamente lo que este cambio viene a evitar. Se compara contra el
+  // `configId` que se le estampa al crearlo (ver `createChat`); sin instancia conocida, o
+  // en demo, no se esconde nada.
   const displayChats = (() => {
     const serverIds = new Set(serverChats.map((c) => c.id));
-    const optimistic = chats.filter((c) => !serverIds.has(c.id));
+    const belongsHere = (c: Chat) =>
+      showAllInstances || !c.configId || !activeConfigId || c.configId === activeConfigId;
+    const optimistic = chats.filter((c) => !serverIds.has(c.id) && belongsHere(c));
     return [...optimistic, ...serverChats];
   })();
   const chatGroups = groupChatsByDate(displayChats);
@@ -135,8 +162,11 @@ export function useChat(chatId?: string, userId?: string) {
 
   const loadServerConversations = useCallback(async (offset: number) => {
     if (!IS_AUTH_ENABLED || !userId) return;
-    const result = await fetchMyConversations(50, offset);
+    // Sin filtro cuando el usuario pidió ver todo. El backend ignora "demo" solo.
+    const filterConfigId = showAllInstances ? null : activeConfigId;
+    const result = await fetchMyConversations(50, offset, filterConfigId);
     if (!result.success || !result.conversations) return;
+    setOtherInstancesCount(result.otherCount ?? 0);
     const loaded: Chat[] = result.conversations.map((c) => {
       // thread_id is "{org_id}:{localId}" — use only the localId part as the
       // navigation id so URLs stay clean (no encoded colons).
@@ -145,6 +175,7 @@ export function useChat(chatId?: string, userId?: string) {
       return {
         id: navId,
         conversationId: c.id,
+        configId: c.odoo_config_id ?? null,
         title: c.title ?? "",
         messages: [],
         createdAt: new Date(c.last_message_at),
@@ -166,12 +197,13 @@ export function useChat(chatId?: string, userId?: string) {
         return prev.filter((c) => !serverIds.has(c.id));
       });
       setServerChats(merged);
-      setHasMore((result.count ?? 0) > 50);
+      setServerOffset(0);
+      setHasMore(hasMoreAfter(result.total, loaded.length, 0));
       return;
     }
     setServerChats((prev) => [...prev, ...loaded]);
-    setHasMore((result.count ?? 0) > offset + 50);
-  }, [userId]);
+    setHasMore(hasMoreAfter(result.total, loaded.length, offset));
+  }, [userId, activeConfigId, showAllInstances]);
 
   const loadMoreConversations = useCallback(() => {
     const next = serverOffset + 50;
@@ -185,6 +217,9 @@ export function useChat(chatId?: string, userId?: string) {
       const title = firstMessage.length > 50 ? firstMessage.slice(0, 47) + "..." : firstMessage;
       const newChat: Chat = {
         id,
+        // La misma instancia que va a viajar en el stream. Se estampa acá para que el chat
+        // ya pertenezca a algo mientras el backend todavía no lo devolvió en la lista.
+        configId: activeConfigId,
         title,
         messages: [],
         createdAt: new Date(),
@@ -194,7 +229,7 @@ export function useChat(chatId?: string, userId?: string) {
       setCurrentChatId(id);
       return id;
     },
-    []
+    [activeConfigId]
   );
 
   const sendMessage = useCallback(
@@ -744,10 +779,14 @@ export function useChat(chatId?: string, userId?: string) {
     setCurrentChatId(undefined);
     setHasMore(false);
     setServerOffset(0);
+    setOtherInstancesCount(0);
+    setShowAllInstances(false);
   }, []);
 
   return {
     chats,
+    /** Lista mostrada: los del server + los optimistas que todavía no volvieron de él. */
+    displayChats,
     chatGroups,
     currentChat,
     currentChatId,
@@ -762,6 +801,10 @@ export function useChat(chatId?: string, userId?: string) {
     loadServerConversations,
     loadMoreConversations,
     hasMore,
+    /** Chats del usuario en OTRAS instancias, escondidos por el filtro (0 = no hay nada que ofrecer). */
+    otherInstancesCount,
+    showAllInstances,
+    setShowAllInstances,
     deleteChat,
     clearChats,
     traceEntries,

@@ -24,7 +24,10 @@
     "deleteChat": "Elimina conversazione",
     "confirmDeleteChat": "Eliminare?",
     "yes": "Sì",
-    "no": "No"
+    "no": "No",
+    "instanceBadge": "Istanza",
+    "otherInstances": "{count, plural, one {# chat in un'altra istanza} other {# chat in altre istanze}}",
+    "onlyActiveInstance": "Mostra solo l'istanza attiva"
   },
   "UserMenu": {
     "guest": "Ospite",
@@ -403,7 +406,10 @@
       "ttsWidget": "TTS",
       "sttLimitReached": "Limite quota STT raggiunto — contatta il tuo fornitore",
       "ttsLimitReached": "Limite quota TTS raggiunto — contatta il tuo fornitore",
-      "voiceToggleError": "Impossibile aggiornare la preferenza vocale"
+      "voiceToggleError": "Impossibile aggiornare la preferenza vocale",
+      "routineAuthor": "Crea Routine",
+      "toggleRoutineAuthor": "Consentire a questa persona di creare e modificare Routine",
+      "routineAuthorError": "Non è stato possibile aggiornare l'autorizzazione Routine"
     },
     "credentials": {
       "sectionTitle": "Le mie credenziali Odoo",
@@ -1587,14 +1593,12 @@
     "history": "Cronologia",
     "run": "Esegui",
     "rerun": "Esegui di nuovo",
-    "regenerate": "Rigenera",
     "download": "Scarica",
     "running": "In esecuzione…",
     "progress": "{done} di {total} passi",
     "stepCount": "{count, plural, one {# passaggio} other {# passaggi}}",
     "partialNote": "Alcuni passi non sono stati completati. Il report è stato generato comunque, con quelle sezioni annotate.",
     "emptyCatalog": "Nessuna routine disponibile per questa istanza.",
-    "emptyHistory": "Non hai ancora eseguito nessuna routine.",
     "noInstance": "Collega un'istanza Odoo per eseguire le routine.",
     "startFailed": "Impossibile avviare la routine.",
     "tooManyRuns": "Ci sono troppe routine in esecuzione. Riprova tra qualche secondo.",
@@ -1639,14 +1643,17 @@
       "anio_pasado": "L'anno scorso",
       "ultimos_30_dias": "Ultimi 30 giorni",
       "ultimos_60_dias": "Ultimi 60 giorni",
-      "ultimos_90_dias": "Ultimi 90 giorni"
+      "ultimos_90_dias": "Ultimi 90 giorni",
+      "absolute": "Un periodo specifico…",
+      "rolling": "Ultimi N giorni…"
     },
     "compare": {
       "periodo_anterior": "Il periodo precedente",
       "mismo_periodo_anio_anterior": "Lo stesso periodo dell'anno scorso",
       "mismo_periodo_hace_2_anos": "Lo stesso periodo 2 anni fa",
       "mismo_periodo_hace_3_anos": "Lo stesso periodo 3 anni fa",
-      "ninguno": "Senza confronto"
+      "ninguno": "Senza confronto",
+      "absolute": "Un periodo specifico…"
     },
     "createNew": "Nuova Routine",
     "group": {
@@ -1747,7 +1754,8 @@
         "org": "Condivisa con l'organizzazione",
         "private": "Privata"
       },
-      "usersFailed": "Non siamo riusciti a caricare gli utenti dell'organizzazione. Quanto vedi sotto può essere incompleto."
+      "usersFailed": "Non siamo riusciti a caricare gli utenti dell'organizzazione. Quanto vedi sotto può essere incompleto.",
+      "inheritMeaning": "«Predefinito» ora significa: visibile agli amministratori della tua organizzazione e invisibile ai clienti. Perché un cliente veda una Routine, imposta «Sì» nella sua riga."
     },
     "cancel": "Annulla",
     "schedule": "Programma",
@@ -1792,7 +1800,32 @@
     "scheduleWhenMonthly": "Il {day} di ogni mese alle {hour}",
     "backToRoutines": "Torna alle Routine",
     "runNotFoundTitle": "Non troviamo questa esecuzione",
-    "runNotFoundBody": "Potrebbe essere stata eliminata, oppure appartiene a un'altra persona: ogni esecuzione usa le credenziali di chi l'ha richiesta, e solo quella persona ne vede i risultati."
+    "runNotFoundBody": "Potrebbe essere stata eliminata, oppure appartiene a un'altra persona: ogni esecuzione usa le credenziali di chi l'ha richiesta, e solo quella persona ne vede i risultati.",
+    "periodPicker": {
+      "unit": "Unità",
+      "month": "Mese",
+      "quarter": "Trimestre",
+      "year": "Anno",
+      "days": "giorni"
+    },
+    "rerunUnavailable": "Questa Routine non è più disponibile.",
+    "deletedRoutine": "Routine eliminata",
+    "deleteRun": "Elimina dalla cronologia",
+    "deleteRunConfirm": "Eliminare?",
+    "deleteRunFailed": "Non è stato possibile eliminare l'esecuzione.",
+    "clearHistory": "Svuota cronologia",
+    "clearHistoryConfirm": "Eliminare tutto?",
+    "clearHistoryFailed": "Non è stato possibile svuotare la cronologia.",
+    "confirmYes": "Sì",
+    "confirmNo": "No",
+    "runOn": "Esegui su",
+    "rerunOn": "Esegui di nuovo su {instance}",
+    "notAvailableOnInstance": "Questa Routine non è disponibile su {instance}.",
+    "runConfirm": {
+      "title": "Esegui sull'istanza",
+      "otherInstance": "Un'altra istanza",
+      "confirm": "Conferma"
+    }
   },
   "Chat": {
     "openInOdoo": "Apri in Odoo"

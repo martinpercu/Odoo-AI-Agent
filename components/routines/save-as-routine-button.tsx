@@ -21,9 +21,14 @@ import { useSession } from "@/hooks/use-session";
  *  - **sin organización**, porque una Rutina de usuario siempre pertenece a una org
  *    ([D6](../../PLAN_RUTINAS/DECISIONES.md#d6)).
  *
- * ⚠️ **No hay gate de rol.** Crear puede cualquiera de la organización, `CLIENT_USER`
- * incluido ([D3](../../PLAN_RUTINAS/DECISIONES.md#d3--catálogo-autoría-y-permisos)) —
- * es la mitad de esa decisión que se olvida siempre.
+ * ⚠️ **Hace falta permiso de autoría** (2026-08-12). D3 decía "crear puede cualquiera de
+ * la organización, `CLIENT_USER` incluido"; en la práctica eso le ponía al cliente final
+ * una herramienta de implementador delante del chat sin que su implementador lo hubiera
+ * decidido. Ahora el ADMIN lo otorga por usuario y nace apagado.
+ *
+ * ⚠️ Se gatea en `meData.routines.can_author` —el valor YA RESUELTO por el backend—, no
+ * en `user.can_author_routines`: ese es el flag crudo del cliente y no contempla que el
+ * implementador puede por rol. Con el crudo, un ADMIN perdería su propio botón.
  */
 export function SaveAsRoutineButton({
   chatId,
@@ -38,6 +43,7 @@ export function SaveAsRoutineButton({
   const { meData } = useSession();
 
   if (!hasMessages || isDemoMode || !meData?.org?.id) return null;
+  if (!meData?.routines?.can_author) return null;
 
   return (
     <>

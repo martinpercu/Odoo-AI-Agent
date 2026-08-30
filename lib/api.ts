@@ -155,24 +155,42 @@ export async function fetchMe(): Promise<FetchMeResult> {
 export interface FetchConversationsResult {
   success: boolean;
   conversations?: ServerConversation[];
+  /** Cuántas vinieron en ESTA página (no el total). */
   count?: number;
+  /** Cuántas matchean el filtro en total — de acá sale si hay más páginas. */
+  total?: number;
+  /** Cuántas quedaron afuera por ser de OTRA instancia (0 sin filtro). */
+  otherCount?: number;
   error?: string;
 }
 
+/**
+ * Historial lateral del usuario.
+ *
+ * ⚠️ **El filtro por instancia lo hace el backend**, no este cliente: la lista se pagina de
+ * a 50, así que filtrar la página ya traída deja el sidebar vacío teniendo chats (los 50 más
+ * recientes pueden ser todos de otra instancia) y rompe "cargar más". Mandar `configId` en
+ * la query es la única forma de que las 50 sean 50 útiles.
+ *
+ * `"demo"` no es un UUID: el backend lo ignora y devuelve todo, que es lo correcto.
+ */
 export async function fetchMyConversations(
   limit = 50,
-  offset = 0
+  offset = 0,
+  configId?: string | null
 ): Promise<FetchConversationsResult> {
   try {
-    const res = await authFetch(
-      `${API_BASE}/me/conversations?limit=${limit}&offset=${offset}`
-    );
+    const qs = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (configId) qs.set("config_id", configId);
+    const res = await authFetch(`${API_BASE}/me/conversations?${qs.toString()}`);
     const data = await res.json();
     if (res.ok)
       return {
         success: true,
         conversations: data.conversations ?? data,
         count: data.count,
+        total: data.total,
+        otherCount: data.other_count,
       };
     return { success: false, error: data.detail || "Failed to fetch conversations" };
   } catch (err) {
@@ -497,6 +515,9 @@ export async function updateOrgUser(
     allow_feedback?: boolean;
     stt_enabled?: boolean;
     tts_enabled?: boolean;
+    /** Routines: may this user WRITE them? No org quota behind it (unlike
+     *  STT/TTS) — it consumes nothing, it is an attribution. */
+    can_author_routines?: boolean;
   }
 ): Promise<UpdateOrgUserResult> {
   try {
@@ -2578,6 +2599,8 @@ export interface RunRoutineResult {
   runId?: string;
   /** `429` = tope de corridas simultáneas (A8). Es una espera, no una falla. */
   rateLimited?: boolean;
+  /** `409` = la instancia elegida no cumple el `requires` de la Rutina. */
+  notAvailable?: boolean;
   error?: string;
 }
 
@@ -2596,6 +2619,11 @@ export async function runRoutine(
     const data = await res.json().catch(() => ({}));
     if (res.ok) return { success: true, runId: data.run_id };
     if (res.status === 429) return { success: false, rateLimited: true, error: "too_many_runs" };
+    // 409 = la instancia no cumple el `requires` de la Rutina. Se distingue del error
+    // genérico porque desde que se puede ELEGIR instancia al ejecutar es un desenlace
+    // esperable —el catálogo se filtró contra la instancia activa, no contra la elegida—
+    // y el mensaje tiene que nombrar la instancia, no decir "no se pudo iniciar".
+    if (res.status === 409) return { success: false, notAvailable: true, error: "not_available" };
     const detail = typeof data.detail === "string" ? data.detail : data.detail?.error_code;
     return { success: false, error: detail || "Failed to start routine" };
   } catch (err) {
@@ -2635,6 +2663,51 @@ export async function listRoutineRuns(limit = 20): Promise<ListRoutineRunsResult
     const data = await res.json();
     if (res.ok) return { success: true, runs: data.runs ?? [] };
     return { success: false, error: data.detail || "Failed to fetch runs" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Borra UNA corrida del historial. El backend la scopea por org Y usuario, así
+ * que un id ajeno devuelve 404 — no confirma ni que exista.
+ *
+ * ⚠️ Es irreversible y arrastra los checkpoints de LangGraph de esa corrida. NO
+ * toca los pins que la Rutina haya publicado en el Tablero: esos viven por
+ * Rutina, no por corrida, y borrarlos acá haría que el Tablero se vacíe solo.
+ */
+export async function deleteRoutineRun(
+  runId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/runs/${runId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) return { success: true };
+    const data = await res.json().catch(() => ({}));
+    return { success: false, error: data.detail || "Failed to delete run" };
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+/**
+ * Vacía el historial del usuario. **Sólo el suyo** — no existe "borrar el de la
+ * org": una corrida se ejecutó con las credenciales de una persona, así que sus
+ * números son los que Odoo le deja ver a ella.
+ */
+export async function deleteAllRoutineRuns(): Promise<{
+  success: boolean;
+  deleted?: number;
+  error?: string;
+}> {
+  try {
+    const res = await authFetch(`${API_BASE}/routines/runs`, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { success: true, deleted: data.deleted };
+    return { success: false, error: data.detail || "Failed to clear history" };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
@@ -2844,7 +2917,7 @@ export async function createRoutine(
       name: opt.name,
       steps: opt.steps,
       description: opt.description ?? "",
-      icon: opt.icon ?? "🧭",
+      icon: opt.icon ?? "Compass",
       scope: opt.scope ?? "private",
       language: opt.language ?? "es",
       config_id: opt.configId ?? null,

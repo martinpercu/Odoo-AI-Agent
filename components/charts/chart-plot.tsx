@@ -122,9 +122,23 @@ export const PIE_MAX_SLICES = 6;
  * and pinned the truncated set. The payload always carries every group; only the
  * pie rendering folds the tail.
  *
- * Points arrive in the aggregation's own order (usually descending by value), so
- * the tail is whatever falls past the head. `meta.total` is untouched: the footer
- * keeps showing the real global total.
+ * ⚠️ Folding the tail is only defensible because the points arrive RANKED, and
+ * that is a backend guarantee, not a hope: `sort_groups_by_metric` orders the
+ * groups right after the `read_group` (odoo_executor, and pin_refresh for a
+ * refreshed pin). It is needed because `read_group` returns groups in the
+ * comodel's own `_order` — a `user_id` breakdown comes back ALPHABETICAL — and
+ * this function slices by POSITION. While that order was merely assumed, a
+ * "ventas por vendedor" with 12 sellers folded the three biggest into a 91%
+ * "Otros" slice (2026-08-10).
+ *
+ * The guarantee has three deliberate exceptions, all orders that mean something
+ * by themselves: a date groupby (chronological), a `crm.lead` stage breakdown
+ * (funnel sequence) and any `top_n` (already ranked by Odoo, possibly ASCENDING
+ * on purpose — "los que menos vendieron"). The first two never reach a pie as a
+ * ranking anyway; if a pie is ever rendered over one of them, the tail is a
+ * positional tail and not a small one — sort here before slicing.
+ *
+ * `meta.total` is untouched: the footer keeps showing the real global total.
  */
 export function collapseForPie(
   data: ChartSSEEvent["data"],
@@ -206,22 +220,36 @@ export function ChartTypeSwitcher({
  * truncating is a chart-axis concession. It always shows EVERY row — the pie's
  * "others" collapse is a pie problem, and the table is where the user goes to see
  * the tail it folded.
+ *
+ * `height` must match whatever the sibling `ChartPlot` uses in the same card
+ * (280 default in the chat card, 200 in the Tablero) — the other three view
+ * types (bar/line/pie) always render at that fixed height, so a table with its
+ * own taller cap broke height-parity between cards in the Tablero grid, and
+ * inside a single chat card switching to table view visibly shifted the bubble
+ * and moved the scroll position. Fixed height (not a max), so a short table
+ * doesn't collapse below it either — it just leaves the same blank space a
+ * sparse pie/bar chart would.
  */
 export function ChartTable({
   data,
   meta,
   compact = false,
+  height = 280,
 }: {
   data: ChartSSEEvent["data"];
   meta: ChartSSEEvent["meta"];
   /** Narrow card: drop the % column so the two columns that matter fit without
       a horizontal scroll. The share is the derived value, so it is the one to go. */
   compact?: boolean;
+  height?: number;
 }) {
   const total = data.reduce((acc, d) => acc + (d.value ?? 0), 0);
 
   return (
-    <div className="max-h-[320px] min-w-0 overflow-auto rounded-md border border-border">
+    <div
+      style={{ height }}
+      className="min-w-0 overflow-auto rounded-md border border-border"
+    >
       <table className="w-full table-fixed border-collapse text-left">
         <thead className="sticky top-0 bg-raised">
           <tr>
