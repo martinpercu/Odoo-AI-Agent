@@ -1512,5 +1512,20 @@
       "mismo_periodo_hace_3_anos": "3 વર્ષ પહેલાંનો એ જ સમયગાળો",
       "ninguno": "સરખામણી વગર"
     }
+  },
+  "Chat": {
+    "openInOdoo": "Odoo માં ખોલો"
+  },
+  "Snapshot": {
+    "title": "તમારા વ્યવસાય વિશે મને આટલું ખબર છે",
+    "hint": "આમાંથી કોઈપણ સંખ્યા વિશે મને પૂછો.",
+    "model": {
+      "resPartner": "સંપર્કો",
+      "productProduct": "ઉત્પાદનો",
+      "saleOrder": "વેચાણ",
+      "accountMove": "ઇન્વોઇસ",
+      "crmLead": "તકો",
+      "purchaseOrder": "ખરીદી"
+    }
   }
 }

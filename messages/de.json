@@ -1512,5 +1512,20 @@
       "mismo_periodo_hace_3_anos": "Derselbe Zeitraum vor 3 Jahren",
       "ninguno": "Ohne Vergleich"
     }
+  },
+  "Chat": {
+    "openInOdoo": "In Odoo öffnen"
+  },
+  "Snapshot": {
+    "title": "Das weiß ich bereits über Ihr Geschäft",
+    "hint": "Fragen Sie mich zu einer dieser Zahlen.",
+    "model": {
+      "resPartner": "Kontakte",
+      "productProduct": "Produkte",
+      "saleOrder": "Umsatz",
+      "accountMove": "Rechnungen",
+      "crmLead": "Chancen",
+      "purchaseOrder": "Einkäufe"
+    }
   }
 }
