@@ -757,11 +757,6 @@ export interface MeResponse {
   slots_used: SlotsUsed | null;
   odoo_configs: OdooConfigSummary[];
   /**
-   * @deprecated Lo reemplaza {@link MeResponse.demo_instances}. Se mantiene un release
-   * para que el front viejo no se quede sin demo entre el deploy del back y el del front.
-   */
-  demo_available?: boolean;
-  /**
    * Las instancias del parque que este usuario puede elegir (PLAN_INSTANCIAS/05).
    * Un anónimo y un CLIENT_USER reciben las públicas; un implementador recibe además
    * las de demo no públicas. **La lista no es el permiso**: quién puede usar cuál lo

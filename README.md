@@ -123,7 +123,7 @@ A modern, responsive interface that allows users to query and manage data from t
 
 **🔐 Authentication & Multi-Tenancy:**
 - Supabase email/password authentication (DEV MODE bypass when unset)
-- Demo mode: unauthenticated access when backend sets `demo_available` (banner in chat + "Try Demo" button on login)
+- Demo mode: unauthenticated access when `/me` returns a non-empty `demo_instances` (banner in chat + "Try Demo" button on login)
 - Organization management (name, slug, type)
 - Role-based access control (SuperAdmin, Admin, Client User)
 - Subscription tiers (Free, Starter, Implementor S/M/L/XL/XXL) with slot limits
@@ -502,8 +502,8 @@ A family of components introduced by the onboarding/tenant refactor:
 ```
 App loads → GET /me (no auth token)
          → redirected to /chat
-            → demo_available: false → /chat (no demo, login link visible in sidebar)
-            → demo_available: true  → /chat (Demo Mode)
+            → demo_instances empty → /chat (no demo, login link visible in sidebar)
+            → demo_instances non-empty → /chat (Demo Mode)
                                        activeConfigId = "demo"
                                        banner shown in chat
                                        "Try Demo" button on login page
@@ -649,7 +649,7 @@ When `NEXT_PUBLIC_SUPABASE_URL` is unset:
 | **Odoo Configs (Instances)** | `OdooConfigSummaryWithCreds[]` | Multiple Odoo connections per org; carry instance metadata (`company_name`, `odoo_version`) + the caller's own `connection_status`; selection driven by `connection_status === "active"`. The active one is set by the user menu **or by opening a chat** — a chat carries the instance it was born against, so continuing it can't answer from a different company's data |
 | **Odoo Connection** | `OdooConnectionStatus` = `unset` / `active` / `invalid` | Per-user, per-instance credential lifecycle (spec §4). `unset` = assigned but no valid key (blocking); `active` = validated; `invalid` = auth failed, flagged per user |
 | **Seats / Invitations** | `SeatType` (`paid`/`free`), `InvitationMode` (`invite_only`/`precreds`) | Invitations are per instance: pick a seat + whether the invitee loads their own key (invite_only) or the admin pre-loads it (precreds → active on accept) |
-| **Demo Mode** | `demo_available: boolean` | Backend flag enabling unauthenticated access; `activeConfigId = "demo"`. Authed users with no active Connection also fall back to demo (banner CTA → setup) |
+| **Demo Mode** | `demo_instances.length > 0` | The park's public demo instances (`/me`); `activeConfigId` = the chosen instance's id (the alias `"demo"` still resolves to `comercial`). Authed users with no active Connection also fall back to demo (banner CTA → setup) |
 | **Voice features** | `voice_features: { stt, tts }` on `MeResponse` | The **caller's effective** entitlement, computed server-side (per-user flag OR SUPERADMIN bypass, AND global kill switch, AND — for anonymous/demo — the backend demo flags). Gate all voice UI on this, never on the raw `stt_enabled`/`tts_enabled` admin flags. Org quotas `stt_slots_limit`/`tts_slots_limit` (-1 = unlimited, 0 = not contracted) are SUPERADMIN-managed; ADMINs grant the per-user flags within quota (409 `sttLimitReached`/`ttsLimitReached` on exhaustion). A third, independent layer is the user's own local toggle in `localStorage` |
 | **White-label branding** | `brand_name`, `brand_logo_url` (on `MeOrg`) | An uploaded org logo replaces the TheOdooAgent `Wordmark` in the sidebar header **for every role**. ADMINs upload from the Settings Org tab (`POST /admin/orgs/{id}/brand-logo`). The invite page shows the inviter's `brand_name` + instance `company_name`, so an invited end-client never sees who built the product |
 | **allow_feedback** | `boolean` (per user, on `MeUser`) | When `true`, a "Report" button appears on hover over the **last AI message** only. Users submit reports with optional category (`wrong_answer`, `crash`, `misunderstood`, `other`), comment, and expected response. Managed via PATCH `/admin/orgs/{id}/users/{id}`. |

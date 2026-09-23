@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const t = useTranslations("Auth");
   const { register, isLoading: authLoading, user } = useAuth();
   const { reload, meData } = useSession();
-  const demoAvailable = meData?.demo_available ?? false;
+  const demoAvailable = (meData?.demo_instances?.length ?? 0) > 0;
   const router = useRouter();
   const pathname = usePathname();
 
