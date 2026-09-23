@@ -16,6 +16,7 @@ import type {
 } from "@/lib/types";
 import type { TraceEntry } from "@/components/chat/langgraph-trace-panel";
 import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
+import { applyVisitorHeader } from "@/lib/demo-visitor";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useAudience } from "@/hooks/use-audience";
@@ -344,6 +345,10 @@ export function useChat(chatId?: string, userId?: string) {
         const token = await getAccessToken();
         const sseHeaders: Record<string, string> = { "Content-Type": "application/json" };
         if (token) sseHeaders["Authorization"] = `Bearer ${token}`;
+        // DI-11 — el stream es el camino por el que NACE una conversación: sin este
+        // header el backend no sabe de quién es y no la guarda, y el sidebar del
+        // visitante queda vacío aunque el resto de la identidad funcione.
+        applyVisitorHeader(sseHeaders, token);
 
         const ttsBody = ttsEnabled
           ? {

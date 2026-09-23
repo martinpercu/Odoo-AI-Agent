@@ -57,6 +57,7 @@ import type {
   ReportOfferOption,
 } from "@/lib/types";
 import { getAccessToken } from "@/lib/supabase";
+import { applyVisitorHeader } from "@/lib/demo-visitor";
 
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
@@ -91,6 +92,11 @@ export async function authFetch(
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
+
+  // DI-11 — sin sesión, la identidad efímera del visitante del demo. Va acá, en el
+  // wrapper central, para que ninguna llamada se olvide: el id es lo que hace que
+  // sus conversaciones se guarden y que el historial que lee sea el SUYO.
+  applyVisitorHeader(headers, token);
 
   const res = await fetch(url, { ...options, headers });
 
@@ -1489,6 +1495,7 @@ export async function uploadImage(
     const token = await getAccessToken();
     const headers: Record<string, string> = {};
     if (token) headers["Authorization"] = `Bearer ${token}`;
+    applyVisitorHeader(headers, token);   // DI-11 — fetch manual, mismo trato que authFetch
 
     const res = await fetch(`${API_BASE}/chat/${chatId}/upload`, {
       method: "POST",
@@ -1544,6 +1551,7 @@ export async function transcribeAudio(blob: Blob, language?: string): Promise<Tr
     const token = await getAccessToken();
     const headers: Record<string, string> = {};
     if (token) headers["Authorization"] = `Bearer ${token}`;
+    applyVisitorHeader(headers, token);   // DI-11 — fetch manual, mismo trato que authFetch
 
     const res = await fetch(`${API_BASE}/transcribe`, {
       method: "POST",
@@ -1604,6 +1612,7 @@ export async function fetchTtsPreview(text: string, voice: string, speed = 1.0):
     const token = await getAccessToken();
     const headers: Record<string, string> = {};
     if (token) headers["Authorization"] = `Bearer ${token}`;
+    applyVisitorHeader(headers, token);   // DI-11 — fetch manual, mismo trato que authFetch
 
     const res = await fetch(`${API_BASE}/voice/tts/preview`, {
       method: "POST",

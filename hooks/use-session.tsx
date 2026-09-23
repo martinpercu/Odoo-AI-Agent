@@ -9,7 +9,9 @@ import {
   ReactNode,
 } from "react";
 import type { MeResponse } from "@/lib/types";
-import { fetchMe } from "@/lib/api";
+import { fetchMe, API_BASE } from "@/lib/api";
+import { getAccessToken } from "@/lib/supabase";
+import { ensureDemoVisitor } from "@/lib/demo-visitor";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -42,6 +44,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     setIsError(false);
     try {
+      // DI-11 — sin sesión de Supabase, el visitante del demo necesita una identidad
+      // efímera ANTES del primer `/me`: es lo que hace que sus conversaciones se
+      // guarden y que el sidebar deje de estar vacío. Idempotente (con una guardada
+      // no llama al servidor) y nunca lanza: si falla, el visitante chatea igual,
+      // sin historial, que es el comportamiento de antes de DI-11.
+      //
+      // Se lee el token de Supabase directo y no el `user` de React por la misma
+      // razón que explica el comentario de arriba: el estado puede ir atrasado.
+      const token = await getAccessToken();
+      if (!token) await ensureDemoVisitor(API_BASE);
+
       const result = await fetchMe();
       if (result.success && result.data) {
         setMeData(result.data);

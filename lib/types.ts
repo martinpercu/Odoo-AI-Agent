@@ -530,6 +530,17 @@ export interface MeUser {
    * role-based access. This one is only for rendering the admin's own toggle.
    */
   can_author_routines?: boolean;
+  /**
+   * DI-11 — ¿este llamador es el visitante EFÍMERO del demo (identidad de
+   * conveniencia, sin cuenta)?
+   *
+   * ⚠️ Cuando es `true`, `role` viene `"ADMIN"` pero eso es de PRESENTACIÓN: es lo
+   * que hace que el demo se dibuje como implementador (audiencia `builder`, D16).
+   * Del lado del servidor el visitante tiene rol `CLIENT_USER` y no autoriza nada —
+   * no es una contradicción, son dos ejes distintos (quién mira vs. qué puede).
+   * No uses este flag para habilitar nada: para eso está el rol real.
+   */
+  is_ephemeral?: boolean;
 }
 
 /**
