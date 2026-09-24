@@ -1000,7 +1000,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "ಈ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಿ",
         "building": "ರಚಿಸಲಾಗುತ್ತಿದೆ…",
         "failed": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-        "tooManyRuns": "ಹಲವು ಕಾರ್ಯಗಳು ನಡೆಯುತ್ತಿವೆ. ಕೆಲವು ಕ್ಷಣ ಕಾದು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+        "tooManyRuns": "ಹಲವು ಕಾರ್ಯಗಳು ನಡೆಯುತ್ತಿವೆ. ಕೆಲವು ಕ್ಷಣ ಕಾದು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+        "partial": "{declared} ರಲ್ಲಿ {published} ಚಾರ್ಟ್‌ಗಳನ್ನು ರಚಿಸಲಾಗಿದೆ. ಉಳಿದವುಗಳಿಗೆ ಈ ಕಂಪನಿಯಲ್ಲಿ ಸಾಕಷ್ಟು ಡೇಟಾ ಇಲ್ಲ.",
+        "none": "ಈ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಲು ಈ ಕಂಪನಿಯಲ್ಲಿ ಸಾಕಷ್ಟು ಡೇಟಾ ಇಲ್ಲ."
       }
     },
     "WriteGate": {

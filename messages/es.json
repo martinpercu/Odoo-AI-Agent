@@ -1000,7 +1000,9 @@
         "apply": "Armar este tablero",
         "building": "Armando…",
         "failed": "No se pudo armar el tablero. Probá de nuevo.",
-        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar."
+        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar.",
+        "partial": "Se armaron {published} de {declared} tarjetas. Los otros pasos no devolvieron datos agrupados en esta instancia, así que no hay gráfico para mostrar.",
+        "none": "No se armó ninguna tarjeta: los pasos de este tablero no devolvieron datos agrupados en esta instancia."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "Armar este tablero",
         "building": "Armando…",
         "failed": "No se pudo armar el tablero. Probá de nuevo.",
-        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar."
+        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar.",
+        "partial": "Se armaron {published} de {declared} gráficos. Para el resto no hay datos suficientes en esta empresa.",
+        "none": "No hay datos suficientes en esta empresa para armar este tablero."
       }
     },
     "WriteGate": {

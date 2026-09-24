@@ -1000,7 +1000,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "यह डैशबोर्ड बनाएं",
         "building": "बन रहा है…",
         "failed": "डैशबोर्ड नहीं बन सका। दोबारा कोशिश करें।",
-        "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।"
+        "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।",
+        "partial": "{declared} में से {published} चार्ट बने। बाकी के लिए इस कंपनी में पर्याप्त डेटा नहीं है।",
+        "none": "यह डैशबोर्ड बनाने के लिए इस कंपनी में पर्याप्त डेटा नहीं है।"
       }
     },
     "WriteGate": {

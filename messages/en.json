@@ -1000,7 +1000,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} charts. There isn't enough data in this company for the rest.",
+        "none": "There isn't enough data in this company to build this dashboard."
       }
     },
     "WriteGate": {

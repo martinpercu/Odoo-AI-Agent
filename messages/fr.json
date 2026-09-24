@@ -1000,7 +1000,9 @@
         "apply": "Créer ce tableau de bord",
         "building": "Création…",
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
-        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
+        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
+        "partial": "{published} cartes sur {declared} ont été créées. Les autres étapes n'ont renvoyé aucune donnée groupée sur cette instance : il n'y a rien à représenter.",
+        "none": "Aucune carte créée : les étapes de ce tableau n'ont renvoyé aucune donnée groupée sur cette instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "Créer ce tableau de bord",
         "building": "Création…",
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
-        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
+        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
+        "partial": "{published} graphiques sur {declared} ont été créés. Il n'y a pas assez de données dans cette entreprise pour les autres.",
+        "none": "Il n'y a pas assez de données dans cette entreprise pour créer ce tableau."
       }
     },
     "WriteGate": {

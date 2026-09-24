@@ -1000,7 +1000,9 @@
         "apply": "Montar este painel",
         "building": "A montar…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
-        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
+        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
+        "partial": "Foram criados {published} de {declared} cartões. As outras etapas não retornaram dados agrupados nesta instância, então não há gráfico para mostrar.",
+        "none": "Nenhum cartão foi criado: as etapas deste painel não retornaram dados agrupados nesta instância."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "Montar este painel",
         "building": "A montar…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
-        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
+        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
+        "partial": "Foram criados {published} de {declared} gráficos. Não há dados suficientes nesta empresa para o restante.",
+        "none": "Não há dados suficientes nesta empresa para montar este painel."
       }
     },
     "WriteGate": {

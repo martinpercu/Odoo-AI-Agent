@@ -1000,7 +1000,9 @@
         "apply": "Dieses Dashboard erstellen",
         "building": "Wird erstellt…",
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
-        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
+        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
+        "partial": "{published} von {declared} Karten erstellt. Die übrigen Schritte lieferten auf dieser Instanz keine gruppierten Daten, daher gibt es nichts darzustellen.",
+        "none": "Keine Karte erstellt: Die Schritte dieses Dashboards lieferten auf dieser Instanz keine gruppierten Daten."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "Dieses Dashboard erstellen",
         "building": "Wird erstellt…",
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
-        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
+        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
+        "partial": "{published} von {declared} Diagrammen erstellt. Für den Rest gibt es in diesem Unternehmen nicht genug Daten.",
+        "none": "In diesem Unternehmen gibt es nicht genug Daten für dieses Dashboard."
       }
     },
     "WriteGate": {

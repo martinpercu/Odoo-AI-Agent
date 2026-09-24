@@ -1000,7 +1000,9 @@
         "apply": "Crea questo cruscotto",
         "building": "Creazione…",
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
-        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
+        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
+        "partial": "Create {published} schede su {declared}. Gli altri passaggi non hanno restituito dati raggruppati su questa istanza, quindi non c'è nulla da rappresentare.",
+        "none": "Nessuna scheda creata: i passaggi di questa dashboard non hanno restituito dati raggruppati su questa istanza."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "Crea questo cruscotto",
         "building": "Creazione…",
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
-        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
+        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
+        "partial": "Creati {published} grafici su {declared}. Per il resto non ci sono dati sufficienti in questa azienda.",
+        "none": "Non ci sono dati sufficienti in questa azienda per creare questa dashboard."
       }
     },
     "WriteGate": {

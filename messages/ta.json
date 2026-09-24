@@ -1000,7 +1000,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1117,9 @@
         "apply": "இந்த டாஷ்போர்டை உருவாக்கு",
         "building": "உருவாக்குகிறது…",
         "failed": "டாஷ்போர்டை உருவாக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
-        "tooManyRuns": "பல செயல்கள் இயங்குகின்றன. சில வினாடிகள் காத்திருந்து மீண்டும் முயற்சிக்கவும்."
+        "tooManyRuns": "பல செயல்கள் இயங்குகின்றன. சில வினாடிகள் காத்திருந்து மீண்டும் முயற்சிக்கவும்.",
+        "partial": "{declared} இல் {published} வரைபடங்கள் உருவாக்கப்பட்டன. மீதமுள்ளவற்றுக்கு இந்த நிறுவனத்தில் போதுமான தரவு இல்லை.",
+        "none": "இந்த டாஷ்போர்டை உருவாக்க இந்த நிறுவனத்தில் போதுமான தரவு இல்லை."
       }
     },
     "WriteGate": {
