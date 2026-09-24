@@ -997,6 +997,11 @@
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
         "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
       }
+    },
+    "WriteGate": {
+      "note": "Sans compte, la démo publique est en lecture seule : les requêtes fonctionnent, mais cette écriture ne sera pas exécutée dans Odoo.",
+      "cta": "Créer un compte pour l'exécuter",
+      "locked": "Compte requis"
     }
   },
   "Client": {
@@ -1107,6 +1112,11 @@
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
         "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
       }
+    },
+    "WriteGate": {
+      "note": "Il vous faut un compte pour effectuer des modifications. Vous pouvez continuer à poser toutes vos questions.",
+      "cta": "Créer un compte",
+      "locked": "Compte requis"
     }
   },
   "Intro": {

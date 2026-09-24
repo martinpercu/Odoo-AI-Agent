@@ -997,6 +997,11 @@
         "failed": "Não foi possível montar o painel. Tente novamente.",
         "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
       }
+    },
+    "WriteGate": {
+      "note": "Sem conta, a demo pública é somente leitura: as consultas funcionam, mas esta gravação não é executada no Odoo.",
+      "cta": "Criar uma conta para executá-la",
+      "locked": "Requer conta"
     }
   },
   "Client": {
@@ -1107,6 +1112,11 @@
         "failed": "Não foi possível montar o painel. Tente novamente.",
         "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
       }
+    },
+    "WriteGate": {
+      "note": "Para fazer alterações você precisa de uma conta. Pode continuar perguntando o que quiser.",
+      "cta": "Criar uma conta",
+      "locked": "Requer conta"
     }
   },
   "Intro": {

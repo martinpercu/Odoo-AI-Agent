@@ -3,13 +3,15 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Loader2, X, Pencil, Check, AlertTriangle } from "lucide-react";
+import { Loader2, X, Pencil, Check, AlertTriangle, Lock } from "lucide-react";
 import type { ActionProposalMetadata, ActionContext, EntitySearchResult } from "@/lib/types";
 import { EntityAutocomplete } from "./entity-autocomplete";
 import { AuditHistoryPopover } from "./audit-history-popover";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
 import { modelToDocType } from "@/lib/odoo-model-to-doctype";
+import { useAudienceT } from "@/hooks/use-audience-translations";
+import { AccountRequiredNote, isWriteAction, useWriteRequiresAccount } from "./account-required-note";
 
 interface ActionProposalButtonProps {
   metadata: ActionProposalMetadata;
@@ -109,11 +111,20 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
   const [editingField, setEditingField] = useState<string | null>(null);
   const [hoveredDirtyField, setHoveredDirtyField] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  /** El `detail` del 403 `account_required`, si el click llegó a pasar (red de seguridad). */
+  const [accountRequiredDetail, setAccountRequiredDetail] = useState<string | null>(null);
   const { currentChatId } = useChatContext();
   const t = useTranslations("ChatMessages");
   const tClientVerb = useTranslations("Client.ActionProposal.verb");
   const { meData } = useSession();
   const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
+  const tGate = useAudienceT("WriteGate");
+  const writeRequiresAccount = useWriteRequiresAccount();
+  // Sin cuenta, una escritura no se puede ejecutar: se muestra QUÉ haría (eso es lo que
+  // el demo viene a enseñar) pero el botón no se ofrece como si fuera a andar.
+  const blocked =
+    accountRequiredDetail !== null ||
+    (writeRequiresAccount && isWriteAction(metadata.action.action));
 
   function clientActionLabel(): string {
     const docType = modelToDocType(metadata.action.model);
@@ -153,8 +164,10 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
       setCompleted(true);
     } catch (error) {
       // Handle per-field validation errors (422)
-      const err = error as Error & { fieldErrors?: Record<string, string> };
-      if (err.fieldErrors) {
+      const err = error as Error & { fieldErrors?: Record<string, string>; accountRequired?: boolean };
+      if (err.accountRequired) {
+        setAccountRequiredDetail(err.message);
+      } else if (err.fieldErrors) {
         setFieldErrors(err.fieldErrors);
       } else {
         console.error("Action confirmation failed:", error);
@@ -339,7 +352,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                 </div>
 
                 {/* Edit toggle */}
-                {!loading && (
+                {!loading && !blocked && (
                   <button
                     type="button"
                     onClick={() => setEditingField(isEditing ? null : key)}
@@ -402,14 +415,18 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
         )}
       </AnimatePresence>
 
+      {blocked && <AccountRequiredNote detail={accountRequiredDetail ?? undefined} />}
+
       {/* Action buttons */}
       <div className="mt-4 flex items-center gap-2">
         <button
           onClick={handleConfirm}
-          disabled={loading}
-          className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
+          disabled={loading || blocked}
+          title={blocked ? tGate("locked") : undefined}
+          className="inline-flex h-btn-md items-center gap-2 rounded-btn bg-accent px-4 text-body font-medium text-white shadow-sm transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-accent"
         >
           {loading && <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />}
+          {blocked && <Lock size={16} strokeWidth={1.5} aria-hidden />}
           <span>{loading ? metadata.labels.confirm_btn : actionLabel}</span>
         </button>
         <button

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ActionPromptMetadata, ActionContext } from "@/lib/types";
+import { AccountRequiredNote, useWriteRequiresAccount } from "./account-required-note";
 
 interface OdooActionButtonProps {
   metadata: ActionPromptMetadata;
@@ -14,6 +15,9 @@ interface OdooActionButtonProps {
 export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) {
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [accountRequiredDetail, setAccountRequiredDetail] = useState<string | null>(null);
+  // Siempre es un `method_call`, o sea una escritura: sin cuenta no se ofrece.
+  const blocked = useWriteRequiresAccount() || accountRequiredDetail !== null;
   const t = useTranslations("ChatMessages");
 
   const buttonLabel = metadata.action_btn ?? metadata.actionLabel;
@@ -35,10 +39,16 @@ export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) 
       await onAction(actionContext);
       setCompleted(true);
     } catch (error) {
-      console.error("Action failed:", error);
+      const err = error as Error & { accountRequired?: boolean };
+      if (err.accountRequired) setAccountRequiredDetail(err.message);
+      else console.error("Action failed:", error);
     } finally {
       setLoading(false);
     }
+  }
+
+  if (blocked) {
+    return <AccountRequiredNote detail={accountRequiredDetail ?? undefined} />;
   }
 
   return (

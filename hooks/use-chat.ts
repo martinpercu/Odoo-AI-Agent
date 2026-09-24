@@ -678,6 +678,15 @@ export function useChat(chatId?: string, userId?: string) {
           throw err;
         }
 
+        // Sin cuenta no se escribe: también se devuelve a la tarjeta, que lo dice en
+        // su lugar. Si siguiera al mensaje `⚠️` de abajo, la función retornaría sin
+        // lanzar y la tarjeta se pintaría "Completado ✓" debajo del rechazo.
+        if (result.errorCode === "account_required") {
+          const err = new Error(result.error || "Account required");
+          (err as Error & { accountRequired: boolean }).accountRequired = true;
+          throw err;
+        }
+
         const errorMessage: Message = {
           id: `msg-${Date.now()}`,
           role: "assistant",

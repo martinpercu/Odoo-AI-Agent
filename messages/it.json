@@ -997,6 +997,11 @@
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
         "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
       }
+    },
+    "WriteGate": {
+      "note": "Senza account la demo pubblica è in sola lettura: le interrogazioni funzionano, ma questa scrittura non viene eseguita su Odoo.",
+      "cta": "Crea un account per eseguirla",
+      "locked": "Account richiesto"
     }
   },
   "Client": {
@@ -1107,6 +1112,11 @@
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
         "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
       }
+    },
+    "WriteGate": {
+      "note": "Per apportare modifiche serve un account. Puoi continuare a chiedere tutto ciò che vuoi.",
+      "cta": "Crea un account",
+      "locked": "Account richiesto"
     }
   },
   "Intro": {

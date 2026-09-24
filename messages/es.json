@@ -997,6 +997,11 @@
         "failed": "No se pudo armar el tablero. Probá de nuevo.",
         "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar."
       }
+    },
+    "WriteGate": {
+      "note": "Sin cuenta, el demo público es de solo lectura: las consultas funcionan, pero esta escritura no se ejecuta en Odoo.",
+      "cta": "Crear una cuenta para ejecutarla",
+      "locked": "Requiere cuenta"
     }
   },
   "Client": {
@@ -1107,6 +1112,11 @@
         "failed": "No se pudo armar el tablero. Probá de nuevo.",
         "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar."
       }
+    },
+    "WriteGate": {
+      "note": "Para hacer cambios necesitas una cuenta. Puedes seguir preguntando todo lo que quieras.",
+      "cta": "Crear una cuenta",
+      "locked": "Requiere cuenta"
     }
   },
   "Intro": {

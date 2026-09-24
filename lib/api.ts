@@ -1193,6 +1193,12 @@ export interface ExecuteActionResult {
   message?: string;
   error?: string;
   fieldErrors?: Record<string, string>;
+  /**
+   * `"account_required"`: el backend no deja ESCRIBIR a un llamador sin cuenta (el
+   * visitante del demo). Llega como 403 con el `detail` ya localizado. ⚠️ Es 403 y no
+   * 401 a propósito: `authFetch` trata el 401 como sesión vencida y manda a /login.
+   */
+  errorCode?: "account_required";
   result?: ActionResult;
   queue_next?: { text: string };
 }
@@ -1233,6 +1239,10 @@ export async function executeAction(
     }
 
     let errorMessage = data.detail || data.message || "Action failed";
+
+    if (res.status === 403 && data.error_code === "account_required") {
+      return { success: false, error: errorMessage, errorCode: "account_required" };
+    }
 
     if (res.status === 400) {
       errorMessage = `Validation error: ${errorMessage}`;
