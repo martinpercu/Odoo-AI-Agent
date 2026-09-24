@@ -1260,7 +1260,8 @@
       "unset": "sans ident.",
       "invalid": "invalides",
       "pending": "en attente",
-      "seats": "sur {total} sièges"
+      "seats": "sur {total} sièges",
+      "orgSeats": "{used} sur {total} sièges dans votre organisation"
     },
     "seat": {
       "paid": "Payant",

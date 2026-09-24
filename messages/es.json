@@ -1260,7 +1260,8 @@
       "unset": "sin creds",
       "invalid": "inválidas",
       "pending": "pendientes",
-      "seats": "de {total} seats"
+      "seats": "de {total} seats",
+      "orgSeats": "{used} de {total} seats en tu organización"
     },
     "seat": {
       "paid": "Pago",

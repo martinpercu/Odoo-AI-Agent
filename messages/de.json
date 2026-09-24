@@ -1260,7 +1260,8 @@
       "unset": "ohne Daten",
       "invalid": "ungültig",
       "pending": "ausstehend",
-      "seats": "von {total} Plätzen"
+      "seats": "von {total} Plätzen",
+      "orgSeats": "{used} von {total} Plätzen in Ihrer Organisation"
     },
     "seat": {
       "paid": "Bezahlt",
