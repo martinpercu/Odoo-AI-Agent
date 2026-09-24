@@ -703,7 +703,12 @@ export function useChat(chatId?: string, userId?: string) {
           ...c,
           messages: [...c.messages, errorMessage],
         }));
-        return;
+        // Y además se LANZA: si retornara, la tarjeta que llamó lo tomaría como éxito
+        // y se pintaría "Completado ✓" debajo del error. `reported` le dice que el
+        // mensaje ya está en el chat — sólo tiene que volver a ofrecer el botón.
+        const err = new Error(result.error || "Action failed");
+        (err as Error & { reported: boolean }).reported = true;
+        throw err;
       }
 
       // Build success metadata

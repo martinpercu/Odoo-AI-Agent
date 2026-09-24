@@ -164,12 +164,16 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
       setCompleted(true);
     } catch (error) {
       // Handle per-field validation errors (422)
-      const err = error as Error & { fieldErrors?: Record<string, string>; accountRequired?: boolean };
+      const err = error as Error & {
+        fieldErrors?: Record<string, string>;
+        accountRequired?: boolean;
+        reported?: boolean;
+      };
       if (err.accountRequired) {
         setAccountRequiredDetail(err.message);
       } else if (err.fieldErrors) {
         setFieldErrors(err.fieldErrors);
-      } else {
+      } else if (!err.reported) {
         console.error("Action confirmation failed:", error);
       }
     } finally {
