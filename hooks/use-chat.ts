@@ -15,7 +15,7 @@ import type {
   NoCredentialsMetadata,
 } from "@/lib/types";
 import type { TraceEntry } from "@/components/chat/langgraph-trace-panel";
-import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
+import { API_BASE, NETWORK_ERROR, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
 import { applyVisitorHeader } from "@/lib/demo-visitor";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -693,10 +693,14 @@ export function useChat(chatId?: string, userId?: string) {
           throw err;
         }
 
+        const errorText =
+          result.error === NETWORK_ERROR
+            ? t("connectionError")
+            : result.error || t("actionFailed");
         const errorMessage: Message = {
           id: `msg-${Date.now()}`,
           role: "assistant",
-          content: `⚠️ ${result.error || "Action failed"}`,
+          content: `⚠️ ${errorText}`,
           timestamp: new Date(),
         };
         updateChat(currentChatId, (c) => ({
@@ -706,7 +710,7 @@ export function useChat(chatId?: string, userId?: string) {
         // Y además se LANZA: si retornara, la tarjeta que llamó lo tomaría como éxito
         // y se pintaría "Completado ✓" debajo del error. `reported` le dice que el
         // mensaje ya está en el chat — sólo tiene que volver a ofrecer el botón.
-        const err = new Error(result.error || "Action failed");
+        const err = new Error(errorText);
         (err as Error & { reported: boolean }).reported = true;
         throw err;
       }
@@ -759,7 +763,7 @@ export function useChat(chatId?: string, userId?: string) {
         sendMessage(result.queue_next.text, currentChatId);
       }
     },
-    [currentChatId, activeConfigId, locale, sendMessage, updateChat, isPreviewingAsClient]
+    [currentChatId, activeConfigId, locale, sendMessage, updateChat, isPreviewingAsClient, t]
   );
 
   const loadChatHistory = useCallback(

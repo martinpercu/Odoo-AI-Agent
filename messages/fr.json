@@ -172,7 +172,8 @@
       "desc": "Vous n'avez pas d'identifiants configurés pour cette connexion Odoo. Configurez-les dans les Paramètres.",
       "cta": "Aller aux Paramètres"
     },
-    "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez."
+    "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez.",
+    "actionFailed": "L'action n'a pas pu être exécutée."
   },
   "ChatHistory": {
     "loading": "Chargement de la conversation...",

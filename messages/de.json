@@ -172,7 +172,8 @@
       "desc": "Sie haben keine Anmeldedaten für diese Odoo-Verbindung konfiguriert. Richten Sie diese in den Einstellungen ein.",
       "cta": "Zu den Einstellungen"
     },
-    "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut."
+    "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut.",
+    "actionFailed": "Die Aktion konnte nicht ausgeführt werden."
   },
   "ChatHistory": {
     "loading": "Konversation wird geladen...",

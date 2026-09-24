@@ -172,7 +172,8 @@
       "desc": "No tienes credenciales configuradas para esta conexión Odoo. Configúralas en Ajustes para poder realizar consultas.",
       "cta": "Ir a Ajustes"
     },
-    "connectionError": "No pudimos completar la consulta. Revisá la conexión e intentá de nuevo."
+    "connectionError": "No pudimos completar la consulta. Revisá la conexión e intentá de nuevo.",
+    "actionFailed": "No se pudo ejecutar la acción."
   },
   "ChatHistory": {
     "loading": "Cargando conversación...",

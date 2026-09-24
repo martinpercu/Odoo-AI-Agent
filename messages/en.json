@@ -172,7 +172,8 @@
       "desc": "You don't have credentials configured for this Odoo connection. Set them up in Settings to run queries.",
       "cta": "Go to Settings"
     },
-    "connectionError": "We couldn't complete the query. Check the connection and try again."
+    "connectionError": "We couldn't complete the query. Check the connection and try again.",
+    "actionFailed": "The action could not be executed."
   },
   "ChatHistory": {
     "loading": "Loading conversation...",
