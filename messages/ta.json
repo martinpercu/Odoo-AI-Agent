@@ -31,7 +31,8 @@
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
     "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
-    "showAllInstances": "அனைத்தையும் காட்டு"
+    "showAllInstances": "அனைத்தையும் காட்டு",
+    "openMenu": "மெனுவைத் திற"
   },
   "UserMenu": {
     "guest": "விருந்தினர்",
@@ -103,7 +104,8 @@
     "transcribeError": "ஆடியோவை படியெடுக்க முடியவில்லை",
     "selectConfig": "Choose an instance",
     "ownGroup": "Your instances",
-    "demoGroup": "Sample companies"
+    "demoGroup": "Sample companies",
+    "placeholderShort": "உங்கள் Odoo பற்றி கேளுங்கள்..."
   },
   "ChatMessages": {
     "typingIndicator": "Odoo-ஐ வினவுகிறோம்",

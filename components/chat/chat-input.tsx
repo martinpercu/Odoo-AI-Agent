@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Square, Mic, MicOff, Loader2, /* Paperclip, */ X } from "lucide-react";
 import { useIconSize } from "@/hooks/use-icon-size";
@@ -45,6 +46,9 @@ export function ChatInput({
   onStopAudio,
 }: ChatInputProps) {
   const t = useTranslations("ChatInput");
+  // En un teléfono el placeholder largo se partía en dos líneas dentro de un textarea
+  // de una, quedaba cortado y le aparecía una barra de scroll. `sm` = 640px.
+  const isNarrow = useMediaQuery("(max-width: 639px)");
   const tVoice = useTranslations("VoiceSettings");
   const [value, setValue] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -262,7 +266,7 @@ export function ChatInput({
                   adjustHeight();
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder={isTranscribing ? t("transcribing") : t("placeholder")}
+                placeholder={isTranscribing ? t("transcribing") : isNarrow ? t("placeholderShort") : t("placeholder")}
                 rows={1}
                 disabled={disabled}
                 className="max-h-50 min-h-input flex-1 resize-none bg-transparent px-2 py-2 text-body outline-none placeholder:text-text-muted disabled:opacity-50"

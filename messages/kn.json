@@ -31,7 +31,8 @@
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
     "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
-    "showAllInstances": "ಎಲ್ಲವನ್ನೂ ತೋರಿಸಿ"
+    "showAllInstances": "ಎಲ್ಲವನ್ನೂ ತೋರಿಸಿ",
+    "openMenu": "ಮೆನು ತೆರೆಯಿರಿ"
   },
   "UserMenu": {
     "guest": "ಅತಿಥಿ",
@@ -103,7 +104,8 @@
     "transcribeError": "ಆಡಿಯೋವನ್ನು ಪ್ರತಿಲೇಖನ ಮಾಡಲಾಗಲಿಲ್ಲ",
     "selectConfig": "Choose an instance",
     "ownGroup": "Your instances",
-    "demoGroup": "Sample companies"
+    "demoGroup": "Sample companies",
+    "placeholderShort": "ನಿಮ್ಮ Odoo ಬಗ್ಗೆ ಕೇಳಿ..."
   },
   "ChatMessages": {
     "typingIndicator": "Odoo ಪ್ರಶ್ನಿಸಲಾಗುತ್ತಿದೆ",

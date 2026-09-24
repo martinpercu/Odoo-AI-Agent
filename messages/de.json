@@ -31,7 +31,8 @@
     "viewAsClient": "Kundenansicht",
     "backToMyView": "Zurück zu meiner Ansicht",
     "viewAsClientInfo": "Kunden sehen eine luftigere Ansicht, und der Agent sagt „Kunde“ statt „res.partner“.",
-    "showAllInstances": "alle anzeigen"
+    "showAllInstances": "alle anzeigen",
+    "openMenu": "Menü öffnen"
   },
   "UserMenu": {
     "guest": "Gast",
@@ -103,7 +104,8 @@
     "transcribeError": "Audio konnte nicht transkribiert werden",
     "selectConfig": "Instanz auswählen",
     "ownGroup": "Deine Instanzen",
-    "demoGroup": "Beispielunternehmen"
+    "demoGroup": "Beispielunternehmen",
+    "placeholderShort": "Frage zu Ihrem Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Frage Odoo ab",

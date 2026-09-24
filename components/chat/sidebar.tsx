@@ -315,9 +315,12 @@ export function Sidebar({
   return (
     <>
       {/* Mobile toggle */}
+      {/* Arriba a la izquierda y DENTRO del alto del cartel del demo, que en pantallas
+          chicas le deja lugar (`demo-banner`): en `top-4` tapaba su ícono y el contenido. */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 rounded-md bg-surface p-2 shadow-sm lg:hidden"
+        aria-label={t("openMenu")}
+        className="fixed left-2 top-1.5 z-50 rounded-md bg-surface p-2 shadow-sm lg:hidden"
       >
         <Menu size={iconBtn} />
       </button>

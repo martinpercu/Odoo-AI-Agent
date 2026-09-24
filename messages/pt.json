@@ -31,7 +31,8 @@
     "viewAsClient": "Ver como cliente",
     "backToMyView": "Voltar à minha vista",
     "viewAsClientInfo": "Os clientes veem uma disposição mais espaçada e o agente diz “cliente” em vez de “res.partner”.",
-    "showAllInstances": "ver todos"
+    "showAllInstances": "ver todos",
+    "openMenu": "Abrir menu"
   },
   "UserMenu": {
     "guest": "Convidado",
@@ -103,7 +104,8 @@
     "transcribeError": "Não foi possível transcrever o áudio",
     "selectConfig": "Escolher uma instância",
     "ownGroup": "As suas instâncias",
-    "demoGroup": "Empresas de exemplo"
+    "demoGroup": "Empresas de exemplo",
+    "placeholderShort": "Pergunte sobre seu Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",
