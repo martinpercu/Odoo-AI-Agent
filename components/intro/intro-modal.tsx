@@ -10,7 +10,7 @@ import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useChatContext } from "@/components/app-shell";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
-import { clearOnboardingSkipped } from "@/lib/post-auth";
+import { clearOnboardingSkipped, isOwnSessionMe } from "@/lib/post-auth";
 import { track } from "@/lib/analytics";
 import { A11yModal } from "@/components/intro/a11y-modal";
 
@@ -27,8 +27,15 @@ export function IntroModal() {
   const { isModalOpen, openModal, closeModal, openPanel, dismissed, ready } = useIntro();
   const { isDemoMode } = useOdooConfig();
   const { createChat, sendMessage } = useChatContext();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { meData } = useSession();
+  /**
+   * ¿Ya sabemos quién mira? Al arrancar logueado hay unos cientos de ms en los que el
+   * `/me` todavía es el del visitante (o no llegó) y la app se cree en demo — el cartel
+   * "Modo Demo" parpadea. Decidir en ese hueco le abría el modal del demo a un
+   * implementador sobre SU instancia, y como se abre una sola vez, quedaba abierto.
+   */
+  const sessionSettled = !authLoading && (user ? isOwnSessionMe(meData) : !!meData);
   const [dontShowAgain, setDontShowAgain] = useState(true);
   const autoOpened = useRef(false);
   const titleId = useId();
@@ -36,13 +43,13 @@ export function IntroModal() {
 
   // Auto-open once on the first demo visit (anonymous), after storage is read.
   useEffect(() => {
-    if (!ready || autoOpened.current) return;
+    if (!ready || !sessionSettled || autoOpened.current) return;
     if (isDemoMode && !dismissed) {
       autoOpened.current = true;
       openModal();
       track("intro_modal_shown");
     }
-  }, [ready, dismissed, isDemoMode, openModal]);
+  }, [ready, sessionSettled, dismissed, isDemoMode, openModal]);
 
   function handleClose(reason: "x" | "backdrop" | "esc" | "cta" | "no_show_again") {
     track("intro_modal_dismissed", { reason });
