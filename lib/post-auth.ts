@@ -14,6 +14,16 @@ export function clearOnboardingSkipped() {
 }
 
 /**
+ * ¿Este `/me` ya es el del usuario que acaba de entrar? Justo después de un login o
+ * un registro el `/me` en memoria sigue siendo el del VISITANTE EFÍMERO del demo (sin
+ * org, sin instancias), y decidir con ése mandaba a `/onboarding` a alguien que tiene
+ * instancias: se veía la pantalla un instante y rebotaba a `/chat`.
+ */
+export function isOwnSessionMe(meData: MeResponse | null | undefined): meData is MeResponse {
+  return !!meData && !meData.user?.is_ephemeral;
+}
+
+/**
  * Where to send an authenticated user after the session bootstrap. Returns a path
  * segment (no locale prefix).
  *

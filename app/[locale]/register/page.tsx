@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
-import { resolvePostAuthPath } from "@/lib/post-auth";
+import { isOwnSessionMe, resolvePostAuthPath } from "@/lib/post-auth";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { Loader2, Zap, Check } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -39,7 +39,8 @@ export default function RegisterPage() {
 
   // Redirect already-logged-in users
   useEffect(() => {
-    if (!authLoading && user && meData) {
+    // ⚠️ Recién registrado, el `/me` en memoria todavía es el del visitante del demo.
+    if (!authLoading && user && isOwnSessionMe(meData)) {
       router.replace(`/${locale}/${resolvePostAuthPath(meData)}`);
     }
   }, [authLoading, user, meData, locale, router]);
