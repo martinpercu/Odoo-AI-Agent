@@ -118,6 +118,9 @@ function ChartCard({
 }) {
   const { chart } = pin;
   const locale = useLocale();
+  // "Sin datos" también cuando hay filas pero ninguna tiene un valor numérico: un pin
+  // con un payload que no se puede dibujar pintaba un recuadro vacío sin decir nada.
+  const hasPlottableData = chart.data.some((row) => typeof row.value === "number");
   const [viewType, setViewType] = useState<ChartViewType>(chart.chart_type);
 
   const isLive = (pin.query_context?.volatility ?? "variable") === "variable";
@@ -206,7 +209,7 @@ function ChartCard({
 
       {/* Gráfico */}
       <div className="min-w-0 flex-1">
-        {chart.data.length === 0 ? (
+        {!hasPlottableData ? (
           <p className="py-8 text-center text-small text-text-secondary">
             {tChart("noData")}
           </p>
