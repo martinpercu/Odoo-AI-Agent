@@ -30,7 +30,8 @@
     "onlyActiveInstance": "फक्त सक्रिय इन्स्टन्स दाखवा",
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
-    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”."
+    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
+    "showAllInstances": "सर्व दाखवा"
   },
   "UserMenu": {
     "guest": "पाहुणे",

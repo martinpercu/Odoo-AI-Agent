@@ -30,7 +30,8 @@
     "onlyActiveInstance": "Afficher uniquement l'instance active",
     "viewAsClient": "Vue client",
     "backToMyView": "Revenir à ma vue",
-    "viewAsClientInfo": "Les clients voient une mise en page plus aérée et l’agent dit « client » au lieu de « res.partner »."
+    "viewAsClientInfo": "Les clients voient une mise en page plus aérée et l’agent dit « client » au lieu de « res.partner ».",
+    "showAllInstances": "tout afficher"
   },
   "UserMenu": {
     "guest": "Invité",

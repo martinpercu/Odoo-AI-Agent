@@ -30,7 +30,8 @@
     "onlyActiveInstance": "ಸಕ್ರಿಯ ಇನ್‌ಸ್ಟನ್ಸ್ ಮಾತ್ರ ತೋರಿಸಿ",
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
-    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”."
+    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
+    "showAllInstances": "ಎಲ್ಲವನ್ನೂ ತೋರಿಸಿ"
   },
   "UserMenu": {
     "guest": "ಅತಿಥಿ",
