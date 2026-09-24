@@ -170,7 +170,10 @@
     "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez."
   },
   "ChatHistory": {
-    "loading": "Chargement de la conversation..."
+    "loading": "Chargement de la conversation...",
+    "notFound": "Conversation introuvable",
+    "notFoundHint": "Elle a peut-être été supprimée, ou appartient à un autre compte ou navigateur.",
+    "notFoundCta": "Commencer une nouvelle requête"
   },
   "Pricing": {
     "heading": "Forfaits et Tarifs",

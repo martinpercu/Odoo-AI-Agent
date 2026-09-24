@@ -88,6 +88,12 @@ export function useChat(chatId?: string, userId?: string) {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const loadedChatIdsRef = useRef<Set<string>>(new Set());
+  /**
+   * Chats cuyo historial se pidió y no volvió nada (inexistente, de otra identidad, o
+   * error). Sin esto la página de un chat que no se puede abrir queda en blanco, que
+   * no se distingue de "está cargando" ni le dice al usuario qué hacer.
+   */
+  const [missingChatIds, setMissingChatIds] = useState<ReadonlySet<string>>(new Set());
   const { activeConfigId, isConfigured } = useOdooConfig();
   const { isPreviewingAsClient } = useAudience();
   const locale = useLocale();
@@ -768,11 +774,13 @@ export function useChat(chatId?: string, userId?: string) {
 
       try {
         const result = await fetchChatHistory(targetChatId, activeConfigId);
-        if (!result.success || !result.messages) {
+        const messages = result.success ? result.messages ?? [] : [];
+        if (messages.length === 0) {
+          // Un chat recién creado nunca llega acá: nace con mensajes optimistas y el
+          // chequeo de arriba lo saltea. Vacío es "no hay nada que abrir".
+          setMissingChatIds((prev) => new Set(prev).add(targetChatId));
           return;
         }
-        const messages = result.messages;
-        if (messages.length === 0) return; // Empty = new chat, WelcomeDashboard will show
 
         setChats((prev) => {
           const existingChat = prev.find((c) => c.id === targetChatId);
@@ -802,6 +810,10 @@ export function useChat(chatId?: string, userId?: string) {
   );
 
   const clearChats = useCallback(() => {
+    // Sin esto, un chat ya pedido no se vuelve a pedir nunca: la lista se vacía pero
+    // el id sigue marcado como cargado, y la página queda en blanco.
+    loadedChatIdsRef.current = new Set();
+    setMissingChatIds(new Set());
     setChats([]);
     setServerChats([]);
     setCurrentChatId(undefined);
@@ -813,6 +825,8 @@ export function useChat(chatId?: string, userId?: string) {
 
   return {
     chats,
+    /** `true` cuando el historial de ese chat se pidió y no hay nada que mostrar. */
+    isChatMissing: (id: string) => missingChatIds.has(id),
     /** Lista mostrada: los del server + los optimistas que todavía no volvieron de él. */
     displayChats,
     chatGroups,

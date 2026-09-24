@@ -170,7 +170,10 @@
     "connectionError": "Não conseguimos concluir a consulta. Verifique a ligação e tente novamente."
   },
   "ChatHistory": {
-    "loading": "Carregando conversa..."
+    "loading": "Carregando conversa...",
+    "notFound": "Não encontramos esta conversa",
+    "notFoundHint": "Pode ter sido excluída, ou pertencer a outra conta ou navegador.",
+    "notFoundCta": "Começar uma nova consulta"
   },
   "Pricing": {
     "heading": "Planos e Preços",
