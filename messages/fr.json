@@ -151,7 +151,9 @@
       "fieldEdited": "Modifié",
       "originalValue": "Suggestion originale",
       "validationError": "Veuillez corriger les champs en rouge.",
-      "confirm": "Confirmer l'action"
+      "confirm": "Confirmer l'action",
+      "yes": "Oui",
+      "no": "Non"
     },
     "audit": {
       "title": "Historique des actions",

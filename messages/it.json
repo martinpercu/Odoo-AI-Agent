@@ -151,7 +151,9 @@
       "fieldEdited": "Modificato",
       "originalValue": "Suggerimento originale",
       "validationError": "Correggi i campi evidenziati e riprova.",
-      "confirm": "Conferma azione"
+      "confirm": "Conferma azione",
+      "yes": "Sì",
+      "no": "No"
     },
     "audit": {
       "title": "Cronologia azioni",

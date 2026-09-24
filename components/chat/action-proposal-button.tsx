@@ -8,7 +8,7 @@ import type { ActionProposalMetadata, ActionContext, EntitySearchResult } from "
 import { EntityAutocomplete } from "./entity-autocomplete";
 import { AuditHistoryPopover } from "./audit-history-popover";
 import { useChatContext } from "@/components/app-shell";
-import { useSession } from "@/hooks/use-session";
+import { useAudience } from "@/hooks/use-audience";
 import { modelToDocType } from "@/lib/odoo-model-to-doctype";
 import { useAudienceT } from "@/hooks/use-audience-translations";
 import { AccountRequiredNote, isWriteAction, useWriteRequiresAccount } from "./account-required-note";
@@ -63,9 +63,9 @@ function formatFieldLabel(key: string): string {
 }
 
 /** Display value for non-editing state. */
-function formatDisplayValue(value: unknown): string {
+function formatDisplayValue(value: unknown, yesNo: { yes: string; no: string }): string {
   if (value === null || value === undefined) return "—";
-  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (typeof value === "boolean") return value ? yesNo.yes : yesNo.no;
   if (Array.isArray(value)) {
     if (value.length === 2 && typeof value[0] === "number") return String(value[1]);
     return value.join(", ");
@@ -116,8 +116,11 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
   const { currentChatId } = useChatContext();
   const t = useTranslations("ChatMessages");
   const tClientVerb = useTranslations("Client.ActionProposal.verb");
-  const { meData } = useSession();
-  const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
+  // Por AUDIENCIA, no por rol: con "ver como cliente" el encabezado técnico
+  // (`create · res.partner`) y el verbo del backend tienen que desaparecer como en el
+  // resto de la pantalla. El BLOQUEO de escritura de abajo, en cambio, es por sesión.
+  const isBuilder = useAudience().audience === "builder";
+  const yesNo = { yes: t("actionProposal.yes"), no: t("actionProposal.no") };
   const tGate = useAudienceT("WriteGate");
   const writeRequiresAccount = useWriteRequiresAccount();
   // Sin cuenta, una escritura no se puede ejecutar: se muestra QUÉ haría (eso es lo que
@@ -349,7 +352,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                         }}
                         transition={dirtyTransition}
                       >
-                        {formatDisplayValue(currentValue)}
+                        {formatDisplayValue(currentValue, yesNo)}
                       </motion.span>
                     </div>
                   )}
@@ -378,7 +381,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                       transition={{ duration: 0.15 }}
                       className="absolute -bottom-8 left-10 z-50 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-small text-background shadow-lg"
                     >
-                      {t("actionProposal.originalValue")}: {formatDisplayValue(originalValue)}
+                      {t("actionProposal.originalValue")}: {formatDisplayValue(originalValue, yesNo)}
                     </motion.div>
                   )}
                 </AnimatePresence>

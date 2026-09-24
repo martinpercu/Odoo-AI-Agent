@@ -151,7 +151,9 @@
       "fieldEdited": "Modified",
       "originalValue": "Original suggestion",
       "validationError": "Please fix the highlighted fields and try again.",
-      "confirm": "Confirm action"
+      "confirm": "Confirm action",
+      "yes": "Yes",
+      "no": "No"
     },
     "audit": {
       "title": "Action History",

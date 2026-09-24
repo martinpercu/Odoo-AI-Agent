@@ -151,7 +151,9 @@
       "fieldEdited": "Geändert",
       "originalValue": "Originalvorschlag",
       "validationError": "Bitte korrigieren Sie die markierten Felder.",
-      "confirm": "Aktion bestätigen"
+      "confirm": "Aktion bestätigen",
+      "yes": "Ja",
+      "no": "Nein"
     },
     "audit": {
       "title": "Aktionsverlauf",
