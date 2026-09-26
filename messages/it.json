@@ -30,7 +30,9 @@
     "onlyActiveInstance": "Mostra solo l'istanza attiva",
     "viewAsClient": "Vista cliente",
     "backToMyView": "Torna alla mia vista",
-    "viewAsClientInfo": "I clienti vedono un layout più arioso e l’agente dice “cliente” invece di “res.partner”."
+    "viewAsClientInfo": "I clienti vedono un layout più arioso e l’agente dice “cliente” invece di “res.partner”.",
+    "showAllInstances": "mostra tutti",
+    "openMenu": "Apri menu"
   },
   "UserMenu": {
     "guest": "Ospite",
@@ -102,7 +104,8 @@
     "transcribeError": "Impossibile trascrivere l'audio",
     "selectConfig": "Scegli un'istanza",
     "ownGroup": "Le tue istanze",
-    "demoGroup": "Aziende di esempio"
+    "demoGroup": "Aziende di esempio",
+    "placeholderShort": "Chiedi sul tuo Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Interrogazione Odoo in corso",
@@ -169,7 +172,8 @@
       "desc": "Non hai credenziali configurate per questa connessione Odoo. Configurale nelle Impostazioni per eseguire query.",
       "cta": "Vai alle Impostazioni"
     },
-    "connectionError": "Non siamo riusciti a completare la richiesta. Controlla la connessione e riprova."
+    "connectionError": "Non siamo riusciti a completare la richiesta. Controlla la connessione e riprova.",
+    "actionFailed": "Non è stato possibile eseguire l'azione."
   },
   "ChatHistory": {
     "loading": "Caricamento conversazione...",
@@ -1000,7 +1004,9 @@
         "apply": "Crea questo cruscotto",
         "building": "Creazione…",
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
-        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
+        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
+        "partial": "Create {published} schede su {declared}. Gli altri passaggi non hanno restituito dati raggruppati su questa istanza, quindi non c'è nulla da rappresentare.",
+        "none": "Nessuna scheda creata: i passaggi di questa dashboard non hanno restituito dati raggruppati su questa istanza."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "Crea questo cruscotto",
         "building": "Creazione…",
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
-        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova."
+        "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
+        "partial": "Creati {published} grafici su {declared}. Per il resto non ci sono dati sufficienti in questa azienda.",
+        "none": "Non ci sono dati sufficienti in questa azienda per creare questa dashboard."
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "senza cred.",
       "invalid": "non valide",
       "pending": "in attesa",
-      "seats": "di {total} posti"
+      "seats": "di {total} posti",
+      "orgSeats": "{used} di {total} posti nella tua organizzazione"
     },
     "seat": {
       "paid": "A pagamento",

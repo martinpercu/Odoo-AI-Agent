@@ -30,7 +30,9 @@
     "onlyActiveInstance": "Show only the active instance",
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
-    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”."
+    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
+    "showAllInstances": "show all",
+    "openMenu": "Open menu"
   },
   "UserMenu": {
     "guest": "Guest",
@@ -102,7 +104,8 @@
     "transcribeError": "Couldn't transcribe the audio",
     "selectConfig": "Choose an instance",
     "ownGroup": "Your instances",
-    "demoGroup": "Sample companies"
+    "demoGroup": "Sample companies",
+    "placeholderShort": "Ask about your Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Querying Odoo",
@@ -169,7 +172,8 @@
       "desc": "You don't have credentials configured for this Odoo connection. Set them up in Settings to run queries.",
       "cta": "Go to Settings"
     },
-    "connectionError": "We couldn't complete the query. Check the connection and try again."
+    "connectionError": "We couldn't complete the query. Check the connection and try again.",
+    "actionFailed": "The action could not be executed."
   },
   "ChatHistory": {
     "loading": "Loading conversation...",
@@ -1000,7 +1004,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} charts. There isn't enough data in this company for the rest.",
+        "none": "There isn't enough data in this company to build this dashboard."
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "no creds",
       "invalid": "invalid",
       "pending": "pending",
-      "seats": "of {total} seats"
+      "seats": "of {total} seats",
+      "orgSeats": "{used} of {total} seats in your organization"
     },
     "seat": {
       "paid": "Paid",

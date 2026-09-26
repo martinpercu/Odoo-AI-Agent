@@ -1238,26 +1238,25 @@ export async function executeAction(
       };
     }
 
-    let errorMessage = data.detail || data.message || "Action failed";
+    // El `detail` llega ya localizado del backend: se muestra tal cual. Le pegábamos
+    // "Validation error:" / "Execution error:" delante — en inglés, en los 11 idiomas.
+    // Sin `detail`, `error` queda vacío y quien muestra el mensaje pone el suyo.
+    const errorMessage: string | undefined = data.detail || data.message || undefined;
 
     if (res.status === 403 && data.error_code === "account_required") {
       return { success: false, error: errorMessage, errorCode: "account_required" };
     }
 
-    if (res.status === 400) {
-      errorMessage = `Validation error: ${errorMessage}`;
-    } else if (res.status === 422) {
+    if (res.status === 422) {
       const fieldErrors: Record<string, string> | undefined =
         data.errors && typeof data.errors === "object" ? data.errors : undefined;
       return { success: false, error: errorMessage, fieldErrors };
-    } else if (res.status === 500) {
-      errorMessage = `Execution error: ${errorMessage}`;
     }
 
     return { success: false, error: errorMessage };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
-    return { success: false, error: "Network error: Could not connect to backend" };
+    return { success: false, error: NETWORK_ERROR };
   }
 }
 

@@ -30,7 +30,9 @@
     "onlyActiveInstance": "केवल सक्रिय इंस्टेंस दिखाएं",
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
-    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”."
+    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
+    "showAllInstances": "सभी दिखाएं",
+    "openMenu": "मेनू खोलें"
   },
   "UserMenu": {
     "guest": "अतिथि",
@@ -102,7 +104,8 @@
     "transcribeError": "ऑडियो ट्रांसक्राइब नहीं हो सका",
     "selectConfig": "Choose an instance",
     "ownGroup": "Your instances",
-    "demoGroup": "Sample companies"
+    "demoGroup": "Sample companies",
+    "placeholderShort": "अपने Odoo के बारे में पूछें..."
   },
   "ChatMessages": {
     "typingIndicator": "Odoo से क्वेरी हो रही है",
@@ -169,7 +172,8 @@
       "desc": "इस Odoo कनेक्शन के लिए आपके पास क्रेडेंशियल नहीं हैं। क्वेरी चलाने के लिए सेटिंग्स में इन्हें सेट करें।",
       "cta": "सेटिंग्स पर जाएं"
     },
-    "connectionError": "हम अनुरोध पूरा नहीं कर सके। कनेक्शन जाँचें और फिर से प्रयास करें।"
+    "connectionError": "हम अनुरोध पूरा नहीं कर सके। कनेक्शन जाँचें और फिर से प्रयास करें।",
+    "actionFailed": "कार्रवाई पूरी नहीं हो सकी।"
   },
   "ChatHistory": {
     "loading": "बातचीत लोड हो रही है...",
@@ -1000,7 +1004,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "यह डैशबोर्ड बनाएं",
         "building": "बन रहा है…",
         "failed": "डैशबोर्ड नहीं बन सका। दोबारा कोशिश करें।",
-        "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।"
+        "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।",
+        "partial": "{declared} में से {published} चार्ट बने। बाकी के लिए इस कंपनी में पर्याप्त डेटा नहीं है।",
+        "none": "यह डैशबोर्ड बनाने के लिए इस कंपनी में पर्याप्त डेटा नहीं है।"
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "no creds",
       "invalid": "invalid",
       "pending": "pending",
-      "seats": "of {total} seats"
+      "seats": "of {total} seats",
+      "orgSeats": "{used} of {total} seats in your organization"
     },
     "seat": {
       "paid": "Paid",

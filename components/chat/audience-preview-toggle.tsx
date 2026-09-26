@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye, Info, Undo2 } from "lucide-react";
+import { useId } from "react";
 import { useTranslations } from "next-intl";
 
 import { useAudience } from "@/hooks/use-audience";
@@ -35,6 +36,7 @@ export function AudiencePreviewToggle({ collapsed = false }: { collapsed?: boole
   const t = useTranslations("Sidebar");
   const iconBtn = useIconSize("button");
   const { canPreviewAsClient, isPreviewingAsClient, setPreviewAsClient } = useAudience();
+  const switchId = useId();
 
   if (!canPreviewAsClient) return null;
 
@@ -95,7 +97,11 @@ export function AudiencePreviewToggle({ collapsed = false }: { collapsed?: boole
         }`}
       >
         <Icon size={iconBtn} strokeWidth={1.5} className="shrink-0" aria-hidden />
-        <span className="min-w-0 truncate text-body font-medium">{label}</span>
+        {/* El texto es el `<label>` del switch: tocar "Ver como cliente" lo activa, como
+            en cualquier toggle. Antes sólo respondía el riel de 32px a la derecha. */}
+        <label htmlFor={switchId} className="min-w-0 cursor-pointer truncate text-body font-medium">
+          {label}
+        </label>
         {/* El "+ info" existe SÓLO del lado del implementador: del lado del cliente el
             texto ya es "volver a mi vista" y explicar en qué consiste la vista que estás
             mirando no agrega nada.
@@ -118,6 +124,7 @@ export function AudiencePreviewToggle({ collapsed = false }: { collapsed?: boole
           </InfoTooltip>
         )}
         <button
+          id={switchId}
           type="button"
           role="switch"
           aria-checked={isPreviewingAsClient}
@@ -131,11 +138,14 @@ export function AudiencePreviewToggle({ collapsed = false }: { collapsed?: boole
           <span
             aria-hidden
             className={`relative block h-4 w-8 rounded-full transition-colors ${
-              isPreviewingAsClient ? "bg-accent" : "bg-border"
+              // Apagado: `bg-text-muted` y perilla blanca. Era `bg-border` con perilla
+              // `bg-surface` sobre `bg-sidebar-hover` — tres tonos casi iguales, y en
+              // oscuro el control desaparecía.
+              isPreviewingAsClient ? "bg-accent" : "bg-text-muted"
             }`}
           >
             <span
-              className={`absolute top-0.5 h-3 w-3 rounded-full bg-surface transition-all ${
+              className={`absolute top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-all ${
                 isPreviewingAsClient ? "left-[18px]" : "left-0.5"
               }`}
             />

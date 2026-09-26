@@ -30,7 +30,9 @@
     "onlyActiveInstance": "Ver apenas a instância ativa",
     "viewAsClient": "Ver como cliente",
     "backToMyView": "Voltar à minha vista",
-    "viewAsClientInfo": "Os clientes veem uma disposição mais espaçada e o agente diz “cliente” em vez de “res.partner”."
+    "viewAsClientInfo": "Os clientes veem uma disposição mais espaçada e o agente diz “cliente” em vez de “res.partner”.",
+    "showAllInstances": "ver todos",
+    "openMenu": "Abrir menu"
   },
   "UserMenu": {
     "guest": "Convidado",
@@ -102,7 +104,8 @@
     "transcribeError": "Não foi possível transcrever o áudio",
     "selectConfig": "Escolher uma instância",
     "ownGroup": "As suas instâncias",
-    "demoGroup": "Empresas de exemplo"
+    "demoGroup": "Empresas de exemplo",
+    "placeholderShort": "Pergunte sobre seu Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Consultando Odoo",
@@ -169,7 +172,8 @@
       "desc": "Você não tem credenciais configuradas para esta conexão Odoo. Configure-as em Configurações para realizar consultas.",
       "cta": "Ir para Configurações"
     },
-    "connectionError": "Não conseguimos concluir a consulta. Verifique a ligação e tente novamente."
+    "connectionError": "Não conseguimos concluir a consulta. Verifique a ligação e tente novamente.",
+    "actionFailed": "Não foi possível executar a ação."
   },
   "ChatHistory": {
     "loading": "Carregando conversa...",
@@ -1000,7 +1004,9 @@
         "apply": "Montar este painel",
         "building": "A montar…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
-        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
+        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
+        "partial": "Foram criados {published} de {declared} cartões. As outras etapas não retornaram dados agrupados nesta instância, então não há gráfico para mostrar.",
+        "none": "Nenhum cartão foi criado: as etapas deste painel não retornaram dados agrupados nesta instância."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "Montar este painel",
         "building": "A montar…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
-        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente."
+        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
+        "partial": "Foram criados {published} de {declared} gráficos. Não há dados suficientes nesta empresa para o restante.",
+        "none": "Não há dados suficientes nesta empresa para montar este painel."
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "sem creds",
       "invalid": "inválidas",
       "pending": "pendentes",
-      "seats": "de {total} assentos"
+      "seats": "de {total} assentos",
+      "orgSeats": "{used} de {total} assentos na sua organização"
     },
     "seat": {
       "paid": "Pago",

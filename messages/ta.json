@@ -30,7 +30,9 @@
     "onlyActiveInstance": "செயலில் உள்ள நிகழ்வை மட்டும் காட்டு",
     "viewAsClient": "View as client",
     "backToMyView": "Back to my view",
-    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”."
+    "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
+    "showAllInstances": "அனைத்தையும் காட்டு",
+    "openMenu": "மெனுவைத் திற"
   },
   "UserMenu": {
     "guest": "விருந்தினர்",
@@ -102,7 +104,8 @@
     "transcribeError": "ஆடியோவை படியெடுக்க முடியவில்லை",
     "selectConfig": "Choose an instance",
     "ownGroup": "Your instances",
-    "demoGroup": "Sample companies"
+    "demoGroup": "Sample companies",
+    "placeholderShort": "உங்கள் Odoo பற்றி கேளுங்கள்..."
   },
   "ChatMessages": {
     "typingIndicator": "Odoo-ஐ வினவுகிறோம்",
@@ -169,7 +172,8 @@
       "desc": "இந்த Odoo இணைப்புக்கான சான்றுகள் உள்ளமைக்கப்படவில்லை. வினவல்களை இயக்க அமைப்புகளில் உள்ளமைக்கவும்.",
       "cta": "அமைப்புகளுக்கு செல்லவும்"
     },
-    "connectionError": "கோரிக்கையை முடிக்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்."
+    "connectionError": "கோரிக்கையை முடிக்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+    "actionFailed": "செயலைச் செய்ய முடியவில்லை."
   },
   "ChatHistory": {
     "loading": "உரையாடல் ஏற்றப்படுகிறது...",
@@ -1000,7 +1004,9 @@
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
-        "tooManyRuns": "A few things are running. Wait a few seconds and try again."
+        "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
+        "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
+        "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "இந்த டாஷ்போர்டை உருவாக்கு",
         "building": "உருவாக்குகிறது…",
         "failed": "டாஷ்போர்டை உருவாக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
-        "tooManyRuns": "பல செயல்கள் இயங்குகின்றன. சில வினாடிகள் காத்திருந்து மீண்டும் முயற்சிக்கவும்."
+        "tooManyRuns": "பல செயல்கள் இயங்குகின்றன. சில வினாடிகள் காத்திருந்து மீண்டும் முயற்சிக்கவும்.",
+        "partial": "{declared} இல் {published} வரைபடங்கள் உருவாக்கப்பட்டன. மீதமுள்ளவற்றுக்கு இந்த நிறுவனத்தில் போதுமான தரவு இல்லை.",
+        "none": "இந்த டாஷ்போர்டை உருவாக்க இந்த நிறுவனத்தில் போதுமான தரவு இல்லை."
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "no creds",
       "invalid": "invalid",
       "pending": "pending",
-      "seats": "of {total} seats"
+      "seats": "of {total} seats",
+      "orgSeats": "{used} of {total} seats in your organization"
     },
     "seat": {
       "paid": "Paid",

@@ -202,30 +202,36 @@ export function Sidebar({
                       </button>
                     </div>
                   ) : (
+                    // Dos botones HERMANOS dentro de la fila: abrir y borrar. Era un
+                    // `div role="button"` con el de borrar ADENTRO — un control dentro de
+                    // otro, que los lectores de pantalla no pueden anunciar bien.
                     <div
-                      className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-body transition-colors cursor-pointer ${
+                      className={`flex w-full items-center rounded-md text-body transition-colors ${
                         currentChatId === chat.id
                           ? "bg-sidebar-active font-medium text-accent"
                           : "hover:bg-sidebar-hover"
                       }`}
-                      onClick={() => { onSelectChat(chat.id); setMobileOpen(false); }}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => { if (e.key === "Enter") { onSelectChat(chat.id); setMobileOpen(false); } }}
                     >
-                      <MessageSquare size={iconInline} strokeWidth={1.5} className="shrink-0 opacity-60" />
-                      <span className="min-w-0 flex-1 text-left">
-                        <span className="block truncate">{chat.title || t("newConversation")}</span>
-                        {instanceNameFor(chat.configId) && (
-                          <span className="block truncate text-micro text-text-muted">
-                            {instanceNameFor(chat.configId)}
-                          </span>
-                        )}
-                      </span>
                       <button
                         type="button"
-                        onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(chat.id); }}
-                        className="shrink-0 rounded p-1 opacity-0 group-hover/chat:opacity-100 text-text-secondary hover:text-error hover:bg-error-subtle transition-all"
+                        onClick={() => { onSelectChat(chat.id); setMobileOpen(false); }}
+                        aria-current={currentChatId === chat.id ? "page" : undefined}
+                        className="flex min-w-0 flex-1 items-center gap-2.5 rounded-md py-2 pl-2.5 text-left"
+                      >
+                        <MessageSquare size={iconInline} strokeWidth={1.5} className="shrink-0 opacity-60" />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate">{chat.title || t("newConversation")}</span>
+                          {instanceNameFor(chat.configId) && (
+                            <span className="block truncate text-micro text-text-muted">
+                              {instanceNameFor(chat.configId)}
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeleteId(chat.id)}
+                        className="mx-1.5 shrink-0 rounded p-1 opacity-0 group-hover/chat:opacity-100 focus-visible:opacity-100 text-text-secondary hover:text-error hover:bg-error-subtle transition-all"
                         aria-label={t("deleteChat")}
                       >
                         <Trash2 size={13} strokeWidth={1.5} />
@@ -260,9 +266,16 @@ export function Sidebar({
             onClick={() => onToggleAllInstances(!showAllInstances)}
             className="mt-1 w-full rounded-md px-2.5 py-2 text-left text-small text-text-muted hover:bg-sidebar-hover hover:text-text-secondary transition-colors"
           >
-            {showAllInstances
-              ? t("onlyActiveInstance")
-              : t("otherInstances", { count: otherInstancesCount })}
+            {showAllInstances ? (
+              <span className="font-medium text-accent">{t("onlyActiveInstance")}</span>
+            ) : (
+              // Se dibujaba como texto gris sin ninguna señal de que se puede tocar.
+              <>
+                {t("otherInstances", { count: otherInstancesCount })}
+                {" · "}
+                <span className="font-medium text-accent">{t("showAllInstances")}</span>
+              </>
+            )}
           </button>
         )}
 
@@ -302,9 +315,12 @@ export function Sidebar({
   return (
     <>
       {/* Mobile toggle */}
+      {/* Arriba a la izquierda y DENTRO del alto del cartel del demo, que en pantallas
+          chicas le deja lugar (`demo-banner`): en `top-4` tapaba su ícono y el contenido. */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 rounded-md bg-surface p-2 shadow-sm lg:hidden"
+        aria-label={t("openMenu")}
+        className="fixed left-2 top-1.5 z-50 rounded-md bg-surface p-2 shadow-sm lg:hidden"
       >
         <Menu size={iconBtn} />
       </button>

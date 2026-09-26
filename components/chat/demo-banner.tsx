@@ -53,7 +53,7 @@ export function DemoBanner() {
     : bannerText;
 
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-border bg-warning-subtle px-4 py-2 text-small text-warning-solid shrink-0">
+    <div className="flex min-h-12 items-center justify-between gap-3 border-b border-border bg-warning-subtle py-2 pl-14 pr-4 text-small text-warning-solid shrink-0 lg:min-h-0 lg:pl-4">
       <div className="flex items-center gap-2 min-w-0">
         <Zap size={16} strokeWidth={1.5} className="shrink-0" />
         <span className="sm:hidden">{t("demoBannerShort")}</span>

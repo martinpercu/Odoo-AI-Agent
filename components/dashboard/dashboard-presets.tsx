@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
-import { Loader2, Sparkles } from "lucide-react";
+import { Info, Loader2, Sparkles } from "lucide-react";
 
 import { listRoutines, runRoutine } from "@/lib/api";
 import { useAudienceT } from "@/hooks/use-audience-translations";
@@ -38,6 +38,8 @@ export function DashboardPresets({ configId, onApplied, disabled }: DashboardPre
   const [presets, setPresets] = useState<Routine[] | null>(null);
   const [runningId, setRunningId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /** "Se armaron 1 de 4": sin esto el usuario ve UNA tarjeta y ningún motivo. */
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (!configId) {
@@ -62,6 +64,7 @@ export function DashboardPresets({ configId, onApplied, disabled }: DashboardPre
     if (!configId) return;
     setRunningId(routineId);
     setError(null);
+    setNotice(null);
     const res = await runRoutine(routineId, configId, {}, locale);
     if (!res.success || !res.runId) {
       setRunningId(null);
@@ -77,7 +80,21 @@ export function DashboardPresets({ configId, onApplied, disabled }: DashboardPre
       if (status && !["queued", "running"].includes(status)) {
         // `partial` es un éxito con nota (7 de 8 pasos): las tarjetas que salieron
         // bien ya están en el Tablero y hay que mostrarlas.
-        if (status === "error") setError(t("presets.failed"));
+        if (status === "error") {
+          setError(t("presets.failed"));
+        } else {
+          const pins = run.success ? run.run?.pins : null;
+          if (pins && pins.published.length < pins.declared.length) {
+            setNotice(
+              pins.published.length === 0
+                ? t("presets.none")
+                : t("presets.partial", {
+                    published: pins.published.length,
+                    declared: pins.declared.length,
+                  })
+            );
+          }
+        }
         break;
       }
     }
@@ -105,6 +122,15 @@ export function DashboardPresets({ configId, onApplied, disabled }: DashboardPre
       {error && (
         <div className="mb-3 rounded-card border border-error/30 bg-error-subtle p-3 text-small text-error">
           {error}
+        </div>
+      )}
+      {notice && (
+        <div
+          role="status"
+          className="mb-3 flex items-start gap-2 rounded-card border border-border bg-raised p-3 text-small text-text-secondary"
+        >
+          <Info size={16} strokeWidth={1.5} className="mt-0.5 shrink-0" aria-hidden />
+          <span>{notice}</span>
         </div>
       )}
 

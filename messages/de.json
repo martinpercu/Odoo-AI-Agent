@@ -30,7 +30,9 @@
     "onlyActiveInstance": "Nur die aktive Instanz anzeigen",
     "viewAsClient": "Kundenansicht",
     "backToMyView": "Zurück zu meiner Ansicht",
-    "viewAsClientInfo": "Kunden sehen eine luftigere Ansicht, und der Agent sagt „Kunde“ statt „res.partner“."
+    "viewAsClientInfo": "Kunden sehen eine luftigere Ansicht, und der Agent sagt „Kunde“ statt „res.partner“.",
+    "showAllInstances": "alle anzeigen",
+    "openMenu": "Menü öffnen"
   },
   "UserMenu": {
     "guest": "Gast",
@@ -102,7 +104,8 @@
     "transcribeError": "Audio konnte nicht transkribiert werden",
     "selectConfig": "Instanz auswählen",
     "ownGroup": "Deine Instanzen",
-    "demoGroup": "Beispielunternehmen"
+    "demoGroup": "Beispielunternehmen",
+    "placeholderShort": "Frage zu Ihrem Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Frage Odoo ab",
@@ -169,7 +172,8 @@
       "desc": "Sie haben keine Anmeldedaten für diese Odoo-Verbindung konfiguriert. Richten Sie diese in den Einstellungen ein.",
       "cta": "Zu den Einstellungen"
     },
-    "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut."
+    "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut.",
+    "actionFailed": "Die Aktion konnte nicht ausgeführt werden."
   },
   "ChatHistory": {
     "loading": "Konversation wird geladen...",
@@ -1000,7 +1004,9 @@
         "apply": "Dieses Dashboard erstellen",
         "building": "Wird erstellt…",
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
-        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
+        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
+        "partial": "{published} von {declared} Karten erstellt. Die übrigen Schritte lieferten auf dieser Instanz keine gruppierten Daten, daher gibt es nichts darzustellen.",
+        "none": "Keine Karte erstellt: Die Schritte dieses Dashboards lieferten auf dieser Instanz keine gruppierten Daten."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "Dieses Dashboard erstellen",
         "building": "Wird erstellt…",
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
-        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
+        "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
+        "partial": "{published} von {declared} Diagrammen erstellt. Für den Rest gibt es in diesem Unternehmen nicht genug Daten.",
+        "none": "In diesem Unternehmen gibt es nicht genug Daten für dieses Dashboard."
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "ohne Daten",
       "invalid": "ungültig",
       "pending": "ausstehend",
-      "seats": "von {total} Plätzen"
+      "seats": "von {total} Plätzen",
+      "orgSeats": "{used} von {total} Plätzen in Ihrer Organisation"
     },
     "seat": {
       "paid": "Bezahlt",

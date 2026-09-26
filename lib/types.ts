@@ -1325,6 +1325,13 @@ export interface RoutineAttribution {
 export interface RoutineRunDetail extends RoutineRunSummary {
   progress: Record<string, RoutineStepStatus>;
   results: Record<string, RoutineResultEntry>;
+  /**
+   * Qué tarjetas dejó en el Tablero una Rutina con `compose.pin` (los presets).
+   * `null` = la Rutina no publica, o la corrida es anterior a que el backend lo
+   * guardara. La regla de qué paso produce un gráfico vive en el backend
+   * (`publish_pins`): acá sólo se compara declaradas contra publicadas.
+   */
+  pins?: { declared: string[]; published: string[] } | null;
   params: Record<string, unknown>;
   routine_version?: number;
   /** El archivo sólo viaja en el detalle, nunca en el listado. */

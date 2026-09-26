@@ -30,7 +30,9 @@
     "onlyActiveInstance": "Afficher uniquement l'instance active",
     "viewAsClient": "Vue client",
     "backToMyView": "Revenir à ma vue",
-    "viewAsClientInfo": "Les clients voient une mise en page plus aérée et l’agent dit « client » au lieu de « res.partner »."
+    "viewAsClientInfo": "Les clients voient une mise en page plus aérée et l’agent dit « client » au lieu de « res.partner ».",
+    "showAllInstances": "tout afficher",
+    "openMenu": "Ouvrir le menu"
   },
   "UserMenu": {
     "guest": "Invité",
@@ -102,7 +104,8 @@
     "transcribeError": "Impossible de transcrire l'audio",
     "selectConfig": "Choisir une instance",
     "ownGroup": "Vos instances",
-    "demoGroup": "Entreprises d'exemple"
+    "demoGroup": "Entreprises d'exemple",
+    "placeholderShort": "Question sur votre Odoo..."
   },
   "ChatMessages": {
     "typingIndicator": "Interrogation d'Odoo",
@@ -169,7 +172,8 @@
       "desc": "Vous n'avez pas d'identifiants configurés pour cette connexion Odoo. Configurez-les dans les Paramètres.",
       "cta": "Aller aux Paramètres"
     },
-    "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez."
+    "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez.",
+    "actionFailed": "L'action n'a pas pu être exécutée."
   },
   "ChatHistory": {
     "loading": "Chargement de la conversation...",
@@ -1000,7 +1004,9 @@
         "apply": "Créer ce tableau de bord",
         "building": "Création…",
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
-        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
+        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
+        "partial": "{published} cartes sur {declared} ont été créées. Les autres étapes n'ont renvoyé aucune donnée groupée sur cette instance : il n'y a rien à représenter.",
+        "none": "Aucune carte créée : les étapes de ce tableau n'ont renvoyé aucune donnée groupée sur cette instance."
       }
     },
     "WriteGate": {
@@ -1115,7 +1121,9 @@
         "apply": "Créer ce tableau de bord",
         "building": "Création…",
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
-        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez."
+        "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
+        "partial": "{published} graphiques sur {declared} ont été créés. Il n'y a pas assez de données dans cette entreprise pour les autres.",
+        "none": "Il n'y a pas assez de données dans cette entreprise pour créer ce tableau."
       }
     },
     "WriteGate": {
@@ -1252,7 +1260,8 @@
       "unset": "sans ident.",
       "invalid": "invalides",
       "pending": "en attente",
-      "seats": "sur {total} sièges"
+      "seats": "sur {total} sièges",
+      "orgSeats": "{used} sur {total} sièges dans votre organisation"
     },
     "seat": {
       "paid": "Payant",

@@ -11,6 +11,7 @@ import {
   Loader2,
   Building2,
   Lock,
+  Users,
 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { listOdooConfigs } from "@/lib/api";
@@ -44,7 +45,10 @@ function InstanceCard({ config }: { config: OdooConfigSummary }) {
           <ChevronRight size={18} strokeWidth={1.5} className="text-text-muted" />
         </div>
       </div>
-      {config.counts && <InstanceHealthSummary counts={config.counts} seats={config.seats} />}
+      {/* Sin `seats`: son de la ORGANIZACIÓN (el backend repite el mismo número en cada
+          instancia), así que en cada tarjeta parecían ser de esa instancia. Van una sola
+          vez, bajo el título de la página. */}
+      {config.counts && <InstanceHealthSummary counts={config.counts} />}
     </Link>
   );
 }
@@ -59,6 +63,7 @@ export default function InstancesPage() {
   const isPartner = meData?.org?.type === "PARTNER";
 
   const [configs, setConfigs] = useState<OdooConfigSummary[] | null>(null);
+  const orgSeats = configs?.find((c) => c.seats)?.seats;
   const [adding, setAdding] = useState(false);
 
   // setState lives inside the .then callback (not directly in the effect body).
@@ -107,6 +112,16 @@ export default function InstancesPage() {
           </button>
         )}
       </div>
+
+      {orgSeats && (
+        <p className="-mt-3 mb-6 flex items-center gap-2 text-small text-text-secondary">
+          <Users size={16} strokeWidth={1.5} className="shrink-0" aria-hidden />
+          {t("health.orgSeats", {
+            used: orgSeats.paid_used + orgSeats.free_used,
+            total: orgSeats.paid_total + orgSeats.free_total,
+          })}
+        </p>
+      )}
 
       {/* Add-instance form (PARTNER only) */}
       <AnimatePresence>
