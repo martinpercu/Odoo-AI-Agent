@@ -997,6 +997,11 @@
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
         "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
       }
+    },
+    "WriteGate": {
+      "note": "Ohne Konto ist die öffentliche Demo schreibgeschützt: Abfragen funktionieren, aber dieser Schreibvorgang wird nicht in Odoo ausgeführt.",
+      "cta": "Konto erstellen, um ihn auszuführen",
+      "locked": "Konto erforderlich"
     }
   },
   "Client": {
@@ -1107,6 +1112,11 @@
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
         "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut."
       }
+    },
+    "WriteGate": {
+      "note": "Für Änderungen benötigen Sie ein Konto. Fragen können Sie weiterhin alles, was Sie möchten.",
+      "cta": "Konto erstellen",
+      "locked": "Konto erforderlich"
     }
   },
   "Intro": {

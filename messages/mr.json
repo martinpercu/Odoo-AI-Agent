@@ -997,6 +997,11 @@
         "failed": "The dashboard could not be built. Try again.",
         "tooManyRuns": "A few things are running. Wait a few seconds and try again."
       }
+    },
+    "WriteGate": {
+      "note": "Without an account the public demo is read-only: queries work, but this write won't run on Odoo.",
+      "cta": "Create an account to run it",
+      "locked": "Account required"
     }
   },
   "Client": {
@@ -1107,6 +1112,11 @@
         "failed": "डॅशबोर्ड तयार होऊ शकला नाही. पुन्हा प्रयत्न करा.",
         "tooManyRuns": "अनेक कामे चालू आहेत. काही सेकंद थांबा आणि पुन्हा प्रयत्न करा."
       }
+    },
+    "WriteGate": {
+      "note": "बदल करण्यासाठी तुम्हाला खाते हवे आहे. तुम्ही हवे ते विचारत राहू शकता.",
+      "cta": "खाते तयार करा",
+      "locked": "खाते आवश्यक"
     }
   },
   "Intro": {
