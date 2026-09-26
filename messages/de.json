@@ -151,7 +151,9 @@
       "fieldEdited": "Geändert",
       "originalValue": "Originalvorschlag",
       "validationError": "Bitte korrigieren Sie die markierten Felder.",
-      "confirm": "Aktion bestätigen"
+      "confirm": "Aktion bestätigen",
+      "yes": "Ja",
+      "no": "Nein"
     },
     "audit": {
       "title": "Aktionsverlauf",
@@ -170,7 +172,10 @@
     "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut."
   },
   "ChatHistory": {
-    "loading": "Konversation wird geladen..."
+    "loading": "Konversation wird geladen...",
+    "notFound": "Diese Unterhaltung wurde nicht gefunden",
+    "notFoundHint": "Sie wurde möglicherweise gelöscht oder gehört zu einem anderen Konto oder Browser.",
+    "notFoundCta": "Neue Anfrage starten"
   },
   "Pricing": {
     "heading": "Tarife & Preise",

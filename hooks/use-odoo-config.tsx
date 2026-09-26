@@ -75,6 +75,10 @@ export function OdooConfigProvider({ children }: { children: React.ReactNode }) 
   // Choose the active config. No complete instance → stay in demo (admins/anonymous);
   // a CLIENT_USER with a non-active config keeps it so they see the load-creds / invalid state.
   useEffect(() => {
+    // Sin `/me` no hay con qué elegir. Elegir igual caía en el literal "demo" y la app
+    // se creía en demo hasta que llegaba la sesión: el cartel parpadeaba y el modal de
+    // intro se le abría a un implementador logueado.
+    if (!meData) return;
     if (usableConfigs.length === 0) {
       if (!isClientUser || rawConfigs.length === 0) {
         // ⚠️ El literal `"demo"` queda SÓLO como último recurso: es el alias de
@@ -100,7 +104,7 @@ export function OdooConfigProvider({ children }: { children: React.ReactNode }) 
     } else {
       setActiveConfigIdState(usableConfigs[0].id);
     }
-  }, [configsSig, isClientUser]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [configsSig, isClientUser, !!meData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setActiveConfigId = useCallback((id: string) => {
     setActiveConfigIdState(id);
@@ -117,7 +121,11 @@ export function OdooConfigProvider({ children }: { children: React.ReactNode }) 
    * restaura sola). El literal se sigue aceptando porque es el alias que el backend
    * resuelve cuando todavía no hay catálogo cargado.
    */
-  const isDemoMode = activeConfig?.is_demo === true || activeConfigId === "demo";
+  // ⚠️ El alias sólo cuenta mientras NO hay instancias propias usables: con ellas, un
+  // "demo" en `activeConfigId` es el valor viejo del render anterior a que el efecto de
+  // arriba elija — y un render alcanza para abrir el modal del demo sobre una instancia real.
+  const isDemoMode =
+    activeConfig?.is_demo === true || (activeConfigId === "demo" && !hasOwnUsable);
   const isConfigured = isDemoMode || activeConfig !== null;
 
   const config = activeConfig

@@ -12,6 +12,7 @@
  */
 
 import { useState } from "react";
+import { useLocale } from "next-intl";
 import { BarChart3, TrendingUp, PieChart as PieIcon, Table as TableIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -35,23 +36,41 @@ export type ChartViewType = ChartSSEEvent["chart_type"];
 // Brand indigo palette for pie charts (Rule 3: odoo-purple is logo-only)
 export const PIE_COLORS = ["#6366F1", "#818CF8", "#A5B4FC", "#C7D2FE", "#E0E7FF"];
 
+/**
+ * ⚠️ **El locale es el de la APP y es obligatorio.** Estaba fijo en `"en-US"`: el
+ * Tablero mostraba `₲7,556,304,062` en una pantalla en español mientras el chat, que
+ * formatea el backend, decía `₲7.556.304.062` — el mismo número de dos maneras (la
+ * misma familia que el bug 15 del ROADMAP). Sin default a propósito: un llamador que
+ * se olvide no compila, en vez de caer callado en inglés.
+ *
+ * `useGrouping: "always"`: en español `Intl` no agrupa los números de 4 cifras
+ * ("2623" al lado de "11.968" en la misma tarjeta).
+ */
+function numberFormat(locale: string, options: Intl.NumberFormatOptions): Intl.NumberFormat {
+  return new Intl.NumberFormat(locale, {
+    useGrouping: "always",
+    ...options,
+  } as Intl.NumberFormatOptions);
+}
+
 export function formatValue(
   val: number,
   format: string,
   symbol: string,
-  noDecimals = false
+  noDecimals: boolean | undefined,
+  locale: string
 ): string {
   switch (format) {
     case "currency": {
       const decimals = noDecimals ? 0 : 2;
-      return `${symbol}${new Intl.NumberFormat("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(val)}`;
+      return `${symbol}${numberFormat(locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(val)}`;
     }
     case "integer":
-      return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(val);
+      return numberFormat(locale, { maximumFractionDigits: 0 }).format(val);
     case "decimal":
     case "number":
     default:
-      return new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
+      return numberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
   }
 }
 
@@ -59,35 +78,28 @@ export function formatAxisValue(
   val: number,
   format: string,
   symbol: string,
-  noDecimals = false
+  noDecimals: boolean | undefined,
+  locale: string
 ): string {
   if (format !== "currency" && format !== "decimal" && format !== "number") {
-    return formatValue(val, format, symbol, noDecimals);
+    return formatValue(val, format, symbol, noDecimals, locale);
   }
 
-  const abs = Math.abs(val);
-  let compact: string;
-
-  if (abs >= 1_000_000_000_000) {
-    compact = `${parseFloat((val / 1_000_000_000_000).toFixed(1))}T`;
-  } else if (abs >= 1_000_000_000) {
-    compact = `${parseFloat((val / 1_000_000_000).toFixed(1))}B`;
-  } else if (abs >= 1_000_000) {
-    compact = `${parseFloat((val / 1_000_000).toFixed(1))}M`;
-  } else if (abs >= 1_000) {
-    compact = `${parseFloat((val / 1_000).toFixed(1))}K`;
-  } else {
-    const decimals = noDecimals ? 0 : 2;
-    compact = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }).format(val);
-  }
+  // Las abreviaturas también son del idioma: "B" es inglés — en español mil millones
+  // es "mil M", y "billón" sería otra cosa (10¹²). Las arma `Intl`, no nosotros.
+  const compact =
+    Math.abs(val) >= 1_000
+      ? numberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(val)
+      : numberFormat(locale, {
+          minimumFractionDigits: noDecimals ? 0 : 2,
+          maximumFractionDigits: noDecimals ? 0 : 2,
+        }).format(val);
 
   return format === "currency" ? `${symbol}${compact}` : compact;
 }
 
 export function ChartTooltip(props: Record<string, unknown> & { meta: ChartSSEEvent["meta"] }) {
+  const locale = useLocale();
   const { active, payload, label, meta } = props as {
     active?: boolean;
     payload?: { value?: number; name?: string }[];
@@ -100,7 +112,7 @@ export function ChartTooltip(props: Record<string, unknown> & { meta: ChartSSEEv
     <div className="rounded-md border border-border bg-surface px-3 py-2 shadow-lg">
       <p className="text-small font-medium text-foreground">{label ?? payload[0].name}</p>
       <p className="text-body font-semibold font-technical text-accent">
-        {formatValue(payload[0].value as number, meta.value_format, meta.currency_symbol, meta.no_decimals)}
+        {formatValue(payload[0].value as number, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
       </p>
     </div>
   );
@@ -243,6 +255,7 @@ export function ChartTable({
   compact?: boolean;
   height?: number;
 }) {
+  const locale = useLocale();
   const total = data.reduce((acc, d) => acc + (d.value ?? 0), 0);
 
   return (
@@ -276,7 +289,7 @@ export function ChartTable({
                 {row.label}
               </td>
               <td className="px-3 py-2 text-right text-body font-technical text-foreground tabular-nums">
-                {formatValue(row.value, meta.value_format, meta.currency_symbol, meta.no_decimals)}
+                {formatValue(row.value, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
               </td>
               {!compact && (
                 <td className="px-3 py-2 text-right text-small font-technical text-text-secondary tabular-nums">
@@ -314,6 +327,7 @@ export function ChartPlot({
   horizontalBar?: boolean;
   otherLabel?: string;
 }) {
+  const locale = useLocale();
   const viewData = viewType === "pie" ? collapseForPie(data, otherLabel) : data;
   const isHorizontalBar = viewType === "bar" && horizontalBar;
   const boxHeight = isHorizontalBar ? Math.max(viewData.length * 40, 200) : height;
@@ -328,7 +342,7 @@ export function ChartPlot({
               <XAxis
                 type="number"
                 tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
-                tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
+                tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
               />
               <YAxis
                 dataKey="label"
@@ -350,7 +364,7 @@ export function ChartPlot({
               />
               <YAxis
                 tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
-                tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
+                tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
               />
               <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
               <Bar dataKey="value" fill="var(--brand)" radius={[4, 4, 0, 0]} />
@@ -372,7 +386,7 @@ export function ChartPlot({
             />
             <YAxis
               tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
-              tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals)}
+              tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
             />
             <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
             <Area

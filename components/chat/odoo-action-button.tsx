@@ -39,9 +39,9 @@ export function OdooActionButton({ metadata, onAction }: OdooActionButtonProps) 
       await onAction(actionContext);
       setCompleted(true);
     } catch (error) {
-      const err = error as Error & { accountRequired?: boolean };
+      const err = error as Error & { accountRequired?: boolean; reported?: boolean };
       if (err.accountRequired) setAccountRequiredDetail(err.message);
-      else console.error("Action failed:", error);
+      else if (!err.reported) console.error("Action failed:", error);
     } finally {
       setLoading(false);
     }

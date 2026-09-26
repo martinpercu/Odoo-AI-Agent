@@ -5,7 +5,7 @@ import { CheckCircle2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ActionSuccessMetadata } from "@/lib/types";
 import { DocNum } from "@/components/ui/doc-num";
-import { useSession } from "@/hooks/use-session";
+import { useAudience } from "@/hooks/use-audience";
 import { modelToDocType } from "@/lib/odoo-model-to-doctype";
 
 interface SuccessCardProps {
@@ -24,8 +24,9 @@ function normalizeAction(action: string): KnownAction {
 export function SuccessCard({ metadata }: SuccessCardProps) {
   const t = useTranslations("ChatMessages.success");
   const tClient = useTranslations("Client.ActionSuccess");
-  const { meData } = useSession();
-  const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
+  // Por AUDIENCIA, no por rol: con "ver como cliente" esta tarjeta tiene que perder el
+  // nombre técnico y el número de registro como el resto de la pantalla.
+  const isBuilder = useAudience().audience === "builder";
 
   function clientHeadline(): string {
     const action = normalizeAction(metadata.action);

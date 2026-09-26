@@ -36,7 +36,10 @@
   /* Text */
   --text-primary:   #1C1917;   /* stone-900, warm */
   --text-secondary: #57534E;   /* stone-600 */
-  --text-muted:     #A8A29E;   /* stone-400 */
+  --text-muted:     #78716C;   /* stone-500 — era stone-400 (2,3–2,5:1, no llegaba a 4,5) */
+  /* Acento como TEXTO (ver el bloque "ACENTO COMO TEXTO" al final) */
+  --accent-text:       #4F46E5;   /* indigo 600 — 6,0–6,3:1 */
+  --accent-text-hover: #4338CA;   /* indigo 700 */
 
   /* Semantic */
   --state-success:        #16A34A;
@@ -85,7 +88,9 @@
   /* Text */
   --text-primary:   #FAFAF7;
   --text-secondary: #B8B3AC;
-  --text-muted:     #7A7670;
+  --text-muted:     #9A958E;   /* era #7A7670: 2,9–3,9:1 */
+  --accent-text:       #A5B4FC;   /* indigo 300 — 6,5–8,9:1 */
+  --accent-text-hover: #C7D2FE;   /* indigo 200 */
 
   /* Semantic — tonos más vivos en dark cálido */
   --state-success:        #34D399;   /* emerald 400 */
@@ -395,4 +400,29 @@ body {
   padding-left: 1em;
   margin-bottom: 0.75em;
   color: var(--text-secondary);
+}
+
+/* ============================================================
+   ACENTO COMO TEXTO ≠ ACENTO COMO RELLENO (2026-09-23)
+   ------------------------------------------------------------
+   `text-accent` y `bg-accent` salían del MISMO color (indigo 500). Como relleno con
+   texto blanco anda; como texto no: 2,9:1 sobre las superficies oscuras y 4,0–4,5
+   sobre las claras, con 4,5 de mínimo (DESIGN_GUIDELINES §9). No hay un solo indigo
+   que sirva para las dos cosas en los dos modos — el que se lee sobre fondo oscuro es
+   demasiado claro para llevar texto blanco encima.
+   Así que el texto usa `--accent-text` y el relleno sigue en `--brand`. Se reescriben
+   acá las utilidades de TEXTO (no los 180 usos): dentro de la misma capa y después de
+   las de Tailwind, así que las variantes `hover:` y `group-hover:` siguen ganando por
+   especificidad igual que antes.
+   ============================================================ */
+@layer utilities {
+  .text-accent { color: var(--accent-text); }
+  .text-accent\/60 { color: color-mix(in oklab, var(--accent-text) 60%, transparent); }
+  .text-accent-hover { color: var(--accent-text-hover); }
+  @media (hover: hover) {
+    .hover\:text-accent:hover { color: var(--accent-text); }
+    .hover\:text-accent-hover:hover { color: var(--accent-text-hover); }
+    .group:hover .group-hover\:text-accent { color: var(--accent-text); }
+    .group:hover .group-hover\:text-accent-hover { color: var(--accent-text-hover); }
+  }
 }

@@ -13,7 +13,7 @@ import {
   RefreshCw,
   X,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import type { DashboardRefreshResult, PinnedChart, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
@@ -117,6 +117,7 @@ function ChartCard({
   tChart: ReturnType<typeof useTranslations>;
 }) {
   const { chart } = pin;
+  const locale = useLocale();
   const [viewType, setViewType] = useState<ChartViewType>(chart.chart_type);
 
   const isLive = (pin.query_context?.volatility ?? "variable") === "variable";
@@ -129,7 +130,8 @@ function ChartCard({
           chart.meta.total,
           chart.meta.value_format,
           chart.meta.currency_symbol,
-          chart.meta.no_decimals
+          chart.meta.no_decimals,
+          locale
         )
       : null;
 

@@ -151,7 +151,9 @@
       "fieldEdited": "Modified",
       "originalValue": "Original suggestion",
       "validationError": "Please fix the highlighted fields and try again.",
-      "confirm": "Confirm action"
+      "confirm": "Confirm action",
+      "yes": "Yes",
+      "no": "No"
     },
     "audit": {
       "title": "Action History",
@@ -170,7 +172,10 @@
     "connectionError": "We couldn't complete the query. Check the connection and try again."
   },
   "ChatHistory": {
-    "loading": "Loading conversation..."
+    "loading": "Loading conversation...",
+    "notFound": "We couldn't find this conversation",
+    "notFoundHint": "It may have been deleted, or belong to another account or browser.",
+    "notFoundCta": "Start a new query"
   },
   "Pricing": {
     "heading": "Plans & Pricing",

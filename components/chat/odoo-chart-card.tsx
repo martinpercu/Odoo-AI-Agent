@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ChartSSEEvent } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
@@ -26,6 +26,7 @@ interface OdooChartCardProps {
 
 export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardProps) {
   const t = useTranslations("ChatMessages.chart");
+  const locale = useLocale();
   const { chart_type, title, data, meta } = chart;
 
   // The backend's chart_type is the STARTING POINT, not the final word: it seeds
@@ -169,7 +170,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
             {t("globalTotal")}
           </span>
           <span className="text-body font-semibold font-technical text-accent">
-            {formatValue(meta.total, meta.value_format, meta.currency_symbol, meta.no_decimals)}
+            {formatValue(meta.total, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
           </span>
         </div>
       )}

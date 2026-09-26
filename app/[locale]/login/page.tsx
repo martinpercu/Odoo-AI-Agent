@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
+import { isOwnSessionMe, resolvePostAuthPath } from "@/lib/post-auth";
 import { Loader2, Zap } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
 
@@ -27,12 +28,15 @@ function LoginContent() {
   const locale = pathname?.split("/")[1] || "en";
   const nextPath = searchParams.get("next") || `/${locale}/chat`;
 
-  // Redirect already-logged-in users
+  // Adónde va un usuario con sesión — el que ya estaba logueado y el que acaba de
+  // entrar por el formulario. Es la ÚNICA redirección de esta página: el submit sólo
+  // recarga la sesión. Dos caminos distintos para lo mismo competían entre sí.
+  // ⚠️ Espera un `/me` que sea del usuario (ver `isOwnSessionMe`).
   useEffect(() => {
-    if (!authLoading && user) {
-      router.replace(meData?.org ? `/${locale}/chat` : `/${locale}/onboarding`);
-    }
-  }, [authLoading, user, meData?.org, locale, router]);
+    if (authLoading || !user || !isOwnSessionMe(meData)) return;
+    const dest = resolvePostAuthPath(meData);
+    router.replace(dest === "chat" ? nextPath : `/${locale}/${dest}`);
+  }, [authLoading, user, meData, locale, router, nextPath]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -44,12 +48,10 @@ function LoginContent() {
         setError(result.error);
         return;
       }
+      // La redirección la hace el efecto de arriba cuando llega el `/me` del usuario.
+      // Si `/me` no respondió, igual se sale del login: el chat sabe qué hacer sin él.
       const me = await reload();
-      if (!me || me.org === null) {
-        router.push(`/${locale}/onboarding`);
-      } else {
-        router.push(nextPath);
-      }
+      if (!me) router.push(nextPath);
     } finally {
       setIsSubmitting(false);
     }

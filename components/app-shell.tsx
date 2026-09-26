@@ -6,7 +6,7 @@ import { PinnedSidebar } from "@/components/pinned/pinned-sidebar";
 import { FlyingPinPortal } from "@/components/pinned/flying-pin-animation";
 import { LangGraphTracePanel } from "@/components/chat/langgraph-trace-panel";
 import { useChat } from "@/hooks/use-chat";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
@@ -61,21 +61,40 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const { user } = useAuth();
   const { meData } = useSession();
-  const chat = useChat(chatIdFromUrl, user?.id);
+  /**
+   * De quién es el historial: el usuario con cuenta, o —sin sesión— el visitante
+   * EFÍMERO del demo (DI-11). Sus conversaciones se guardan desde DI-11, pero la
+   * lista se pedía sólo con sesión de Supabase, así que el sidebar del visitante
+   * quedaba vacío al recargar y un chat suyo abierto por URL se veía en blanco.
+   * ⚠️ `is_ephemeral` acá decide únicamente QUÉ LISTA SE PIDE — el backend resuelve
+   * la identidad por el header `X-Demo-Visitor`; esto no habilita nada.
+   */
+  const historyOwnerId =
+    user?.id ?? (meData?.user?.is_ephemeral ? meData.user.id : undefined);
+  const chat = useChat(chatIdFromUrl, historyOwnerId);
   const { loadAllPins } = usePinnedInsights();
   const { activeConfigId, setActiveConfigId } = useOdooConfig();
   const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
 
   // El historial se pide YA filtrado por instancia (ver `fetchMyConversations`), así que
   // cambiar de instancia — o pedir "ver todos" — es volver a pedir la primera página.
+  //
+  // ⚠️ Se limpia sólo al PERDER el dueño (logout), no mientras todavía no hay uno: en el
+  // arranque `/me` llega después del primer render, y limpiar ahí dejaba en `undefined`
+  // el chat abierto por URL — la página quedaba en blanco.
+  const prevHistoryOwnerRef = useRef<string | undefined>(undefined);
   useEffect(() => {
-    if (!user) {
-      chat.clearChats();
+    const prevOwner = prevHistoryOwnerRef.current;
+    prevHistoryOwnerRef.current = historyOwnerId;
+    if (!historyOwnerId) {
+      if (prevOwner) chat.clearChats();
       return;
     }
+    // Otro dueño (el visitante que se loguea): lo del anterior no es suyo.
+    if (prevOwner && prevOwner !== historyOwnerId) chat.clearChats();
     chat.loadServerConversations(0);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, activeConfigId, chat.showAllInstances]);
+  }, [historyOwnerId, activeConfigId, chat.showAllInstances]);
 
   useEffect(() => {
     if (user) loadAllPins();

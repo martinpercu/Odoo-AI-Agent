@@ -151,7 +151,9 @@
       "fieldEdited": "Modificato",
       "originalValue": "Suggerimento originale",
       "validationError": "Correggi i campi evidenziati e riprova.",
-      "confirm": "Conferma azione"
+      "confirm": "Conferma azione",
+      "yes": "Sì",
+      "no": "No"
     },
     "audit": {
       "title": "Cronologia azioni",
@@ -170,7 +172,10 @@
     "connectionError": "Non siamo riusciti a completare la richiesta. Controlla la connessione e riprova."
   },
   "ChatHistory": {
-    "loading": "Caricamento conversazione..."
+    "loading": "Caricamento conversazione...",
+    "notFound": "Non abbiamo trovato questa conversazione",
+    "notFoundHint": "Potrebbe essere stata eliminata, o appartenere a un altro account o browser.",
+    "notFoundCta": "Inizia una nuova richiesta"
   },
   "Pricing": {
     "heading": "Piani e prezzi",

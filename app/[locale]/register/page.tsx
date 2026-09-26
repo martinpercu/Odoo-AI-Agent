@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
-import { resolvePostAuthPath } from "@/lib/post-auth";
+import { isOwnSessionMe, resolvePostAuthPath } from "@/lib/post-auth";
 import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { Loader2, Zap, Check } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -39,7 +39,8 @@ export default function RegisterPage() {
 
   // Redirect already-logged-in users
   useEffect(() => {
-    if (!authLoading && user && meData) {
+    // ⚠️ Recién registrado, el `/me` en memoria todavía es el del visitante del demo.
+    if (!authLoading && user && isOwnSessionMe(meData)) {
       router.replace(`/${locale}/${resolvePostAuthPath(meData)}`);
     }
   }, [authLoading, user, meData, locale, router]);
@@ -102,14 +103,24 @@ export default function RegisterPage() {
               ),
             })}
           </p>
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <p className="text-micro font-medium uppercase tracking-wide text-accent">
-              <InfoTooltip text={t("scarcityTooltip")} className="text-accent uppercase">
-                {t("foundingScarcity")}
-              </InfoTooltip>
-            </p>
-            <div className="relative w-40 shrink-0">
+          <p className="mt-3 text-micro font-medium uppercase tracking-wide text-accent">
+            <InfoTooltip text={t("scarcityTooltip")} className="text-accent uppercase">
+              {t("foundingScarcity")}
+            </InfoTooltip>
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* El código es la PUERTA de este formulario (beta cerrada), así que es un campo
+              de verdad, el primero y a ancho completo — no un input angosto al costado de
+              "cupos limitados" con el placeholder cortado. */}
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="register-access-code" className="text-small font-medium text-text-secondary">
+              {t("accessCodeLabel")}
+            </label>
+            <div className="relative">
               <input
+                id="register-access-code"
                 type="text"
                 value={accessCode}
                 onChange={(e) => {
@@ -119,10 +130,13 @@ export default function RegisterPage() {
                 }}
                 onBlur={() => setCodeTouched(true)}
                 placeholder={t("accessCodePlaceholder")}
-                className={`w-full rounded-btn border bg-base py-1 pl-2.5 pr-7 text-small text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 ${
+                aria-invalid={showAccessError || undefined}
+                className={`w-full rounded-md border bg-base py-2 pl-3 pr-9 text-body text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 ${
                   accessCodeValid
                     ? "border-success-solid focus:ring-success-solid/30"
-                    : "border-border focus:ring-accent/30"
+                    : showAccessError
+                      ? "border-error focus:ring-error/30"
+                      : "border-border focus:ring-accent/30"
                 }`}
                 autoComplete="off"
               />
@@ -130,47 +144,46 @@ export default function RegisterPage() {
                 <Check
                   size={16}
                   strokeWidth={2}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-success-solid"
+                  aria-hidden
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-success-solid"
                 />
               )}
             </div>
+        {showAccessError && (
+          <p className="mt-1.5 rounded-md bg-error-subtle px-3 py-2 text-small text-error">
+            {t.rich("accessCodeError", {
+              mail: (chunks) => (
+                <a
+                  href={`mailto:${t("requestAccessEmail")}?subject=${encodeURIComponent(
+                    "Founding Partners"
+                  )}`}
+                  className="font-medium underline hover:no-underline"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
+        )}
+        {/* Subtle path in for visitors without a code → email Martin */}
+        {!showAccessError && (
+          <p className="mt-2 text-micro text-text-muted">
+            {t.rich("requestAccess", {
+              mail: (chunks) => (
+                <a
+                  href={`mailto:${t("requestAccessEmail")}?subject=${encodeURIComponent(
+                    "Founding Partners"
+                  )}`}
+                  className="font-medium text-accent hover:underline"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
+        )}
           </div>
-          {showAccessError && (
-            <p className="mt-1.5 rounded-md bg-error-subtle px-3 py-2 text-small text-error">
-              {t.rich("accessCodeError", {
-                mail: (chunks) => (
-                  <a
-                    href={`mailto:${t("requestAccessEmail")}?subject=${encodeURIComponent(
-                      "Founding Partners"
-                    )}`}
-                    className="font-medium underline hover:no-underline"
-                  >
-                    {chunks}
-                  </a>
-                ),
-              })}
-            </p>
-          )}
-          {/* Subtle path in for visitors without a code → email Martin */}
-          {!showAccessError && (
-            <p className="mt-2 text-micro text-text-muted">
-              {t.rich("requestAccess", {
-                mail: (chunks) => (
-                  <a
-                    href={`mailto:${t("requestAccessEmail")}?subject=${encodeURIComponent(
-                      "Founding Partners"
-                    )}`}
-                    className="font-medium text-accent hover:underline"
-                  >
-                    {chunks}
-                  </a>
-                ),
-              })}
-            </p>
-          )}
-        </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-small font-medium text-text-secondary">
               {t("email")}

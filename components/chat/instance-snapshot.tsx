@@ -96,8 +96,12 @@ export function InstanceSnapshot() {
                   UI: con el navegador en inglés y la app en español, la misma tarjeta
                   mostraba «425» y «2,640» — coma de miles en una pantalla en español.
                   Es el mismo modo de falla que el bug 15 del ROADMAP, acá del lado del
-                  front. El locale de la app es el único que corresponde. */}
-              {(usage?.[tile.model] ?? 0).toLocaleString(locale)}
+                  front. El locale de la app es el único que corresponde.
+                  Y agrupando SIEMPRE: en español `Intl` no agrupa las cifras de 4
+                  dígitos, así que «2623» quedaba al lado de «11.968». */}
+              {(usage?.[tile.model] ?? 0).toLocaleString(locale, {
+                useGrouping: "always",
+              } as Intl.NumberFormatOptions)}
             </p>
             <p className="text-micro text-text-muted">{t(`model.${tile.key}`)}</p>
           </div>

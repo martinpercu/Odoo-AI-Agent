@@ -151,7 +151,9 @@
       "fieldEdited": "Modificado",
       "originalValue": "Sugerencia original",
       "validationError": "Corrige los campos resaltados e intenta de nuevo.",
-      "confirm": "Confirmar acción"
+      "confirm": "Confirmar acción",
+      "yes": "Sí",
+      "no": "No"
     },
     "audit": {
       "title": "Historial de Acciones",
@@ -170,7 +172,10 @@
     "connectionError": "No pudimos completar la consulta. Revisá la conexión e intentá de nuevo."
   },
   "ChatHistory": {
-    "loading": "Cargando conversación..."
+    "loading": "Cargando conversación...",
+    "notFound": "No encontramos esta conversación",
+    "notFoundHint": "Puede haberse borrado, o pertenecer a otra cuenta o a otro navegador.",
+    "notFoundCta": "Empezar una consulta nueva"
   },
   "Pricing": {
     "heading": "Planes y Precios",
