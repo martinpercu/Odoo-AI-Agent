@@ -66,7 +66,6 @@
     "suggestions": {
       "inventory": "Visualizza l'inventario attuale dei prodotti",
       "invoices": "Mostra le fatture in sospeso",
-      "inventoryCheck": "Controlla le scorte di prodotto",
       "employees": "Elenca i dipendenti per reparto",
       "billingByClient": "Fatturazione per cliente nel 2024",
       "salesReport": "Genera report mensile delle vendite",
@@ -75,10 +74,13 @@
       "topProducts": "Prodotti più venduti nel Q3 2025",
       "salesByClientMonth": "Quanto abbiamo venduto per cliente a febbraio?",
       "purchasesBySupplier": "Acquisti per fornitore nel 2025",
-      "paymentsByClientNov": "Totale pagamenti per cliente a novembre",
       "paymentsByClientJan": "Totale pagamenti per cliente a gennaio",
       "salesBySellerYear": "Vendite per venditore quest'anno",
-      "salesBySeller2024": "Vendite per venditore nel 2024"
+      "stockByWarehouse": "Giacenze per magazzino",
+      "restock": "Quali prodotti devo riordinare?",
+      "opportunitiesByStage": "Opportunità per fase",
+      "hoursByProject": "Ore registrate per progetto questo mese",
+      "overdueTasks": "Quali attività sono scadute?"
     },
     "noCredsBanner": "Configura le tue credenziali per chattare",
     "noCredsCta": "Vai a Connessione"
@@ -1889,7 +1891,12 @@
       "saleOrder": "Vendite",
       "accountMove": "Fatture",
       "crmLead": "Opportunità",
-      "purchaseOrder": "Acquisti"
+      "purchaseOrder": "Acquisti",
+      "projectProject": "Progetti",
+      "projectTask": "Attività",
+      "timesheet": "Registrazioni ore",
+      "stockQuant": "Giacenze per ubicazione",
+      "posOrder": "Vendite al banco"
     },
     "titleDemo": "Quello che so già di {instance}",
     "hintDemo": "È un'azienda di esempio. Chiedimi di uno qualsiasi di questi numeri."

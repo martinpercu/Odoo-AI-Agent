@@ -66,7 +66,6 @@
     "suggestions": {
       "inventory": "વર્તમાન ઉત્પાદ ઇન્વેન્ટરી જુઓ",
       "invoices": "બાકી ઇન્વૉઇસ દર્શાવો",
-      "inventoryCheck": "ઉત્પાદ ઇન્વેન્ટરી તપાસો",
       "employees": "વિભાગ પ્રમાણે કર્મચારીઓની યાદી",
       "billingByClient": "2024 માં ગ્રાહક પ્રમાણે બિલિંગ",
       "salesReport": "માસિક વેચાણ અહેવાલ બનાવો",
@@ -75,10 +74,13 @@
       "topProducts": "Q3 2025 માં સૌથી વધુ વેચાતા ઉત્પાદો",
       "salesByClientMonth": "ફેબ્રુઆરીમાં પ્રતિ ગ્રાહક કેટલું વેચ્યું?",
       "purchasesBySupplier": "2025 માં સપ્લાયર પ્રમાણે ખરીદી",
-      "paymentsByClientNov": "નવેમ્બરમાં ગ્રાહક પ્રમાણે કુલ ચૂકવણી",
       "paymentsByClientJan": "જાન્યુઆરીમાં ગ્રાહક પ્રમાણે કુલ ચૂકવણી",
       "salesBySellerYear": "આ વર્ષ સેલ્સ-પર્સન પ્રમાણે વેચાણ",
-      "salesBySeller2024": "2024 માં સેલ્સ-પર્સન પ્રમાણે વેચાણ"
+      "stockByWarehouse": "ગોદામ મુજબ સ્ટોક",
+      "restock": "મારે કયા ઉત્પાદનો ફરી મંગાવવાના છે?",
+      "opportunitiesByStage": "તબક્કા મુજબ તકો",
+      "hoursByProject": "આ મહિને પ્રોજેક્ટ મુજબ નોંધાયેલા કલાક",
+      "overdueTasks": "કયા કાર્યો મુદત વીતી ગયેલા છે?"
     },
     "noCredsBanner": "Configure your credentials to start chatting",
     "noCredsCta": "Go to Connection"
@@ -1889,7 +1891,12 @@
       "saleOrder": "વેચાણ",
       "accountMove": "ઇન્વોઇસ",
       "crmLead": "તકો",
-      "purchaseOrder": "ખરીદી"
+      "purchaseOrder": "ખરીદી",
+      "projectProject": "પ્રોજેક્ટ",
+      "projectTask": "કાર્યો",
+      "timesheet": "કલાકની નોંધો",
+      "stockQuant": "સ્થાન મુજબ સ્ટોક",
+      "posOrder": "કાઉન્ટર વેચાણ"
     },
     "titleDemo": "What I already know about {instance}",
     "hintDemo": "This is a sample company. Ask me about any of these numbers."

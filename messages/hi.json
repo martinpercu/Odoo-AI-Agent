@@ -66,7 +66,6 @@
     "suggestions": {
       "inventory": "वर्तमान उत्पाद इन्वेंटरी देखें",
       "invoices": "लंबित चालान दिखाएं",
-      "inventoryCheck": "उत्पाद स्टॉक जांचें",
       "employees": "विभाग के अनुसार कर्मचारियों की सूची",
       "billingByClient": "2024 में ग्राहक के अनुसार बिलिंग",
       "salesReport": "मासिक बिक्री रिपोर्ट बनाएं",
@@ -75,10 +74,13 @@
       "topProducts": "Q3 2025 में सबसे ज़्यादा बिकने वाले उत्पाद",
       "salesByClientMonth": "फरवरी में प्रति ग्राहक कितनी बिक्री हुई?",
       "purchasesBySupplier": "2025 में आपूर्तिकर्ता के अनुसार खरीद",
-      "paymentsByClientNov": "नवंबर में ग्राहक के अनुसार कुल भुगतान",
       "paymentsByClientJan": "जनवरी में ग्राहक के अनुसार कुल भुगतान",
       "salesBySellerYear": "इस साल विक्रेता के अनुसार बिक्री",
-      "salesBySeller2024": "2024 में विक्रेता के अनुसार बिक्री"
+      "stockByWarehouse": "गोदाम के अनुसार स्टॉक",
+      "restock": "मुझे किन उत्पादों को फिर से मंगाना है?",
+      "opportunitiesByStage": "चरण के अनुसार अवसर",
+      "hoursByProject": "इस महीने प्रोजेक्ट के अनुसार दर्ज घंटे",
+      "overdueTasks": "कौन-से कार्य अतिदेय हैं?"
     },
     "noCredsBanner": "Configure your credentials to start chatting",
     "noCredsCta": "Go to Connection"
@@ -1889,7 +1891,12 @@
       "saleOrder": "बिक्री",
       "accountMove": "चालान",
       "crmLead": "अवसर",
-      "purchaseOrder": "खरीद"
+      "purchaseOrder": "खरीद",
+      "projectProject": "प्रोजेक्ट",
+      "projectTask": "कार्य",
+      "timesheet": "घंटों की प्रविष्टियाँ",
+      "stockQuant": "स्थान के अनुसार स्टॉक",
+      "posOrder": "काउंटर बिक्री"
     },
     "titleDemo": "What I already know about {instance}",
     "hintDemo": "This is a sample company. Ask me about any of these numbers."

@@ -7,6 +7,8 @@ import { MarkB } from "@/components/AgentMark";
 import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { isUsableFor } from "@/lib/suggestions";
 import { useChatContext } from "@/components/app-shell";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
@@ -14,8 +16,16 @@ import { clearOnboardingSkipped, isOwnSessionMe } from "@/lib/post-auth";
 import { track } from "@/lib/analytics";
 import { A11yModal } from "@/components/intro/a11y-modal";
 
-/** Example prompts — id used for analytics, text resolved from i18n. */
-const EXAMPLE_PROMPTS = ["overdue_invoices", "top_customers", "stock_check"] as const;
+/**
+ * Example prompts — id used for analytics, text resolved from i18n. `model` es lo que
+ * consulta cada uno: con el mismo filtro que el carrusel (X-06) no se ofrece uno que la
+ * instancia activa no puede contestar (ej. stock en una agencia sin depósito).
+ */
+const EXAMPLE_PROMPTS = [
+  { id: "overdue_invoices", model: "account.move" },
+  { id: "top_customers", model: "sale.order" },
+  { id: "stock_check", model: "stock.quant" },
+] as const;
 
 const CHIPS = [
   { key: "anyOdoo", icon: Boxes },
@@ -25,7 +35,8 @@ export function IntroModal() {
   const t = useTranslations("Intro.modal");
   const router = useRouter();
   const { isModalOpen, openModal, closeModal, openPanel, dismissed, ready } = useIntro();
-  const { isDemoMode } = useOdooConfig();
+  const { isDemoMode, activeConfigId } = useOdooConfig();
+  const usage = useInstanceUsage(activeConfigId)?.usage;
   const { createChat, sendMessage } = useChatContext();
   const { user, isLoading: authLoading } = useAuth();
   const { meData } = useSession();
@@ -130,7 +141,7 @@ export function IntroModal() {
             {t("tryThisLabel")}
           </p>
           <div className="mb-4 space-y-2">
-            {EXAMPLE_PROMPTS.map((id) => {
+            {EXAMPLE_PROMPTS.filter((p) => isUsableFor(p.model, usage)).map(({ id }) => {
               const text = t(`tryThis.${id}`);
               return (
                 <button

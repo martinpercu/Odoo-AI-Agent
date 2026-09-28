@@ -66,7 +66,6 @@
     "suggestions": {
       "inventory": "Ver o inventário atual de produtos",
       "invoices": "Mostrar faturas pendentes",
-      "inventoryCheck": "Verificar inventário de produtos",
       "employees": "Listar funcionários por departamento",
       "billingByClient": "Faturamento por cliente em 2024",
       "salesReport": "Gerar relatório de vendas mensal",
@@ -75,10 +74,13 @@
       "topProducts": "Produtos mais vendidos no T3 2025",
       "salesByClientMonth": "Quanto vendemos por cliente em fevereiro?",
       "purchasesBySupplier": "Compras por fornecedor em 2025",
-      "paymentsByClientNov": "Total de pagamentos por cliente em novembro",
       "paymentsByClientJan": "Total de pagamentos por cliente em janeiro",
       "salesBySellerYear": "Vendas por vendedor este ano",
-      "salesBySeller2024": "Vendas por vendedor em 2024"
+      "stockByWarehouse": "Estoque por depósito",
+      "restock": "Quais produtos preciso repor?",
+      "opportunitiesByStage": "Oportunidades por etapa",
+      "hoursByProject": "Horas lançadas por projeto este mês",
+      "overdueTasks": "Quais tarefas estão atrasadas?"
     },
     "noCredsBanner": "Configure suas credenciais para começar a conversar",
     "noCredsCta": "Ir para Conexão"
@@ -1889,7 +1891,12 @@
       "saleOrder": "Vendas",
       "accountMove": "Faturas",
       "crmLead": "Oportunidades",
-      "purchaseOrder": "Compras"
+      "purchaseOrder": "Compras",
+      "projectProject": "Projetos",
+      "projectTask": "Tarefas",
+      "timesheet": "Apontamentos de horas",
+      "stockQuant": "Estoque por local",
+      "posOrder": "Vendas de balcão"
     },
     "titleDemo": "O que já sei sobre {instance}",
     "hintDemo": "É uma empresa de exemplo. Pergunte-me sobre qualquer um destes números."

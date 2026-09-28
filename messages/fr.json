@@ -66,7 +66,6 @@
     "suggestions": {
       "inventory": "Voir l'inventaire actuel des produits",
       "invoices": "Afficher les factures en attente",
-      "inventoryCheck": "Vérifier l'inventaire des produits",
       "employees": "Lister les employés par département",
       "billingByClient": "Facturation par client en 2024",
       "salesReport": "Générer le rapport de ventes mensuel",
@@ -75,10 +74,13 @@
       "topProducts": "Produits les plus vendus au T3 2025",
       "salesByClientMonth": "Combien avons-nous vendu par client en février ?",
       "purchasesBySupplier": "Achats par fournisseur en 2025",
-      "paymentsByClientNov": "Total des paiements par client en novembre",
       "paymentsByClientJan": "Total des paiements par client en janvier",
       "salesBySellerYear": "Ventes par vendeur cette année",
-      "salesBySeller2024": "Ventes par vendeur en 2024"
+      "stockByWarehouse": "Stock par entrepôt",
+      "restock": "Quels produits dois-je réapprovisionner ?",
+      "opportunitiesByStage": "Opportunités par étape",
+      "hoursByProject": "Heures saisies par projet ce mois-ci",
+      "overdueTasks": "Quelles tâches sont en retard ?"
     },
     "noCredsBanner": "Configurez vos identifiants pour commencer à chatter",
     "noCredsCta": "Aller à Connexion"
@@ -1889,7 +1891,12 @@
       "saleOrder": "Ventes",
       "accountMove": "Factures",
       "crmLead": "Opportunités",
-      "purchaseOrder": "Achats"
+      "purchaseOrder": "Achats",
+      "projectProject": "Projets",
+      "projectTask": "Tâches",
+      "timesheet": "Feuilles de temps",
+      "stockQuant": "Stock par emplacement",
+      "posOrder": "Ventes en caisse"
     },
     "titleDemo": "Ce que je sais déjà de {instance}",
     "hintDemo": "C'est une entreprise d'exemple. Posez-moi une question sur ces chiffres."

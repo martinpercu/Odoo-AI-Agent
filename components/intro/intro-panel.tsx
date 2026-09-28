@@ -24,6 +24,9 @@ import { FactRow } from "@/components/ui/fact-row";
 import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
 import { useChatContext } from "@/components/app-shell";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { isUsableFor } from "@/lib/suggestions";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { clearOnboardingSkipped } from "@/lib/post-auth";
@@ -99,6 +102,8 @@ export function IntroPanel() {
   const router = useRouter();
   const { isPanelOpen, closePanel } = useIntro();
   const { createChat, sendMessage } = useChatContext();
+  const { activeConfigId } = useOdooConfig();
+  const usage = useInstanceUsage(activeConfigId)?.usage;
   const { user } = useAuth();
   const { meData } = useSession();
   const isPartner = meData?.org?.type === "PARTNER";
@@ -185,11 +190,13 @@ export function IntroPanel() {
   }
 
   // 2 · Qué hace — interactive example chips.
+  // X-06 — cada chip dice qué modelo consulta; lo que la instancia activa midió en
+  // cero no se ofrece (mismo filtro que el carrusel).
   const chips = [
-    { id: "overdue_invoices", text: t("what.chip1") },
-    { id: "sales_by_rep", text: t("what.chip2") },
-    { id: "create_contact", text: t("what.chip3") },
-  ] as const;
+    { id: "overdue_invoices", text: t("what.chip1"), model: "account.move" },
+    { id: "sales_by_rep", text: t("what.chip2"), model: "sale.order" },
+    { id: "create_contact", text: t("what.chip3"), model: undefined },
+  ].filter((chip) => isUsableFor(chip.model, usage));
 
   // 3 · Por qué es distinto.
   const diffRows = [

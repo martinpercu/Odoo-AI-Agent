@@ -66,7 +66,6 @@
     "suggestions": {
       "inventory": "ಪ್ರಸ್ತುತ ಉತ್ಪನ್ನ ದಾಸ್ತಾನು ವೀಕ್ಷಿಸಿ",
       "invoices": "ಬಾಕಿ ಇರುವ ಬಿಲ್‌ಗಳನ್ನು ತೋರಿಸಿ",
-      "inventoryCheck": "ಉತ್ಪನ್ನ ದಾಸ್ತಾನು ಪರಿಶೀಲಿಸಿ",
       "employees": "ವಿಭಾಗದ ಪ್ರಕಾರ ಉದ್ಯೋಗಿಗಳ ಪಟ್ಟಿ",
       "billingByClient": "2024 ರಲ್ಲಿ ಗ್ರಾಹಕರ ಪ್ರಕಾರ ಬಿಲ್ಲಿಂಗ್",
       "salesReport": "ಮಾಸಿಕ ಮಾರಾಟ ವರದಿ ರಚಿಸಿ",
@@ -75,10 +74,13 @@
       "topProducts": "2025 ರ ಮೂರನೇ ತ್ರೈಮಾಸಿಕದಲ್ಲಿ ಹೆಚ್ಚು ಮಾರಾಟವಾದ ಉತ್ಪನ್ನಗಳು",
       "salesByClientMonth": "ಫೆಬ್ರವರಿಯಲ್ಲಿ ಗ್ರಾಹಕರಿಗೆ ಎಷ್ಟು ಮಾರಾಟ ಮಾಡಿದೆವು?",
       "purchasesBySupplier": "2025 ರಲ್ಲಿ ಪೂರೈಕೆದಾರರ ಪ್ರಕಾರ ಖರೀದಿಗಳು",
-      "paymentsByClientNov": "ನವೆಂಬರ್‌ನಲ್ಲಿ ಗ್ರಾಹಕರ ಪ್ರಕಾರ ಒಟ್ಟು ಪಾವತಿಗಳು",
       "paymentsByClientJan": "ಜನವರಿಯಲ್ಲಿ ಗ್ರಾಹಕರ ಪ್ರಕಾರ ಒಟ್ಟು ಪಾವತಿಗಳು",
       "salesBySellerYear": "ಈ ವರ್ಷ ಮಾರಾಟ ಪ್ರತಿನಿಧಿಗಳ ಪ್ರಕಾರ ಮಾರಾಟ",
-      "salesBySeller2024": "2024 ರಲ್ಲಿ ಮಾರಾಟ ಪ್ರತಿನಿಧಿಗಳ ಪ್ರಕಾರ ಮಾರಾಟ"
+      "stockByWarehouse": "ಗೋದಾಮು ಪ್ರಕಾರ ಸ್ಟಾಕ್",
+      "restock": "ಯಾವ ಉತ್ಪನ್ನಗಳನ್ನು ಮತ್ತೆ ತರಿಸಬೇಕು?",
+      "opportunitiesByStage": "ಹಂತದ ಪ್ರಕಾರ ಅವಕಾಶಗಳು",
+      "hoursByProject": "ಈ ತಿಂಗಳು ಯೋಜನೆ ಪ್ರಕಾರ ದಾಖಲಾದ ಗಂಟೆಗಳು",
+      "overdueTasks": "ಯಾವ ಕಾರ್ಯಗಳ ಅವಧಿ ಮೀರಿದೆ?"
     },
     "noCredsBanner": "Configure your credentials to start chatting",
     "noCredsCta": "Go to Connection"
@@ -1889,7 +1891,12 @@
       "saleOrder": "ಮಾರಾಟ",
       "accountMove": "ಸರಕುಪಟ್ಟಿ",
       "crmLead": "ಅವಕಾಶಗಳು",
-      "purchaseOrder": "ಖರೀದಿ"
+      "purchaseOrder": "ಖರೀದಿ",
+      "projectProject": "ಯೋಜನೆಗಳು",
+      "projectTask": "ಕಾರ್ಯಗಳು",
+      "timesheet": "ಗಂಟೆಗಳ ದಾಖಲೆಗಳು",
+      "stockQuant": "ಸ್ಥಳದ ಪ್ರಕಾರ ಸ್ಟಾಕ್",
+      "posOrder": "ಕೌಂಟರ್ ಮಾರಾಟ"
     },
     "titleDemo": "What I already know about {instance}",
     "hintDemo": "This is a sample company. Ask me about any of these numbers."

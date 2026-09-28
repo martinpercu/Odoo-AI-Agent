@@ -34,12 +34,21 @@ import { useOdooConfig } from "@/hooks/use-odoo-config";
  * salta recién al abrir la página.
  */
 const SNAPSHOT_MODELS: ReadonlyArray<{ model: string; key: string }> = [
-  { model: "res.partner", key: "resPartner" },
+  // X-06 — primero lo que DICE de qué va el negocio, después lo que tiene cualquiera.
+  // Con el orden viejo (contactos, productos, ventas, facturas) las cuatro empresas del
+  // parque se veían iguales: la consultora no mostraba sus proyectos ni sus horas, y el
+  // corralón no mostraba su stock. Salen los primeros 4 con datos.
+  { model: "crm.lead", key: "crmLead" },
+  { model: "project.project", key: "projectProject" },
+  { model: "project.task", key: "projectTask" },
+  { model: "account.analytic.line", key: "timesheet" },
+  { model: "stock.quant", key: "stockQuant" },
   { model: "product.product", key: "productProduct" },
+  { model: "pos.order", key: "posOrder" },
   { model: "sale.order", key: "saleOrder" },
   { model: "account.move", key: "accountMove" },
-  { model: "crm.lead", key: "crmLead" },
   { model: "purchase.order", key: "purchaseOrder" },
+  { model: "res.partner", key: "resPartner" },
 ];
 
 const MAX_TILES = 4;
