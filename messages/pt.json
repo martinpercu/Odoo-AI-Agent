@@ -963,10 +963,10 @@
       "typingIndicator": "Executando · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Painel",
+      "subtitle": "Cada cartão volta a consultar sua instância com o mesmo critério com que foi criado: os números se atualizam sem passar pelo agente.",
       "empty": "O seu painel está vazio",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Adicione gráficos pelo chat ou execute uma Rotina que publique no Painel. Cada cartão lembra a consulta que o gerou.",
       "refreshAll": "Atualizar tudo",
       "refreshingAll": "A atualizar…",
       "refresh": "Atualizar este cartão",
@@ -984,10 +984,10 @@
         "applied": "A mostrar de {start} a {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Ao vivo",
+        "historic": "Histórico",
+        "noPeriod": "Não depende do período",
+        "noPeriodHint": "Esta consulta não tem uma data que possa mudar sem alterar o resultado, então o período do Painel não a modifica."
       },
       "state": {
         "updated": "Atualizado",
@@ -995,19 +995,19 @@
         "failed": "Falhou"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped.",
+        "static": "É um período fechado: não muda.",
+        "no_context": "Foi salvo antes de o Painel lembrar a consulta.",
+        "no_groupby": "Não tem um detalhamento para recalcular.",
+        "no_model": "Não foi salvo de qual modelo vem.",
+        "not_chart": "É um arquivo, não uma consulta.",
+        "generic": "Não era preciso atualizá-lo.",
         "no_instance": "Não foi salva a instância deste cartão, então ele não pode ser atualizado."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh.",
+        "odoo_error": "A instância retornou um erro na consulta.",
+        "chart_failed": "A consulta rodou mas não retornou dados para o gráfico.",
+        "unexpected": "Erro inesperado ao atualizar este cartão.",
+        "generic": "Não foi possível atualizar este cartão.",
         "no_credentials": "Você não tem credenciais carregadas para esta instância.",
         "instance_gone": "A instância não existe mais ou você não tem mais acesso.",
         "auth_failed": "A instância recusou o login."
@@ -1015,11 +1015,11 @@
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Não foi possível gerar o ficheiro. Tente novamente."
+        "failed": "Não foi possível gerar o arquivo. Tente de novo."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Painéis predefinidos por perfil",
+        "subtitle": "Rotinas que só publicam gráficos. Rodam com suas credenciais e deixam seus cartões aqui.",
         "apply": "Montar este painel",
         "building": "A montar…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
@@ -1031,7 +1031,8 @@
         "title": "Dados de {name}",
         "none": "Sem instância",
         "noneHint": "Não foi salva a instância deste cartão, então ele não pode ser atualizado."
-      }
+      },
+      "refreshAllDisabled": "Nenhum cartão pode ser atualizado: são históricos, arquivos ou não se sabe de qual instância são."
     },
     "WriteGate": {
       "note": "Sem conta, a demo pública é somente leitura: as consultas funcionam, mas esta gravação não é executada no Odoo.",
@@ -1157,7 +1158,8 @@
         "title": "Dados de {name}",
         "none": "Origem desconhecida",
         "noneHint": "Não sabemos de qual sistema veio este cartão, então ele não pode ser atualizado."
-      }
+      },
+      "refreshAllDisabled": "Nenhum cartão pode ser atualizado agora."
     },
     "WriteGate": {
       "note": "Para fazer alterações você precisa de uma conta. Pode continuar perguntando o que quiser.",
@@ -1892,7 +1894,9 @@
       "title": "Executar na instância",
       "otherInstance": "Outra instância",
       "confirm": "Confirmar"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Esta Rotina adicionou # gráfico ao seu Painel.} other {Esta Rotina adicionou # gráficos ao seu Painel.}}",
+    "openDashboard": "Abrir o Painel"
   },
   "Chat": {
     "openInOdoo": "Abrir no Odoo"

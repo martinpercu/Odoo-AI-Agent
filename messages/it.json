@@ -963,10 +963,10 @@
       "typingIndicator": "Esecuzione · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Cruscotto",
+      "subtitle": "Ogni scheda interroga di nuovo la sua istanza con lo stesso criterio con cui è stata creata: i numeri si aggiornano senza passare dall'agente.",
       "empty": "Il tuo cruscotto è vuoto",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Aggiungi grafici dalla chat o esegui una Routine che pubblica nel cruscotto. Ogni scheda ricorda la query che l'ha generata.",
       "refreshAll": "Aggiorna tutto",
       "refreshingAll": "Aggiornamento…",
       "refresh": "Aggiorna questa scheda",
@@ -984,10 +984,10 @@
         "applied": "Dal {start} al {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Dal vivo",
+        "historic": "Storico",
+        "noPeriod": "Non dipende dal periodo",
+        "noPeriodHint": "Questa query non ha una data modificabile senza alterare il risultato, quindi il periodo del cruscotto non la cambia."
       },
       "state": {
         "updated": "Aggiornato",
@@ -995,19 +995,19 @@
         "failed": "Non riuscito"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped.",
+        "static": "Periodo chiuso: non cambia.",
+        "no_context": "Salvata prima che il cruscotto ricordasse la query.",
+        "no_groupby": "Non ha una suddivisione da ricalcolare.",
+        "no_model": "Non è stato salvato da quale modello proviene.",
+        "not_chart": "È un file, non una query.",
+        "generic": "Non serviva aggiornarla.",
         "no_instance": "L'istanza di questa scheda non è stata salvata, quindi non si può aggiornare."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh.",
+        "odoo_error": "L'istanza ha restituito un errore per la query.",
+        "chart_failed": "La query è stata eseguita ma non ha restituito dati per il grafico.",
+        "unexpected": "Errore imprevisto durante l'aggiornamento di questa scheda.",
+        "generic": "Impossibile aggiornare questa scheda.",
         "no_credentials": "Non hai credenziali caricate per questa istanza.",
         "instance_gone": "L'istanza non esiste più o non hai più accesso.",
         "auth_failed": "L'istanza ha rifiutato l'accesso."
@@ -1015,11 +1015,11 @@
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Non è stato possibile generare il file. Riprova."
+        "failed": "Impossibile generare il file. Riprova."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Cruscotti predefiniti per ruolo",
+        "subtitle": "Routine che pubblicano solo grafici. Vengono eseguite con le tue credenziali e lasciano qui le loro schede.",
         "apply": "Crea questo cruscotto",
         "building": "Creazione…",
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
@@ -1031,7 +1031,8 @@
         "title": "Dati di {name}",
         "none": "Nessuna istanza",
         "noneHint": "L'istanza di questa scheda non è stata salvata, quindi non si può aggiornare."
-      }
+      },
+      "refreshAllDisabled": "Nessuna scheda si può aggiornare: sono storiche, file o la loro istanza è sconosciuta."
     },
     "WriteGate": {
       "note": "Senza account la demo pubblica è in sola lettura: le interrogazioni funzionano, ma questa scrittura non viene eseguita su Odoo.",
@@ -1157,7 +1158,8 @@
         "title": "Dati di {name}",
         "none": "Origine sconosciuta",
         "noneHint": "Non sappiamo da quale sistema viene questa scheda, quindi non si può aggiornare."
-      }
+      },
+      "refreshAllDisabled": "Nessuna scheda si può aggiornare ora."
     },
     "WriteGate": {
       "note": "Per apportare modifiche serve un account. Puoi continuare a chiedere tutto ciò che vuoi.",
@@ -1892,7 +1894,9 @@
       "title": "Esegui sull'istanza",
       "otherInstance": "Un'altra istanza",
       "confirm": "Conferma"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Questa Routine ha aggiunto # grafico al tuo cruscotto.} other {Questa Routine ha aggiunto # grafici al tuo cruscotto.}}",
+    "openDashboard": "Apri il cruscotto"
   },
   "Chat": {
     "openInOdoo": "Apri in Odoo"

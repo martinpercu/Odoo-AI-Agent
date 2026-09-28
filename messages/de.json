@@ -963,10 +963,10 @@
       "typingIndicator": "Ausführen · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Dashboard",
+      "subtitle": "Jede Karte fragt ihre Instanz mit denselben Kriterien erneut ab wie bei der Erstellung: Die Zahlen werden ohne den Agenten aktualisiert.",
       "empty": "Ihr Dashboard ist leer",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Fügen Sie Diagramme aus dem Chat hinzu oder führen Sie eine Routine aus, die ins Dashboard veröffentlicht. Jede Karte merkt sich ihre Abfrage.",
       "refreshAll": "Alle aktualisieren",
       "refreshingAll": "Wird aktualisiert…",
       "refresh": "Diese Karte aktualisieren",
@@ -984,10 +984,10 @@
         "applied": "Vom {start} bis {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Live",
+        "historic": "Historisch",
+        "noPeriod": "Zeitraumunabhängig",
+        "noPeriodHint": "Diese Abfrage hat kein Datum, das sich ändern lässt, ohne das Ergebnis zu verfälschen – der Dashboard-Zeitraum wirkt sich nicht aus."
       },
       "state": {
         "updated": "Aktualisiert",
@@ -995,19 +995,19 @@
         "failed": "Fehlgeschlagen"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped.",
+        "static": "Abgeschlossener Zeitraum: ändert sich nicht.",
+        "no_context": "Gespeichert, bevor das Dashboard die Abfrage speicherte.",
+        "no_groupby": "Keine Aufschlüsselung zum Neuberechnen.",
+        "no_model": "Das Quellmodell wurde nicht gespeichert.",
+        "not_chart": "Das ist eine Datei, keine Abfrage.",
+        "generic": "Keine Aktualisierung nötig.",
         "no_instance": "Für diese Karte wurde keine Instanz gespeichert, daher kann sie nicht aktualisiert werden."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh.",
+        "odoo_error": "Die Instanz hat bei der Abfrage einen Fehler zurückgegeben.",
+        "chart_failed": "Die Abfrage lief, lieferte aber keine Daten für das Diagramm.",
+        "unexpected": "Unerwarteter Fehler beim Aktualisieren dieser Karte.",
+        "generic": "Diese Karte konnte nicht aktualisiert werden.",
         "no_credentials": "Für diese Instanz sind keine Zugangsdaten hinterlegt.",
         "instance_gone": "Die Instanz existiert nicht mehr oder du hast keinen Zugriff mehr.",
         "auth_failed": "Die Instanz hat die Anmeldung abgelehnt."
@@ -1018,8 +1018,8 @@
         "failed": "Die Datei konnte nicht erstellt werden. Bitte erneut versuchen."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Vordefinierte Dashboards nach Rolle",
+        "subtitle": "Routinen, die nur Diagramme veröffentlichen. Sie laufen mit Ihren Zugangsdaten und legen ihre Karten hier ab.",
         "apply": "Dieses Dashboard erstellen",
         "building": "Wird erstellt…",
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
@@ -1031,7 +1031,8 @@
         "title": "Daten aus {name}",
         "none": "Keine Instanz",
         "noneHint": "Für diese Karte wurde keine Instanz gespeichert, daher kann sie nicht aktualisiert werden."
-      }
+      },
+      "refreshAllDisabled": "Keine Karte kann aktualisiert werden: Sie sind historisch, Dateien oder ihre Instanz ist unbekannt."
     },
     "WriteGate": {
       "note": "Ohne Konto ist die öffentliche Demo schreibgeschützt: Abfragen funktionieren, aber dieser Schreibvorgang wird nicht in Odoo ausgeführt.",
@@ -1157,7 +1158,8 @@
         "title": "Daten aus {name}",
         "none": "Unbekannte Quelle",
         "noneHint": "Wir wissen nicht, aus welchem System diese Karte stammt, daher kann sie nicht aktualisiert werden."
-      }
+      },
+      "refreshAllDisabled": "Derzeit kann keine Karte aktualisiert werden."
     },
     "WriteGate": {
       "note": "Für Änderungen benötigen Sie ein Konto. Fragen können Sie weiterhin alles, was Sie möchten.",
@@ -1892,7 +1894,9 @@
       "title": "Ausführen auf der Instanz",
       "otherInstance": "Andere Instanz",
       "confirm": "Bestätigen"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Diese Routine hat # Diagramm zu deinem Dashboard hinzugefügt.} other {Diese Routine hat # Diagramme zu deinem Dashboard hinzugefügt.}}",
+    "openDashboard": "Dashboard öffnen"
   },
   "Chat": {
     "openInOdoo": "In Odoo öffnen"

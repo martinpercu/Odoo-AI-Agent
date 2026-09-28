@@ -157,18 +157,22 @@ export default function DashboardPage() {
             </label>
 
             <div className="ml-auto flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => handleRefreshAll()}
-                disabled={!canQueryOdoo || refreshing}
-                className="flex h-btn-sm items-center gap-1.5 rounded-btn border border-border px-3 text-small font-medium transition-colors hover:bg-raised disabled:opacity-50"
-              >
-                <RefreshCw
-                  size={14}
-                  strokeWidth={1.5}
-                  className={refreshing ? "animate-spin text-accent" : "text-accent"}
-                />
-                {refreshing ? t("refreshingAll") : t("refreshAll")}
-              </button>
+              {/* F-10 — un botón deshabilitado que no dice por qué se lee como roto. El
+                  motivo va en el envoltorio: un <button disabled> no siempre muestra su title. */}
+              <span title={!canQueryOdoo ? t("refreshAllDisabled") : undefined}>
+                <button
+                  onClick={() => handleRefreshAll()}
+                  disabled={!canQueryOdoo || refreshing}
+                  className="flex h-btn-sm items-center gap-1.5 rounded-btn border border-border px-3 text-small font-medium transition-colors hover:bg-raised disabled:opacity-50"
+                >
+                  <RefreshCw
+                    size={14}
+                    strokeWidth={1.5}
+                    className={refreshing ? "animate-spin text-accent" : "text-accent"}
+                  />
+                  {refreshing ? t("refreshingAll") : t("refreshAll")}
+                </button>
+              </span>
 
               {chartCount > 0 && (
                 <>

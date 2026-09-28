@@ -963,10 +963,10 @@
       "typingIndicator": "Ejecutando · query"
     },
     "Dashboard": {
-      "title": "Tablero de insights",
-      "subtitle": "Cada tarjeta re-ejecuta su query_context contra la instancia — read_group directo, sin grafo ni LLM.",
+      "title": "Tablero",
+      "subtitle": "Cada tarjeta vuelve a consultar su instancia con el mismo criterio con que se creó: los números se actualizan sin pasar por el agente.",
       "empty": "Tu tablero está vacío",
-      "emptyHint": "Fijá gráficos desde el chat o corré una Rutina con compose.pin. El pin guarda modelo, dominio y groupby.",
+      "emptyHint": "Agrega gráficos desde el chat o corre una Rutina que publique en el Tablero. Cada tarjeta recuerda la consulta que la generó.",
       "refreshAll": "Actualizar todo",
       "refreshingAll": "Actualizando…",
       "refresh": "Actualizar esta tarjeta",
@@ -984,10 +984,10 @@
         "applied": "Mostrando del {start} al {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "Sin date_filter",
-        "noPeriodHint": "El query_context no tiene un date_filter reescribible, así que el override de período se ignora en vez de alterar el dominio."
+        "live": "En vivo",
+        "historic": "Histórico",
+        "noPeriod": "No depende del período",
+        "noPeriodHint": "Esta consulta no tiene una fecha que se pueda cambiar sin alterar el resultado, así que el período del Tablero no la modifica."
       },
       "state": {
         "updated": "Actualizado",
@@ -995,19 +995,19 @@
         "failed": "No se pudo"
       },
       "skipReason": {
-        "static": "chart_volatility la marcó static: período cerrado.",
-        "no_context": "Pin sin query_context (anterior a Fase 6).",
-        "no_groupby": "Sin groupby_fields no hay chart payload que rearmar.",
-        "no_model": "Falta primary_model en el query_context.",
-        "not_chart": "content_type distinto de chart.",
-        "generic": "Se salteó.",
+        "static": "Es un período cerrado: no cambia.",
+        "no_context": "Se guardó antes de que el Tablero recordara la consulta.",
+        "no_groupby": "No tiene un desglose que volver a calcular.",
+        "no_model": "No se guardó de qué modelo sale.",
+        "not_chart": "Es un archivo, no una consulta.",
+        "generic": "No hacía falta actualizarla.",
         "no_instance": "No se guardó de qué instancia es esta tarjeta, así que no se puede actualizar."
       },
       "errorReason": {
-        "odoo_error": "Falló el read_group contra la instancia.",
-        "chart_failed": "build_chart_payload devolvió None.",
-        "unexpected": "Excepción no prevista al refrescar.",
-        "generic": "No se pudo refrescar.",
+        "odoo_error": "La instancia devolvió un error al consultar.",
+        "chart_failed": "La consulta corrió pero no devolvió datos para el gráfico.",
+        "unexpected": "Error inesperado al actualizar esta tarjeta.",
+        "generic": "No se pudo actualizar esta tarjeta.",
         "no_credentials": "No tienes credenciales cargadas para esta instancia.",
         "instance_gone": "La instancia ya no existe o ya no tienes acceso.",
         "auth_failed": "La instancia rechazó el inicio de sesión."
@@ -1015,11 +1015,11 @@
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "No se pudo generar el archivo. Probá de nuevo."
+        "failed": "No se pudo generar el archivo. Inténtalo de nuevo."
       },
       "presets": {
-        "title": "Tableros preset por rol",
-        "subtitle": "Rutinas del catálogo cuyo compose es sólo pin. Corren con tus credenciales y dejan sus gráficos acá.",
+        "title": "Tableros predefinidos por rol",
+        "subtitle": "Rutinas que sólo publican gráficos. Corren con tus credenciales y dejan sus tarjetas acá.",
         "apply": "Armar este tablero",
         "building": "Armando…",
         "failed": "No se pudo armar el tablero. Probá de nuevo.",
@@ -1031,7 +1031,8 @@
         "title": "Datos de {name}",
         "none": "Sin instancia",
         "noneHint": "No se guardó de qué instancia es esta tarjeta, así que no se puede actualizar."
-      }
+      },
+      "refreshAllDisabled": "Ninguna tarjeta se puede actualizar: son históricas, archivos o no se sabe de qué instancia son."
     },
     "WriteGate": {
       "note": "Sin cuenta, el demo público es de solo lectura: las consultas funcionan, pero esta escritura no se ejecuta en Odoo.",
@@ -1157,7 +1158,8 @@
         "title": "Datos de {name}",
         "none": "Origen desconocido",
         "noneHint": "No sabemos de qué sistema salió esta tarjeta, así que no se puede actualizar."
-      }
+      },
+      "refreshAllDisabled": "Ninguna tarjeta se puede actualizar ahora."
     },
     "WriteGate": {
       "note": "Para hacer cambios necesitas una cuenta. Puedes seguir preguntando todo lo que quieras.",
@@ -1892,7 +1894,9 @@
       "title": "Ejecutar contra la instancia",
       "otherInstance": "Otra instancia",
       "confirm": "Confirmar"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Esta Rutina agregó # gráfico a tu Tablero.} other {Esta Rutina agregó # gráficos a tu Tablero.}}",
+    "openDashboard": "Abrir el Tablero"
   },
   "Chat": {
     "openInOdoo": "Abrir en Odoo"

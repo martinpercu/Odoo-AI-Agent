@@ -1,7 +1,8 @@
 "use client";
 
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, LayoutDashboard } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 import type {
   Routine,
@@ -34,7 +35,8 @@ export function RoutineResults({
 
   const entries = Object.values(run.results ?? {});
   const derived = entries.filter((e) => e.kind === "derived");
-  if (derived.length === 0) return null;
+  const pinsNotice = <RoutinePinsNotice run={run} />;
+  if (derived.length === 0) return pinsNotice;
 
   const stepLabel = (key: string) =>
     routine?.steps?.find((s) => s.key === key)?.label ?? key;
@@ -48,6 +50,7 @@ export function RoutineResults({
 
   return (
     <div className="mt-4 space-y-4">
+      {pinsNotice}
       {scalars.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-2">
           {scalars.map((d) => (
@@ -168,4 +171,24 @@ function makeAmountFormatter(entries: RoutineResultEntry[]): (value: number) => 
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     })}`;
+}
+
+/**
+ * F-10 — una Rutina que publica gráficos (`compose.pin`) lo DICE. Antes las tarjetas
+ * aparecían en el Tablero sin que nada avisara de dónde habían salido. La cuenta viene
+ * del backend (`run.pins.published`); acá no se recalcula qué paso da un gráfico.
+ */
+function RoutinePinsNotice({ run }: { run: RoutineRunDetail }) {
+  const t = useTranslations("Routines");
+  const count = run.pins?.published?.length ?? 0;
+  if (count === 0) return null;
+  return (
+    <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-btn bg-accent-subtle px-3 py-2 text-small text-accent">
+      <LayoutDashboard size={14} strokeWidth={1.5} className="shrink-0" aria-hidden />
+      <span>{t("pinsPublished", { count })}</span>
+      <Link href="/tablero" className="font-medium underline underline-offset-2 hover:no-underline">
+        {t("openDashboard")}
+      </Link>
+    </p>
+  );
 }

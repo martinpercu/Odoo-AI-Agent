@@ -963,10 +963,10 @@
       "typingIndicator": "Exécution · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Tableau de bord",
+      "subtitle": "Chaque carte réinterroge son instance avec les mêmes critères qu'à sa création : les chiffres se mettent à jour sans passer par l'agent.",
       "empty": "Votre tableau de bord est vide",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Ajoutez des graphiques depuis le chat ou lancez une Routine qui publie dans le tableau de bord. Chaque carte garde la requête qui l'a créée.",
       "refreshAll": "Tout actualiser",
       "refreshingAll": "Actualisation…",
       "refresh": "Actualiser cette carte",
@@ -984,10 +984,10 @@
         "applied": "Du {start} au {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "En direct",
+        "historic": "Historique",
+        "noPeriod": "Indépendant de la période",
+        "noPeriodHint": "Cette requête n'a pas de date modifiable sans altérer le résultat : la période du tableau de bord ne la change pas."
       },
       "state": {
         "updated": "Actualisé",
@@ -995,19 +995,19 @@
         "failed": "Échec"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped.",
+        "static": "Période close : elle ne change pas.",
+        "no_context": "Enregistrée avant que le tableau de bord ne garde la requête.",
+        "no_groupby": "Pas de ventilation à recalculer.",
+        "no_model": "Le modèle d'origine n'a pas été enregistré.",
+        "not_chart": "C'est un fichier, pas une requête.",
+        "generic": "Pas besoin de l'actualiser.",
         "no_instance": "L'instance de cette carte n'a pas été enregistrée : elle ne peut pas être actualisée."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh.",
+        "odoo_error": "L'instance a renvoyé une erreur pour la requête.",
+        "chart_failed": "La requête a tourné mais n'a renvoyé aucune donnée pour le graphique.",
+        "unexpected": "Erreur inattendue lors de l'actualisation de cette carte.",
+        "generic": "Impossible d'actualiser cette carte.",
         "no_credentials": "Vous n'avez pas d'identifiants pour cette instance.",
         "instance_gone": "L'instance n'existe plus ou vous n'y avez plus accès.",
         "auth_failed": "L'instance a refusé la connexion."
@@ -1015,11 +1015,11 @@
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Le fichier n'a pas pu être généré. Réessayez."
+        "failed": "Impossible de générer le fichier. Réessayez."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Tableaux de bord prédéfinis par rôle",
+        "subtitle": "Routines qui publient uniquement des graphiques. Elles s'exécutent avec vos identifiants et déposent leurs cartes ici.",
         "apply": "Créer ce tableau de bord",
         "building": "Création…",
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
@@ -1031,7 +1031,8 @@
         "title": "Données de {name}",
         "none": "Sans instance",
         "noneHint": "L'instance de cette carte n'a pas été enregistrée : elle ne peut pas être actualisée."
-      }
+      },
+      "refreshAllDisabled": "Aucune carte ne peut être actualisée : elles sont historiques, ce sont des fichiers ou leur instance est inconnue."
     },
     "WriteGate": {
       "note": "Sans compte, la démo publique est en lecture seule : les requêtes fonctionnent, mais cette écriture ne sera pas exécutée dans Odoo.",
@@ -1157,7 +1158,8 @@
         "title": "Données de {name}",
         "none": "Origine inconnue",
         "noneHint": "Nous ne savons pas de quel système vient cette carte : elle ne peut pas être actualisée."
-      }
+      },
+      "refreshAllDisabled": "Aucune carte ne peut être actualisée pour le moment."
     },
     "WriteGate": {
       "note": "Il vous faut un compte pour effectuer des modifications. Vous pouvez continuer à poser toutes vos questions.",
@@ -1892,7 +1894,9 @@
       "title": "Exécuter sur l'instance",
       "otherInstance": "Une autre instance",
       "confirm": "Confirmer"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Cette Routine a ajouté # graphique à votre tableau de bord.} other {Cette Routine a ajouté # graphiques à votre tableau de bord.}}",
+    "openDashboard": "Ouvrir le tableau de bord"
   },
   "Chat": {
     "openInOdoo": "Ouvrir dans Odoo"

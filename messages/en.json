@@ -963,10 +963,10 @@
       "typingIndicator": "Executing · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Dashboard",
+      "subtitle": "Each card re-queries its instance with the same criteria it was created with: numbers refresh without going through the agent.",
       "empty": "Your dashboard is empty",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Add charts from the chat or run a Routine that publishes to the Dashboard. Each card remembers the query behind it.",
       "refreshAll": "Refresh all",
       "refreshingAll": "Refreshing…",
       "refresh": "Refresh this card",
@@ -984,10 +984,10 @@
         "applied": "Showing {start} to {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Live",
+        "historic": "Historical",
+        "noPeriod": "Not period-dependent",
+        "noPeriodHint": "This query has no date that can be changed without altering the result, so the Dashboard period doesn't affect it."
       },
       "state": {
         "updated": "Updated",
@@ -995,19 +995,19 @@
         "failed": "Failed"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped.",
+        "static": "Closed period: it doesn't change.",
+        "no_context": "Saved before the Dashboard remembered the query.",
+        "no_groupby": "It has no breakdown to recompute.",
+        "no_model": "It wasn't saved which model it comes from.",
+        "not_chart": "It's a file, not a query.",
+        "generic": "No need to refresh it.",
         "no_instance": "This card didn't record which instance it came from, so it can't be refreshed."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh.",
+        "odoo_error": "The instance returned an error for the query.",
+        "chart_failed": "The query ran but returned no data for the chart.",
+        "unexpected": "Unexpected error refreshing this card.",
+        "generic": "This card couldn't be refreshed.",
         "no_credentials": "You don't have credentials loaded for this instance.",
         "instance_gone": "The instance no longer exists or you no longer have access.",
         "auth_failed": "The instance rejected the login."
@@ -1015,11 +1015,11 @@
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "The file could not be generated. Try again."
+        "failed": "Couldn't generate the file. Try again."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Preset dashboards by role",
+        "subtitle": "Routines that only publish charts. They run with your credentials and leave their cards here.",
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
@@ -1031,7 +1031,8 @@
         "title": "Data from {name}",
         "none": "No instance",
         "noneHint": "This card didn't record which instance it came from, so it can't be refreshed."
-      }
+      },
+      "refreshAllDisabled": "No card can be refreshed: they're historical, files, or their instance is unknown."
     },
     "WriteGate": {
       "note": "Without an account the public demo is read-only: queries work, but this write won't run on Odoo.",
@@ -1157,7 +1158,8 @@
         "title": "Data from {name}",
         "none": "Unknown source",
         "noneHint": "We don't know which system this card came from, so it can't be refreshed."
-      }
+      },
+      "refreshAllDisabled": "No card can be refreshed right now."
     },
     "WriteGate": {
       "note": "You need an account to make changes. You can keep asking anything you like.",
@@ -1892,7 +1894,9 @@
       "title": "Run against the instance",
       "otherInstance": "Another instance",
       "confirm": "Confirm"
-    }
+    },
+    "pinsPublished": "{count, plural, one {This Routine added # chart to your Dashboard.} other {This Routine added # charts to your Dashboard.}}",
+    "openDashboard": "Open the Dashboard"
   },
   "Chat": {
     "openInOdoo": "Open in Odoo"
