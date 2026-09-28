@@ -143,10 +143,11 @@ function ResetPasswordContent() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-small font-medium text-text-secondary">
+            <label htmlFor="reset-code" className="text-small font-medium text-text-secondary">
               {t("code")}
             </label>
             <input
+              id="reset-code"
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
@@ -161,10 +162,12 @@ function ResetPasswordContent() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-small font-medium text-text-secondary">
+            <label htmlFor="reset-newPassword" className="text-small font-medium text-text-secondary">
               {t("newPassword")}
             </label>
             <PasswordInput
+              id="reset-newPassword"
+              autoComplete="new-password"
               value={password}
               onChange={setPassword}
               required
@@ -173,10 +176,12 @@ function ResetPasswordContent() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-small font-medium text-text-secondary">
+            <label htmlFor="reset-confirmPassword" className="text-small font-medium text-text-secondary">
               {t("confirmPassword")}
             </label>
             <PasswordInput
+              id="reset-confirmPassword"
+              autoComplete="new-password"
               value={confirm}
               onChange={setConfirm}
               required

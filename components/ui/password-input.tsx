@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PasswordInputProps {
   value: string;
@@ -11,6 +12,9 @@ interface PasswordInputProps {
   minLength?: number;
   readOnly?: boolean;
   className?: string;
+  /** F-07 — para asociarlo a su `<label htmlFor>`. */
+  id?: string;
+  autoComplete?: string;
 }
 
 export function PasswordInput({
@@ -21,12 +25,17 @@ export function PasswordInput({
   minLength,
   readOnly,
   className,
+  id,
+  autoComplete,
 }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
+  const t = useTranslations("Auth");
 
   return (
     <div className="relative">
       <input
+        id={id}
+        autoComplete={autoComplete}
         type={visible ? "text" : "password"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -43,7 +52,7 @@ export function PasswordInput({
         type="button"
         onClick={() => setVisible((v) => !v)}
         className="absolute inset-y-0 right-0 flex items-center px-3 text-text-muted hover:text-foreground transition-colors"
-        aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+        aria-label={visible ? t("hidePassword") : t("showPassword")}
         tabIndex={-1}
       >
         {visible ? (

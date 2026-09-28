@@ -64,16 +64,18 @@ export default function ForgotPasswordPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-small font-medium text-text-secondary">
+            <label htmlFor="forgot-email" className="text-small font-medium text-text-secondary">
               {t("email")}
             </label>
             <input
+              id="forgot-email"
+              autoComplete="email"
               type="email"
               required
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t("emailPlaceholder")}
               className="rounded-btn border border-border bg-base px-3 py-2 text-body text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </div>

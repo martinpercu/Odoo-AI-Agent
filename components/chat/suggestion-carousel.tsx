@@ -10,9 +10,12 @@ import {
 import { useInstanceUsage } from "@/hooks/use-instance-usage";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
-const ROTATION_INTERVAL = 4000;
-const FADE_OUT_MS = 1600;
-const FADE_IN_MS = 750;
+// F-07 — el fundido era de ~1,6 s: durante ese tiempo las tarjetas estaban a medio
+// opacar y un click o un Tab caían sobre algo que se estaba yendo. Ahora es corto, la
+// rotación se pausa con el mouse O con el foco adentro, y con "reducir movimiento" no rota.
+const ROTATION_INTERVAL = 7000;
+const FADE_OUT_MS = 250;
+const FADE_IN_MS = 250;
 const FADE_OUT_S = FADE_OUT_MS / 1000;
 const FADE_IN_S = FADE_IN_MS / 1000;
 
@@ -72,6 +75,8 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
   }, [usage]);
 
   useEffect(() => {
+    // Con "reducir movimiento" no rota: las 4 del arranque se quedan quietas.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     scheduleNext();
     return clearTimer;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -87,8 +92,19 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
     scheduleNext();
   }
 
+  function handleBlur(e: React.FocusEvent<HTMLDivElement>) {
+    // Sólo cuando el foco SALE del carrusel, no al pasar de una tarjeta a otra.
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+    handleMouseLeave();
+  }
+
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleBlur}
+    >
       <motion.div
         animate={{ opacity: show ? 1 : 0 }}
         transition={{ duration: show ? FADE_IN_S : FADE_OUT_S, ease: "easeOut" }}

@@ -32,7 +32,8 @@
     "backToMyView": "Back to my view",
     "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
     "showAllInstances": "सर्व दाखवा",
-    "openMenu": "मेनू उघडा"
+    "openMenu": "मेनू उघडा",
+    "cycleInstance": "Switch instance"
   },
   "UserMenu": {
     "guest": "पाहुणे",
@@ -620,7 +621,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Demo mode — you're looking at {instance}, a sample company.",
     "previewAsClientBanner": "You're seeing {instance} as your end client would: trimmed menu, roomier layout, and the agent speaking without technical jargon.",
-    "previewAsClientHint": "Try seeing it as your client does, from the left-hand menu."
+    "previewAsClientHint": "Try seeing it as your client does, from the left-hand menu.",
+    "emailPlaceholder": "you@example.com",
+    "showPassword": "पासवर्ड दाखवा",
+    "hidePassword": "पासवर्ड लपवा"
   },
   "Onboarding": {
     "step1Label": "Odoo Connection",

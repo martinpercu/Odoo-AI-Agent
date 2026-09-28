@@ -32,7 +32,8 @@
     "backToMyView": "Zurück zu meiner Ansicht",
     "viewAsClientInfo": "Kunden sehen eine luftigere Ansicht, und der Agent sagt „Kunde“ statt „res.partner“.",
     "showAllInstances": "alle anzeigen",
-    "openMenu": "Menü öffnen"
+    "openMenu": "Menü öffnen",
+    "cycleInstance": "Instanz wechseln"
   },
   "UserMenu": {
     "guest": "Gast",
@@ -620,7 +621,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Demo-Modus — du siehst {instance}, ein Beispielunternehmen.",
     "previewAsClientBanner": "Du siehst {instance} so, wie es dein Endkunde sähe: gekürztes Menü, luftigere Darstellung und der Agent ohne Fachjargon.",
-    "previewAsClientHint": "Sieh es dir aus Kundensicht an — über das linke Menü."
+    "previewAsClientHint": "Sieh es dir aus Kundensicht an — über das linke Menü.",
+    "emailPlaceholder": "du@beispiel.de",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen"
   },
   "Onboarding": {
     "step1Label": "Odoo-Verbindung",

@@ -143,7 +143,7 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           onMouseEnter={() => { if (configs.length >= 2) setBtnHover(true); }}
           onMouseLeave={() => setBtnHover(false)}
           disabled={configs.length < 2}
-          aria-label="Cambiar instancia"
+          aria-label={t("cycleInstance")}
           className={`shrink-0 rounded-btn p-1 transition-colors disabled:opacity-40 ${isActive ? "bg-raised text-accent" : "text-foreground"}`}
         >
           <ArrowBigRight size={iconBtn} strokeWidth={btnHover ? 2.5 : 1.5} />
