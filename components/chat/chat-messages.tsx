@@ -19,6 +19,7 @@ import { SuccessCard } from "./success-card";
 import { ValidationPrompt } from "./validation-prompt";
 import { OdooActionButton } from "./odoo-action-button";
 import { ActionProposalButton } from "./action-proposal-button";
+import { SalesMeasureCard } from "./sales-measure-card";
 import { SelectionCard } from "./selection-card";
 import { ReportTypeCard } from "./report-type-card";
 import { ReportOfferCard } from "./report-offer-card";
@@ -212,6 +213,12 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                               <AggReportCard
                                 metadata={message.metadata}
                                 onPick={handleAggReport}
+                              />
+                            ) : message.metadata.kind === "sales_measure" ? (
+                              <SalesMeasureCard
+                                metadata={message.metadata}
+                                onSelect={sendChoice}
+                                initialSelected={message.choice}
                               />
                             ) : message.metadata.kind === "stage_drilldown" ? (
                               <StageDrilldownCard

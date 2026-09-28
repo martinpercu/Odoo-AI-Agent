@@ -188,6 +188,32 @@ export interface StageDrilldownSelectionMetadata {
   options: StageDrilldownOption[];
 }
 
+/**
+ * X-03 (A4, A19, AA-5) — "ventas": ¿pedidos de venta o facturación?
+ *
+ * **No bloquea**: la respuesta ya llegó calculada con `current` y estos chips ofrecen la
+ * otra fuente. Se contesta como `stage_drilldown`: mandando el `value` como mensaje.
+ * ⚠️ La elección vive en el ESTADO DEL CHAT, del lado del backend — el front **no** la
+ * guarda (ni localStorage ni preferencia): el mismo humano puede preguntar lo mismo en
+ * otro chat y querer decir la otra cosa.
+ */
+export interface SalesMeasureOption {
+  value: string;
+  label: string;
+  source: "orders" | "invoices";
+  /** La fuente con la que se respondió ESTE turno. */
+  selected: boolean;
+}
+
+export interface SalesMeasureSelectionMetadata {
+  type: "selection_prompt";
+  kind: "sales_measure";
+  current: "orders" | "invoices";
+  /** `true` la primera vez en el chat (el texto termina preguntando); después sólo ofrece cambiar. */
+  asked: boolean;
+  options: SalesMeasureOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
@@ -198,7 +224,8 @@ export type KindedSelectionMetadata =
   | PersonRoleSelectionMetadata
   | ReportOfferSelectionMetadata
   | AggReportSelectionMetadata
-  | StageDrilldownSelectionMetadata;
+  | StageDrilldownSelectionMetadata
+  | SalesMeasureSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -246,6 +273,7 @@ export type MessageMetadata =
   | ReportOfferSelectionMetadata
   | AggReportSelectionMetadata
   | StageDrilldownSelectionMetadata
+  | SalesMeasureSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
