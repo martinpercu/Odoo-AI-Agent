@@ -1163,7 +1163,7 @@
   "Intro": {
     "modal": {
       "title": "Sie testen TheOdooAgent",
-      "subtitle": "So wird es Ihre Kunden sehen.",
+      "subtitle": "Sie sind in einem Beispiel-Odoo, in der Implementierer-Ansicht. Mit „Kundenansicht“ sehen Sie, was Ihre Kunden sehen würden.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-Label · KI inklusive"
       },
@@ -1190,8 +1190,8 @@
         "partnerTag": "Geschäftsmodell"
       },
       "what": {
-        "heading": "Testen Sie es wie Ihr Kunde",
-        "line": "Dies läuft auf einem Demo-Odoo. Senden Sie eine Anfrage und sehen Sie genau, was Ihre Endnutzer sehen werden.",
+        "heading": "Probieren Sie es selbst",
+        "line": "Dies läuft auf einem Beispiel-Odoo. Senden Sie eine Anfrage und sehen Sie, was es antwortet; mit „Kundenansicht“ im linken Menü sehen Sie, was ein Endnutzer sehen würde.",
         "chip1": "Überfällige Rechnungen über 380k",
         "chip2": "Umsatz nach Vertriebsmitarbeiter letzten Monat",
         "chip3": "Kontakt erstellen: María López"

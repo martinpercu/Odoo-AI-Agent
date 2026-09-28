@@ -25,7 +25,8 @@ import { A11yModal } from "@/components/intro/a11y-modal";
 const EXAMPLE_PROMPTS = [
   { id: "overdue_invoices", model: "account.move" },
   { id: "top_customers", model: "sale.order" },
-  { id: "stock_check", model: "stock.quant" },
+  // ⚠️ La clave dice "stock_check" pero el texto es un reporte mensual: sin filtro.
+  { id: "stock_check", model: undefined },
 ] as const;
 
 const CHIPS = [

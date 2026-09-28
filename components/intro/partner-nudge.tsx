@@ -7,6 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useIntro } from "@/hooks/use-intro";
 import { usePartnerNudge } from "@/hooks/use-partner-nudge";
+import { useAudience } from "@/hooks/use-audience";
 import { track } from "@/lib/analytics";
 
 /**
@@ -24,6 +25,9 @@ export function PartnerNudge() {
   const { view, minimize, expand } = usePartnerNudge();
   const { openPanel } = useIntro();
   const reduceMotion = useReducedMotion();
+  // F-05 (A3) — es un mensaje para IMPLEMENTADORES ("revéndelo a tus clientes"): en la
+  // vista previa "ver como cliente" no existe, porque un cliente final no lo vería nunca.
+  const isBuilder = useAudience().audience === "builder";
 
   function handleStartFree() {
     track("partner_cta_clicked", { source: "nudge" });
@@ -36,6 +40,8 @@ export function PartnerNudge() {
     track("info_opened_from_panel", { source: "nudge" });
     openPanel();
   }
+
+  if (!isBuilder) return null;
 
   return (
     <AnimatePresence initial={false}>

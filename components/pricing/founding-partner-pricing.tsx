@@ -26,6 +26,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Check, Star, Users, Building2, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import { FoundingInfoModal } from "@/components/pricing/founding-info-modal";
 import type { BillingState } from "@/lib/types";
 
@@ -43,6 +44,7 @@ function formatPrice(value: number): string {
 
 export function FoundingPartnerPricing({ billing, awaitingFirstInstance }: FoundingPartnerPricingProps) {
   const t = useTranslations("Pricing.founding");
+  const { user } = useAuth();
   const [infoOpen, setInfoOpen] = useState(false);
   const openInfo = () => setInfoOpen(true);
 
@@ -69,9 +71,13 @@ export function FoundingPartnerPricing({ billing, awaitingFirstInstance }: Found
           className="relative flex flex-col rounded-card border border-accent bg-surface p-6 shadow-lg ring-2 ring-accent/20"
         >
           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="rounded-btn bg-accent px-4 py-1 text-micro font-semibold text-white">
-              {t("yourPlan")}
-            </span>
+            {/* F-05 — "Tu plan" sólo con sesión: a un visitante del demo no le
+                corresponde ningún plan todavía. */}
+            {user && (
+              <span className="rounded-btn bg-accent px-4 py-1 text-micro font-semibold text-white">
+                {t("yourPlan")}
+              </span>
+            )}
           </div>
 
           <div className="mb-4 flex items-center gap-3">

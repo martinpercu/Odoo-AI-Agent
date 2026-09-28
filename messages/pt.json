@@ -1163,7 +1163,7 @@
   "Intro": {
     "modal": {
       "title": "Você está testando o TheOdooAgent",
-      "subtitle": "Isto é o que seus clientes verão.",
+      "subtitle": "Você está em um Odoo de exemplo, com a visão de implementador. Com «Ver como cliente» você vê o que seus clientes veriam.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · IA incluída"
       },
@@ -1190,8 +1190,8 @@
         "partnerTag": "Modelo de negócio"
       },
       "what": {
-        "heading": "Experimente como seu cliente faria",
-        "line": "Isto roda em um Odoo demo. Envie uma consulta e veja exatamente o que seus usuários finais verão.",
+        "heading": "Experimente você mesmo",
+        "line": "Isto roda em um Odoo de exemplo. Envie uma consulta e veja o que ele responde; com «Ver como cliente», no menu da esquerda, você vê o que um usuário final veria.",
         "chip1": "Faturas vencidas acima de 250000",
         "chip2": "Vendas por vendedor no mês passado",
         "chip3": "Criar contato: María López"
