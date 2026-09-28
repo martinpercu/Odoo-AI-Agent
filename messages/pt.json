@@ -1893,5 +1893,10 @@
     },
     "titleDemo": "O que já sei sobre {instance}",
     "hintDemo": "É uma empresa de exemplo. Pergunte-me sobre qualquer um destes números."
+  },
+  "DataUntil": {
+    "label": "Dados até {date}",
+    "hintDemo": "Esta empresa de exemplo tem dados até essa data: um período posterior vai vir vazio.",
+    "hint": "Os dados desta instância vão até essa data."
   }
 }

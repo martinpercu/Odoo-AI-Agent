@@ -1893,5 +1893,10 @@
     },
     "titleDemo": "What I already know about {instance}",
     "hintDemo": "This is a sample company. Ask me about any of these numbers."
+  },
+  "DataUntil": {
+    "label": "{date} तक का डेटा",
+    "hintDemo": "इस नमूना कंपनी के पास इस तारीख तक का डेटा है: बाद की अवधि खाली आएगी।",
+    "hint": "इस सिस्टम का डेटा इस तारीख तक है।"
   }
 }

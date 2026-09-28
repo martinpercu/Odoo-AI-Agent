@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { DataUntilBadge } from "./data-until-badge";
 import { instanceLabel } from "@/lib/instance-label";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
@@ -68,7 +69,8 @@ export function InstanceSnapshot() {
       transition={{ duration: 0.15, ease: "easeOut" }}
       className="mb-6 rounded-card border border-border bg-surface p-4"
     >
-      <p className="mb-3 flex items-center gap-1.5 text-small font-medium text-foreground">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+      <p className="flex items-center gap-1.5 text-small font-medium text-foreground">
         <Sparkles size={14} strokeWidth={1.5} className="text-accent" aria-hidden />
         {/* ⚠️ En demo el encabezado NO puede decir "tu negocio": los números son de
             Kestrel o de Casa Mendieta, no de quien está mirando. Nombrar la empresa
@@ -76,6 +78,9 @@ export function InstanceSnapshot() {
             qué va esta empresa?" — que es para lo que el selector la puso ahí. */}
         {isDemoMode && demoName ? t("titleDemo", { instance: demoName }) : t("title")}
       </p>
+      {/* X-04 — hasta cuándo llegan estos números (sólo si vale la pena decirlo). */}
+      <DataUntilBadge className="text-micro text-text-muted" />
+      </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map((tile) => (
           <div key={tile.model} className="rounded-btn border border-border bg-base px-3 py-2">

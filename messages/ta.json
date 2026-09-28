@@ -1893,5 +1893,10 @@
     },
     "titleDemo": "What I already know about {instance}",
     "hintDemo": "This is a sample company. Ask me about any of these numbers."
+  },
+  "DataUntil": {
+    "label": "{date} வரையிலான தரவு",
+    "hintDemo": "இந்த மாதிரி நிறுவனத்திடம் அந்தத் தேதி வரை தரவு உள்ளது: பிந்தைய காலம் காலியாக வரும்.",
+    "hint": "இந்த அமைப்பின் தரவு அந்தத் தேதி வரை உள்ளது."
   }
 }
