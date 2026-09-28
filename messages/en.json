@@ -1376,7 +1376,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "noSeatsWarning": "User limit reached",
-      "noSeatsLink": "Add seats"
+      "noSeatsLink": "Add seats",
+      "invalidEmail": "That email doesn't look valid: check it has a full domain (e.g. name@company.com)."
     },
     "edit": {
       "button": "Edit",
@@ -1418,7 +1419,8 @@
     "timezoneEffective": "Your schedules use {timezone}.",
     "timezoneUseDetected": "Use this device's ({timezone})",
     "timezoneExistingNote": "Schedules you already created keep the time zone they were created with.",
-    "timezoneFailed": "Could not save the time zone."
+    "timezoneFailed": "Could not save the time zone.",
+    "timezoneSearch": "Search time zone (e.g. New York, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",

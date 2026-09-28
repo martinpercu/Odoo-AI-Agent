@@ -1376,7 +1376,8 @@
       "copy": "Copiar",
       "copied": "Copiado",
       "noSeatsWarning": "Limite de usuários atingido",
-      "noSeatsLink": "Adicionar"
+      "noSeatsLink": "Adicionar",
+      "invalidEmail": "Esse e-mail não parece válido: verifique se tem um domínio completo (ex.: nome@empresa.com)."
     },
     "edit": {
       "button": "Editar",
@@ -1418,7 +1419,8 @@
     "timezoneEffective": "Seus agendamentos usam {timezone}.",
     "timezoneUseDetected": "Usar o deste dispositivo ({timezone})",
     "timezoneExistingNote": "Os agendamentos já criados mantêm o fuso horário com que foram criados.",
-    "timezoneFailed": "Não foi possível salvar o fuso horário."
+    "timezoneFailed": "Não foi possível salvar o fuso horário.",
+    "timezoneSearch": "Buscar fuso (ex.: São Paulo, Lisboa)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",

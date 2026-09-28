@@ -1376,7 +1376,8 @@
       "copy": "Kopieren",
       "copied": "Kopiert",
       "noSeatsWarning": "Benutzerlimit erreicht",
-      "noSeatsLink": "Hinzufügen"
+      "noSeatsLink": "Hinzufügen",
+      "invalidEmail": "Diese E-Mail scheint ungültig: Prüfen Sie, ob sie eine vollständige Domain hat (z. B. name@firma.de)."
     },
     "edit": {
       "button": "Bearbeiten",
@@ -1418,7 +1419,8 @@
     "timezoneEffective": "Deine Planungen verwenden {timezone}.",
     "timezoneUseDetected": "Die dieses Geräts verwenden ({timezone})",
     "timezoneExistingNote": "Bereits erstellte Planungen behalten die Zeitzone, mit der sie angelegt wurden.",
-    "timezoneFailed": "Zeitzone konnte nicht gespeichert werden."
+    "timezoneFailed": "Zeitzone konnte nicht gespeichert werden.",
+    "timezoneSearch": "Zeitzone suchen (z. B. Berlin, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",

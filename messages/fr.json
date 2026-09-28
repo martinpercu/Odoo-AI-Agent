@@ -1376,7 +1376,8 @@
       "copy": "Copier",
       "copied": "Copié",
       "noSeatsWarning": "Limite d'utilisateurs atteinte",
-      "noSeatsLink": "Ajouter"
+      "noSeatsLink": "Ajouter",
+      "invalidEmail": "Cet e-mail ne semble pas valide : vérifiez qu'il a un domaine complet (ex. : nom@entreprise.com)."
     },
     "edit": {
       "button": "Modifier",
@@ -1418,7 +1419,8 @@
     "timezoneEffective": "Vos programmations utilisent {timezone}.",
     "timezoneUseDetected": "Utiliser celui de cet appareil ({timezone})",
     "timezoneExistingNote": "Les programmations déjà créées conservent le fuseau horaire avec lequel elles ont été créées.",
-    "timezoneFailed": "Impossible d'enregistrer le fuseau horaire."
+    "timezoneFailed": "Impossible d'enregistrer le fuseau horaire.",
+    "timezoneSearch": "Rechercher un fuseau (ex. : Paris, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",

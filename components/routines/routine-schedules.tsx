@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, CalendarClock, Loader2, Trash2 } from "lucide-react";
 
 import { deleteRoutineSchedule, updateRoutineSchedule } from "@/lib/api";
@@ -62,6 +62,7 @@ function ScheduleRow({
   onChanged: () => void;
 }) {
   const t = useTranslations("Routines");
+  const locale = useLocale();
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
@@ -127,7 +128,7 @@ function ScheduleRow({
           {schedule.is_active && (
             <p className="mt-0.5 text-micro text-text-muted">
               {t("scheduleNextRun", {
-                when: new Date(schedule.next_run_at).toLocaleString(),
+                when: new Date(schedule.next_run_at).toLocaleString(locale),
               })}
             </p>
           )}

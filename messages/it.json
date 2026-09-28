@@ -1376,7 +1376,8 @@
       "copy": "Copia",
       "copied": "Copiato",
       "noSeatsWarning": "Limite utenti raggiunto",
-      "noSeatsLink": "Aggiungi"
+      "noSeatsLink": "Aggiungi",
+      "invalidEmail": "Questa email non sembra valida: controlla che abbia un dominio completo (es.: nome@azienda.com)."
     },
     "edit": {
       "button": "Modifica",
@@ -1418,7 +1419,8 @@
     "timezoneEffective": "Le tue programmazioni usano {timezone}.",
     "timezoneUseDetected": "Usa quello di questo dispositivo ({timezone})",
     "timezoneExistingNote": "Le programmazioni già create mantengono il fuso orario con cui sono state create.",
-    "timezoneFailed": "Non è stato possibile salvare il fuso orario."
+    "timezoneFailed": "Non è stato possibile salvare il fuso orario.",
+    "timezoneSearch": "Cerca fuso orario (es.: Roma, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",

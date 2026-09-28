@@ -16,6 +16,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { createInvitation, sendInvitationEmail } from "@/lib/api";
+import { isPlausibleEmail } from "@/lib/email";
 import type { InvitationMode, InstanceSeats, SeatType } from "@/lib/types";
 import { deriveSeatState } from "@/lib/seats";
 
@@ -70,6 +71,10 @@ export function InviteUserForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!orgId || noSeats) return;
+    if (!isPlausibleEmail(email)) {
+      setError(t("invalidEmail"));
+      return;
+    }
     setSubmitting(true);
     setError(null);
     setLink(null);
@@ -136,6 +141,7 @@ export function InviteUserForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            aria-invalid={error === t("invalidEmail") || undefined}
             placeholder={t("emailPlaceholder")}
             className="w-full rounded-btn border border-border bg-base py-2 pl-9 pr-3 text-body outline-none transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
           />

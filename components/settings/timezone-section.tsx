@@ -54,6 +54,18 @@ export function TimezoneSection() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /**
+   * F-12 — ~400 zonas en un <select> sin búsqueda obligaba a scrollear hasta
+   * "America/Argentina/…". El filtro no toca el valor elegido: si deja afuera la zona
+   * actual, igual se muestra, para que el select nunca aparezca vacío o mintiendo.
+   */
+  const [query, setQuery] = useState("");
+  const visibleZones = useMemo(() => {
+    const q = query.trim().toLowerCase().replace(/\s+/g, "_");
+    if (!q) return zones;
+    const hits = zones.filter((z) => z.toLowerCase().includes(q));
+    return value && !hits.includes(value) ? [value, ...hits] : hits;
+  }, [zones, query, value]);
 
   const detected = useMemo(() => {
     try {
@@ -86,6 +98,14 @@ export function TimezoneSection() {
       </div>
       <p className="mb-4 text-small text-text-secondary">{t("timezoneSubtitle")}</p>
 
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t("timezoneSearch")}
+        aria-label={t("timezoneSearch")}
+        className="mb-2 h-btn-md w-full rounded-btn border border-border bg-base px-3 text-small placeholder:text-text-muted focus:border-accent focus:outline-none"
+      />
       <div className="flex flex-wrap items-center gap-2">
         <select
           value={value}
@@ -100,7 +120,7 @@ export function TimezoneSection() {
               ? t("timezoneInheritWith", { timezone: orgDefault })
               : t("timezoneInherit")}
           </option>
-          {zones.map((zone) => (
+          {visibleZones.map((zone) => (
             <option key={zone} value={zone}>
               {zone.replace(/_/g, " ")}
             </option>

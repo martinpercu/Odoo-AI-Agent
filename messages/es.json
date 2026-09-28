@@ -1376,7 +1376,8 @@
       "copy": "Copiar",
       "copied": "Copiado",
       "noSeatsWarning": "Alcanzaste el máximo de usuarios",
-      "noSeatsLink": "Agregar"
+      "noSeatsLink": "Agregar",
+      "invalidEmail": "Ese email no parece válido: revisa que tenga un dominio completo (ej.: nombre@empresa.com)."
     },
     "edit": {
       "button": "Editar",
@@ -1418,7 +1419,8 @@
     "timezoneEffective": "Tus agendados usan {timezone}.",
     "timezoneUseDetected": "Usar la de este dispositivo ({timezone})",
     "timezoneExistingNote": "Los agendados que ya creaste mantienen la zona con la que se crearon.",
-    "timezoneFailed": "No se pudo guardar la zona horaria."
+    "timezoneFailed": "No se pudo guardar la zona horaria.",
+    "timezoneSearch": "Buscar zona (ej.: Buenos Aires, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",

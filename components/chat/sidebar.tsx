@@ -216,6 +216,8 @@ export function Sidebar({
                         type="button"
                         onClick={() => { onSelectChat(chat.id); setMobileOpen(false); }}
                         aria-current={currentChatId === chat.id ? "page" : undefined}
+                        // F-12 — el título se trunca a una línea: el completo, al pasar el mouse.
+                        title={chat.title || undefined}
                         className="flex min-w-0 flex-1 items-center gap-2.5 rounded-md py-2 pl-2.5 text-left"
                       >
                         <MessageSquare size={iconInline} strokeWidth={1.5} className="shrink-0 opacity-60" />

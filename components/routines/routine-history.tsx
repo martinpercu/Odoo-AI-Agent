@@ -12,7 +12,7 @@ import {
   Server,
   Trash2,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { deleteRoutineRun, fetchRoutineRun, regenerateRoutineRun } from "@/lib/api";
 import type { Routine, RoutineRunDetail, RoutineRunSummary } from "@/lib/types";
@@ -72,6 +72,7 @@ export function RoutineHistoryItem({
   instanceName?: string | null;
 }) {
   const t = useTranslations("Routines");
+  const locale = useLocale();
   const [busy, setBusy] = useState<"download" | "delete" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -145,7 +146,7 @@ export function RoutineHistoryItem({
             </span>
           </div>
           <p className="mt-0.5 text-small text-text-muted">
-            {when ? new Date(when).toLocaleString() : ""}
+            {when ? new Date(when).toLocaleString(locale) : ""}
             {run.step_total ? ` · ${t("progress", { done: run.step_done, total: run.step_total })}` : ""}
           </p>
 
