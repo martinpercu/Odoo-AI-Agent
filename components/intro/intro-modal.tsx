@@ -8,6 +8,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useIntro } from "@/hooks/use-intro";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { useAudience } from "@/hooks/use-audience";
 import { isUsableFor } from "@/lib/suggestions";
 import { useChatContext } from "@/components/app-shell";
 import { useAuth } from "@/hooks/use-auth";
@@ -37,6 +38,7 @@ export function IntroModal() {
   const { isModalOpen, openModal, closeModal, openPanel, dismissed, ready } = useIntro();
   const { isDemoMode, activeConfigId } = useOdooConfig();
   const usage = useInstanceUsage(activeConfigId)?.usage;
+  const isBuilder = useAudience().audience === "builder";
   const { createChat, sendMessage } = useChatContext();
   const { user, isLoading: authLoading } = useAuth();
   const { meData } = useSession();
@@ -205,7 +207,8 @@ export function IntroModal() {
             >
               {t("whatIsThis")}
             </button>
-            <span className="ml-auto">{t("madeBy")}</span>
+            {/* A9/A20 — por AUDIENCIA, no por rol: tampoco en la vista previa cliente. */}
+            {isBuilder && <span className="ml-auto">{t("madeBy")}</span>}
           </div>
         </div>
       </div>

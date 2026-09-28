@@ -26,6 +26,7 @@ import { useIntro } from "@/hooks/use-intro";
 import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { useAudience } from "@/hooks/use-audience";
 import { isUsableFor } from "@/lib/suggestions";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
@@ -104,6 +105,7 @@ export function IntroPanel() {
   const { createChat, sendMessage } = useChatContext();
   const { activeConfigId } = useOdooConfig();
   const usage = useInstanceUsage(activeConfigId)?.usage;
+  const isBuilder = useAudience().audience === "builder";
   const { user } = useAuth();
   const { meData } = useSession();
   const isPartner = meData?.org?.type === "PARTNER";
@@ -389,6 +391,9 @@ export function IntroPanel() {
                         {item.a}
                       </Collapsible>
                     ))}
+                    {/* A9/A20 — "Hecho por Martin" sólo para quien mira como implementador:
+                        el panel puede seguir abierto al encender "ver como cliente". */}
+                    {isBuilder && (
                     <Collapsible question={t("founder.heading")}>
                       <p className="mb-3">{t("founder.body")}</p>
                       <a
@@ -399,6 +404,7 @@ export function IntroPanel() {
                         {t("founder.email")}
                       </a>
                     </Collapsible>
+                    )}
                   </div>
                 </Section>
               </div>
