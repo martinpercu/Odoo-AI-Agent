@@ -155,8 +155,10 @@ export function useChat(chatId?: string, userId?: string) {
   const chatGroups = groupChatsByDate(displayChats);
 
   const deleteChat = useCallback(async (chatId: string) => {
-    const target = chatsRef.current.find((c) => c.id === chatId)
-      ?? serverChatsRef.current.find((c) => c.id === chatId);
+    // El id real de la base (`conversationId`) sólo lo tiene la copia del server; la
+    // optimista puede seguir viva al lado (F-03), así que se busca primero la del server.
+    const target = serverChatsRef.current.find((c) => c.id === chatId)
+      ?? chatsRef.current.find((c) => c.id === chatId);
     const idForApi = target?.conversationId ?? chatId;
     const result = await deleteChatAPI(idForApi);
     if (result.success) {
@@ -205,20 +207,31 @@ export function useChat(chatId?: string, userId?: string) {
       };
     });
     if (offset === 0) {
-      // Preserve in-memory messages: check both optimistic (chats) and already-migrated (serverChats).
-      const localById = new Map([
-        ...serverChatsRef.current.map((c) => [c.id, c] as [string, Chat]),
-        ...chatsRef.current.map((c) => [c.id, c] as [string, Chat]),
-      ]);
-      const merged = loaded.map((s) => {
-        const local = localById.get(s.id);
-        return local && local.messages.length > 0 ? { ...s, messages: local.messages } : s;
+      /**
+       * F-03 — el merge se hace sobre el estado VIGENTE, no sobre una foto.
+       *
+       * Antes se armaba con `chatsRef`/`serverChatsRef` (el estado del último render) y
+       * se aplicaba reemplazando `serverChats` y SACANDO de `chats` todo chat que ya
+       * volvía del server. Si el usuario mandaba el mensaje siguiente en el mismo frame
+       * en que llegaba esta respuesta —encadenar justo después de una respuesta lenta—,
+       * la foto no tenía ese turno: el chat salía de `chats` sin él, la burbuja
+       * desaparecía y los chunks del stream ya no encontraban su mensaje.
+       *
+       * Ahora: la lista del server conserva los mensajes que YA tenía (updater funcional)
+       * y un chat optimista con mensajes se queda en `chats`, que es la copia que manda
+       * (`currentChat` la busca primero y `updateChat` actualiza las dos). La barra
+       * lateral no se duplica: `displayChats` sólo muestra el optimista si el server
+       * todavía no lo devolvió.
+       */
+      const serverIds = new Set(loaded.map((c) => c.id));
+      setChats((prev) => prev.filter((c) => !serverIds.has(c.id) || c.messages.length > 0));
+      setServerChats((prev) => {
+        const prevById = new Map(prev.map((c) => [c.id, c] as [string, Chat]));
+        return loaded.map((s) => {
+          const local = prevById.get(s.id);
+          return local && local.messages.length > 0 ? { ...s, messages: local.messages } : s;
+        });
       });
-      setChats((prev) => {
-        const serverIds = new Set(loaded.map((c) => c.id));
-        return prev.filter((c) => !serverIds.has(c.id));
-      });
-      setServerChats(merged);
       setServerOffset(0);
       setHasMore(hasMoreAfter(result.total, loaded.length, 0));
       return;
