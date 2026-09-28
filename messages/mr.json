@@ -203,7 +203,6 @@
         "features": {
           "seat": "१ सीट",
           "dailyLimit": "दैनिक चॅट मर्यादा",
-          "watermark": "प्रतिसादांवर वॉटरमार्क",
           "forever": "कायमचे मोफत"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "सदस्यता घ्या",
         "features": {
           "seat": "१ पूर्ण सीट",
-          "noLimit": "चॅट मर्यादा नाही",
-          "noWatermark": "वॉटरमार्क नाही"
+          "noLimit": "चॅट मर्यादा नाही"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "१० सीट पासून (५ मोफत + ५ सशुल्क)",
           "seatsTo": "१०५ सीट पर्यंत (५ मोफत + १०० सशुल्क)",
-          "freeSeats": "वॉटरमार्क सह मोफत सीट समाविष्ट",
+          "freeSeats": "Free seats included",
           "idealFor": "Odoo इम्प्लिमेंटर्ससाठी आदर्श"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "सशुल्क सीट",
       "freeSlots": "मोफत सीट",
       "price": "किंमत",
-      "freeSlotNote": "मोफत सीटवर नेहमी वॉटरमार्क दिसतो आणि वापर मर्यादा असतात. सशुल्क सीटवर संपूर्ण अमर्यादित प्रवेश असतो."
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "प्रकार",
       "colPlan": "योजना",
       "colSlots": "स्लॉट",
-      "colWatermark": "वॉटरमार्क",
       "colUsers": "वापरकर्ते",
       "colCreated": "तयार केले",
       "colActions": "कृती",
@@ -752,7 +749,6 @@
       "editTier": "योजना",
       "editPaidSlots": "सशुल्क स्लॉट",
       "editFreeSlots": "मोफत स्लॉट",
-      "editWatermark": "वॉटरमार्क दाखवा",
       "editSave": "जतन करा",
       "editCancel": "रद्द करा",
       "editSuccess": "सदस्यता अपडेट केली.",

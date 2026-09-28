@@ -2169,7 +2169,6 @@ export interface UpdateOrgSubscriptionPayload {
   tier?: string;
   paid_slots_limit?: number;
   free_slots_limit?: number;
-  show_watermark?: boolean;
   /** Voice feature quotas (-1 = unlimited, 0 = not contracted). */
   stt_slots_limit?: number;
   tts_slots_limit?: number;

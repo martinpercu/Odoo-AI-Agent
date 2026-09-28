@@ -251,8 +251,6 @@ export interface Message {
   charts?: ChartSSEEvent[];
   recordLinks?: RecordLinksEvent[];
   imageUrl?: string;
-  /** Whether to show "Powered by The Odoo Agent" watermark. Undefined = show (safe default). */
-  watermark?: boolean;
 }
 
 export interface Chat {
@@ -592,7 +590,6 @@ export interface MeOrg {
 
 export interface MeSubscription {
   tier: SubscriptionTier;
-  show_watermark: boolean;
   paid_slots_limit: number;
   free_slots_limit: number;
   is_active: boolean;
@@ -883,7 +880,6 @@ export interface SuperAdminSubscription {
   tier: string;
   paid_slots_limit: number;
   free_slots_limit: number;
-  show_watermark: boolean;
   is_active: boolean;
   /** Voice feature quotas (-1 = unlimited, 0 = not contracted). */
   stt_slots_limit?: number;

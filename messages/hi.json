@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 सीट",
           "dailyLimit": "दैनिक चैट सीमा",
-          "watermark": "उत्तरों पर वॉटरमार्क",
           "forever": "हमेशा के लिए मुफ़्त"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "सदस्यता लें",
         "features": {
           "seat": "1 पूर्ण सीट",
-          "noLimit": "कोई चैट सीमा नहीं",
-          "noWatermark": "कोई वॉटरमार्क नहीं"
+          "noLimit": "कोई चैट सीमा नहीं"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "10 सीट से (5 मुफ़्त + 5 भुगतान)",
           "seatsTo": "105 सीट तक (5 मुफ़्त + 100 भुगतान)",
-          "freeSeats": "वॉटरमार्क के साथ मुफ़्त सीट शामिल",
+          "freeSeats": "Free seats included",
           "idealFor": "Odoo इम्प्लीमेंटर्स के लिए आदर्श"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "भुगतान सीट",
       "freeSlots": "मुफ़्त सीट",
       "price": "मूल्य",
-      "freeSlotNote": "मुफ़्त सीट हमेशा वॉटरमार्क दिखाती हैं और उपयोग की सीमाएं होती हैं। भुगतान सीट में पूर्ण असीमित पहुंच है।"
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "प्रकार",
       "colPlan": "प्लान",
       "colSlots": "सीटें",
-      "colWatermark": "वॉटरमार्क",
       "colUsers": "उपयोगकर्ता",
       "colCreated": "बनाया",
       "colActions": "कार्य",
@@ -752,7 +749,6 @@
       "editTier": "प्लान",
       "editPaidSlots": "भुगतान सीट",
       "editFreeSlots": "मुफ़्त सीट",
-      "editWatermark": "वॉटरमार्क दिखाएं",
       "editSave": "सहेजें",
       "editCancel": "रद्द करें",
       "editSuccess": "सदस्यता अपडेट हुई।",

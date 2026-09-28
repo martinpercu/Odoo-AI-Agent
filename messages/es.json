@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 asiento",
           "dailyLimit": "Límite de chats diarios",
-          "watermark": "Marca de agua en respuestas",
           "forever": "Gratis para siempre"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "Suscribirse",
         "features": {
           "seat": "1 asiento completo",
-          "noLimit": "Sin límite de chats",
-          "noWatermark": "Sin marca de agua"
+          "noLimit": "Sin límite de chats"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "Desde 10 asientos (5 gratis + 5 pagos)",
           "seatsTo": "Hasta 105 asientos (5 gratis + 100 pagos)",
-          "freeSeats": "Asientos gratuitos con marca de agua incluidos",
+          "freeSeats": "Asientos gratuitos incluidos",
           "idealFor": "Ideal para implementadores Odoo"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "Asientos pagos",
       "freeSlots": "Asientos gratuitos",
       "price": "Precio",
-      "freeSlotNote": "Los asientos gratuitos siempre muestran marca de agua y tienen límite de uso. Los asientos pagos tienen acceso completo sin restricciones."
+      "freeSlotNote": "Los asientos gratuitos tienen límite de uso. Los asientos pagos tienen acceso completo sin restricciones."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "Tipo",
       "colPlan": "Plan",
       "colSlots": "Slots",
-      "colWatermark": "Watermark",
       "colUsers": "Usuarios",
       "colCreated": "Creada",
       "colActions": "Acciones",
@@ -752,7 +749,6 @@
       "editTier": "Plan",
       "editPaidSlots": "Slots pagos",
       "editFreeSlots": "Slots gratuitos",
-      "editWatermark": "Mostrar watermark",
       "editSave": "Guardar",
       "editCancel": "Cancelar",
       "editSuccess": "Suscripción actualizada.",

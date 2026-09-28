@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 સ્થાન",
           "dailyLimit": "દૈનિક ચૅટ મર્યાદા",
-          "watermark": "જવાબ પર વૉટરમાર્ક",
           "forever": "કાયમ માટે મફત"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "સબ્સ્ક્રાઇબ",
         "features": {
           "seat": "1 સંપૂર્ણ સ્થાન",
-          "noLimit": "ચૅટ મર્યાદા નહીં",
-          "noWatermark": "વૉટરમાર્ક નહીં"
+          "noLimit": "ચૅટ મર્યાદા નહીં"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "10 સ્થાનથી (5 મફત + 5 પેઇડ)",
           "seatsTo": "105 સ્થાન સુધી (5 મફત + 100 પેઇડ)",
-          "freeSeats": "વૉટરમાર્ક સહિત મફત સ્થાન",
+          "freeSeats": "Free seats included",
           "idealFor": "Odoo ઇમ્પ્લિમેન્ટર્સ માટે આદર્શ"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "પેઇડ સ્થાન",
       "freeSlots": "મફત સ્થાન",
       "price": "ભાવ",
-      "freeSlotNote": "મફત સ્થાન હંમેશ વૉટરમાર્ક બતાવે છે અને ઉપયોગ મર્યાદા ધરાવે છે. પેઇડ સ્થાન સંપૂર્ણ અમર્યાદ ઍક્સેસ આપે છે."
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "પ્રકાર",
       "colPlan": "પ્લાન",
       "colSlots": "સ્થાન",
-      "colWatermark": "વૉટરમાર્ક",
       "colUsers": "વપરાશકર્તાઓ",
       "colCreated": "બનાવ્યું",
       "colActions": "ક્રિયાઓ",
@@ -752,7 +749,6 @@
       "editTier": "પ્લાન",
       "editPaidSlots": "પેઇડ સ્થાન",
       "editFreeSlots": "મફત સ્થાન",
-      "editWatermark": "વૉટરમાર્ક બતાવો",
       "editSave": "સાચવો",
       "editCancel": "રદ કરો",
       "editSuccess": "સબ્સ્ક્રિપ્શન અપડેટ થયું.",

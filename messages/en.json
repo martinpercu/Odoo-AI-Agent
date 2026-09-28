@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 seat",
           "dailyLimit": "Daily chat limit",
-          "watermark": "Watermark on responses",
           "forever": "Free forever"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "Subscribe",
         "features": {
           "seat": "1 full seat",
-          "noLimit": "No chat limit",
-          "noWatermark": "No watermark"
+          "noLimit": "No chat limit"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "From 10 seats (5 free + 5 paid)",
           "seatsTo": "Up to 105 seats (5 free + 100 paid)",
-          "freeSeats": "Free seats with watermark included",
+          "freeSeats": "Free seats included",
           "idealFor": "Ideal for Odoo implementors"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "Paid seats",
       "freeSlots": "Free seats",
       "price": "Price",
-      "freeSlotNote": "Free seats always show a watermark and have usage limits. Paid seats have full unrestricted access."
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "Type",
       "colPlan": "Plan",
       "colSlots": "Slots",
-      "colWatermark": "Watermark",
       "colUsers": "Users",
       "colCreated": "Created",
       "colActions": "Actions",
@@ -752,7 +749,6 @@
       "editTier": "Plan",
       "editPaidSlots": "Paid slots",
       "editFreeSlots": "Free slots",
-      "editWatermark": "Show watermark",
       "editSave": "Save",
       "editCancel": "Cancel",
       "editSuccess": "Subscription updated.",

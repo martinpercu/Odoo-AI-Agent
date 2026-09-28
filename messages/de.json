@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 Platz",
           "dailyLimit": "Tägliches Chat-Limit",
-          "watermark": "Wasserzeichen auf Antworten",
           "forever": "Für immer kostenlos"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "Abonnieren",
         "features": {
           "seat": "1 vollständiger Platz",
-          "noLimit": "Kein Chat-Limit",
-          "noWatermark": "Kein Wasserzeichen"
+          "noLimit": "Kein Chat-Limit"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "Ab 10 Plätze (5 kostenlos + 5 kostenpflichtig)",
           "seatsTo": "Bis zu 105 Plätze (5 kostenlos + 100 kostenpflichtig)",
-          "freeSeats": "Kostenlose Plätze mit Wasserzeichen inklusive",
+          "freeSeats": "Kostenlose Plätze inklusive",
           "idealFor": "Ideal für Odoo-Implementierer"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "Kostenpflichtige Plätze",
       "freeSlots": "Kostenlose Plätze",
       "price": "Preis",
-      "freeSlotNote": "Kostenlose Plätze zeigen immer ein Wasserzeichen und haben Nutzungslimits. Kostenpflichtige Plätze haben vollen, uneingeschränkten Zugriff."
+      "freeSlotNote": "Kostenlose Plätze haben Nutzungslimits. Kostenpflichtige Plätze haben vollen, uneingeschränkten Zugriff."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "Typ",
       "colPlan": "Plan",
       "colSlots": "Slots",
-      "colWatermark": "Wasserzeichen",
       "colUsers": "Benutzer",
       "colCreated": "Erstellt",
       "colActions": "Aktionen",
@@ -752,7 +749,6 @@
       "editTier": "Plan",
       "editPaidSlots": "Bezahlte Slots",
       "editFreeSlots": "Kostenlose Slots",
-      "editWatermark": "Wasserzeichen anzeigen",
       "editSave": "Speichern",
       "editCancel": "Abbrechen",
       "editSuccess": "Abonnement aktualisiert.",

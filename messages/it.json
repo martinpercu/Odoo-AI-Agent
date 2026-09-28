@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 posto",
           "dailyLimit": "Limite giornaliero di chat",
-          "watermark": "Filigrana sulle risposte",
           "forever": "Gratuito per sempre"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "Abbonati",
         "features": {
           "seat": "1 posto completo",
-          "noLimit": "Nessun limite di chat",
-          "noWatermark": "Nessuna filigrana"
+          "noLimit": "Nessun limite di chat"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "Da 10 posti (5 gratuiti + 5 a pagamento)",
           "seatsTo": "Fino a 105 posti (5 gratuiti + 100 a pagamento)",
-          "freeSeats": "Posti gratuiti con filigrana inclusi",
+          "freeSeats": "Posti gratuiti inclusi",
           "idealFor": "Ideale per implementatori Odoo"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "Posti a pagamento",
       "freeSlots": "Posti gratuiti",
       "price": "Prezzo",
-      "freeSlotNote": "I posti gratuiti mostrano sempre una filigrana e hanno limiti di utilizzo. I posti a pagamento hanno accesso completo senza restrizioni."
+      "freeSlotNote": "I posti gratuiti hanno limiti di utilizzo. I posti a pagamento hanno accesso completo senza restrizioni."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "Tipo",
       "colPlan": "Piano",
       "colSlots": "Posti",
-      "colWatermark": "Filigrana",
       "colUsers": "Utenti",
       "colCreated": "Creato",
       "colActions": "Azioni",
@@ -752,7 +749,6 @@
       "editTier": "Piano",
       "editPaidSlots": "Posti a pagamento",
       "editFreeSlots": "Posti gratuiti",
-      "editWatermark": "Mostra filigrana",
       "editSave": "Salva",
       "editCancel": "Annulla",
       "editSuccess": "Abbonamento aggiornato.",

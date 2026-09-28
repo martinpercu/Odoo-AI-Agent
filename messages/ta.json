@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 இடம்",
           "dailyLimit": "தினசரி அரட்டை வரம்பு",
-          "watermark": "பதில்களில் வாட்டர்மார்க்",
           "forever": "என்றும் இலவசம்"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "குழுசேரவும்",
         "features": {
           "seat": "1 முழு இடம்",
-          "noLimit": "அரட்டை வரம்பு இல்லை",
-          "noWatermark": "வாட்டர்மார்க் இல்லை"
+          "noLimit": "அரட்டை வரம்பு இல்லை"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "10 இடங்கள் முதல் (5 இலவசம் + 5 பணம் செலுத்தியது)",
           "seatsTo": "105 இடங்கள் வரை (5 இலவசம் + 100 பணம் செலுத்தியது)",
-          "freeSeats": "வாட்டர்மார்க் உள்ள இலவச இடங்கள் சேர்க்கப்பட்டுள்ளன",
+          "freeSeats": "Free seats included",
           "idealFor": "Odoo அமலாக்கர்களுக்கு ஏற்றது"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "பணம் செலுத்திய இடங்கள்",
       "freeSlots": "இலவச இடங்கள்",
       "price": "விலை",
-      "freeSlotNote": "இலவச இடங்கள் எப்போதும் வாட்டர்மார்க் காட்டும் மற்றும் பயன்பாட்டு வரம்புகள் கொண்டிருக்கும். பணம் செலுத்திய இடங்கள் முழு வரம்பற்ற அணுகல் தரும்."
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "வகை",
       "colPlan": "திட்டம்",
       "colSlots": "இடங்கள்",
-      "colWatermark": "வாட்டர்மார்க்",
       "colUsers": "பயனர்கள்",
       "colCreated": "உருவாக்கியது",
       "colActions": "செயல்கள்",
@@ -752,7 +749,6 @@
       "editTier": "திட்டம்",
       "editPaidSlots": "பணம் செலுத்திய இடங்கள்",
       "editFreeSlots": "இலவச இடங்கள்",
-      "editWatermark": "வாட்டர்மார்க் காட்டவும்",
       "editSave": "சேமிக்கவும்",
       "editCancel": "ரத்தசெய்",
       "editSuccess": "குழுசேர்வை புதுப்பிக்கப்பட்டது.",

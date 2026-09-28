@@ -429,8 +429,6 @@ export function useChat(chatId?: string, userId?: string) {
         let buffer = "";
         let charts: ChartSSEEvent[] = [];
         let recordLinks: RecordLinksEvent[] = [];
-        // Watermark: safe default = not show. Only shows when backend explicitly sends show: true.
-        let showWatermark: boolean | undefined = undefined;
 
         // Throttle state updates to once per animation frame to avoid
         // triggering a React re-render + ReactMarkdown re-parse on every SSE chunk.
@@ -443,7 +441,6 @@ export function useChat(chatId?: string, userId?: string) {
           const meta = lastMetadata;
           const chartSnap = charts;
           const recordLinksSnap = recordLinks;
-          const wm = showWatermark;
           updateChat(targetId, (c) => ({
             ...c,
             messages: c.messages.map((m) =>
@@ -454,7 +451,6 @@ export function useChat(chatId?: string, userId?: string) {
                     ...(meta && { metadata: meta }),
                     ...(chartSnap.length > 0 && { charts: chartSnap }),
                     ...(recordLinksSnap.length > 0 && { recordLinks: recordLinksSnap }),
-                    watermark: wm,
                   }
                 : m
             ),
@@ -537,10 +533,6 @@ export function useChat(chatId?: string, userId?: string) {
                         filename: parsed.filename,
                       } satisfies ExcelExportMetadata;
                       text = "";
-                    } else if (parsed.type === "watermark") {
-                      // Watermark event comes at the start. show: false = paid client.
-                      showWatermark = typeof parsed.show === "boolean" ? parsed.show : false;
-                      continue;
                     } else if (parsed.type === "audio") {
                       // TTS chunk — enqueue for gapless playback, never touches
                       // the visible chat content.
@@ -569,7 +561,6 @@ export function useChat(chatId?: string, userId?: string) {
                                 content: finalContent,
                                 ...(charts.length > 0 && { charts }),
                                 ...(recordLinks.length > 0 && { recordLinks }),
-                                watermark: showWatermark,
                               }
                             : m
                         ),

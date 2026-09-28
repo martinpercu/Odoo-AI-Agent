@@ -203,7 +203,6 @@
         "features": {
           "seat": "1 ಸೀಟ್",
           "dailyLimit": "ದೈನಿಕ ಚಾಟ್ ಮಿತಿ",
-          "watermark": "ಪ್ರತಿಕ್ರಿಯೆಗಳಲ್ಲಿ ವಾಟರ್‌ಮಾರ್ಕ್",
           "forever": "ಶಾಶ್ವತವಾಗಿ ಉಚಿತ"
         }
       },
@@ -214,8 +213,7 @@
         "cta": "ಚಂದಾದಾರರಾಗಿ",
         "features": {
           "seat": "1 ಪೂರ್ಣ ಸೀಟ್",
-          "noLimit": "ಚಾಟ್ ಮಿತಿ ಇಲ್ಲ",
-          "noWatermark": "ವಾಟರ್‌ಮಾರ್ಕ್ ಇಲ್ಲ"
+          "noLimit": "ಚಾಟ್ ಮಿತಿ ಇಲ್ಲ"
         }
       },
       "enterprise": {
@@ -225,7 +223,7 @@
         "features": {
           "seatsFrom": "10 ಸೀಟ್‌ಗಳಿಂದ (5 ಉಚಿತ + 5 ಪಾವತಿ)",
           "seatsTo": "105 ಸೀಟ್‌ಗಳವರೆಗೆ (5 ಉಚಿತ + 100 ಪಾವತಿ)",
-          "freeSeats": "ವಾಟರ್‌ಮಾರ್ಕ್ ಸಹಿತ ಉಚಿತ ಸೀಟ್‌ಗಳು",
+          "freeSeats": "Free seats included",
           "idealFor": "Odoo ಅನುಷ್ಠಾನಕಾರರಿಗೆ ಸೂಕ್ತ"
         }
       }
@@ -239,7 +237,7 @@
       "paidSlots": "ಪಾವತಿ ಸೀಟ್‌ಗಳು",
       "freeSlots": "ಉಚಿತ ಸೀಟ್‌ಗಳು",
       "price": "ಬೆಲೆ",
-      "freeSlotNote": "ಉಚಿತ ಸೀಟ್‌ಗಳು ಯಾವಾಗಲೂ ವಾಟರ್‌ಮಾರ್ಕ್ ತೋರಿಸುತ್ತವೆ ಮತ್ತು ಬಳಕೆಯ ಮಿತಿಗಳನ್ನು ಹೊಂದಿವೆ. ಪಾವತಿ ಸೀಟ್‌ಗಳು ಸಂಪೂರ್ಣ ನಿರ್ಬಂಧರಹಿತ ಪ್ರವೇಶವನ್ನು ಹೊಂದಿವೆ."
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -736,7 +734,6 @@
       "colType": "ಪ್ರಕಾರ",
       "colPlan": "ಯೋಜನೆ",
       "colSlots": "ಸ್ಲಾಟ್‌ಗಳು",
-      "colWatermark": "ವಾಟರ್‌ಮಾರ್ಕ್",
       "colUsers": "ಬಳಕೆದಾರರು",
       "colCreated": "ರಚಿಸಿದ ದಿನಾಂಕ",
       "colActions": "ಕ್ರಿಯೆಗಳು",
@@ -752,7 +749,6 @@
       "editTier": "ಯೋಜನೆ",
       "editPaidSlots": "ಪಾವತಿ ಸ್ಲಾಟ್‌ಗಳು",
       "editFreeSlots": "ಉಚಿತ ಸ್ಲಾಟ್‌ಗಳು",
-      "editWatermark": "ವಾಟರ್‌ಮಾರ್ಕ್ ತೋರಿಸಿ",
       "editSave": "ಉಳಿಸಿ",
       "editCancel": "ರದ್ದುಮಾಡಿ",
       "editSuccess": "ಚಂದಾದಾರಿಕೆ ನವೀಕರಿಸಲಾಗಿದೆ.",
