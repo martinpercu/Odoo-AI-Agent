@@ -147,7 +147,9 @@
         "pie": "வட்டம்",
         "table": "அட்டவணை"
       },
-      "others": "மற்றவை"
+      "others": "மற்றவை",
+      "topTotal": "முதல் {n} மொத்தம்",
+      "overallTotal": "ஒட்டுமொத்த மொத்தம்"
     },
     "actionProposal": {
       "editField": "திருத்தவும்",

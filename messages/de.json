@@ -147,7 +147,9 @@
         "pie": "Kreis",
         "table": "Tabelle"
       },
-      "others": "Andere"
+      "others": "Andere",
+      "topTotal": "Summe der Top {n}",
+      "overallTotal": "Gesamtsumme"
     },
     "actionProposal": {
       "editField": "Bearbeiten",

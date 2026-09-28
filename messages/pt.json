@@ -147,7 +147,9 @@
         "pie": "Pizza",
         "table": "Tabela"
       },
-      "others": "Outros"
+      "others": "Outros",
+      "topTotal": "Total do top {n}",
+      "overallTotal": "Total geral"
     },
     "actionProposal": {
       "editField": "Editar",

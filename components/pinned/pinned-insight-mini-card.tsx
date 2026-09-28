@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { BarChart3, PieChart, TrendingUp, Table as TableIcon, FileText, FileSpreadsheet, X, Download, RefreshCw } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatAxisValue } from "@/components/charts/chart-plot";
 import type { LucideIcon } from "lucide-react";
 import type { ChartSSEEvent, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
@@ -21,21 +22,9 @@ const chartIcons: Record<ChartSSEEvent["chart_type"], LucideIcon> = {
   table: TableIcon,
 };
 
-function formatTotal(total: number, format: string, symbol: string): string {
-  if (format === "currency") {
-    const abs = Math.abs(total);
-    if (abs >= 1_000_000) return `${symbol}${(total / 1_000_000).toFixed(1)}M`;
-    if (abs >= 1_000) return `${symbol}${(total / 1_000).toFixed(1)}K`;
-    return `${symbol}${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  }
-  if (format === "integer") {
-    return total.toLocaleString(undefined, { maximumFractionDigits: 0 });
-  }
-  return total.toLocaleString();
-}
-
 export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   const t = useTranslations("PinnedInsights");
+  const locale = useLocale();
   const { unpin, refreshPin } = usePinnedInsights();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -49,7 +38,17 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
 
     const Icon = chartIcons[pin.chart.chart_type] ?? BarChart3;
     const total = pin.chart.meta.total != null
-      ? formatTotal(pin.chart.meta.total, pin.chart.meta.value_format, pin.chart.meta.currency_symbol)
+      ? // Compacto y con el locale de la APP (el mismo `formatAxisValue` de los ejes): antes
+        // armaba "1.2M" a mano con el locale del navegador. En un ranking, la suma del top.
+        formatAxisValue(
+          pin.chart.meta.scope === "top_n" && pin.chart.meta.top_total != null
+            ? pin.chart.meta.top_total
+            : pin.chart.meta.total,
+          pin.chart.meta.value_format,
+          pin.chart.meta.currency_symbol,
+          pin.chart.meta.no_decimals,
+          locale
+        )
       : null;
 
     async function handleRefresh() {

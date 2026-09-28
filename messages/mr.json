@@ -147,7 +147,9 @@
         "pie": "पाय",
         "table": "तक्ता"
       },
-      "others": "इतर"
+      "others": "इतर",
+      "topTotal": "शीर्ष {n} ची एकूण",
+      "overallTotal": "एकूण बेरीज"
     },
     "actionProposal": {
       "editField": "संपादित करा",

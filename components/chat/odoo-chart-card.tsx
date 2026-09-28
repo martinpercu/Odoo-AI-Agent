@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { ChartSSEEvent } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
@@ -13,8 +13,8 @@ import {
   ChartPlot,
   ChartTable,
   ChartTypeSwitcher,
+  ChartTotals,
   chartIconFor,
-  formatValue,
 } from "@/components/charts/chart-plot";
 import type { ChartViewType } from "@/components/charts/chart-plot";
 
@@ -26,7 +26,6 @@ interface OdooChartCardProps {
 
 export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardProps) {
   const t = useTranslations("ChatMessages.chart");
-  const locale = useLocale();
   const { chart_type, title, data, meta } = chart;
 
   // The backend's chart_type is the STARTING POINT, not the final word: it seeds
@@ -163,17 +162,8 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
         )}
       </div>
 
-      {/* Footer: total */}
-      {meta.total != null && (
-        <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-          <span className="text-small text-text-secondary">
-            {t("globalTotal")}
-          </span>
-          <span className="text-body font-semibold font-technical text-accent">
-            {formatValue(meta.total, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
-          </span>
-        </div>
-      )}
+      {/* Footer: total(es), rotulados por su ámbito — F-11 / B-23 */}
+      <ChartTotals meta={meta} />
 
       {/* Grouped by info */}
       {meta.group_by && (

@@ -147,7 +147,9 @@
         "pie": "પાઇ",
         "table": "કોષ્ટક"
       },
-      "others": "અન્ય"
+      "others": "અન્ય",
+      "topTotal": "ટોચના {n} નો કુલ",
+      "overallTotal": "કુલ સરવાળો"
     },
     "actionProposal": {
       "editField": "સંપાદિત કરો",

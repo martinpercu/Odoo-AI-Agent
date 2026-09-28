@@ -14,7 +14,7 @@ import {
   Server,
   X,
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import type { DashboardRefreshResult, PinnedChart, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
@@ -28,8 +28,8 @@ import {
   ChartPlot,
   ChartTable,
   ChartTypeSwitcher,
+  ChartTotals,
   chartIconFor,
-  formatValue,
 } from "@/components/charts/chart-plot";
 import type { ChartViewType } from "@/components/charts/chart-plot";
 
@@ -113,7 +113,6 @@ function ChartCard({
   tChart: ReturnType<typeof useTranslations>;
 }) {
   const { chart } = pin;
-  const locale = useLocale();
   // "Sin datos" también cuando hay filas pero ninguna tiene un valor numérico: un pin
   // con un payload que no se puede dibujar pintaba un recuadro vacío sin decir nada.
   const hasPlottableData = chart.data.some((row) => typeof row.value === "number");
@@ -123,17 +122,6 @@ function ChartCard({
   // El default es `true` para no marcar como atemporal un pin que llegó de un endpoint
   // que todavía no manda el veredicto: decir de más es peor que no decir.
   const followsPeriod = pin.date_dependent ?? true;
-  const total =
-    chart.meta.total != null
-      ? formatValue(
-          chart.meta.total,
-          chart.meta.value_format,
-          chart.meta.currency_symbol,
-          chart.meta.no_decimals,
-          locale
-        )
-      : null;
-
   const viewLabels: Record<ChartViewType, string> = {
     bar: tChart("viewAs.bar"),
     line: tChart("viewAs.line"),
@@ -225,13 +213,8 @@ function ChartCard({
 
       {/* Pie: total + selector de formato */}
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
-        {total !== null ? (
-          <span className="min-w-0 truncate font-technical text-body font-semibold text-accent">
-            {total}
-          </span>
-        ) : (
-          <span aria-hidden />
-        )}
+        {/* F-11 — rotulado por su ámbito: en un ranking es "Total del top N". */}
+        <ChartTotals meta={chart.meta} compact />
         {chart.data.length > 0 && (
           <ChartTypeSwitcher
             value={viewType}

@@ -147,7 +147,9 @@
         "pie": "पाई",
         "table": "तालिका"
       },
-      "others": "अन्य"
+      "others": "अन्य",
+      "topTotal": "शीर्ष {n} का कुल",
+      "overallTotal": "कुल योग"
     },
     "actionProposal": {
       "editField": "संपादित करें",

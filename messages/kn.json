@@ -147,7 +147,9 @@
         "pie": "ಪೈ",
         "table": "ಕೋಷ್ಟಕ"
       },
-      "others": "ಇತರೆ"
+      "others": "ಇತರೆ",
+      "topTotal": "ಅಗ್ರ {n} ಒಟ್ಟು",
+      "overallTotal": "ಒಟ್ಟು ಮೊತ್ತ"
     },
     "actionProposal": {
       "editField": "ಸಂಪಾದಿಸಿ",

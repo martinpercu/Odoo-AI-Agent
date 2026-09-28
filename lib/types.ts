@@ -356,6 +356,20 @@ export interface ChartMeta {
   model: string;
   period: string | null;
   total: number;
+  group_by_field?: string;
+  /**
+   * B-23 / F-11 — de QUÉ es `total`. `"all"` = el total general real (todos los grupos);
+   * `"top_n"` = sólo se conoce la suma de las filas que vinieron. ⚠️ Nunca rotular
+   * "Total global" a la suma de un top: era el bug.
+   */
+  total_scope?: "all" | "top_n";
+  /** Presente en un ranking: el gráfico es un top N, no el universo. */
+  scope?: "top_n";
+  top_n?: number;
+  /** La suma de las filas del top. */
+  top_total?: number;
+  /** Lo que queda fuera del top (`total - top_total`) → la porción "Otros" de la torta. */
+  others?: number;
 }
 
 export type PinVolatility = "variable" | "static";

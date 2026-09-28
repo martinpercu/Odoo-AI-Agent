@@ -147,7 +147,9 @@
         "pie": "Camembert",
         "table": "Tableau"
       },
-      "others": "Autres"
+      "others": "Autres",
+      "topTotal": "Total du top {n}",
+      "overallTotal": "Total général"
     },
     "actionProposal": {
       "editField": "Modifier",

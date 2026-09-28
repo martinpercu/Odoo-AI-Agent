@@ -147,7 +147,9 @@
         "pie": "Torta",
         "table": "Tabla"
       },
-      "others": "Otros"
+      "others": "Otros",
+      "topTotal": "Total del top {n}",
+      "overallTotal": "Total general"
     },
     "actionProposal": {
       "editField": "Editar",
