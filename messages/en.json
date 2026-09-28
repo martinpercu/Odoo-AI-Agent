@@ -180,7 +180,8 @@
       "cta": "Go to Settings"
     },
     "connectionError": "We couldn't complete the query. Check the connection and try again.",
-    "actionFailed": "The action could not be executed."
+    "actionFailed": "The action could not be executed.",
+    "somethingWentWrong": "Something went wrong. Try again in a few seconds."
   },
   "ChatHistory": {
     "loading": "Loading conversation...",

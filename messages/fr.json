@@ -180,7 +180,8 @@
       "cta": "Aller aux Paramètres"
     },
     "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez.",
-    "actionFailed": "L'action n'a pas pu être exécutée."
+    "actionFailed": "L'action n'a pas pu être exécutée.",
+    "somethingWentWrong": "Un problème est survenu. Réessayez dans quelques secondes."
   },
   "ChatHistory": {
     "loading": "Chargement de la conversation...",

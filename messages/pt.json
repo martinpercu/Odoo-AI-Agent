@@ -180,7 +180,8 @@
       "cta": "Ir para Configurações"
     },
     "connectionError": "Não conseguimos concluir a consulta. Verifique a ligação e tente novamente.",
-    "actionFailed": "Não foi possível executar a ação."
+    "actionFailed": "Não foi possível executar a ação.",
+    "somethingWentWrong": "Algo deu errado. Tente de novo em alguns segundos."
   },
   "ChatHistory": {
     "loading": "Carregando conversa...",

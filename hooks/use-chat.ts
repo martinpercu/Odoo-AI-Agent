@@ -15,7 +15,8 @@ import type {
   NoCredentialsMetadata,
 } from "@/lib/types";
 import type { TraceEntry } from "@/components/chat/langgraph-trace-panel";
-import { API_BASE, NETWORK_ERROR, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
+import { userFacingError } from "@/lib/user-facing-error";
+import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
 import { applyVisitorHeader } from "@/lib/demo-visitor";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -352,10 +353,20 @@ export function useChat(chatId?: string, userId?: string) {
           const result = await uploadImageAPI(targetId, image, activeConfigId!, locale);
 
           if (!result.success) {
+            const noSession = !(await getAccessToken());
             updateChat(targetId, (c) => ({
               ...c,
               messages: c.messages.map((m) =>
-                m.id === assistantId ? { ...m, content: `⚠️ ${result.error || "Upload failed"}` } : m
+                m.id === assistantId
+                  ? {
+                      ...m,
+                      content: `⚠️ ${userFacingError(result.error, {
+                        anonymous: noSession,
+                        connection: t("connectionError"),
+                        generic: t("somethingWentWrong"),
+                      })}`,
+                    }
+                  : m
               ),
             }));
             return;
@@ -675,7 +686,14 @@ export function useChat(chatId?: string, userId?: string) {
           // User stopped streaming — keep what we have
         } else {
           // Show error in the assistant message
-          const errorMsg = (err as Error).message || "Error de conexión";
+          // F-13 (A12) — "API error: 500" o "Failed to fetch" no son para una persona: el
+          // de red se traduce siempre y, sin sesión, cualquier cosa técnica es el neutro.
+          const errorMsg = userFacingError((err as Error).message, {
+            // Sin sesión de Supabase = el visitante del demo (tenga o no identidad efímera).
+            anonymous: !(await getAccessToken()),
+            connection: t("connectionError"),
+            generic: t("somethingWentWrong"),
+          });
           updateChat(targetId, (c) => ({
             ...c,
             messages: c.messages.map((m) =>
@@ -739,10 +757,13 @@ export function useChat(chatId?: string, userId?: string) {
           throw err;
         }
 
-        const errorText =
-          result.error === NETWORK_ERROR
-            ? t("connectionError")
-            : result.error || t("actionFailed");
+        // F-13 (A12) — el `detail` del back ya viene neutro para el anónimo (B-13); esto
+        // es la defensa de este lado: nada técnico llega a quien no tiene sesión.
+        const errorText = userFacingError(result.error, {
+          anonymous: !(await getAccessToken()),
+          connection: t("connectionError"),
+          generic: t("actionFailed"),
+        });
         const errorMessage: Message = {
           id: `msg-${Date.now()}`,
           role: "assistant",

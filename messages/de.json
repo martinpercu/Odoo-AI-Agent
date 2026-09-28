@@ -180,7 +180,8 @@
       "cta": "Zu den Einstellungen"
     },
     "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut.",
-    "actionFailed": "Die Aktion konnte nicht ausgeführt werden."
+    "actionFailed": "Die Aktion konnte nicht ausgeführt werden.",
+    "somethingWentWrong": "Etwas ist schiefgelaufen. Versuch es in ein paar Sekunden erneut."
   },
   "ChatHistory": {
     "loading": "Konversation wird geladen...",
