@@ -944,7 +944,15 @@
       "title": "Traccia LangGraph",
       "expand": "Mostra tracce",
       "collapse": "Nascondi tracce",
-      "empty": "Nessun evento ancora. Le tracce appaiono mentre l'agente elabora."
+      "empty": "Nessun evento ancora. Le tracce appaiono mentre l'agente elabora.",
+      "detail": {
+        "model": "Modello",
+        "method": "Metodo",
+        "groupby": "Raggruppato per",
+        "count": "Record",
+        "cached": "Dalla cache",
+        "domain": "Dominio"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Esecuzione · query"

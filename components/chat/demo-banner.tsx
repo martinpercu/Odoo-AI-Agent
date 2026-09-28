@@ -67,7 +67,9 @@ export function DemoBanner() {
       </div>
       <div className="flex shrink-0 items-center gap-3">
         {canPreviewAsClient && !isPreviewingAsClient && (
-          <span className="hidden items-center gap-1.5 opacity-90 lg:flex">
+          // Sólo con mucho ancho: con el panel de trazas o el riel abiertos, esta pista y el
+          // chip de "datos hasta" le comían el lugar al NOMBRE de la empresa, que es el dato.
+          <span className="hidden items-center gap-1.5 opacity-90 2xl:flex">
             <Eye size={14} strokeWidth={1.5} className="shrink-0" aria-hidden />
             <span>{t("previewAsClientHint")}</span>
           </span>

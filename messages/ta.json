@@ -944,7 +944,15 @@
       "title": "LangGraph trace",
       "expand": "traces காட்டவும்",
       "collapse": "traces மறைக்கவும்",
-      "empty": "இன்னும் நிகழ்வுகள் இல்லை. Agent செயலாக்கும்போது traces தோன்றும்."
+      "empty": "இன்னும் நிகழ்வுகள் இல்லை. Agent செயலாக்கும்போது traces தோன்றும்.",
+      "detail": {
+        "model": "Model",
+        "method": "Method",
+        "groupby": "Grouped by",
+        "count": "Records",
+        "cached": "From cache",
+        "domain": "Domain"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "செயல்படுத்துகிறது · வினவல்"

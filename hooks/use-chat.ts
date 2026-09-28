@@ -535,7 +535,17 @@ export function useChat(chatId?: string, userId?: string) {
                 currentEventType = "message";
                 try {
                   const entry = JSON.parse(raw) as TraceEntry;
-                  setTraceEntries((prev) => [...prev, { ts: entry.ts, level: entry.level, node: entry.node, message: entry.message }]);
+                  setTraceEntries((prev) => [
+                    ...prev,
+                    {
+                      ts: entry.ts,
+                      level: entry.level,
+                      node: entry.node,
+                      message: entry.message,
+                      // B-24 — la consulta real del executor; el panel la muestra al expandir.
+                      ...(entry.detail && typeof entry.detail === "object" && { detail: entry.detail }),
+                    },
+                  ]);
                 } catch { /* ignore malformed trace */ }
                 continue;
               }

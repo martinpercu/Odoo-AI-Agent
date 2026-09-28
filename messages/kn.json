@@ -944,7 +944,15 @@
       "title": "LangGraph ಟ್ರೇಸ್",
       "expand": "ಟ್ರೇಸ್‌ಗಳನ್ನು ತೋರಿಸಿ",
       "collapse": "ಟ್ರೇಸ್‌ಗಳನ್ನು ಮರೆಮಾಡಿ",
-      "empty": "ಇನ್ನೂ ಯಾವುದೇ ಘಟನೆಗಳಿಲ್ಲ. ಏಜೆಂಟ್ ಪ್ರಕ್ರಿಯೆಗೊಳಿಸುವಾಗ ಟ್ರೇಸ್‌ಗಳು ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ."
+      "empty": "ಇನ್ನೂ ಯಾವುದೇ ಘಟನೆಗಳಿಲ್ಲ. ಏಜೆಂಟ್ ಪ್ರಕ್ರಿಯೆಗೊಳಿಸುವಾಗ ಟ್ರೇಸ್‌ಗಳು ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ.",
+      "detail": {
+        "model": "Model",
+        "method": "Method",
+        "groupby": "Grouped by",
+        "count": "Records",
+        "cached": "From cache",
+        "domain": "Domain"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "ಕಾರ್ಯಗತಗೊಳಿಸಲಾಗುತ್ತಿದೆ · ಪ್ರಶ್ನೆ"

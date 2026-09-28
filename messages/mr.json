@@ -944,7 +944,15 @@
       "title": "LangGraph ट्रेस",
       "expand": "ट्रेस दाखवा",
       "collapse": "ट्रेस लपवा",
-      "empty": "अद्याप कोणतेही इव्हेंट नाहीत. Agent प्रक्रिया करत असताना ट्रेस दिसतात."
+      "empty": "अद्याप कोणतेही इव्हेंट नाहीत. Agent प्रक्रिया करत असताना ट्रेस दिसतात.",
+      "detail": {
+        "model": "Model",
+        "method": "Method",
+        "groupby": "Grouped by",
+        "count": "Records",
+        "cached": "From cache",
+        "domain": "Domain"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "चालवत आहे · चौकशी"

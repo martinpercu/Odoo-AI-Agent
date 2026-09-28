@@ -944,7 +944,15 @@
       "title": "LangGraph trace",
       "expand": "Mostrar traces",
       "collapse": "Ocultar traces",
-      "empty": "Sem eventos ainda. Os traces aparecem quando o agente processa."
+      "empty": "Sem eventos ainda. Os traces aparecem quando o agente processa.",
+      "detail": {
+        "model": "Modelo",
+        "method": "Método",
+        "groupby": "Agrupado por",
+        "count": "Registros",
+        "cached": "Do cache",
+        "domain": "Domínio"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Executando · query"

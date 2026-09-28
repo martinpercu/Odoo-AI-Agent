@@ -944,7 +944,15 @@
       "title": "LangGraph trace",
       "expand": "Afficher les traces",
       "collapse": "Masquer les traces",
-      "empty": "Aucun événement. Les traces apparaissent pendant le traitement."
+      "empty": "Aucun événement. Les traces apparaissent pendant le traitement.",
+      "detail": {
+        "model": "Modèle",
+        "method": "Méthode",
+        "groupby": "Groupé par",
+        "count": "Enregistrements",
+        "cached": "Depuis le cache",
+        "domain": "Domaine"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Exécution · query"

@@ -944,7 +944,15 @@
       "title": "LangGraph ટ્રેસ",
       "expand": "ટ્રેસ બતાવો",
       "collapse": "ટ્રેસ છુપાવો",
-      "empty": "હજુ કોઈ ઇવેન્ટ નથી. એજન્ટ પ્રક્રિયા કરે ત્યારે ટ્રેસ દેખાય."
+      "empty": "હજુ કોઈ ઇવેન્ટ નથી. એજન્ટ પ્રક્રિયા કરે ત્યારે ટ્રેસ દેખાય.",
+      "detail": {
+        "model": "Model",
+        "method": "Method",
+        "groupby": "Grouped by",
+        "count": "Records",
+        "cached": "From cache",
+        "domain": "Domain"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "અમલ · ક્વેરી"
