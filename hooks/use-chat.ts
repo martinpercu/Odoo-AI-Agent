@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type {
   Message,
   MessageMetadata,
@@ -169,11 +169,24 @@ export function useChat(chatId?: string, userId?: string) {
     return result;
   }, [currentChatId]);
 
+  /**
+   * F-02 — el número del último pedido de la lista. Una respuesta que vuelve después de
+   * otro pedido más nuevo se descarta: si no, cambiar de instancia rápido (o el refresco
+   * al terminar un stream) podía pintar la lista de la instancia ANTERIOR debajo del
+   * cartel de la nueva, y el sidebar quedaba con los chats de otra empresa.
+   */
+  const conversationsSeqRef = useRef(0);
+
   const loadServerConversations = useCallback(async (offset: number) => {
     if (!IS_AUTH_ENABLED || !userId) return;
+    // F-02 — sin instancia todavía no se pide: el pedido saldría SIN filtro y su
+    // respuesta (todas las instancias) podía llegar después de la filtrada y pisarla.
+    if (!showAllInstances && !activeConfigId) return;
+    const seq = ++conversationsSeqRef.current;
     // Sin filtro cuando el usuario pidió ver todo. El backend ignora "demo" solo.
     const filterConfigId = showAllInstances ? null : activeConfigId;
     const result = await fetchMyConversations(50, offset, filterConfigId);
+    if (seq !== conversationsSeqRef.current) return;
     if (!result.success || !result.conversations) return;
     setOtherInstancesCount(result.otherCount ?? 0);
     const loaded: Chat[] = result.conversations.map((c) => {
@@ -213,6 +226,13 @@ export function useChat(chatId?: string, userId?: string) {
     setServerChats((prev) => [...prev, ...loaded]);
     setHasMore(hasMoreAfter(result.total, loaded.length, offset));
   }, [userId, activeConfigId, showAllInstances]);
+
+  // El `finally` de un stream corre segundos después de que se mandó el mensaje: tiene que
+  // refrescar con la instancia de AHORA, no con la que había en el closure (F-02).
+  const loadServerConversationsRef = useRef(loadServerConversations);
+  useEffect(() => {
+    loadServerConversationsRef.current = loadServerConversations;
+  }, [loadServerConversations]);
 
   const loadMoreConversations = useCallback(() => {
     const next = serverOffset + 50;
@@ -644,7 +664,7 @@ export function useChat(chatId?: string, userId?: string) {
         abortControllerRef.current = null;
         setIsStreaming(false);
         // Reload server list so the new thread gets its real title from the backend
-        loadServerConversations(0);
+        loadServerConversationsRef.current(0);
       }
     },
     [
@@ -658,7 +678,6 @@ export function useChat(chatId?: string, userId?: string) {
       isConfigured,
       locale,
       t,
-      loadServerConversations,
       audioPlayer,
       meData?.voice_features?.tts,
     ]
