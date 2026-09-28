@@ -534,7 +534,8 @@
     "historicBadge": "Historisch",
     "refreshTooltip": "Daten aktualisieren",
     "downloadTooltip": "Herunterladen",
-    "openDashboard": "Dashboard öffnen"
+    "openDashboard": "Dashboard öffnen",
+    "noInstance": "Es ist unbekannt, aus welcher Instanz diese Karte stammt, daher kann sie nicht aktualisiert werden."
   },
   "Notifications": {
     "title": "Benachrichtigungen",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "Für diese Karte wurde keine Instanz gespeichert, daher kann sie nicht aktualisiert werden."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "Für diese Instanz sind keine Zugangsdaten hinterlegt.",
+        "instance_gone": "Die Instanz existiert nicht mehr oder du hast keinen Zugriff mehr.",
+        "auth_failed": "Die Instanz hat die Anmeldung abgelehnt."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
         "partial": "{published} von {declared} Karten erstellt. Die übrigen Schritte lieferten auf dieser Instanz keine gruppierten Daten, daher gibt es nichts darzustellen.",
         "none": "Keine Karte erstellt: Die Schritte dieses Dashboards lieferten auf dieser Instanz keine gruppierten Daten."
+      },
+      "instance": {
+        "title": "Daten aus {name}",
+        "none": "Keine Instanz",
+        "noneHint": "Für diese Karte wurde keine Instanz gespeichert, daher kann sie nicht aktualisiert werden."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "Es gibt keine Aufschlüsselung zum Neuberechnen.",
         "no_model": "Wir wissen nicht, woher diese Zahl stammt.",
         "not_chart": "Eine gespeicherte Datei, keine Abfrage.",
-        "generic": "Eine Aktualisierung war nicht nötig."
+        "generic": "Eine Aktualisierung war nicht nötig.",
+        "no_instance": "Wir wissen nicht, aus welchem System diese Karte stammt, daher kann sie nicht aktualisiert werden."
       },
       "errorReason": {
         "odoo_error": "Wir konnten Ihr System für diese Karte nicht erreichen.",
         "chart_failed": "Die Abfrage lief, lieferte aber nichts zum Darstellen.",
         "unexpected": "Mit dieser Karte ist etwas schiefgelaufen.",
-        "generic": "Diese Karte konnte nicht aktualisiert werden."
+        "generic": "Diese Karte konnte nicht aktualisiert werden.",
+        "no_credentials": "Deine Verbindung zu diesem System fehlt.",
+        "instance_gone": "Dieses System ist nicht mehr verfügbar.",
+        "auth_failed": "Wir konnten uns bei diesem System nicht anmelden."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
         "partial": "{published} von {declared} Diagrammen erstellt. Für den Rest gibt es in diesem Unternehmen nicht genug Daten.",
         "none": "In diesem Unternehmen gibt es nicht genug Daten für dieses Dashboard."
+      },
+      "instance": {
+        "title": "Daten aus {name}",
+        "none": "Unbekannte Quelle",
+        "noneHint": "Wir wissen nicht, aus welchem System diese Karte stammt, daher kann sie nicht aktualisiert werden."
       }
     },
     "WriteGate": {

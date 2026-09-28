@@ -534,7 +534,8 @@
     "historicBadge": "ऐतिहासिक",
     "refreshTooltip": "डेटा रिफ्रेश करें",
     "downloadTooltip": "डाउनलोड करें",
-    "openDashboard": "डैशबोर्ड खोलें"
+    "openDashboard": "डैशबोर्ड खोलें",
+    "noInstance": "यह पता नहीं है कि यह कार्ड किस सिस्टम से है, इसलिए इसे अपडेट नहीं किया जा सकता।"
   },
   "Notifications": {
     "title": "अलर्ट",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "This card didn't record which instance it came from, so it can't be refreshed."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "You don't have credentials loaded for this instance.",
+        "instance_gone": "The instance no longer exists or you no longer have access.",
+        "auth_failed": "The instance rejected the login."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
         "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
         "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
+      },
+      "instance": {
+        "title": "Data from {name}",
+        "none": "No instance",
+        "noneHint": "This card didn't record which instance it came from, so it can't be refreshed."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "दोबारा गिनने के लिए कोई विभाजन नहीं है।",
         "no_model": "हमें नहीं पता यह आंकड़ा कहां से आया।",
         "not_chart": "यह सहेजी गई फ़ाइल है, कोई प्रश्न नहीं।",
-        "generic": "इसे अपडेट करने की ज़रूरत नहीं थी।"
+        "generic": "इसे अपडेट करने की ज़रूरत नहीं थी।",
+        "no_instance": "हमें नहीं पता कि यह कार्ड किस सिस्टम से आया है, इसलिए इसे अपडेट नहीं किया जा सकता।"
       },
       "errorReason": {
         "odoo_error": "इस कार्ड के लिए हम आपके सिस्टम से जुड़ नहीं सके।",
         "chart_failed": "प्रश्न चला लेकिन चार्ट के लिए कोई डेटा नहीं मिला।",
         "unexpected": "इस कार्ड के साथ कुछ गड़बड़ हुई।",
-        "generic": "यह कार्ड अपडेट नहीं हो सका।"
+        "generic": "यह कार्ड अपडेट नहीं हो सका।",
+        "no_credentials": "इस सिस्टम से आपका कनेक्शन मौजूद नहीं है।",
+        "instance_gone": "यह सिस्टम अब उपलब्ध नहीं है।",
+        "auth_failed": "हम इस सिस्टम में साइन इन नहीं कर सके।"
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।",
         "partial": "{declared} में से {published} चार्ट बने। बाकी के लिए इस कंपनी में पर्याप्त डेटा नहीं है।",
         "none": "यह डैशबोर्ड बनाने के लिए इस कंपनी में पर्याप्त डेटा नहीं है।"
+      },
+      "instance": {
+        "title": "{name} का डेटा",
+        "none": "अज्ञात स्रोत",
+        "noneHint": "हमें नहीं पता कि यह कार्ड किस सिस्टम से आया है, इसलिए इसे अपडेट नहीं किया जा सकता।"
       }
     },
     "WriteGate": {

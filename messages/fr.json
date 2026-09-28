@@ -534,7 +534,8 @@
     "historicBadge": "Historique",
     "refreshTooltip": "Actualiser les données",
     "downloadTooltip": "Télécharger",
-    "openDashboard": "Ouvrir le tableau de bord"
+    "openDashboard": "Ouvrir le tableau de bord",
+    "noInstance": "On ne sait pas de quelle instance vient cette carte : elle ne peut pas être actualisée."
   },
   "Notifications": {
     "title": "Alertes",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "L'instance de cette carte n'a pas été enregistrée : elle ne peut pas être actualisée."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "Vous n'avez pas d'identifiants pour cette instance.",
+        "instance_gone": "L'instance n'existe plus ou vous n'y avez plus accès.",
+        "auth_failed": "L'instance a refusé la connexion."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
         "partial": "{published} cartes sur {declared} ont été créées. Les autres étapes n'ont renvoyé aucune donnée groupée sur cette instance : il n'y a rien à représenter.",
         "none": "Aucune carte créée : les étapes de ce tableau n'ont renvoyé aucune donnée groupée sur cette instance."
+      },
+      "instance": {
+        "title": "Données de {name}",
+        "none": "Sans instance",
+        "noneHint": "L'instance de cette carte n'a pas été enregistrée : elle ne peut pas être actualisée."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "Il n'y a pas de répartition à recalculer.",
         "no_model": "Nous ne savons pas d'où vient ce chiffre.",
         "not_chart": "C'est un fichier enregistré, pas une requête.",
-        "generic": "Pas besoin de l'actualiser."
+        "generic": "Pas besoin de l'actualiser.",
+        "no_instance": "Nous ne savons pas de quel système vient cette carte : elle ne peut pas être actualisée."
       },
       "errorReason": {
         "odoo_error": "Nous n'avons pas pu joindre votre système pour cette carte.",
         "chart_failed": "La requête a fonctionné mais n'a rien renvoyé à afficher.",
         "unexpected": "Un problème est survenu avec cette carte.",
-        "generic": "Cette carte n'a pas pu être actualisée."
+        "generic": "Cette carte n'a pas pu être actualisée.",
+        "no_credentials": "Votre connexion à ce système est manquante.",
+        "instance_gone": "Ce système n'est plus disponible.",
+        "auth_failed": "Nous n'avons pas pu nous connecter à ce système."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
         "partial": "{published} graphiques sur {declared} ont été créés. Il n'y a pas assez de données dans cette entreprise pour les autres.",
         "none": "Il n'y a pas assez de données dans cette entreprise pour créer ce tableau."
+      },
+      "instance": {
+        "title": "Données de {name}",
+        "none": "Origine inconnue",
+        "noneHint": "Nous ne savons pas de quel système vient cette carte : elle ne peut pas être actualisée."
       }
     },
     "WriteGate": {

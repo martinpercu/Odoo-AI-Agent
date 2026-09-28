@@ -534,7 +534,8 @@
     "historicBadge": "Histórico",
     "refreshTooltip": "Atualizar dados",
     "downloadTooltip": "Baixar",
-    "openDashboard": "Abrir o painel"
+    "openDashboard": "Abrir o painel",
+    "noInstance": "Não se sabe de qual instância é este cartão, então ele não pode ser atualizado."
   },
   "Notifications": {
     "title": "Alertas",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "Não foi salva a instância deste cartão, então ele não pode ser atualizado."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "Você não tem credenciais carregadas para esta instância.",
+        "instance_gone": "A instância não existe mais ou você não tem mais acesso.",
+        "auth_failed": "A instância recusou o login."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
         "partial": "Foram criados {published} de {declared} cartões. As outras etapas não retornaram dados agrupados nesta instância, então não há gráfico para mostrar.",
         "none": "Nenhum cartão foi criado: as etapas deste painel não retornaram dados agrupados nesta instância."
+      },
+      "instance": {
+        "title": "Dados de {name}",
+        "none": "Sem instância",
+        "noneHint": "Não foi salva a instância deste cartão, então ele não pode ser atualizado."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "Não tem uma repartição para recalcular.",
         "no_model": "Não sabemos de onde veio este número.",
         "not_chart": "É um ficheiro guardado, não uma consulta.",
-        "generic": "Não precisava de ser atualizado."
+        "generic": "Não precisava de ser atualizado.",
+        "no_instance": "Não sabemos de qual sistema veio este cartão, então ele não pode ser atualizado."
       },
       "errorReason": {
         "odoo_error": "Não conseguimos ligar ao seu sistema para este cartão.",
         "chart_failed": "A consulta correu mas não devolveu dados para o gráfico.",
         "unexpected": "Algo correu mal com este cartão.",
-        "generic": "Não foi possível atualizar este cartão."
+        "generic": "Não foi possível atualizar este cartão.",
+        "no_credentials": "Falta a sua conexão com este sistema.",
+        "instance_gone": "Este sistema não está mais disponível.",
+        "auth_failed": "Não conseguimos entrar neste sistema."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
         "partial": "Foram criados {published} de {declared} gráficos. Não há dados suficientes nesta empresa para o restante.",
         "none": "Não há dados suficientes nesta empresa para montar este painel."
+      },
+      "instance": {
+        "title": "Dados de {name}",
+        "none": "Origem desconhecida",
+        "noneHint": "Não sabemos de qual sistema veio este cartão, então ele não pode ser atualizado."
       }
     },
     "WriteGate": {

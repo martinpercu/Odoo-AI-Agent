@@ -1325,6 +1325,15 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
   if (!id || !chatId || !messageId || !contentType) return null;
 
   const payload = r.payload;
+  // X-01 — de qué instancia es. `null` se transporta tal cual: "no se sabe" no es "ninguna".
+  const instance = {
+    ...(r.odoo_config_id !== undefined && {
+      odoo_config_id: (r.odoo_config_id as string | null) || null,
+    }),
+    ...(r.instance_label !== undefined && {
+      instance_label: (r.instance_label as string | null) || null,
+    }),
+  };
 
   if (contentType === "chart") {
     if (!payload) return null;
@@ -1339,6 +1348,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       messageId,
       chartIndex,
       chart: payload as ChartSSEEvent,
+      ...instance,
       ...(queryContext && { query_context: queryContext }),
       // Fase 5 — el veredicto viene resuelto del backend (`pin_refresh.describe`);
       // acá sólo se transporta. Sólo `/me/pins` los manda: en el resto quedan
@@ -1357,6 +1367,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       chatId,
       messageId,
       metadata: payload as FileAttachmentMetadata,
+      ...instance,
     };
   }
 
@@ -1369,6 +1380,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       chatId,
       messageId,
       metadata: payload as ExcelExportMetadata,
+      ...instance,
     };
   }
 
@@ -1646,12 +1658,21 @@ export interface RefreshPinResult {
   /** ¿Se llegó a aplicar el override en ESTE refresh? */
   overrideApplied?: boolean;
   error?: string;
+  /** Código del backend cuando falla (hoy: `no_instance`). */
+  reason?: string;
 }
 
+/**
+ * Refrescar UNA tarjeta.
+ *
+ * ⚠️ **No manda instancia** (X-01, A5): el backend refresca cada pin contra la SUYA
+ * (`pinned_insights.odoo_config_id`) y el `config_id` del cuerpo lo ignora. Mandar la
+ * activa era cómo una tarjeta de Kestrel terminaba con los números de Ladera.
+ * Un pin sin instancia vuelve `409 {reason: "no_instance"}` → `reason` en el resultado.
+ */
 export async function refreshPin(
   chatId: string,
   pinId: string,
-  configId: string,
   language: string,
   /** Fase 5 — el período global del Tablero. Se ignora en un pin atemporal. */
   period?: DashboardPeriod
@@ -1661,7 +1682,6 @@ export async function refreshPin(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        config_id: configId,
         language,
         ...(period && { date_override: period }),
       }),
@@ -1684,7 +1704,11 @@ export async function refreshPin(
       };
     }
 
-    return { success: false, error: extractError(data.detail, "Refresh failed") };
+    return {
+      success: false,
+      error: extractError(data.detail, "Refresh failed"),
+      ...(typeof data.reason === "string" && { reason: data.reason }),
+    };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
@@ -1709,7 +1733,6 @@ export interface RefreshAllPinsResult {
  * entero (auth, instancia inalcanzable), no que falló una tarjeta.
  */
 export async function refreshAllPins(
-  configId: string,
   language: string,
   period?: DashboardPeriod,
   pinIds?: string[]
@@ -1718,8 +1741,8 @@ export async function refreshAllPins(
     const res = await authFetch(`${API_BASE}/me/pins/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // Sin `config_id` (X-01): cada tarjeta se refresca contra SU instancia.
       body: JSON.stringify({
-        config_id: configId,
         language,
         ...(period && { date_override: period }),
         ...(pinIds && { pin_ids: pinIds }),

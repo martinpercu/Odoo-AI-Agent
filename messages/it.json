@@ -534,7 +534,8 @@
     "historicBadge": "Storico",
     "refreshTooltip": "Aggiorna dati",
     "downloadTooltip": "Scarica",
-    "openDashboard": "Apri il cruscotto"
+    "openDashboard": "Apri il cruscotto",
+    "noInstance": "Non si sa da quale istanza provenga questa scheda, quindi non si può aggiornare."
   },
   "Notifications": {
     "title": "Avvisi",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "L'istanza di questa scheda non è stata salvata, quindi non si può aggiornare."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "Non hai credenziali caricate per questa istanza.",
+        "instance_gone": "L'istanza non esiste più o non hai più accesso.",
+        "auth_failed": "L'istanza ha rifiutato l'accesso."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
         "partial": "Create {published} schede su {declared}. Gli altri passaggi non hanno restituito dati raggruppati su questa istanza, quindi non c'è nulla da rappresentare.",
         "none": "Nessuna scheda creata: i passaggi di questa dashboard non hanno restituito dati raggruppati su questa istanza."
+      },
+      "instance": {
+        "title": "Dati di {name}",
+        "none": "Nessuna istanza",
+        "noneHint": "L'istanza di questa scheda non è stata salvata, quindi non si può aggiornare."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "Non c'è una ripartizione da ricalcolare.",
         "no_model": "Non sappiamo da dove arriva questo numero.",
         "not_chart": "È un file salvato, non una query.",
-        "generic": "Non serviva aggiornarla."
+        "generic": "Non serviva aggiornarla.",
+        "no_instance": "Non sappiamo da quale sistema viene questa scheda, quindi non si può aggiornare."
       },
       "errorReason": {
         "odoo_error": "Non siamo riusciti a raggiungere il tuo sistema per questa scheda.",
         "chart_failed": "La query è andata a buon fine ma non ha restituito dati da rappresentare.",
         "unexpected": "Qualcosa è andato storto con questa scheda.",
-        "generic": "Non è stato possibile aggiornare questa scheda."
+        "generic": "Non è stato possibile aggiornare questa scheda.",
+        "no_credentials": "Manca la tua connessione a questo sistema.",
+        "instance_gone": "Questo sistema non è più disponibile.",
+        "auth_failed": "Non siamo riusciti ad accedere a questo sistema."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
         "partial": "Creati {published} grafici su {declared}. Per il resto non ci sono dati sufficienti in questa azienda.",
         "none": "Non ci sono dati sufficienti in questa azienda per creare questa dashboard."
+      },
+      "instance": {
+        "title": "Dati di {name}",
+        "none": "Origine sconosciuta",
+        "noneHint": "Non sappiamo da quale sistema viene questa scheda, quindi non si può aggiornare."
       }
     },
     "WriteGate": {

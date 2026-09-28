@@ -534,7 +534,8 @@
     "historicBadge": "ಐತಿಹಾಸಿಕ",
     "refreshTooltip": "ಡೇಟಾ ನವೀಕರಿಸಿ",
     "downloadTooltip": "ಡೌನ್‌ಲೋಡ್",
-    "openDashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ"
+    "openDashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ",
+    "noInstance": "ಈ ಕಾರ್ಡ್ ಯಾವ ವ್ಯವಸ್ಥೆಯದು ಎಂದು ತಿಳಿದಿಲ್ಲ, ಆದ್ದರಿಂದ ಇದನ್ನು ನವೀಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
   },
   "Notifications": {
     "title": "ಎಚ್ಚರಿಕೆಗಳು",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "This card didn't record which instance it came from, so it can't be refreshed."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "You don't have credentials loaded for this instance.",
+        "instance_gone": "The instance no longer exists or you no longer have access.",
+        "auth_failed": "The instance rejected the login."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
         "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
         "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
+      },
+      "instance": {
+        "title": "Data from {name}",
+        "none": "No instance",
+        "noneHint": "This card didn't record which instance it came from, so it can't be refreshed."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "ಮರುಲೆಕ್ಕ ಮಾಡಲು ಯಾವುದೇ ವಿಭಜನೆ ಇಲ್ಲ.",
         "no_model": "ಈ ಸಂಖ್ಯೆ ಎಲ್ಲಿಂದ ಬಂತೆಂದು ನಮಗೆ ಗೊತ್ತಿಲ್ಲ.",
         "not_chart": "ಇದು ಉಳಿಸಿದ ಕಡತ, ಪ್ರಶ್ನೆಯಲ್ಲ.",
-        "generic": "ಇದನ್ನು ನವೀಕರಿಸುವ ಅಗತ್ಯವಿರಲಿಲ್ಲ."
+        "generic": "ಇದನ್ನು ನವೀಕರಿಸುವ ಅಗತ್ಯವಿರಲಿಲ್ಲ.",
+        "no_instance": "ಈ ಕಾರ್ಡ್ ಯಾವ ವ್ಯವಸ್ಥೆಯಿಂದ ಬಂದಿದೆ ಎಂದು ನಮಗೆ ತಿಳಿದಿಲ್ಲ, ಆದ್ದರಿಂದ ಇದನ್ನು ನವೀಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
       },
       "errorReason": {
         "odoo_error": "ಈ ಕಾರ್ಡ್‌ಗಾಗಿ ನಿಮ್ಮ ವ್ಯವಸ್ಥೆಯನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.",
         "chart_failed": "ಪ್ರಶ್ನೆ ನಡೆಯಿತು ಆದರೆ ಚಾರ್ಟ್‌ಗೆ ಯಾವುದೇ ಮಾಹಿತಿ ಬರಲಿಲ್ಲ.",
         "unexpected": "ಈ ಕಾರ್ಡ್‌ನಲ್ಲಿ ಏನೋ ತಪ್ಪಾಯಿತು.",
-        "generic": "ಈ ಕಾರ್ಡ್ ನವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
+        "generic": "ಈ ಕಾರ್ಡ್ ನವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.",
+        "no_credentials": "ಈ ವ್ಯವಸ್ಥೆಯೊಂದಿಗೆ ನಿಮ್ಮ ಸಂಪರ್ಕ ಇಲ್ಲ.",
+        "instance_gone": "ಈ ವ್ಯವಸ್ಥೆ ಈಗ ಲಭ್ಯವಿಲ್ಲ.",
+        "auth_failed": "ಈ ವ್ಯವಸ್ಥೆಗೆ ನಮಗೆ ಸೈನ್ ಇನ್ ಮಾಡಲು ಆಗಲಿಲ್ಲ."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "ಹಲವು ಕಾರ್ಯಗಳು ನಡೆಯುತ್ತಿವೆ. ಕೆಲವು ಕ್ಷಣ ಕಾದು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
         "partial": "{declared} ರಲ್ಲಿ {published} ಚಾರ್ಟ್‌ಗಳನ್ನು ರಚಿಸಲಾಗಿದೆ. ಉಳಿದವುಗಳಿಗೆ ಈ ಕಂಪನಿಯಲ್ಲಿ ಸಾಕಷ್ಟು ಡೇಟಾ ಇಲ್ಲ.",
         "none": "ಈ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ರಚಿಸಲು ಈ ಕಂಪನಿಯಲ್ಲಿ ಸಾಕಷ್ಟು ಡೇಟಾ ಇಲ್ಲ."
+      },
+      "instance": {
+        "title": "{name} ಡೇಟಾ",
+        "none": "ಅಜ್ಞಾತ ಮೂಲ",
+        "noneHint": "ಈ ಕಾರ್ಡ್ ಯಾವ ವ್ಯವಸ್ಥೆಯಿಂದ ಬಂದಿದೆ ಎಂದು ನಮಗೆ ತಿಳಿದಿಲ್ಲ, ಆದ್ದರಿಂದ ಇದನ್ನು ನವೀಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
       }
     },
     "WriteGate": {

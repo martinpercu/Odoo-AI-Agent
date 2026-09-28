@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useCallback, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useOdooConfig } from "@/hooks/use-odoo-config";
 import type {
   PinnedInsight,
   PinnedChart,
@@ -104,7 +103,6 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
   const [pins, setPins] = useState<PinnedInsight[]>([]);
   const { showError } = useToast();
   const t = useTranslations("PinnedInsights");
-  const { activeConfigId } = useOdooConfig();
   const locale = useLocale();
   const loadedChatsRef = useRef<Set<string>>(new Set());
 
@@ -335,9 +333,10 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
 
   const refreshPin = useCallback(
     async (pinId: string, chatId: string, period?: DashboardPeriod) => {
-      const result = await apiRefreshPin(chatId, pinId, activeConfigId ?? "", locale, period);
+      // Contra la instancia DEL PIN, que resuelve el backend (X-01) — no la activa.
+      const result = await apiRefreshPin(chatId, pinId, locale, period);
       if (!result.success) {
-        showError(result.error || t("errorPin"));
+        showError(result.reason === "no_instance" ? t("noInstance") : result.error || t("errorPin"));
         return;
       }
       if (result.new_payload) {
@@ -350,7 +349,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
         );
       }
     },
-    [showError, t, activeConfigId, locale]
+    [showError, t, locale]
   );
 
   /**
@@ -363,7 +362,9 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
    */
   const refreshAll = useCallback(
     async (period?: DashboardPeriod): Promise<DashboardRefreshResult[]> => {
-      const result = await apiRefreshAllPins(activeConfigId ?? "", locale, period);
+      // Cada tarjeta contra SU instancia (X-01, A5): el backend agrupa por instancia y
+      // devuelve el motivo por tarjeta cuando una instancia no responde.
+      const result = await apiRefreshAllPins(locale, period);
       if (!result.success || !result.results) {
         showError(result.error || t("errorPin"));
         return [];
@@ -385,7 +386,7 @@ export function PinnedInsightsProvider({ children }: { children: React.ReactNode
       }
       return result.results;
     },
-    [showError, t, activeConfigId, locale]
+    [showError, t, locale]
   );
 
   const clearAll = useCallback(

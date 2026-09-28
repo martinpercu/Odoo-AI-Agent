@@ -534,7 +534,8 @@
     "historicBadge": "Histórico",
     "refreshTooltip": "Actualizar datos",
     "downloadTooltip": "Descargar",
-    "openDashboard": "Abrir el tablero"
+    "openDashboard": "Abrir el tablero",
+    "noInstance": "No se sabe de qué instancia es esta tarjeta, así que no se puede actualizar."
   },
   "Notifications": {
     "title": "Alertas",
@@ -981,13 +982,17 @@
         "no_groupby": "Sin groupby_fields no hay chart payload que rearmar.",
         "no_model": "Falta primary_model en el query_context.",
         "not_chart": "content_type distinto de chart.",
-        "generic": "Se salteó."
+        "generic": "Se salteó.",
+        "no_instance": "No se guardó de qué instancia es esta tarjeta, así que no se puede actualizar."
       },
       "errorReason": {
         "odoo_error": "Falló el read_group contra la instancia.",
         "chart_failed": "build_chart_payload devolvió None.",
         "unexpected": "Excepción no prevista al refrescar.",
-        "generic": "No se pudo refrescar."
+        "generic": "No se pudo refrescar.",
+        "no_credentials": "No tienes credenciales cargadas para esta instancia.",
+        "instance_gone": "La instancia ya no existe o ya no tienes acceso.",
+        "auth_failed": "La instancia rechazó el inicio de sesión."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar.",
         "partial": "Se armaron {published} de {declared} tarjetas. Los otros pasos no devolvieron datos agrupados en esta instancia, así que no hay gráfico para mostrar.",
         "none": "No se armó ninguna tarjeta: los pasos de este tablero no devolvieron datos agrupados en esta instancia."
+      },
+      "instance": {
+        "title": "Datos de {name}",
+        "none": "Sin instancia",
+        "noneHint": "No se guardó de qué instancia es esta tarjeta, así que no se puede actualizar."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "No tiene un desglose que volver a calcular.",
         "no_model": "No sabemos de dónde salió este número.",
         "not_chart": "Es un archivo guardado, no una consulta.",
-        "generic": "No hacía falta actualizarla."
+        "generic": "No hacía falta actualizarla.",
+        "no_instance": "No sabemos de qué sistema salió esta tarjeta, así que no se puede actualizar."
       },
       "errorReason": {
         "odoo_error": "No pudimos conectarnos con tu sistema para esta tarjeta.",
         "chart_failed": "La consulta corrió pero no devolvió datos para el gráfico.",
         "unexpected": "Algo salió mal con esta tarjeta.",
-        "generic": "No se pudo actualizar esta tarjeta."
+        "generic": "No se pudo actualizar esta tarjeta.",
+        "no_credentials": "Falta tu conexión con este sistema.",
+        "instance_gone": "Este sistema ya no está disponible.",
+        "auth_failed": "No pudimos entrar a este sistema."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar.",
         "partial": "Se armaron {published} de {declared} gráficos. Para el resto no hay datos suficientes en esta empresa.",
         "none": "No hay datos suficientes en esta empresa para armar este tablero."
+      },
+      "instance": {
+        "title": "Datos de {name}",
+        "none": "Origen desconocido",
+        "noneHint": "No sabemos de qué sistema salió esta tarjeta, así que no se puede actualizar."
       }
     },
     "WriteGate": {

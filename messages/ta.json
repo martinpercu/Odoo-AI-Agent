@@ -534,7 +534,8 @@
     "historicBadge": "வரலாற்று",
     "refreshTooltip": "தரவை புதுப்பிக்கவும்",
     "downloadTooltip": "பதிவிறக்கவும்",
-    "openDashboard": "டாஷ்போர்டைத் திற"
+    "openDashboard": "டாஷ்போர்டைத் திற",
+    "noInstance": "இந்த அட்டை எந்த அமைப்பைச் சேர்ந்தது என்று தெரியவில்லை, எனவே இதைப் புதுப்பிக்க முடியாது."
   },
   "Notifications": {
     "title": "எச்சரிக்கைகள்",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "This card didn't record which instance it came from, so it can't be refreshed."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "You don't have credentials loaded for this instance.",
+        "instance_gone": "The instance no longer exists or you no longer have access.",
+        "auth_failed": "The instance rejected the login."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
         "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
         "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
+      },
+      "instance": {
+        "title": "Data from {name}",
+        "none": "No instance",
+        "noneHint": "This card didn't record which instance it came from, so it can't be refreshed."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "மீண்டும் கணக்கிட பிரிவு எதுவும் இல்லை.",
         "no_model": "இந்த எண் எங்கிருந்து வந்தது என்று தெரியவில்லை.",
         "not_chart": "இது சேமித்த கோப்பு, வினவல் அல்ல.",
-        "generic": "இதைப் புதுப்பிக்க வேண்டியதில்லை."
+        "generic": "இதைப் புதுப்பிக்க வேண்டியதில்லை.",
+        "no_instance": "இந்த அட்டை எந்த அமைப்பிலிருந்து வந்தது என்று எங்களுக்குத் தெரியவில்லை, எனவே இதைப் புதுப்பிக்க முடியாது."
       },
       "errorReason": {
         "odoo_error": "இந்த அட்டைக்காக உங்கள் அமைப்பைத் தொடர்பு கொள்ள முடியவில்லை.",
         "chart_failed": "வினவல் இயங்கியது ஆனால் வரைபடத்திற்கு தரவு எதுவும் திரும்பவில்லை.",
         "unexpected": "இந்த அட்டையில் ஏதோ தவறு நடந்தது.",
-        "generic": "இந்த அட்டையைப் புதுப்பிக்க முடியவில்லை."
+        "generic": "இந்த அட்டையைப் புதுப்பிக்க முடியவில்லை.",
+        "no_credentials": "இந்த அமைப்புடன் உங்கள் இணைப்பு இல்லை.",
+        "instance_gone": "இந்த அமைப்பு இனி கிடைக்கவில்லை.",
+        "auth_failed": "இந்த அமைப்பில் எங்களால் உள்நுழைய முடியவில்லை."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "பல செயல்கள் இயங்குகின்றன. சில வினாடிகள் காத்திருந்து மீண்டும் முயற்சிக்கவும்.",
         "partial": "{declared} இல் {published} வரைபடங்கள் உருவாக்கப்பட்டன. மீதமுள்ளவற்றுக்கு இந்த நிறுவனத்தில் போதுமான தரவு இல்லை.",
         "none": "இந்த டாஷ்போர்டை உருவாக்க இந்த நிறுவனத்தில் போதுமான தரவு இல்லை."
+      },
+      "instance": {
+        "title": "{name} தரவு",
+        "none": "தெரியாத மூலம்",
+        "noneHint": "இந்த அட்டை எந்த அமைப்பிலிருந்து வந்தது என்று எங்களுக்குத் தெரியவில்லை, எனவே இதைப் புதுப்பிக்க முடியாது."
       }
     },
     "WriteGate": {

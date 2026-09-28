@@ -534,7 +534,8 @@
     "historicBadge": "Historic",
     "refreshTooltip": "Refresh data",
     "downloadTooltip": "Download",
-    "openDashboard": "Open the dashboard"
+    "openDashboard": "Open the dashboard",
+    "noInstance": "It's unknown which instance this card came from, so it can't be refreshed."
   },
   "Notifications": {
     "title": "Alerts",
@@ -981,13 +982,17 @@
         "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
         "no_model": "primary_model missing from the query_context.",
         "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "generic": "Skipped.",
+        "no_instance": "This card didn't record which instance it came from, so it can't be refreshed."
       },
       "errorReason": {
         "odoo_error": "The read_group against the instance failed.",
         "chart_failed": "build_chart_payload returned None.",
         "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "generic": "Could not refresh.",
+        "no_credentials": "You don't have credentials loaded for this instance.",
+        "instance_gone": "The instance no longer exists or you no longer have access.",
+        "auth_failed": "The instance rejected the login."
       },
       "export": {
         "pdf": "PDF",
@@ -1003,6 +1008,11 @@
         "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
         "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
         "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
+      },
+      "instance": {
+        "title": "Data from {name}",
+        "none": "No instance",
+        "noneHint": "This card didn't record which instance it came from, so it can't be refreshed."
       }
     },
     "WriteGate": {
@@ -1098,13 +1108,17 @@
         "no_groupby": "There is no breakdown to recompute.",
         "no_model": "We don't know where this number came from.",
         "not_chart": "It's a saved file, not a query.",
-        "generic": "It didn't need refreshing."
+        "generic": "It didn't need refreshing.",
+        "no_instance": "We don't know which system this card came from, so it can't be refreshed."
       },
       "errorReason": {
         "odoo_error": "We couldn't reach your system for this card.",
         "chart_failed": "The query ran but returned nothing to chart.",
         "unexpected": "Something went wrong with this card.",
-        "generic": "This card couldn't be refreshed."
+        "generic": "This card couldn't be refreshed.",
+        "no_credentials": "Your connection to this system is missing.",
+        "instance_gone": "This system is no longer available.",
+        "auth_failed": "We couldn't sign in to this system."
       },
       "export": {
         "pdf": "PDF",
@@ -1120,6 +1134,11 @@
         "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
         "partial": "Built {published} of {declared} charts. There isn't enough data in this company for the rest.",
         "none": "There isn't enough data in this company to build this dashboard."
+      },
+      "instance": {
+        "title": "Data from {name}",
+        "none": "Unknown source",
+        "noneHint": "We don't know which system this card came from, so it can't be refreshed."
       }
     },
     "WriteGate": {

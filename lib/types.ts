@@ -353,12 +353,14 @@ export interface PinRefreshability {
 export interface DashboardRefreshResult {
   pin_id: string;
   status: "ok" | "skipped" | "error";
-  /** Código, no frase: `static` · `no_context` · `no_groupby` · `odoo_error` … */
+  /** Código, no frase: `static` · `no_context` · `no_instance` · `odoo_error` · `auth_failed` … */
   reason?: string;
   date_dependent?: boolean;
   override_applied?: boolean;
   payload?: ChartSSEEvent;
   refreshed_at?: string;
+  /** La instancia contra la que se refrescó ESTA tarjeta (la del pin, X-01). */
+  odoo_config_id?: string | null;
 }
 
 export interface ChartSSEEvent {
@@ -428,7 +430,25 @@ export interface EntitySearchResult {
 
 // ---- Pinned Insights ----
 
-export interface PinnedChart extends PinRefreshability {
+/**
+ * De qué instancia es un pin (X-01, decisión A5 del plan de auditorías).
+ *
+ * El Tablero es POR USUARIO y mezcla instancias a propósito, así que cada tarjeta dice
+ * la suya y el backend la refresca contra ESA — nunca contra la activa. Los dos campos
+ * llegan en `GET /me/pins`; en los pins optimistas (recién fijados en esta sesión) no
+ * están hasta el próximo `loadAllPins`.
+ *
+ * ⚠️ `odoo_config_id: null` es "no se guardó de qué instancia es" (un pin anterior al
+ * estampado que el backfill no pudo resolver), NO "de ninguna": se muestra y se dice
+ * por qué no se refresca, en vez de adivinar una.
+ */
+export interface PinInstance {
+  odoo_config_id?: string | null;
+  /** Ya resuelto por el backend con la misma precedencia que `instanceLabel()`. */
+  instance_label?: string | null;
+}
+
+export interface PinnedChart extends PinRefreshability, PinInstance {
   kind: "chart";
   id: string;
   pinnedAt: string;
@@ -439,7 +459,7 @@ export interface PinnedChart extends PinRefreshability {
   query_context?: PinQueryContext;
 }
 
-export interface PinnedFile {
+export interface PinnedFile extends PinInstance {
   kind: "file";
   id: string;
   pinnedAt: string;
@@ -448,7 +468,7 @@ export interface PinnedFile {
   metadata: FileAttachmentMetadata;
 }
 
-export interface PinnedExcel {
+export interface PinnedExcel extends PinInstance {
   kind: "excel";
   id: string;
   pinnedAt: string;

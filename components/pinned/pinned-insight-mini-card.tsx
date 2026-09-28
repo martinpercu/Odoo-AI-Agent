@@ -8,7 +8,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ChartSSEEvent, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
-import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { isPinRefreshable } from "@/lib/pins";
 
 interface PinnedInsightMiniCardProps {
   pin: PinnedInsight;
@@ -37,7 +37,6 @@ function formatTotal(total: number, format: string, symbol: string): string {
 export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
   const t = useTranslations("PinnedInsights");
   const { unpin, refreshPin } = usePinnedInsights();
-  const { isDemoMode, activeConfig } = useOdooConfig();
   const [refreshing, setRefreshing] = useState(false);
 
   if (pin.kind === "chart") {
@@ -45,8 +44,8 @@ export function PinnedInsightMiniCard({ pin }: PinnedInsightMiniCardProps) {
 
     const volatility = pin.query_context?.volatility ?? "variable";
     const isLive = volatility === "variable";
-    // Refresh only makes sense for live (variable) charts with a real config
-    const canRefresh = isLive && !isDemoMode && activeConfig !== null;
+    // Contra la instancia DEL PIN (X-01), no la activa: misma regla que el Tablero.
+    const canRefresh = isPinRefreshable(pin);
 
     const Icon = chartIcons[pin.chart.chart_type] ?? BarChart3;
     const total = pin.chart.meta.total != null
