@@ -7,7 +7,7 @@ import {
   suggestionsForInstance,
   type Suggestion,
 } from "@/lib/suggestions";
-import { fetchInstanceUsage } from "@/lib/api";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
 const ROTATION_INTERVAL = 4000;
@@ -27,9 +27,13 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
    * El uso real de la instancia (quick-wins §7). Se pide **después** del render y
    * sin bloquear: la primera medición puede costar ~1s contra una instancia
    * grande, y el carrusel no puede esperarla. Hasta que llega se muestra el pool
-   * completo, que es el comportamiento de siempre.
+   * completo, que es el comportamiento de siempre. Compartido con el resumen (F-01).
+   *
+   * ⚠️ **La excepción de demo se sacó** (PLAN_INSTANCIAS/05 §4): con el parque,
+   * `comercial` no tiene inventario y `retail` no tiene CRM, así que sin filtrar le
+   * ofrecemos a un visitante una pregunta cuya respuesta es vacía.
    */
-  const [usage, setUsage] = useState<Record<string, number> | null>(null);
+  const usage = useInstanceUsage(activeConfigId)?.usage ?? null;
   const poolRef = useRef<Suggestion[]>(suggestionsForInstance(null));
 
   const [visible, setVisible] = useState<Suggestion[]>(getRandomSuggestions(4));
@@ -54,25 +58,6 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
       }, FADE_OUT_MS);
     }, ROTATION_INTERVAL);
   }
-
-  useEffect(() => {
-    // ⚠️ **La excepción de demo se sacó** (PLAN_INSTANCIAS/05 §4). Decía "en demo no
-    // se filtra: la instancia de demo es nuestra y tiene de todo", y era cierto
-    // mientras hubo UNA. Con el parque es lo contrario: `comercial` no tiene
-    // inventario y `retail` no tiene CRM, así que sin filtrar le ofrecemos a un
-    // visitante "¿qué tengo que reponer?" sobre una agencia comercial y la respuesta
-    // es vacía — el peor primer resultado posible, y justo donde se decide si el
-    // producto sirve. Que esto funcione depende de que el backend SONDEE las
-    // instancias de demo (`capability_cache.py`), cosa que ahora hace.
-    if (!activeConfigId) return;
-    let vivo = true;
-    fetchInstanceUsage(activeConfigId).then((u) => {
-      if (vivo) setUsage(u);
-    });
-    return () => {
-      vivo = false;
-    };
-  }, [activeConfigId]);
 
   useEffect(() => {
     poolRef.current = suggestionsForInstance(usage);

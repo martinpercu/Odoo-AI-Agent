@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { fetchInstanceUsage } from "@/lib/api";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
 import { instanceLabel } from "@/lib/instance-label";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
@@ -49,25 +48,14 @@ export function InstanceSnapshot() {
   const locale = useLocale();
   const { activeConfigId, isDemoMode, activeConfig } = useOdooConfig();
   const demoName = instanceLabel(activeConfig);
-  const [usage, setUsage] = useState<Record<string, number> | null>(null);
-
-  useEffect(() => {
-    // ⚠️ El razonamiento viejo —"en demo los números son de NUESTRA instancia:
-    // mostrarlos como 'tu negocio' sería mentir en la primera pantalla"— era correcto
-    // cuando la demo se presentaba como "tu Odoo". Con un selector que dice "elegí una
-    // empresa de ejemplo" el encuadre cambia y el snapshot pasa a ser lo más útil de
-    // la pantalla: te dice de un vistazo que Kestrel tiene 2.000 oportunidades y 0
-    // productos en depósito, o sea de qué va esta empresa. El rótulo de ejemplo lo
-    // pone el encabezado (`t("titleDemo")`), no el silencio.
-    if (!activeConfigId) return;
-    let vivo = true;
-    fetchInstanceUsage(activeConfigId).then((u) => {
-      if (vivo) setUsage(u);
-    });
-    return () => {
-      vivo = false;
-    };
-  }, [activeConfigId]);
+  // ⚠️ El razonamiento viejo —"en demo los números son de NUESTRA instancia:
+  // mostrarlos como 'tu negocio' sería mentir en la primera pantalla"— era correcto
+  // cuando la demo se presentaba como "tu Odoo". Con un selector que dice "elegí una
+  // empresa de ejemplo" el encuadre cambia y el snapshot pasa a ser lo más útil de
+  // la pantalla: te dice de un vistazo de qué va esta empresa. El rótulo de ejemplo lo
+  // pone el encabezado (`t("titleDemo")`), no el silencio.
+  // F-01 — `null` hasta que llega la respuesta de ESTA instancia: nunca la anterior.
+  const usage = useInstanceUsage(activeConfigId)?.usage ?? null;
 
   const tiles = SNAPSHOT_MODELS.filter((m) => (usage?.[m.model] ?? 0) > 0).slice(0, MAX_TILES);
   // Nada que mostrar ⇒ nada se renderiza. Una tarjeta en cero es peor que no tenerla.

@@ -2974,26 +2974,36 @@ export async function executeListingExcelAction(
   }
 }
 
+/** Lo que devuelve `GET /routines/instance-usage` (quick-wins §7, X-04, X-06). */
+export interface InstanceUsageInfo {
+  /** `{modelo: cantidad}` — incluye `stock.quant`, proyectos, tareas, partes y POS (X-06). */
+  usage: Record<string, number>;
+  /** "AAAA-MM-DD": la última fecha de NEGOCIO con datos (X-04, A6). `null` = no se sabe. */
+  dataUntil: string | null;
+}
+
 /**
- * `{modelo: cantidad}` de la instancia (quick-wins §7) — para filtrar las
- * sugerencias del chat contra lo que el tenant realmente usa.
+ * El uso real de la instancia — para filtrar sugerencias, armar el resumen y el cartel
+ * "datos hasta". Leerlo con `useInstanceUsage` (`hooks/use-instance-usage.ts`), que lo
+ * comparte entre pantallas: esta función no cachea.
  *
- * **Best-effort y no bloqueante:** un fallo devuelve `{}`, que el filtro
- * interpreta como "no lo sabemos" y muestra todas las sugerencias. Sugerir de más
- * es mucho mejor que esconderle al usuario algo que sí podía preguntar.
+ * **Best-effort y no bloqueante:** un fallo devuelve `null`, que el filtro interpreta como
+ * "no lo sabemos" y muestra todas las sugerencias. Sugerir de más es mucho mejor que
+ * esconderle al usuario algo que sí podía preguntar.
  */
-export async function fetchInstanceUsage(
-  configId: string
-): Promise<Record<string, number>> {
+export async function fetchInstanceUsage(configId: string): Promise<InstanceUsageInfo | null> {
   try {
     const res = await authFetch(
       `${API_BASE}/routines/instance-usage?config_id=${encodeURIComponent(configId)}`
     );
-    if (!res.ok) return {};
+    if (!res.ok) return null;
     const data = await res.json();
-    return (data.usage ?? {}) as Record<string, number>;
+    return {
+      usage: (data.usage ?? {}) as Record<string, number>,
+      dataUntil: typeof data.data_until === "string" && data.data_until ? data.data_until : null,
+    };
   } catch {
-    return {};
+    return null;
   }
 }
 
