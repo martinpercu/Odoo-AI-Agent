@@ -12,6 +12,8 @@ import type {
   AppNotification,
   NotificationSettings,
   Message,
+  MessageMetadata,
+  RecordLinksEvent,
   EntitySearchResult,
   MeResponse,
   ServerConversation,
@@ -1873,6 +1875,59 @@ export interface FetchChatHistoryResult {
   error?: string;
 }
 
+/**
+ * X-05 — los `events` que guardó el backend, traducidos a la MISMA forma que arma el
+ * stream (`hooks/use-chat.ts`): `chart` y `record_links` se acumulan; `selection_prompt`,
+ * `action_proposal` y `export` ocupan el único lugar de `metadata`, y gana el último —
+ * igual que en vivo. Si esta regla difiere de la del stream, reabrir un chat muestra otra
+ * cosa que la que se vio, que es justo el bug que esto arregla.
+ */
+function hydrateEvents(events: unknown): Partial<Message> {
+  if (!Array.isArray(events) || events.length === 0) return {};
+  const charts: ChartSSEEvent[] = [];
+  const recordLinks: RecordLinksEvent[] = [];
+  let metadata: MessageMetadata | undefined;
+  for (const ev of events) {
+    if (!ev || typeof ev !== "object") continue;
+    const e = ev as Record<string, unknown>;
+    if (e.type === "chart") charts.push(e as unknown as ChartSSEEvent);
+    else if (e.type === "record_links") recordLinks.push(e as unknown as RecordLinksEvent);
+    else if (e.type === "selection_prompt" || e.type === "action_proposal")
+      metadata = e as unknown as MessageMetadata;
+    else if (e.type === "export")
+      metadata = {
+        type: "excel_export",
+        export_url: e.export_url as string,
+        filename: e.filename as string,
+      };
+  }
+  return {
+    ...(metadata && { metadata }),
+    ...(charts.length > 0 && { charts }),
+    ...(recordLinks.length > 0 && { recordLinks }),
+  };
+}
+
+/**
+ * X-05 — qué chip se eligió: si el mensaje del usuario que sigue a unas opciones mandó
+ * el `value` de una de ellas, esa queda marcada al reabrir (en vez de volver a ofrecerse
+ * como si nadie hubiera contestado).
+ */
+function withChoices(messages: Message[]): Message[] {
+  return messages.map((m, i) => {
+    const meta = m.metadata;
+    const next = messages[i + 1];
+    if (m.role !== "assistant" || meta?.type !== "selection_prompt" || next?.role !== "user")
+      return m;
+    const sent = (next.value ?? next.content).trim();
+    const values: string[] =
+      "kind" in meta
+        ? meta.options.map((o) => ("value" in o ? String(o.value) : ""))
+        : meta.options.map((o) => String(o.index));
+    return values.includes(sent) ? { ...m, choice: sent } : m;
+  });
+}
+
 export async function fetchChatHistory(
   chatId: string,
   configId: string
@@ -1882,13 +1937,19 @@ export async function fetchChatHistory(
     const res = await authFetch(`${API_BASE}/chat/${chatId}/history?${params}`);
     const data = await res.json();
     if (res.ok) {
-      const messages: Message[] = (data.messages ?? data).map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (m: any) => ({
-          ...m,
-          role: m.role === "human" ? "user" : m.role === "ai" ? "assistant" : m.role,
-          timestamp: new Date(m.timestamp ?? m.created_at ?? Date.now()),
-        })
+      const messages = withChoices(
+        (data.messages ?? data).map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (m: any): Message => {
+            const { events, ...rest } = m;
+            return {
+              ...rest,
+              role: m.role === "human" ? "user" : m.role === "ai" ? "assistant" : m.role,
+              timestamp: new Date(m.timestamp ?? m.created_at ?? Date.now()),
+              ...hydrateEvents(events),
+            };
+          }
+        )
       );
       return { success: true, messages };
     }

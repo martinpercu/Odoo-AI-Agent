@@ -156,7 +156,8 @@
       "validationError": "Corrija os campos destacados e tente novamente.",
       "confirm": "Confirmar ação",
       "yes": "Sim",
-      "no": "Não"
+      "no": "Não",
+      "expired": "Esta proposta não está mais válida. Se ainda precisar, peça de novo."
     },
     "audit": {
       "title": "Histórico de Ações",

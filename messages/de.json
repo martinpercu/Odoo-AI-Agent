@@ -156,7 +156,8 @@
       "validationError": "Bitte korrigieren Sie die markierten Felder.",
       "confirm": "Aktion bestätigen",
       "yes": "Ja",
-      "no": "Nein"
+      "no": "Nein",
+      "expired": "Dieser Vorschlag ist nicht mehr gültig. Wenn du ihn noch brauchst, frag erneut danach."
     },
     "audit": {
       "title": "Aktionsverlauf",

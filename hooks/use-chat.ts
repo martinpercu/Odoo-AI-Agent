@@ -242,7 +242,13 @@ export function useChat(chatId?: string, userId?: string) {
   );
 
   const sendMessage = useCallback(
-    async (content: string, explicitChatIdOrImage?: string | File, maybeImage?: File) => {
+    async (
+      content: string,
+      explicitChatIdOrImage?: string | File,
+      maybeImage?: File,
+      /** X-07 — lo que el usuario VIO (la etiqueta del chip); `content` es lo que se manda. */
+      displayText?: string
+    ) => {
       // Resolve overloaded args: sendMessage(content, chatId?, image?)
       let explicitChatId: string | undefined;
       let image: File | undefined;
@@ -253,15 +259,19 @@ export function useChat(chatId?: string, userId?: string) {
         image = explicitChatIdOrImage;
       }
 
+      // Sólo cuenta si difiere: una etiqueta igual al valor no agrega nada.
+      const shown = displayText && displayText !== content ? displayText : undefined;
+
       let targetId = explicitChatId ?? currentChatId;
       if (!targetId) {
-        targetId = createChat(content || "Image upload");
+        targetId = createChat(shown || content || "Image upload");
       }
 
       const userMessage: Message = {
         id: `msg-${Date.now()}`,
         role: "user",
-        content,
+        content: shown ?? content,
+        ...(shown && { value: content }),
         timestamp: new Date(),
         ...(image && { imageUrl: URL.createObjectURL(image) }),
       };
@@ -370,6 +380,9 @@ export function useChat(chatId?: string, userId?: string) {
           headers: sseHeaders,
           body: JSON.stringify({
             message: content,
+            // X-07 — el back la guarda en el checkpoint y `/history` la devuelve como
+            // `content` (con `value` = lo mandado). Sin ella la deduce de las opciones.
+            ...(shown && { display_text: shown }),
             config_id: activeConfigId,
             language: locale,
             // Vista previa "como lo ve tu cliente" (PLAN_INSTANCIAS/07 Idea 3). Sólo
@@ -809,6 +822,16 @@ export function useChat(chatId?: string, userId?: string) {
     [activeConfigId]
   );
 
+  /**
+   * X-07 — elegir un chip: se MANDA el `value` y la burbuja muestra la etiqueta que se
+   * tocó ("Equipo de ventas", no "comerciales"). El `value` es lo que el backend compara
+   * contra las opciones que ofreció; la etiqueta es sólo lo que se ve.
+   */
+  const sendChoice = useCallback(
+    (value: string, label?: string) => sendMessage(value, undefined, undefined, label),
+    [sendMessage]
+  );
+
   const clearChats = useCallback(() => {
     // Sin esto, un chat ya pedido no se vuelve a pedir nunca: la lista se vacía pero
     // el id sigue marcado como cargado, y la página queda en blanco.
@@ -834,6 +857,7 @@ export function useChat(chatId?: string, userId?: string) {
     currentChatId,
     setCurrentChatId,
     sendMessage,
+    sendChoice,
     isStreaming,
     isLoadingHistory,
     stopStreaming,

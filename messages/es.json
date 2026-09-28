@@ -156,7 +156,8 @@
       "validationError": "Corrige los campos resaltados e intenta de nuevo.",
       "confirm": "Confirmar acción",
       "yes": "Sí",
-      "no": "No"
+      "no": "No",
+      "expired": "Esta propuesta ya no está vigente. Si todavía la necesitas, pídela de nuevo."
     },
     "audit": {
       "title": "Historial de Acciones",

@@ -156,7 +156,8 @@
       "validationError": "Please fix the highlighted fields and try again.",
       "confirm": "Confirm action",
       "yes": "Yes",
-      "no": "No"
+      "no": "No",
+      "expired": "This proposal is no longer active. If you still need it, ask for it again."
     },
     "audit": {
       "title": "Action History",

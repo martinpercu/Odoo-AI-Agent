@@ -156,7 +156,8 @@
       "validationError": "Correggi i campi evidenziati e riprova.",
       "confirm": "Conferma azione",
       "yes": "Sì",
-      "no": "No"
+      "no": "No",
+      "expired": "Questa proposta non è più valida. Se ti serve ancora, richiedila."
     },
     "audit": {
       "title": "Cronologia azioni",

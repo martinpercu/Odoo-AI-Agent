@@ -8,7 +8,10 @@ import type { KindedSelectionMetadata } from "@/lib/types";
 
 interface ReportTypeCardProps {
   metadata: KindedSelectionMetadata;
-  onSelect: (value: string) => void;
+  /** X-07 — `value` es lo que se manda; `label`, lo que la burbuja muestra. */
+  onSelect: (value: string, label: string) => void;
+  /** X-05 — el valor ya elegido al reabrir el chat (sale de `/history`). */
+  initialSelected?: string;
 }
 
 /**
@@ -17,14 +20,14 @@ interface ReportTypeCardProps {
  * Labels arrive already localized from the backend. Clicking a button sends its
  * `value` as a normal chat message to /chat/{id}/stream.
  */
-export function ReportTypeCard({ metadata, onSelect }: ReportTypeCardProps) {
-  const [selected, setSelected] = useState<string | null>(null);
+export function ReportTypeCard({ metadata, onSelect, initialSelected }: ReportTypeCardProps) {
+  const [selected, setSelected] = useState<string | null>(initialSelected ?? null);
   const t = useTranslations("ChatMessages");
 
-  function handleSelect(value: string) {
+  function handleSelect(value: string, label: string) {
     if (selected !== null) return;
     setSelected(value);
-    onSelect(value);
+    onSelect(value, label);
   }
 
   return (
@@ -43,7 +46,7 @@ export function ReportTypeCard({ metadata, onSelect }: ReportTypeCardProps) {
           return (
             <button
               key={option.value}
-              onClick={() => handleSelect(option.value)}
+              onClick={() => handleSelect(option.value, option.label)}
               disabled={selected !== null}
               className={`flex items-center gap-3 rounded-btn px-3 py-2 text-left text-body transition-colors ${
                 isSelected

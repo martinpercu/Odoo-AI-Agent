@@ -156,7 +156,8 @@
       "validationError": "Veuillez corriger les champs en rouge.",
       "confirm": "Confirmer l'action",
       "yes": "Oui",
-      "no": "Non"
+      "no": "Non",
+      "expired": "Cette proposition n'est plus valable. Si vous en avez encore besoin, redemandez-la."
     },
     "audit": {
       "title": "Historique des actions",

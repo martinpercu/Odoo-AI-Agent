@@ -89,7 +89,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const t = useTranslations("ChatMessages");
   const locale = useLocale();
   const avatarSize = useIconSize("inline");
-  const { executeAction, sendMessage, currentChatId } = useChatContext();
+  const { executeAction, sendChoice, currentChatId } = useChatContext();
   const { meData } = useSession();
   const { activeConfigId } = useOdooConfig();
   const allowFeedback = meData?.user?.allow_feedback === true;
@@ -216,18 +216,21 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                             ) : message.metadata.kind === "stage_drilldown" ? (
                               <StageDrilldownCard
                                 metadata={message.metadata}
-                                onSelect={(value) => sendMessage(value)}
+                                onSelect={sendChoice}
+                                initialSelected={message.choice}
                               />
                             ) : (
                               <ReportTypeCard
                                 metadata={message.metadata}
-                                onSelect={(value) => sendMessage(value)}
+                                onSelect={sendChoice}
+                                initialSelected={message.choice}
                               />
                             )
                           ) : (
                             <SelectionCard
                               metadata={message.metadata}
-                              onSelect={(value) => sendMessage(value)}
+                              onSelect={sendChoice}
+                              initialSelected={message.choice}
                             />
                           ))}
                         {message.metadata.type === "file_attachment" && (

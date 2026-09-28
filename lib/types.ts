@@ -59,6 +59,14 @@ export interface ActionProposalMetadata {
   type: "action_proposal";
   action: ActionContext;
   labels: ActionLabels;
+  /**
+   * Sólo al REABRIR un chat (X-05): el estado que deriva el backend en `/history`.
+   * `executed` = ya se ejecutó · `pending` = es la última y sigue abierta · `expired` =
+   * ya no se puede ejecutar. ⚠️ **Sólo `pending` ofrece ejecutar**: rehidratar una
+   * propuesta vieja con el botón activo es invitar a crear dos veces el mismo registro.
+   * En vivo (stream) no viene y la tarjeta se comporta como siempre.
+   */
+  status?: "pending" | "executed" | "expired";
 }
 
 // Selection prompt for ambiguity resolution (from SSE)
@@ -251,6 +259,16 @@ export interface Message {
   charts?: ChartSSEEvent[];
   recordLinks?: RecordLinksEvent[];
   imageUrl?: string;
+  /**
+   * X-07 — en un mensaje del usuario nacido de un chip: lo que se MANDÓ (`value`),
+   * cuando `content` es la etiqueta que el usuario tocó. La burbuja muestra `content`.
+   */
+  value?: string;
+  /**
+   * X-05 — en un mensaje del agente con opciones: el `value` que el usuario eligió en el
+   * turno siguiente. Sale de `/history` y hace que el chip vuelva marcado al reabrir.
+   */
+  choice?: string;
 }
 
 export interface Chat {
