@@ -33,7 +33,8 @@
     "viewAsClientInfo": "Kunden sehen eine luftigere Ansicht, und der Agent sagt „Kunde“ statt „res.partner“.",
     "showAllInstances": "alle anzeigen",
     "openMenu": "Menü öffnen",
-    "cycleInstance": "Instanz wechseln"
+    "cycleInstance": "Instanz wechseln",
+    "nextInstance": "Nächste: {name}"
   },
   "UserMenu": {
     "guest": "Gast",

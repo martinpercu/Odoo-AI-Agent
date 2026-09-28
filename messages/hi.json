@@ -33,7 +33,8 @@
     "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
     "showAllInstances": "सभी दिखाएं",
     "openMenu": "मेनू खोलें",
-    "cycleInstance": "Switch instance"
+    "cycleInstance": "Switch instance",
+    "nextInstance": "Next: {name}"
   },
   "UserMenu": {
     "guest": "अतिथि",

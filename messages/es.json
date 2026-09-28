@@ -33,7 +33,8 @@
     "viewAsClientInfo": "Los clientes ven una vista más espaciada y el agente usa términos como «cliente» en lugar de «res.partner».",
     "showAllInstances": "ver todos",
     "openMenu": "Abrir menú",
-    "cycleInstance": "Cambiar instancia"
+    "cycleInstance": "Cambiar instancia",
+    "nextInstance": "Siguiente: {name}"
   },
   "UserMenu": {
     "guest": "Invitado",
