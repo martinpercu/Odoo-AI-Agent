@@ -1899,6 +1899,7 @@ function hydrateEvents(events: unknown): Partial<Message> {
         type: "excel_export",
         export_url: e.export_url as string,
         filename: e.filename as string,
+        ...(typeof e.message_id === "string" && { message_id: e.message_id }),
       };
   }
   return {

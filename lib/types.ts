@@ -251,6 +251,8 @@ export interface ExcelExportMetadata {
   type: "excel_export";
   export_url: string;
   filename: string;
+  /** X-09 — el id del mensaje según el backend (ver `ChartSSEEvent.message_id`). */
+  message_id?: string;
 }
 
 export interface NoCredentialsMetadata {
@@ -434,12 +436,21 @@ export interface ChartSSEEvent {
   meta: ChartMeta;
   export_url?: string;
   query_context?: PinQueryContext;
+  /**
+   * X-09 — el id del AIMessage del turno, el MISMO que devuelve `/history`. Se fija con
+   * éste y no con el id local del mensaje: con el local, al reabrir el chat el gráfico
+   * fijado se veía "sin fijar" y fijarlo otra vez lo duplicaba. Un back anterior a
+   * X-09(b) no lo manda y se usa el local, como antes.
+   */
+  message_id?: string;
 }
 
 export interface ExportSSEEvent {
   type: "export";
   export_url: string;
   filename: string;
+  /** X-09 — ver `ChartSSEEvent.message_id`. */
+  message_id?: string;
 }
 
 // Clickable links to the underlying Odoo records the agent just listed
