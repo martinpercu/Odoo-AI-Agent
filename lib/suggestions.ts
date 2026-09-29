@@ -18,6 +18,16 @@ import {
   Target,
 } from "lucide-react";
 
+import type { InstanceUsageInfo } from "@/lib/api";
+import { parseLocalDate } from "@/lib/data-until";
+
+/**
+ * F-15 — el período RELATIVO que nombra el texto de una sugerencia ("este mes", "el mes
+ * pasado", "este año"). Sólo las relativas lo declaran: una fecha fija ("en 2024") no
+ * se mueve con el calendario.
+ */
+export type SuggestionPeriod = "this_month" | "last_month" | "this_year";
+
 export interface Suggestion {
   key: string;
   icon: React.ElementType;
@@ -31,6 +41,8 @@ export interface Suggestion {
    * justo en el momento donde se decide si el producto sirve.
    */
   model?: string;
+  /** F-15 — ver `SuggestionPeriod`. */
+  period?: SuggestionPeriod;
 }
 
 // Active suggestions — shown in the rotating carousel.
@@ -56,9 +68,9 @@ export const ACTIVE_SUGGESTIONS: Suggestion[] = [
   { key: "salesByClientMonth",   icon: DollarSign,   color: "text-info",           model: "sale.order" },
   { key: "purchasesBySupplier",  icon: ShoppingCart, color: "text-warning-solid",  model: "purchase.order" },
   { key: "paymentsByClientJan",  icon: CalendarDays, color: "text-info",           model: "account.payment" },
-  { key: "salesBySellerYear",    icon: UserCheck,    color: "text-accent",         model: "sale.order" },
+  { key: "salesBySellerYear",    icon: UserCheck,    color: "text-accent",         model: "sale.order", period: "this_year" },
   { key: "opportunitiesByStage", icon: Target,       color: "text-info",           model: "crm.lead" },
-  { key: "hoursByProject",       icon: Clock,        color: "text-accent",         model: "account.analytic.line" },
+  { key: "hoursByProject",       icon: Clock,        color: "text-accent",         model: "account.analytic.line", period: "this_month" },
   { key: "overdueTasks",         icon: ListTodo,     color: "text-warning-solid",  model: "project.task" },
 ];
 
@@ -88,23 +100,64 @@ export const RESERVED_SUGGESTIONS: Suggestion[] = [
  * La misma regla que el carrusel, para los chips sueltos de los paneles y del modal
  * (X-06): sin medición, o sin modelo declarado, se muestra; sólo se esconde lo que se
  * MIDIÓ en cero. "No lo sabemos" ≠ "está vacío".
+ *
+ * F-15 — y lo mismo con el período: una sugerencia que dice "este mes" no se ofrece si
+ * los datos de la instancia terminan antes de que empiece este mes. El cartel "Datos
+ * hasta" lo explica, pero ofrecer una pregunta cuya respuesta sabemos vacía es lo que
+ * el filtro existe para evitar. Sin `dataUntil` se muestra.
  */
 export function isUsableFor(
-  model: string | undefined,
-  usage: Record<string, number> | null | undefined
+  item: { model?: string; period?: SuggestionPeriod },
+  info: InstanceUsageInfo | null | undefined,
+  today: Date = new Date()
 ): boolean {
-  if (!model || !usage) return true;
-  const count = usage[model];
-  return count === undefined || count > 0;
+  if (!info) return true;
+  if (item.model) {
+    const count = info.usage[item.model];
+    if (count !== undefined && count <= 0) return false;
+  }
+  return coversPeriod(item.period, info.dataUntil, today);
 }
 
+/** ¿Hay datos dentro de `period`? Sin período o sin fecha de corte, sí. */
+function coversPeriod(
+  period: SuggestionPeriod | undefined,
+  dataUntil: string | null,
+  today: Date
+): boolean {
+  if (!period || !dataUntil) return true;
+  const until = parseLocalDate(dataUntil);
+  if (!until) return true;
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  const start =
+    period === "this_year"
+      ? new Date(y, 0, 1)
+      : period === "this_month"
+        ? new Date(y, m, 1)
+        : new Date(y, m - 1, 1);
+  return until >= start;
+}
+
+/**
+ * Las sugerencias que ESTA instancia puede contestar con datos (quick-wins §7).
+ *
+ * ⚠️ **Sin medición NO se filtra nada.** `info` ausente devuelve el pool completo:
+ * esconder sugerencias por falta de datos es peor que mostrar una que quizás salga
+ * vacía — el usuario no tiene forma de enterarse de lo que le escondimos. Misma regla
+ * que el gating del catálogo (B6): "no lo sabemos" ≠ "está vacío".
+ *
+ * Y si el filtro deja MENOS de `min` sugerencias, se devuelve el pool completo:
+ * un carrusel con una sola tarjeta se ve roto, y peor que una sugerencia que
+ * quizás no traiga nada es una pantalla vacía.
+ */
 export function suggestionsForInstance(
-  usage: Record<string, number> | null | undefined,
+  info: InstanceUsageInfo | null | undefined,
   pool: Suggestion[] = ACTIVE_SUGGESTIONS,
   min = 4
 ): Suggestion[] {
-  if (!usage || Object.keys(usage).length === 0) return pool;
-  const usable = pool.filter((s) => isUsableFor(s.model, usage));
+  if (!info) return pool;
+  const usable = pool.filter((s) => isUsableFor(s, info));
   return usable.length >= min ? usable : pool;
 }
 

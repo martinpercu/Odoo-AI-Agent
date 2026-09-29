@@ -76,7 +76,7 @@ export function HowItWorksPanel() {
   const { isHowItWorksPanelOpen, closeHowItWorksPanel } = useIntro();
   const { createChat, sendMessage } = useChatContext();
   const { activeConfigId } = useOdooConfig();
-  const usage = useInstanceUsage(activeConfigId)?.usage;
+  const usageInfo = useInstanceUsage(activeConfigId);
   const { user } = useAuth();
   const { meData } = useSession();
 
@@ -146,7 +146,7 @@ export function HowItWorksPanel() {
   const chips = [
     { id: "how_top_customers", text: t("what.chip3"), model: "sale.order" },
     { id: "how_out_of_stock", text: t("what.chip4"), model: "stock.quant" },
-  ].filter((chip) => isUsableFor(chip.model, usage));
+  ].filter((chip) => isUsableFor(chip, usageInfo));
 
   const secureItems = [
     { icon: Check, label: t("secure.item1") },

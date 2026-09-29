@@ -38,7 +38,7 @@ export function IntroModal() {
   const router = useRouter();
   const { isModalOpen, openModal, closeModal, openPanel, dismissed, ready } = useIntro();
   const { isDemoMode, activeConfigId } = useOdooConfig();
-  const usage = useInstanceUsage(activeConfigId)?.usage;
+  const usageInfo = useInstanceUsage(activeConfigId);
   const isBuilder = useAudience().audience === "builder";
   const { createChat, sendMessage } = useChatContext();
   const { user, isLoading: authLoading } = useAuth();
@@ -144,7 +144,7 @@ export function IntroModal() {
             {t("tryThisLabel")}
           </p>
           <div className="mb-4 space-y-2">
-            {EXAMPLE_PROMPTS.filter((p) => isUsableFor(p.model, usage)).map(({ id }) => {
+            {EXAMPLE_PROMPTS.filter((p) => isUsableFor(p, usageInfo)).map(({ id }) => {
               const text = t(`tryThis.${id}`);
               return (
                 <button

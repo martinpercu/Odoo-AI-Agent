@@ -36,7 +36,7 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
    * `comercial` no tiene inventario y `retail` no tiene CRM, así que sin filtrar le
    * ofrecemos a un visitante una pregunta cuya respuesta es vacía.
    */
-  const usage = useInstanceUsage(activeConfigId)?.usage ?? null;
+  const usageInfo = useInstanceUsage(activeConfigId);
   const poolRef = useRef<Suggestion[]>(suggestionsForInstance(null));
 
   const [visible, setVisible] = useState<Suggestion[]>(getRandomSuggestions(4));
@@ -63,7 +63,7 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
   }
 
   useEffect(() => {
-    poolRef.current = suggestionsForInstance(usage);
+    poolRef.current = suggestionsForInstance(usageInfo);
     // Si el filtro sacó alguna de las que están en pantalla, se refrescan ya:
     // dejar una sugerencia que sabemos que va a devolver "no hay registros" es
     // exactamente lo que este filtro existe para evitar.
@@ -72,7 +72,7 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
         ? prev
         : getRandomSuggestions(4, poolRef.current)
     );
-  }, [usage]);
+  }, [usageInfo]);
 
   useEffect(() => {
     // Con "reducir movimiento" no rota: las 4 del arranque se quedan quietas.
