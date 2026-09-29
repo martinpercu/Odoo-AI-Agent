@@ -40,10 +40,15 @@ export interface Suggestion {
 // stock) y no hay dos que pregunten casi lo mismo — el carrusel muestra 4 y un par
 // gemelo desperdicia una de las cuatro. Hay de cada negocio del parque: comercial (CRM),
 // servicios (proyectos, tareas, horas) y retail (stock, depósitos, reposición).
+//
+// X-08 — `restock` declara las REGLAS de reposición, no el stock: "¿qué tengo que
+// reponer?" se contesta contra el mínimo de cada regla, y una instancia con stock y sin
+// reglas (D21) contestaba "no hay nada para reponer". Un back que todavía no cuenta
+// `stock.warehouse.orderpoint` deja el modelo sin medir, y sin medir se muestra.
 export const ACTIVE_SUGGESTIONS: Suggestion[] = [
   { key: "inventory",            icon: Package,      color: "text-info",           model: "stock.quant" },
   { key: "stockByWarehouse",     icon: Warehouse,    color: "text-success-solid",  model: "stock.quant" },
-  { key: "restock",              icon: PackagePlus,  color: "text-warning-solid",  model: "stock.quant" },
+  { key: "restock",              icon: PackagePlus,  color: "text-warning-solid",  model: "stock.warehouse.orderpoint" },
   { key: "invoices",             icon: FileText,     color: "text-warning-solid",  model: "account.move" },
   { key: "employees",            icon: Users,        color: "text-success-solid",  model: "hr.employee" },
   { key: "billingByClient",      icon: Receipt,      color: "text-accent",         model: "account.move" },
