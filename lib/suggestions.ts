@@ -1,6 +1,5 @@
 import {
   Package,
-  PackageSearch,
   FileText,
   Users,
   Receipt,
@@ -12,6 +11,11 @@ import {
   CalendarDays,
   FileUp,
   FileBarChart,
+  Clock,
+  ListTodo,
+  Warehouse,
+  PackagePlus,
+  Target,
 } from "lucide-react";
 
 export interface Suggestion {
@@ -29,20 +33,28 @@ export interface Suggestion {
   model?: string;
 }
 
-// Active suggestions — shown in the rotating carousel
+// Active suggestions — shown in the rotating carousel.
+//
+// X-06 — cada una declara el modelo que REALMENTE consulta (el inventario es
+// `stock.quant`, no `product.product`: una agencia sin depósito tiene productos y cero
+// stock) y no hay dos que pregunten casi lo mismo — el carrusel muestra 4 y un par
+// gemelo desperdicia una de las cuatro. Hay de cada negocio del parque: comercial (CRM),
+// servicios (proyectos, tareas, horas) y retail (stock, depósitos, reposición).
 export const ACTIVE_SUGGESTIONS: Suggestion[] = [
-  { key: "inventory",           icon: Package,       color: "text-info",           model: "product.product" },
-  { key: "inventoryCheck",      icon: PackageSearch, color: "text-success-solid",  model: "product.product" },
-  { key: "invoices",            icon: FileText,      color: "text-warning-solid",  model: "account.move" },
-  { key: "employees",           icon: Users,        color: "text-success-solid",  model: "hr.employee" },
-  { key: "billingByClient",     icon: Receipt,      color: "text-accent",         model: "account.move" },
-  { key: "topProducts",         icon: TrendingUp,   color: "text-accent",         model: "sale.order" },
-  { key: "salesByClientMonth",  icon: DollarSign,   color: "text-info",           model: "sale.order" },
-  { key: "purchasesBySupplier", icon: ShoppingCart, color: "text-warning-solid",  model: "purchase.order" },
-  { key: "paymentsByClientNov", icon: CalendarDays, color: "text-success-solid",  model: "account.payment" },
-  { key: "paymentsByClientJan", icon: CalendarDays, color: "text-info",           model: "account.payment" },
-  { key: "salesBySellerYear",   icon: UserCheck,    color: "text-accent",         model: "sale.order" },
-  { key: "salesBySeller2024",   icon: BarChart3,    color: "text-warning-solid",  model: "sale.order" },
+  { key: "inventory",            icon: Package,      color: "text-info",           model: "stock.quant" },
+  { key: "stockByWarehouse",     icon: Warehouse,    color: "text-success-solid",  model: "stock.quant" },
+  { key: "restock",              icon: PackagePlus,  color: "text-warning-solid",  model: "stock.quant" },
+  { key: "invoices",             icon: FileText,     color: "text-warning-solid",  model: "account.move" },
+  { key: "employees",            icon: Users,        color: "text-success-solid",  model: "hr.employee" },
+  { key: "billingByClient",      icon: Receipt,      color: "text-accent",         model: "account.move" },
+  { key: "topProducts",          icon: TrendingUp,   color: "text-accent",         model: "sale.order" },
+  { key: "salesByClientMonth",   icon: DollarSign,   color: "text-info",           model: "sale.order" },
+  { key: "purchasesBySupplier",  icon: ShoppingCart, color: "text-warning-solid",  model: "purchase.order" },
+  { key: "paymentsByClientJan",  icon: CalendarDays, color: "text-info",           model: "account.payment" },
+  { key: "salesBySellerYear",    icon: UserCheck,    color: "text-accent",         model: "sale.order" },
+  { key: "opportunitiesByStage", icon: Target,       color: "text-info",           model: "crm.lead" },
+  { key: "hoursByProject",       icon: Clock,        color: "text-accent",         model: "account.analytic.line" },
+  { key: "overdueTasks",         icon: ListTodo,     color: "text-warning-solid",  model: "project.task" },
 ];
 
 // Reserved — disabled until the agent supports them
@@ -65,17 +77,29 @@ export const RESERVED_SUGGESTIONS: Suggestion[] = [
  * un carrusel con una sola tarjeta se ve roto, y peor que una sugerencia que
  * quizás no traiga nada es una pantalla vacía.
  */
+/**
+ * ¿Una pregunta sobre `model` tiene con qué responder en esta instancia?
+ *
+ * La misma regla que el carrusel, para los chips sueltos de los paneles y del modal
+ * (X-06): sin medición, o sin modelo declarado, se muestra; sólo se esconde lo que se
+ * MIDIÓ en cero. "No lo sabemos" ≠ "está vacío".
+ */
+export function isUsableFor(
+  model: string | undefined,
+  usage: Record<string, number> | null | undefined
+): boolean {
+  if (!model || !usage) return true;
+  const count = usage[model];
+  return count === undefined || count > 0;
+}
+
 export function suggestionsForInstance(
   usage: Record<string, number> | null | undefined,
   pool: Suggestion[] = ACTIVE_SUGGESTIONS,
   min = 4
 ): Suggestion[] {
   if (!usage || Object.keys(usage).length === 0) return pool;
-  const usable = pool.filter((s) => {
-    if (!s.model) return true;              // sin modelo declarado: no se puede juzgar
-    const count = usage[s.model];
-    return count === undefined || count > 0; // sin medir ⇒ se muestra
-  });
+  const usable = pool.filter((s) => isUsableFor(s.model, usage));
   return usable.length >= min ? usable : pool;
 }
 

@@ -154,7 +154,6 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
   const freeFeatures = [
     t("plans.free.features.seat"),
     t("plans.free.features.dailyLimit"),
-    t("plans.free.features.watermark"),
     t("plans.free.features.forever"),
   ];
 
@@ -162,7 +161,6 @@ export function PricingCards({ currentTier }: PricingCardsProps) {
   const starterFeatures = [
     t("plans.starter.features.seat"),
     t("plans.starter.features.noLimit"),
-    t("plans.starter.features.noWatermark"),
   ];
 
   // ---- Enterprise features ----

@@ -32,7 +32,9 @@
     "backToMyView": "Back to my view",
     "viewAsClientInfo": "Clients get a roomier layout, and the agent says “client” instead of “res.partner”.",
     "showAllInstances": "सभी दिखाएं",
-    "openMenu": "मेनू खोलें"
+    "openMenu": "मेनू खोलें",
+    "cycleInstance": "Switch instance",
+    "nextInstance": "Next: {name}"
   },
   "UserMenu": {
     "guest": "अतिथि",
@@ -66,7 +68,6 @@
     "suggestions": {
       "inventory": "वर्तमान उत्पाद इन्वेंटरी देखें",
       "invoices": "लंबित चालान दिखाएं",
-      "inventoryCheck": "उत्पाद स्टॉक जांचें",
       "employees": "विभाग के अनुसार कर्मचारियों की सूची",
       "billingByClient": "2024 में ग्राहक के अनुसार बिलिंग",
       "salesReport": "मासिक बिक्री रिपोर्ट बनाएं",
@@ -75,10 +76,13 @@
       "topProducts": "Q3 2025 में सबसे ज़्यादा बिकने वाले उत्पाद",
       "salesByClientMonth": "फरवरी में प्रति ग्राहक कितनी बिक्री हुई?",
       "purchasesBySupplier": "2025 में आपूर्तिकर्ता के अनुसार खरीद",
-      "paymentsByClientNov": "नवंबर में ग्राहक के अनुसार कुल भुगतान",
       "paymentsByClientJan": "जनवरी में ग्राहक के अनुसार कुल भुगतान",
       "salesBySellerYear": "इस साल विक्रेता के अनुसार बिक्री",
-      "salesBySeller2024": "2024 में विक्रेता के अनुसार बिक्री"
+      "stockByWarehouse": "गोदाम के अनुसार स्टॉक",
+      "restock": "मुझे किन उत्पादों को फिर से मंगाना है?",
+      "opportunitiesByStage": "चरण के अनुसार अवसर",
+      "hoursByProject": "इस महीने प्रोजेक्ट के अनुसार दर्ज घंटे",
+      "overdueTasks": "कौन-से कार्य अतिदेय हैं?"
     },
     "noCredsBanner": "Configure your credentials to start chatting",
     "noCredsCta": "Go to Connection"
@@ -145,7 +149,9 @@
         "pie": "पाई",
         "table": "तालिका"
       },
-      "others": "अन्य"
+      "others": "अन्य",
+      "topTotal": "शीर्ष {n} का कुल",
+      "overallTotal": "कुल योग"
     },
     "actionProposal": {
       "editField": "संपादित करें",
@@ -156,7 +162,8 @@
       "validationError": "हाइलाइट किए गए फ़ील्ड ठीक करें और फिर कोशिश करें।",
       "confirm": "कार्य की पुष्टि करें",
       "yes": "हाँ",
-      "no": "नहीं"
+      "no": "नहीं",
+      "expired": "यह प्रस्ताव अब मान्य नहीं है। अगर अभी भी ज़रूरत है, तो फिर से माँगें।"
     },
     "audit": {
       "title": "कार्य इतिहास",
@@ -173,7 +180,8 @@
       "cta": "सेटिंग्स पर जाएं"
     },
     "connectionError": "हम अनुरोध पूरा नहीं कर सके। कनेक्शन जाँचें और फिर से प्रयास करें।",
-    "actionFailed": "कार्रवाई पूरी नहीं हो सकी।"
+    "actionFailed": "कार्रवाई पूरी नहीं हो सकी।",
+    "somethingWentWrong": "कुछ गलत हो गया। कुछ सेकंड में फिर से कोशिश करें।"
   },
   "ChatHistory": {
     "loading": "बातचीत लोड हो रही है...",
@@ -203,7 +211,6 @@
         "features": {
           "seat": "1 सीट",
           "dailyLimit": "दैनिक चैट सीमा",
-          "watermark": "उत्तरों पर वॉटरमार्क",
           "forever": "हमेशा के लिए मुफ़्त"
         }
       },
@@ -214,8 +221,7 @@
         "cta": "सदस्यता लें",
         "features": {
           "seat": "1 पूर्ण सीट",
-          "noLimit": "कोई चैट सीमा नहीं",
-          "noWatermark": "कोई वॉटरमार्क नहीं"
+          "noLimit": "कोई चैट सीमा नहीं"
         }
       },
       "enterprise": {
@@ -225,7 +231,7 @@
         "features": {
           "seatsFrom": "10 सीट से (5 मुफ़्त + 5 भुगतान)",
           "seatsTo": "105 सीट तक (5 मुफ़्त + 100 भुगतान)",
-          "freeSeats": "वॉटरमार्क के साथ मुफ़्त सीट शामिल",
+          "freeSeats": "Free seats included",
           "idealFor": "Odoo इम्प्लीमेंटर्स के लिए आदर्श"
         }
       }
@@ -239,7 +245,7 @@
       "paidSlots": "भुगतान सीट",
       "freeSlots": "मुफ़्त सीट",
       "price": "मूल्य",
-      "freeSlotNote": "मुफ़्त सीट हमेशा वॉटरमार्क दिखाती हैं और उपयोग की सीमाएं होती हैं। भुगतान सीट में पूर्ण असीमित पहुंच है।"
+      "freeSlotNote": "Free seats have usage limits. Paid seats have full unrestricted access."
     },
     "founding": {
       "name": "Founding Partner",
@@ -536,7 +542,8 @@
     "historicBadge": "ऐतिहासिक",
     "refreshTooltip": "डेटा रिफ्रेश करें",
     "downloadTooltip": "डाउनलोड करें",
-    "openDashboard": "डैशबोर्ड खोलें"
+    "openDashboard": "डैशबोर्ड खोलें",
+    "noInstance": "यह पता नहीं है कि यह कार्ड किस सिस्टम से है, इसलिए इसे अपडेट नहीं किया जा सकता।"
   },
   "Notifications": {
     "title": "अलर्ट",
@@ -616,7 +623,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Demo mode — you're looking at {instance}, a sample company.",
     "previewAsClientBanner": "You're seeing {instance} as your end client would: trimmed menu, roomier layout, and the agent speaking without technical jargon.",
-    "previewAsClientHint": "Try seeing it as your client does, from the left-hand menu."
+    "previewAsClientHint": "Try seeing it as your client does, from the left-hand menu.",
+    "emailPlaceholder": "you@example.com",
+    "showPassword": "पासवर्ड दिखाएँ",
+    "hidePassword": "पासवर्ड छिपाएँ"
   },
   "Onboarding": {
     "step1Label": "Odoo Connection",
@@ -736,7 +746,6 @@
       "colType": "प्रकार",
       "colPlan": "प्लान",
       "colSlots": "सीटें",
-      "colWatermark": "वॉटरमार्क",
       "colUsers": "उपयोगकर्ता",
       "colCreated": "बनाया",
       "colActions": "कार्य",
@@ -752,7 +761,6 @@
       "editTier": "प्लान",
       "editPaidSlots": "भुगतान सीट",
       "editFreeSlots": "मुफ़्त सीट",
-      "editWatermark": "वॉटरमार्क दिखाएं",
       "editSave": "सहेजें",
       "editCancel": "रद्द करें",
       "editSuccess": "सदस्यता अपडेट हुई।",
@@ -942,16 +950,24 @@
       "title": "LangGraph ट्रेस",
       "expand": "ट्रेस दिखाएं",
       "collapse": "ट्रेस छुपाएं",
-      "empty": "अभी तक कोई इवेंट नहीं। एजेंट प्रोसेस करते समय ट्रेस दिखाई देते हैं।"
+      "empty": "अभी तक कोई इवेंट नहीं। एजेंट प्रोसेस करते समय ट्रेस दिखाई देते हैं।",
+      "detail": {
+        "model": "Model",
+        "method": "Method",
+        "groupby": "Grouped by",
+        "count": "Records",
+        "cached": "From cache",
+        "domain": "Domain"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "निष्पादन · क्वेरी"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Dashboard",
+      "subtitle": "Each card re-queries its instance with the same criteria it was created with: numbers refresh without going through the agent.",
       "empty": "Your dashboard is empty",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Add charts from the chat or run a Routine that publishes to the Dashboard. Each card remembers the query behind it.",
       "refreshAll": "Refresh all",
       "refreshingAll": "Refreshing…",
       "refresh": "Refresh this card",
@@ -969,10 +985,10 @@
         "applied": "Showing {start} to {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Live",
+        "historic": "Historical",
+        "noPeriod": "Not period-dependent",
+        "noPeriodHint": "This query has no date that can be changed without altering the result, so the Dashboard period doesn't affect it."
       },
       "state": {
         "updated": "Updated",
@@ -980,34 +996,44 @@
         "failed": "Failed"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "static": "Closed period: it doesn't change.",
+        "no_context": "Saved before the Dashboard remembered the query.",
+        "no_groupby": "It has no breakdown to recompute.",
+        "no_model": "It wasn't saved which model it comes from.",
+        "not_chart": "It's a file, not a query.",
+        "generic": "No need to refresh it.",
+        "no_instance": "This card didn't record which instance it came from, so it can't be refreshed."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "odoo_error": "The instance returned an error for the query.",
+        "chart_failed": "The query ran but returned no data for the chart.",
+        "unexpected": "Unexpected error refreshing this card.",
+        "generic": "This card couldn't be refreshed.",
+        "no_credentials": "You don't have credentials loaded for this instance.",
+        "instance_gone": "The instance no longer exists or you no longer have access.",
+        "auth_failed": "The instance rejected the login."
       },
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "The file could not be generated. Try again."
+        "failed": "Couldn't generate the file. Try again."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Preset dashboards by role",
+        "subtitle": "Routines that only publish charts. They run with your credentials and leave their cards here.",
         "apply": "Build this dashboard",
         "building": "Building…",
         "failed": "The dashboard could not be built. Try again.",
         "tooManyRuns": "A few things are running. Wait a few seconds and try again.",
         "partial": "Built {published} of {declared} cards. The other steps returned no grouped data on this instance, so there is nothing to chart.",
         "none": "No card was built: this dashboard's steps returned no grouped data on this instance."
-      }
+      },
+      "instance": {
+        "title": "Data from {name}",
+        "none": "No instance",
+        "noneHint": "This card didn't record which instance it came from, so it can't be refreshed."
+      },
+      "refreshAllDisabled": "No card can be refreshed: they're historical, files, or their instance is unknown."
     },
     "WriteGate": {
       "note": "Without an account the public demo is read-only: queries work, but this write won't run on Odoo.",
@@ -1102,13 +1128,17 @@
         "no_groupby": "दोबारा गिनने के लिए कोई विभाजन नहीं है।",
         "no_model": "हमें नहीं पता यह आंकड़ा कहां से आया।",
         "not_chart": "यह सहेजी गई फ़ाइल है, कोई प्रश्न नहीं।",
-        "generic": "इसे अपडेट करने की ज़रूरत नहीं थी।"
+        "generic": "इसे अपडेट करने की ज़रूरत नहीं थी।",
+        "no_instance": "हमें नहीं पता कि यह कार्ड किस सिस्टम से आया है, इसलिए इसे अपडेट नहीं किया जा सकता।"
       },
       "errorReason": {
         "odoo_error": "इस कार्ड के लिए हम आपके सिस्टम से जुड़ नहीं सके।",
         "chart_failed": "प्रश्न चला लेकिन चार्ट के लिए कोई डेटा नहीं मिला।",
         "unexpected": "इस कार्ड के साथ कुछ गड़बड़ हुई।",
-        "generic": "यह कार्ड अपडेट नहीं हो सका।"
+        "generic": "यह कार्ड अपडेट नहीं हो सका।",
+        "no_credentials": "इस सिस्टम से आपका कनेक्शन मौजूद नहीं है।",
+        "instance_gone": "यह सिस्टम अब उपलब्ध नहीं है।",
+        "auth_failed": "हम इस सिस्टम में साइन इन नहीं कर सके।"
       },
       "export": {
         "pdf": "PDF",
@@ -1124,7 +1154,13 @@
         "tooManyRuns": "कई काम चल रहे हैं। कुछ सेकंड रुककर दोबारा कोशिश करें।",
         "partial": "{declared} में से {published} चार्ट बने। बाकी के लिए इस कंपनी में पर्याप्त डेटा नहीं है।",
         "none": "यह डैशबोर्ड बनाने के लिए इस कंपनी में पर्याप्त डेटा नहीं है।"
-      }
+      },
+      "instance": {
+        "title": "{name} का डेटा",
+        "none": "अज्ञात स्रोत",
+        "noneHint": "हमें नहीं पता कि यह कार्ड किस सिस्टम से आया है, इसलिए इसे अपडेट नहीं किया जा सकता।"
+      },
+      "refreshAllDisabled": "अभी कोई कार्ड अपडेट नहीं किया जा सकता।"
     },
     "WriteGate": {
       "note": "बदलाव करने के लिए आपको एक खाते की ज़रूरत है। आप जो चाहें पूछते रह सकते हैं।",
@@ -1135,7 +1171,7 @@
   "Intro": {
     "modal": {
       "title": "You're trying TheOdooAgent",
-      "subtitle": "This is what your clients will see.",
+      "subtitle": "You're on a sample Odoo, in the implementer view. Switch on “View as client” to see what your clients would see.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · AI included"
       },
@@ -1162,8 +1198,8 @@
         "partnerTag": "Business model"
       },
       "what": {
-        "heading": "Try it as your client would",
-        "line": "This runs on a demo Odoo. Send a query and see exactly what your end users will see.",
+        "heading": "Try it yourself",
+        "line": "This runs on a sample Odoo. Send a query and see what it answers; switch on “View as client” in the left menu to see what an end user would see.",
         "chip1": "Overdue invoices over 450k",
         "chip2": "Sales by rep last month",
         "chip3": "Create a contact: María López"
@@ -1341,7 +1377,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "noSeatsWarning": "User limit reached",
-      "noSeatsLink": "Add seats"
+      "noSeatsLink": "Add seats",
+      "invalidEmail": "That email doesn't look valid: check it has a full domain (e.g. name@company.com)."
     },
     "edit": {
       "button": "Edit",
@@ -1383,7 +1420,8 @@
     "timezoneEffective": "Your schedules use {timezone}.",
     "timezoneUseDetected": "Use this device's ({timezone})",
     "timezoneExistingNote": "Schedules you already created keep the time zone they were created with.",
-    "timezoneFailed": "Could not save the time zone."
+    "timezoneFailed": "Could not save the time zone.",
+    "timezoneSearch": "Search time zone (e.g. New York, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1859,7 +1897,9 @@
       "title": "इस इंस्टेंस पर चलाएँ",
       "otherInstance": "दूसरा इंस्टेंस",
       "confirm": "पुष्टि करें"
-    }
+    },
+    "pinsPublished": "{count, plural, other {इस रूटीन ने आपके डैशबोर्ड में # चार्ट जोड़े।}}",
+    "openDashboard": "डैशबोर्ड खोलें"
   },
   "Chat": {
     "openInOdoo": "Odoo में खोलें"
@@ -1873,9 +1913,19 @@
       "saleOrder": "बिक्री",
       "accountMove": "चालान",
       "crmLead": "अवसर",
-      "purchaseOrder": "खरीद"
+      "purchaseOrder": "खरीद",
+      "projectProject": "प्रोजेक्ट",
+      "projectTask": "कार्य",
+      "timesheet": "घंटों की प्रविष्टियाँ",
+      "stockQuant": "स्थान के अनुसार स्टॉक",
+      "posOrder": "काउंटर बिक्री"
     },
     "titleDemo": "What I already know about {instance}",
     "hintDemo": "This is a sample company. Ask me about any of these numbers."
+  },
+  "DataUntil": {
+    "label": "{date} तक का डेटा",
+    "hintDemo": "इस नमूना कंपनी के पास इस तारीख तक का डेटा है: बाद की अवधि खाली आएगी।",
+    "hint": "इस सिस्टम का डेटा इस तारीख तक है।"
   }
 }

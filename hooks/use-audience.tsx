@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { useSession } from "@/hooks/use-session";
 
@@ -50,13 +50,31 @@ const AudienceContext = createContext<AudienceContextType | null>(null);
  *
  * Ver `PLAN_INSTANCIAS/07-demo-vivencial.md` Idea 3 y `DECISIONES.md` DI-12.
  */
+const subscribeNoop = () => () => {};
+function readAudienceHint(): Audience | null {
+  try {
+    const v = localStorage.getItem("audience");
+    return v === "builder" || v === "client" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 export function AudienceProvider({ children }: { children: React.ReactNode }) {
   const { meData } = useSession();
   const [previewAsClient, setPreviewAsClientState] = useState(false);
 
   const role = meData?.user?.role;
-  const baseAudience: Audience =
-    role === "ADMIN" || role === "SUPERADMIN" ? "builder" : "client";
+  // F-12 — antes de `/me`, la pista persistida (la misma que el script del <head> usa para
+  // la clase del <html>). Sin esto, la densidad arrancaba bien pero el menú, el copy y los
+  // íconos se dibujaban como cliente y SALTABAN a implementador cuando llegaba `/me`.
+  // Es sólo presentación: en cuanto hay `/me`, manda el rol.
+  const persistedHint = useSyncExternalStore(subscribeNoop, readAudienceHint, () => null);
+  const baseAudience: Audience = meData
+    ? role === "ADMIN" || role === "SUPERADMIN"
+      ? "builder"
+      : "client"
+    : persistedHint ?? "client";
 
   // ⭐ **Se decide por el ROL, no por la audiencia** (`baseAudience` sale del rol y no se
   // mueve con la vista previa). Es la propiedad que hace que el interruptor no se borre a

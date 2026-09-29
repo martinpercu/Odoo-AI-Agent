@@ -4,6 +4,9 @@ import { useState, useEffect, useCallback, createContext, useContext } from "rea
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useAuth } from "@/hooks/use-auth";
+import { userFacingError } from "@/lib/user-facing-error";
 
 interface Toast {
   id: number;
@@ -32,13 +35,22 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
-  const showError = useCallback((message: string) => {
+  const { user } = useAuth();
+  const t = useTranslations("ChatMessages");
+  // F-13 (A12) — un toast nunca muestra un error técnico a quien no tiene sesión, y un
+  // error de red nunca aparece como "Network error: …" en inglés para nadie.
+  const showError = useCallback((raw: string) => {
+    const message = userFacingError(raw, {
+      anonymous: !user,
+      connection: t("connectionError"),
+      generic: t("somethingWentWrong"),
+    });
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, TOAST_DURATION);
-  }, []);
+  }, [user, t]);
 
   const dismiss = useCallback((id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));

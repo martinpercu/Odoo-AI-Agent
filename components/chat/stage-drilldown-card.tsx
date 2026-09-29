@@ -8,7 +8,10 @@ import type { StageDrilldownSelectionMetadata } from "@/lib/types";
 
 interface StageDrilldownCardProps {
   metadata: StageDrilldownSelectionMetadata;
-  onSelect: (value: string) => void;
+  /** X-07 — `value` es lo que se manda; `label`, lo que la burbuja muestra. */
+  onSelect: (value: string, label: string) => void;
+  /** X-05 — el valor ya elegido al reabrir el chat (sale de `/history`). */
+  initialSelected?: string;
 }
 
 /**
@@ -19,14 +22,14 @@ interface StageDrilldownCardProps {
  * matches it exactly against the options it just sent, so `stageId`/`count`
  * are informational only and must never be sent.
  */
-export function StageDrilldownCard({ metadata, onSelect }: StageDrilldownCardProps) {
-  const [selected, setSelected] = useState<string | null>(null);
+export function StageDrilldownCard({ metadata, onSelect, initialSelected }: StageDrilldownCardProps) {
+  const [selected, setSelected] = useState<string | null>(initialSelected ?? null);
   const t = useTranslations("ChatMessages");
 
-  function handleSelect(value: string) {
+  function handleSelect(value: string, label: string) {
     if (selected !== null) return;
     setSelected(value);
-    onSelect(value);
+    onSelect(value, label);
   }
 
   return (
@@ -43,7 +46,7 @@ export function StageDrilldownCard({ metadata, onSelect }: StageDrilldownCardPro
         return (
           <button
             key={option.stageId}
-            onClick={() => handleSelect(option.value)}
+            onClick={() => handleSelect(option.value, option.label)}
             disabled={selected !== null}
             className={`flex items-center gap-2 rounded-btn border px-3 py-2 text-small transition-colors ${
               isSelected

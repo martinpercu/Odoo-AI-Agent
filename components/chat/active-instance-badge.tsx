@@ -66,10 +66,15 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
 
   const isActive = textHover || btnHover;
 
+  // F-09 — la flecha dice ADÓNDE va: sin eso, ciclar entre cuatro empresas era apretar a
+  // ciegas hasta que apareciera la buscada.
+  const nextConfig = configs[(configs.findIndex((c) => c.id === activeConfigId) + 1) % configs.length];
+  const nextName = instanceLabel(nextConfig);
+  const nextLabel = nextName ? t("nextInstance", { name: nextName }) : t("cycleInstance");
+
   function handleCycleNext() {
     if (configs.length < 2) return;
-    const idx = configs.findIndex((c) => c.id === activeConfigId);
-    const next = configs[(idx + 1) % configs.length];
+    const next = nextConfig;
     if (!next) return;
     setActiveConfigId(next.id);
     if (pathname.startsWith("/chat/")) {
@@ -95,8 +100,8 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           role="button"
           tabIndex={0}
           className="flex h-btn-md cursor-default items-center justify-center rounded-btn bg-sidebar-hover"
-          title={`${t("instanceBadge")}: ${name}`}
-          aria-label={`${t("instanceBadge")}: ${name}`}
+          title={`${t("instanceBadge")}: ${name} · ${nextLabel}`}
+          aria-label={`${t("instanceBadge")}: ${name} · ${nextLabel}`}
           onClick={(e) => { e.stopPropagation(); handleCycleNext(); }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -143,7 +148,8 @@ export function ActiveInstanceBadge({ collapsed = false }: { collapsed?: boolean
           onMouseEnter={() => { if (configs.length >= 2) setBtnHover(true); }}
           onMouseLeave={() => setBtnHover(false)}
           disabled={configs.length < 2}
-          aria-label="Cambiar instancia"
+          aria-label={nextLabel}
+          title={nextLabel}
           className={`shrink-0 rounded-btn p-1 transition-colors disabled:opacity-40 ${isActive ? "bg-raised text-accent" : "text-foreground"}`}
         >
           <ArrowBigRight size={iconBtn} strokeWidth={btnHover ? 2.5 : 1.5} />

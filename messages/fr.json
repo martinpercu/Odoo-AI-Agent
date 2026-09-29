@@ -32,7 +32,9 @@
     "backToMyView": "Revenir à ma vue",
     "viewAsClientInfo": "Les clients voient une mise en page plus aérée et l’agent dit « client » au lieu de « res.partner ».",
     "showAllInstances": "tout afficher",
-    "openMenu": "Ouvrir le menu"
+    "openMenu": "Ouvrir le menu",
+    "cycleInstance": "Changer d'instance",
+    "nextInstance": "Suivante : {name}"
   },
   "UserMenu": {
     "guest": "Invité",
@@ -66,7 +68,6 @@
     "suggestions": {
       "inventory": "Voir l'inventaire actuel des produits",
       "invoices": "Afficher les factures en attente",
-      "inventoryCheck": "Vérifier l'inventaire des produits",
       "employees": "Lister les employés par département",
       "billingByClient": "Facturation par client en 2024",
       "salesReport": "Générer le rapport de ventes mensuel",
@@ -75,10 +76,13 @@
       "topProducts": "Produits les plus vendus au T3 2025",
       "salesByClientMonth": "Combien avons-nous vendu par client en février ?",
       "purchasesBySupplier": "Achats par fournisseur en 2025",
-      "paymentsByClientNov": "Total des paiements par client en novembre",
       "paymentsByClientJan": "Total des paiements par client en janvier",
       "salesBySellerYear": "Ventes par vendeur cette année",
-      "salesBySeller2024": "Ventes par vendeur en 2024"
+      "stockByWarehouse": "Stock par entrepôt",
+      "restock": "Quels produits dois-je réapprovisionner ?",
+      "opportunitiesByStage": "Opportunités par étape",
+      "hoursByProject": "Heures saisies par projet ce mois-ci",
+      "overdueTasks": "Quelles tâches sont en retard ?"
     },
     "noCredsBanner": "Configurez vos identifiants pour commencer à chatter",
     "noCredsCta": "Aller à Connexion"
@@ -145,7 +149,9 @@
         "pie": "Camembert",
         "table": "Tableau"
       },
-      "others": "Autres"
+      "others": "Autres",
+      "topTotal": "Total du top {n}",
+      "overallTotal": "Total général"
     },
     "actionProposal": {
       "editField": "Modifier",
@@ -156,7 +162,8 @@
       "validationError": "Veuillez corriger les champs en rouge.",
       "confirm": "Confirmer l'action",
       "yes": "Oui",
-      "no": "Non"
+      "no": "Non",
+      "expired": "Cette proposition n'est plus valable. Si vous en avez encore besoin, redemandez-la."
     },
     "audit": {
       "title": "Historique des actions",
@@ -173,7 +180,8 @@
       "cta": "Aller aux Paramètres"
     },
     "connectionError": "Impossible de terminer la requête. Vérifiez la connexion et réessayez.",
-    "actionFailed": "L'action n'a pas pu être exécutée."
+    "actionFailed": "L'action n'a pas pu être exécutée.",
+    "somethingWentWrong": "Un problème est survenu. Réessayez dans quelques secondes."
   },
   "ChatHistory": {
     "loading": "Chargement de la conversation...",
@@ -203,7 +211,6 @@
         "features": {
           "seat": "1 siège",
           "dailyLimit": "Limite de chats quotidienne",
-          "watermark": "Filigrane sur les réponses",
           "forever": "Gratuit pour toujours"
         }
       },
@@ -214,8 +221,7 @@
         "cta": "S'abonner",
         "features": {
           "seat": "1 siège complet",
-          "noLimit": "Sans limite de chats",
-          "noWatermark": "Sans filigrane"
+          "noLimit": "Sans limite de chats"
         }
       },
       "enterprise": {
@@ -225,7 +231,7 @@
         "features": {
           "seatsFrom": "À partir de 10 sièges (5 gratuits + 5 payants)",
           "seatsTo": "Jusqu'à 105 sièges (5 gratuits + 100 payants)",
-          "freeSeats": "Sièges gratuits avec filigrane inclus",
+          "freeSeats": "Sièges gratuits inclus",
           "idealFor": "Idéal pour les implémentateurs Odoo"
         }
       }
@@ -239,7 +245,7 @@
       "paidSlots": "Sièges payants",
       "freeSlots": "Sièges gratuits",
       "price": "Prix",
-      "freeSlotNote": "Les sièges gratuits affichent toujours un filigrane et ont des limites d'utilisation. Les sièges payants ont un accès complet sans restrictions."
+      "freeSlotNote": "Les sièges gratuits ont des limites d'utilisation. Les sièges payants ont un accès complet sans restrictions."
     },
     "founding": {
       "name": "Founding Partner",
@@ -536,7 +542,8 @@
     "historicBadge": "Historique",
     "refreshTooltip": "Actualiser les données",
     "downloadTooltip": "Télécharger",
-    "openDashboard": "Ouvrir le tableau de bord"
+    "openDashboard": "Ouvrir le tableau de bord",
+    "noInstance": "On ne sait pas de quelle instance vient cette carte : elle ne peut pas être actualisée."
   },
   "Notifications": {
     "title": "Alertes",
@@ -616,7 +623,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Mode démo — vous consultez {instance}, une entreprise d'exemple.",
     "previewAsClientBanner": "Vous voyez {instance} comme le verrait votre client final : menu réduit, densité allégée et l'agent sans jargon technique.",
-    "previewAsClientHint": "Essayez de le voir comme votre client, depuis le menu de gauche."
+    "previewAsClientHint": "Essayez de le voir comme votre client, depuis le menu de gauche.",
+    "emailPlaceholder": "vous@exemple.com",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "Onboarding": {
     "step1Label": "Connexion Odoo",
@@ -736,7 +746,6 @@
       "colType": "Type",
       "colPlan": "Plan",
       "colSlots": "Slots",
-      "colWatermark": "Watermark",
       "colUsers": "Utilisateurs",
       "colCreated": "Créée",
       "colActions": "Actions",
@@ -752,7 +761,6 @@
       "editTier": "Plan",
       "editPaidSlots": "Slots payants",
       "editFreeSlots": "Slots gratuits",
-      "editWatermark": "Afficher le watermark",
       "editSave": "Enregistrer",
       "editCancel": "Annuler",
       "editSuccess": "Abonnement mis à jour.",
@@ -942,16 +950,24 @@
       "title": "LangGraph trace",
       "expand": "Afficher les traces",
       "collapse": "Masquer les traces",
-      "empty": "Aucun événement. Les traces apparaissent pendant le traitement."
+      "empty": "Aucun événement. Les traces apparaissent pendant le traitement.",
+      "detail": {
+        "model": "Modèle",
+        "method": "Méthode",
+        "groupby": "Groupé par",
+        "count": "Enregistrements",
+        "cached": "Depuis le cache",
+        "domain": "Domaine"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Exécution · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Tableau de bord",
+      "subtitle": "Chaque carte réinterroge son instance avec les mêmes critères qu'à sa création : les chiffres se mettent à jour sans passer par l'agent.",
       "empty": "Votre tableau de bord est vide",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Ajoutez des graphiques depuis le chat ou lancez une Routine qui publie dans le tableau de bord. Chaque carte garde la requête qui l'a créée.",
       "refreshAll": "Tout actualiser",
       "refreshingAll": "Actualisation…",
       "refresh": "Actualiser cette carte",
@@ -969,10 +985,10 @@
         "applied": "Du {start} au {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "En direct",
+        "historic": "Historique",
+        "noPeriod": "Indépendant de la période",
+        "noPeriodHint": "Cette requête n'a pas de date modifiable sans altérer le résultat : la période du tableau de bord ne la change pas."
       },
       "state": {
         "updated": "Actualisé",
@@ -980,34 +996,44 @@
         "failed": "Échec"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "static": "Période close : elle ne change pas.",
+        "no_context": "Enregistrée avant que le tableau de bord ne garde la requête.",
+        "no_groupby": "Pas de ventilation à recalculer.",
+        "no_model": "Le modèle d'origine n'a pas été enregistré.",
+        "not_chart": "C'est un fichier, pas une requête.",
+        "generic": "Pas besoin de l'actualiser.",
+        "no_instance": "L'instance de cette carte n'a pas été enregistrée : elle ne peut pas être actualisée."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "odoo_error": "L'instance a renvoyé une erreur pour la requête.",
+        "chart_failed": "La requête a tourné mais n'a renvoyé aucune donnée pour le graphique.",
+        "unexpected": "Erreur inattendue lors de l'actualisation de cette carte.",
+        "generic": "Impossible d'actualiser cette carte.",
+        "no_credentials": "Vous n'avez pas d'identifiants pour cette instance.",
+        "instance_gone": "L'instance n'existe plus ou vous n'y avez plus accès.",
+        "auth_failed": "L'instance a refusé la connexion."
       },
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Le fichier n'a pas pu être généré. Réessayez."
+        "failed": "Impossible de générer le fichier. Réessayez."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Tableaux de bord prédéfinis par rôle",
+        "subtitle": "Routines qui publient uniquement des graphiques. Elles s'exécutent avec vos identifiants et déposent leurs cartes ici.",
         "apply": "Créer ce tableau de bord",
         "building": "Création…",
         "failed": "Le tableau de bord n'a pas pu être créé. Réessayez.",
         "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
         "partial": "{published} cartes sur {declared} ont été créées. Les autres étapes n'ont renvoyé aucune donnée groupée sur cette instance : il n'y a rien à représenter.",
         "none": "Aucune carte créée : les étapes de ce tableau n'ont renvoyé aucune donnée groupée sur cette instance."
-      }
+      },
+      "instance": {
+        "title": "Données de {name}",
+        "none": "Sans instance",
+        "noneHint": "L'instance de cette carte n'a pas été enregistrée : elle ne peut pas être actualisée."
+      },
+      "refreshAllDisabled": "Aucune carte ne peut être actualisée : elles sont historiques, ce sont des fichiers ou leur instance est inconnue."
     },
     "WriteGate": {
       "note": "Sans compte, la démo publique est en lecture seule : les requêtes fonctionnent, mais cette écriture ne sera pas exécutée dans Odoo.",
@@ -1102,13 +1128,17 @@
         "no_groupby": "Il n'y a pas de répartition à recalculer.",
         "no_model": "Nous ne savons pas d'où vient ce chiffre.",
         "not_chart": "C'est un fichier enregistré, pas une requête.",
-        "generic": "Pas besoin de l'actualiser."
+        "generic": "Pas besoin de l'actualiser.",
+        "no_instance": "Nous ne savons pas de quel système vient cette carte : elle ne peut pas être actualisée."
       },
       "errorReason": {
         "odoo_error": "Nous n'avons pas pu joindre votre système pour cette carte.",
         "chart_failed": "La requête a fonctionné mais n'a rien renvoyé à afficher.",
         "unexpected": "Un problème est survenu avec cette carte.",
-        "generic": "Cette carte n'a pas pu être actualisée."
+        "generic": "Cette carte n'a pas pu être actualisée.",
+        "no_credentials": "Votre connexion à ce système est manquante.",
+        "instance_gone": "Ce système n'est plus disponible.",
+        "auth_failed": "Nous n'avons pas pu nous connecter à ce système."
       },
       "export": {
         "pdf": "PDF",
@@ -1124,7 +1154,13 @@
         "tooManyRuns": "Plusieurs traitements sont en cours. Patientez quelques secondes et réessayez.",
         "partial": "{published} graphiques sur {declared} ont été créés. Il n'y a pas assez de données dans cette entreprise pour les autres.",
         "none": "Il n'y a pas assez de données dans cette entreprise pour créer ce tableau."
-      }
+      },
+      "instance": {
+        "title": "Données de {name}",
+        "none": "Origine inconnue",
+        "noneHint": "Nous ne savons pas de quel système vient cette carte : elle ne peut pas être actualisée."
+      },
+      "refreshAllDisabled": "Aucune carte ne peut être actualisée pour le moment."
     },
     "WriteGate": {
       "note": "Il vous faut un compte pour effectuer des modifications. Vous pouvez continuer à poser toutes vos questions.",
@@ -1135,7 +1171,7 @@
   "Intro": {
     "modal": {
       "title": "Vous testez TheOdooAgent",
-      "subtitle": "C'est ce que verront vos clients.",
+      "subtitle": "Vous êtes sur un Odoo d'exemple, en vue implémenteur. Activez « Vue client » pour voir ce que verraient vos clients.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · IA incluse"
       },
@@ -1162,8 +1198,8 @@
         "partnerTag": "Modèle de partenariat"
       },
       "what": {
-        "heading": "Testez-le comme votre client le ferait",
-        "line": "Ceci tourne sur un Odoo de démo. Envoyez une requête et voyez exactement ce que verront vos utilisateurs finaux.",
+        "heading": "Essayez vous-même",
+        "line": "Ceci tourne sur un Odoo d'exemple. Envoyez une requête et voyez ce qu'il répond ; activez « Vue client » dans le menu de gauche pour voir ce que verrait un utilisateur final.",
         "chip1": "Factures échues de plus de 450k",
         "chip2": "Ventes par commercial le mois dernier",
         "chip3": "Créer un contact : María López"
@@ -1341,7 +1377,8 @@
       "copy": "Copier",
       "copied": "Copié",
       "noSeatsWarning": "Limite d'utilisateurs atteinte",
-      "noSeatsLink": "Ajouter"
+      "noSeatsLink": "Ajouter",
+      "invalidEmail": "Cet e-mail ne semble pas valide : vérifiez qu'il a un domaine complet (ex. : nom@entreprise.com)."
     },
     "edit": {
       "button": "Modifier",
@@ -1383,7 +1420,8 @@
     "timezoneEffective": "Vos programmations utilisent {timezone}.",
     "timezoneUseDetected": "Utiliser celui de cet appareil ({timezone})",
     "timezoneExistingNote": "Les programmations déjà créées conservent le fuseau horaire avec lequel elles ont été créées.",
-    "timezoneFailed": "Impossible d'enregistrer le fuseau horaire."
+    "timezoneFailed": "Impossible d'enregistrer le fuseau horaire.",
+    "timezoneSearch": "Rechercher un fuseau (ex. : Paris, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1859,7 +1897,9 @@
       "title": "Exécuter sur l'instance",
       "otherInstance": "Une autre instance",
       "confirm": "Confirmer"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Cette Routine a ajouté # graphique à votre tableau de bord.} other {Cette Routine a ajouté # graphiques à votre tableau de bord.}}",
+    "openDashboard": "Ouvrir le tableau de bord"
   },
   "Chat": {
     "openInOdoo": "Ouvrir dans Odoo"
@@ -1873,9 +1913,19 @@
       "saleOrder": "Ventes",
       "accountMove": "Factures",
       "crmLead": "Opportunités",
-      "purchaseOrder": "Achats"
+      "purchaseOrder": "Achats",
+      "projectProject": "Projets",
+      "projectTask": "Tâches",
+      "timesheet": "Feuilles de temps",
+      "stockQuant": "Stock par emplacement",
+      "posOrder": "Ventes en caisse"
     },
     "titleDemo": "Ce que je sais déjà de {instance}",
     "hintDemo": "C'est une entreprise d'exemple. Posez-moi une question sur ces chiffres."
+  },
+  "DataUntil": {
+    "label": "Données jusqu'à {date}",
+    "hintDemo": "Cette entreprise d'exemple a des données jusqu'à cette date : une période postérieure sera vide.",
+    "hint": "Les données de cette instance vont jusqu'à cette date."
   }
 }

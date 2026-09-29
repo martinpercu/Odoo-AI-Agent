@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { fetchInstanceUsage } from "@/lib/api";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { DataUntilBadge } from "./data-until-badge";
 import { instanceLabel } from "@/lib/instance-label";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
@@ -34,12 +34,21 @@ import { useOdooConfig } from "@/hooks/use-odoo-config";
  * salta recién al abrir la página.
  */
 const SNAPSHOT_MODELS: ReadonlyArray<{ model: string; key: string }> = [
-  { model: "res.partner", key: "resPartner" },
+  // X-06 — primero lo que DICE de qué va el negocio, después lo que tiene cualquiera.
+  // Con el orden viejo (contactos, productos, ventas, facturas) las cuatro empresas del
+  // parque se veían iguales: la consultora no mostraba sus proyectos ni sus horas, y el
+  // corralón no mostraba su stock. Salen los primeros 4 con datos.
+  { model: "crm.lead", key: "crmLead" },
+  { model: "project.project", key: "projectProject" },
+  { model: "project.task", key: "projectTask" },
+  { model: "account.analytic.line", key: "timesheet" },
+  { model: "stock.quant", key: "stockQuant" },
   { model: "product.product", key: "productProduct" },
+  { model: "pos.order", key: "posOrder" },
   { model: "sale.order", key: "saleOrder" },
   { model: "account.move", key: "accountMove" },
-  { model: "crm.lead", key: "crmLead" },
   { model: "purchase.order", key: "purchaseOrder" },
+  { model: "res.partner", key: "resPartner" },
 ];
 
 const MAX_TILES = 4;
@@ -49,25 +58,14 @@ export function InstanceSnapshot() {
   const locale = useLocale();
   const { activeConfigId, isDemoMode, activeConfig } = useOdooConfig();
   const demoName = instanceLabel(activeConfig);
-  const [usage, setUsage] = useState<Record<string, number> | null>(null);
-
-  useEffect(() => {
-    // ⚠️ El razonamiento viejo —"en demo los números son de NUESTRA instancia:
-    // mostrarlos como 'tu negocio' sería mentir en la primera pantalla"— era correcto
-    // cuando la demo se presentaba como "tu Odoo". Con un selector que dice "elegí una
-    // empresa de ejemplo" el encuadre cambia y el snapshot pasa a ser lo más útil de
-    // la pantalla: te dice de un vistazo que Kestrel tiene 2.000 oportunidades y 0
-    // productos en depósito, o sea de qué va esta empresa. El rótulo de ejemplo lo
-    // pone el encabezado (`t("titleDemo")`), no el silencio.
-    if (!activeConfigId) return;
-    let vivo = true;
-    fetchInstanceUsage(activeConfigId).then((u) => {
-      if (vivo) setUsage(u);
-    });
-    return () => {
-      vivo = false;
-    };
-  }, [activeConfigId]);
+  // ⚠️ El razonamiento viejo —"en demo los números son de NUESTRA instancia:
+  // mostrarlos como 'tu negocio' sería mentir en la primera pantalla"— era correcto
+  // cuando la demo se presentaba como "tu Odoo". Con un selector que dice "elegí una
+  // empresa de ejemplo" el encuadre cambia y el snapshot pasa a ser lo más útil de
+  // la pantalla: te dice de un vistazo de qué va esta empresa. El rótulo de ejemplo lo
+  // pone el encabezado (`t("titleDemo")`), no el silencio.
+  // F-01 — `null` hasta que llega la respuesta de ESTA instancia: nunca la anterior.
+  const usage = useInstanceUsage(activeConfigId)?.usage ?? null;
 
   const tiles = SNAPSHOT_MODELS.filter((m) => (usage?.[m.model] ?? 0) > 0).slice(0, MAX_TILES);
   // Nada que mostrar ⇒ nada se renderiza. Una tarjeta en cero es peor que no tenerla.
@@ -80,7 +78,8 @@ export function InstanceSnapshot() {
       transition={{ duration: 0.15, ease: "easeOut" }}
       className="mb-6 rounded-card border border-border bg-surface p-4"
     >
-      <p className="mb-3 flex items-center gap-1.5 text-small font-medium text-foreground">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+      <p className="flex items-center gap-1.5 text-small font-medium text-foreground">
         <Sparkles size={14} strokeWidth={1.5} className="text-accent" aria-hidden />
         {/* ⚠️ En demo el encabezado NO puede decir "tu negocio": los números son de
             Kestrel o de Casa Mendieta, no de quien está mirando. Nombrar la empresa
@@ -88,6 +87,9 @@ export function InstanceSnapshot() {
             qué va esta empresa?" — que es para lo que el selector la puso ahí. */}
         {isDemoMode && demoName ? t("titleDemo", { instance: demoName }) : t("title")}
       </p>
+      {/* X-04 — hasta cuándo llegan estos números (sólo si vale la pena decirlo). */}
+      <DataUntilBadge className="text-micro text-text-muted" />
+      </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map((tile) => (
           <div key={tile.model} className="rounded-btn border border-border bg-base px-3 py-2">

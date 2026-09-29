@@ -8,7 +8,7 @@
   },
   "Sidebar": {
     "appName": "Odoo Agent",
-    "newChat": "Nueva Consulta",
+    "newChat": "Nueva consulta",
     "plans": "Planes",
     "settings": "Configuración",
     "lightMode": "Modo Claro",
@@ -32,7 +32,9 @@
     "backToMyView": "Volver a mi vista",
     "viewAsClientInfo": "Los clientes ven una vista más espaciada y el agente usa términos como «cliente» en lugar de «res.partner».",
     "showAllInstances": "ver todos",
-    "openMenu": "Abrir menú"
+    "openMenu": "Abrir menú",
+    "cycleInstance": "Cambiar instancia",
+    "nextInstance": "Siguiente: {name}"
   },
   "UserMenu": {
     "guest": "Invitado",
@@ -66,7 +68,6 @@
     "suggestions": {
       "inventory": "Ver el inventario actual de productos",
       "invoices": "Mostrar facturas pendientes de cobro",
-      "inventoryCheck": "Consultar inventario de productos",
       "employees": "Lista de empleados por departamento",
       "billingByClient": "Facturación por cliente en 2024",
       "salesReport": "Generar reporte de ventas del mes",
@@ -75,10 +76,13 @@
       "topProducts": "Productos más vendidos tercer trimestre 2025",
       "salesByClientMonth": "¿Cuánto vendimos por cliente en febrero?",
       "purchasesBySupplier": "Compras por proveedor en 2025",
-      "paymentsByClientNov": "Total de pagos por cliente en noviembre",
       "paymentsByClientJan": "Total de pagos por cliente en enero",
       "salesBySellerYear": "Ventas por vendedor este año",
-      "salesBySeller2024": "Ventas por vendedor en 2024"
+      "stockByWarehouse": "Stock por depósito",
+      "restock": "¿Qué productos tengo que reponer?",
+      "opportunitiesByStage": "Oportunidades por etapa",
+      "hoursByProject": "Horas imputadas por proyecto este mes",
+      "overdueTasks": "¿Qué tareas están vencidas?"
     },
     "noCredsBanner": "Configura tus credenciales para chatear",
     "noCredsCta": "Ir a Conexión"
@@ -102,7 +106,7 @@
     "micDenied": "Permiso de micrófono denegado",
     "transcribing": "Transcribiendo...",
     "transcribeError": "No se pudo transcribir el audio",
-    "selectConfig": "Elegí una instancia",
+    "selectConfig": "Elige una instancia",
     "ownGroup": "Tus instancias",
     "demoGroup": "Empresas de ejemplo",
     "placeholderShort": "Pregunta sobre tu Odoo..."
@@ -145,7 +149,9 @@
         "pie": "Torta",
         "table": "Tabla"
       },
-      "others": "Otros"
+      "others": "Otros",
+      "topTotal": "Total del top {n}",
+      "overallTotal": "Total general"
     },
     "actionProposal": {
       "editField": "Editar",
@@ -156,7 +162,8 @@
       "validationError": "Corrige los campos resaltados e intenta de nuevo.",
       "confirm": "Confirmar acción",
       "yes": "Sí",
-      "no": "No"
+      "no": "No",
+      "expired": "Esta propuesta ya no está vigente. Si todavía la necesitas, pídela de nuevo."
     },
     "audit": {
       "title": "Historial de Acciones",
@@ -172,8 +179,9 @@
       "desc": "No tienes credenciales configuradas para esta conexión Odoo. Configúralas en Ajustes para poder realizar consultas.",
       "cta": "Ir a Ajustes"
     },
-    "connectionError": "No pudimos completar la consulta. Revisá la conexión e intentá de nuevo.",
-    "actionFailed": "No se pudo ejecutar la acción."
+    "connectionError": "No pudimos completar la consulta. Revisa la conexión e inténtalo de nuevo.",
+    "actionFailed": "No se pudo ejecutar la acción.",
+    "somethingWentWrong": "Algo salió mal. Inténtalo de nuevo en unos segundos."
   },
   "ChatHistory": {
     "loading": "Cargando conversación...",
@@ -203,7 +211,6 @@
         "features": {
           "seat": "1 asiento",
           "dailyLimit": "Límite de chats diarios",
-          "watermark": "Marca de agua en respuestas",
           "forever": "Gratis para siempre"
         }
       },
@@ -214,8 +221,7 @@
         "cta": "Suscribirse",
         "features": {
           "seat": "1 asiento completo",
-          "noLimit": "Sin límite de chats",
-          "noWatermark": "Sin marca de agua"
+          "noLimit": "Sin límite de chats"
         }
       },
       "enterprise": {
@@ -225,7 +231,7 @@
         "features": {
           "seatsFrom": "Desde 10 asientos (5 gratis + 5 pagos)",
           "seatsTo": "Hasta 105 asientos (5 gratis + 100 pagos)",
-          "freeSeats": "Asientos gratuitos con marca de agua incluidos",
+          "freeSeats": "Asientos gratuitos incluidos",
           "idealFor": "Ideal para implementadores Odoo"
         }
       }
@@ -239,7 +245,7 @@
       "paidSlots": "Asientos pagos",
       "freeSlots": "Asientos gratuitos",
       "price": "Precio",
-      "freeSlotNote": "Los asientos gratuitos siempre muestran marca de agua y tienen límite de uso. Los asientos pagos tienen acceso completo sin restricciones."
+      "freeSlotNote": "Los asientos gratuitos tienen límite de uso. Los asientos pagos tienen acceso completo sin restricciones."
     },
     "founding": {
       "name": "Founding Partner",
@@ -249,7 +255,7 @@
       "afterProgram": "Luego: {rate}/usuario/mes",
       "lockedForLife": "Bloqueado de por vida",
       "byInvitation": "Por invitación",
-      "contactCta": "Habla con Martin",
+      "contactCta": "Hablar con Martin",
       "features": {
         "whiteLabel": "White-label total — tus clientes ven tu marca",
         "aiIncluded": "Costo de IA incluido — sin tokens de LLM que trasladar",
@@ -273,7 +279,7 @@
       "modal": {
         "title": "Programa Founding Partners",
         "body": "Hoy TheOdooAgent está abierto solo por invitación, dentro del programa Founding Partners. Escríbenos y vemos cómo sumarte.",
-        "cta": "Escribir a Martin",
+        "cta": "Hablar con Martin",
         "email": "martin@theodooagent.com"
       },
       "indicator": {
@@ -391,8 +397,8 @@
       "toggleTts": "Alternar respuestas por voz (TTS)",
       "sttWidget": "STT",
       "ttsWidget": "TTS",
-      "sttLimitReached": "Límite de cupos STT alcanzado — contactá a tu proveedor",
-      "ttsLimitReached": "Límite de cupos TTS alcanzado — contactá a tu proveedor",
+      "sttLimitReached": "Límite de cupos STT alcanzado — contacta a tu proveedor",
+      "ttsLimitReached": "Límite de cupos TTS alcanzado — contacta a tu proveedor",
       "voiceToggleError": "No se pudo actualizar la preferencia de voz",
       "routineAuthor": "Crea Rutinas",
       "toggleRoutineAuthor": "Permitir que esta persona cree y edite Rutinas",
@@ -510,13 +516,13 @@
     "tabRoutines": "Rutinas",
     "routines": {
       "title": "Quién ve cada Rutina",
-      "subtitle": "Las Rutinas compartidas las ve toda la organización salvo que las restrinjas acá."
+      "subtitle": "Las Rutinas compartidas las ve toda la organización salvo que las restrinjas aquí."
     }
   },
   "PinnedInsights": {
     "title": "Tablero",
     "empty": "Tu tablero está vacío",
-    "emptyHint": "Agregá gráficos y archivos de tus conversaciones para tenerlos a mano.",
+    "emptyHint": "Agrega gráficos y archivos de tus conversaciones para tenerlos a mano.",
     "pinTooltip": "Agregar al tablero",
     "unpinTooltip": "Quitar del tablero",
     "clearAll": "Vaciar tablero",
@@ -525,9 +531,9 @@
     "excelPin": "Exportación del tablero",
     "viewInChat": "Ver en el chat",
     "pinnedCount": "{count} en el tablero",
-    "errorPin": "No se pudo agregar al tablero. Intentá de nuevo.",
-    "errorUnpin": "No se pudo quitar del tablero. Intentá de nuevo.",
-    "errorClear": "No se pudo vaciar el tablero. Intentá de nuevo.",
+    "errorPin": "No se pudo agregar al tablero. Inténtalo de nuevo.",
+    "errorUnpin": "No se pudo quitar del tablero. Inténtalo de nuevo.",
+    "errorClear": "No se pudo vaciar el tablero. Inténtalo de nuevo.",
     "liveSection": "En vivo",
     "savedSection": "Guardados",
     "saveTooltip": "Guardar insight",
@@ -536,7 +542,8 @@
     "historicBadge": "Histórico",
     "refreshTooltip": "Actualizar datos",
     "downloadTooltip": "Descargar",
-    "openDashboard": "Abrir el tablero"
+    "openDashboard": "Abrir el tablero",
+    "noInstance": "No se sabe de qué instancia es esta tarjeta, así que no se puede actualizar."
   },
   "Notifications": {
     "title": "Alertas",
@@ -604,7 +611,7 @@
     "goToLogin": "Ir a iniciar sesión",
     "demoBannerShort": "Modo Demo",
     "foundingTitle": "Bienvenido al programa de<br></br>Founding Partners",
-    "foundingLine1": "Estás entrando como founding partner de TheOdooAgent. Durante el <prog>programa</prog> tu uso y el de tus clientes es 100% gratis.",
+    "foundingLine1": "Estás entrando como Founding Partner de TheOdooAgent. Durante el <prog>programa</prog> tu uso y el de tus clientes es 100% gratis.",
     "foundingLine2": "Tu feedback define nuestro roadmap. Al finalizar el <prog>programa</prog> te queda la tarifa de founder partner de por vida: $1/usuario.",
     "foundingScarcity": "Cupos Limitados",
     "programTooltip": "El beneficio del programa Founding Partners dura mínimo 2 meses, extendibles según colaboración.",
@@ -616,7 +623,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Modo Demo — estás mirando {instance}, una empresa de ejemplo.",
     "previewAsClientBanner": "Estás viendo {instance} como lo vería tu cliente final: menú recortado, menos densidad y el agente hablando sin jerga técnica.",
-    "previewAsClientHint": "Probá verlo como lo ve tu cliente, desde el menú de la izquierda."
+    "previewAsClientHint": "Prueba verlo como lo ve tu cliente, desde el menú de la izquierda.",
+    "emailPlaceholder": "tu@correo.com",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
   },
   "Onboarding": {
     "step1Label": "Conexión Odoo",
@@ -660,7 +670,7 @@
   },
   "LimitReachedModal": {
     "title": "Límite de usuarios alcanzado",
-    "description": "Tu organización alcanzó el máximo de usuarios permitido por tu plan. Contactá al administrador para actualizarlo.",
+    "description": "Tu organización alcanzó el máximo de usuarios permitido por tu plan. Contacta al administrador para actualizarlo.",
     "cta": "Entendido",
     "close": "Cerrar"
   },
@@ -668,7 +678,7 @@
     "loading": "Aceptando invitación...",
     "loadingDesc": "Por favor espera mientras configuramos tu cuenta.",
     "success": "¡Invitación aceptada!",
-    "successDesc": "Ya sos parte de la organización. Redirigiendo a la app...",
+    "successDesc": "Ya eres parte de la organización. Redirigiendo a la app...",
     "notFound": "Invitación no encontrada",
     "notFoundDesc": "Este link de invitación es inválido o no existe.",
     "alreadyUsed": "Invitación ya usada",
@@ -678,7 +688,7 @@
     "error": "Algo salió mal",
     "errorDesc": "No se pudo aceptar la invitación. Intenta de nuevo.",
     "goHome": "Ir a la app",
-    "registerTitle": "Completá tu registro",
+    "registerTitle": "Completa tu registro",
     "registerInviterSuffix": "te invita a unirte a",
     "registerDescPost": "Crea tu contraseña para activar tu cuenta.",
     "emailLabel": "Email",
@@ -736,7 +746,6 @@
       "colType": "Tipo",
       "colPlan": "Plan",
       "colSlots": "Slots",
-      "colWatermark": "Watermark",
       "colUsers": "Usuarios",
       "colCreated": "Creada",
       "colActions": "Acciones",
@@ -752,7 +761,6 @@
       "editTier": "Plan",
       "editPaidSlots": "Slots pagos",
       "editFreeSlots": "Slots gratuitos",
-      "editWatermark": "Mostrar watermark",
       "editSave": "Guardar",
       "editCancel": "Cancelar",
       "editSuccess": "Suscripción actualizada.",
@@ -778,7 +786,7 @@
       "founderNotStarted": "Sin conectar",
       "founderCurrentDays": "Actualmente {days} días restantes",
       "founderExtendTitle": "Extender beta",
-      "founderExtendDesc": "Agregá o quitá días de beta gratuita para {name}.",
+      "founderExtendDesc": "Agrega o quita días de beta gratuita para {name}.",
       "founderExtendDays": "Días a agregar",
       "founderExtendHint": "Los valores negativos acortan la ventana.",
       "founderExtendConfirm": "Aplicar",
@@ -942,16 +950,24 @@
       "title": "LangGraph trace",
       "expand": "Mostrar trazas",
       "collapse": "Ocultar trazas",
-      "empty": "Sin eventos todavía. Las trazas aparecen cuando el agente procesa."
+      "empty": "Sin eventos todavía. Las trazas aparecen cuando el agente procesa.",
+      "detail": {
+        "model": "Modelo",
+        "method": "Método",
+        "groupby": "Agrupado por",
+        "count": "Registros",
+        "cached": "Desde el caché",
+        "domain": "Dominio"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Ejecutando · query"
     },
     "Dashboard": {
-      "title": "Tablero de insights",
-      "subtitle": "Cada tarjeta re-ejecuta su query_context contra la instancia — read_group directo, sin grafo ni LLM.",
+      "title": "Tablero",
+      "subtitle": "Cada tarjeta vuelve a consultar su instancia con el mismo criterio con que se creó: los números se actualizan sin pasar por el agente.",
       "empty": "Tu tablero está vacío",
-      "emptyHint": "Fijá gráficos desde el chat o corré una Rutina con compose.pin. El pin guarda modelo, dominio y groupby.",
+      "emptyHint": "Agrega gráficos desde el chat o corre una Rutina que publique en el Tablero. Cada tarjeta recuerda la consulta que la generó.",
       "refreshAll": "Actualizar todo",
       "refreshingAll": "Actualizando…",
       "refresh": "Actualizar esta tarjeta",
@@ -969,10 +985,10 @@
         "applied": "Mostrando del {start} al {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "Sin date_filter",
-        "noPeriodHint": "El query_context no tiene un date_filter reescribible, así que el override de período se ignora en vez de alterar el dominio."
+        "live": "En vivo",
+        "historic": "Histórico",
+        "noPeriod": "No depende del período",
+        "noPeriodHint": "Esta consulta no tiene una fecha que se pueda cambiar sin alterar el resultado, así que el período del Tablero no la modifica."
       },
       "state": {
         "updated": "Actualizado",
@@ -980,34 +996,44 @@
         "failed": "No se pudo"
       },
       "skipReason": {
-        "static": "chart_volatility la marcó static: período cerrado.",
-        "no_context": "Pin sin query_context (anterior a Fase 6).",
-        "no_groupby": "Sin groupby_fields no hay chart payload que rearmar.",
-        "no_model": "Falta primary_model en el query_context.",
-        "not_chart": "content_type distinto de chart.",
-        "generic": "Se salteó."
+        "static": "Es un período cerrado: no cambia.",
+        "no_context": "Se guardó antes de que el Tablero recordara la consulta.",
+        "no_groupby": "No tiene un desglose que volver a calcular.",
+        "no_model": "No se guardó de qué modelo sale.",
+        "not_chart": "Es un archivo, no una consulta.",
+        "generic": "No hacía falta actualizarla.",
+        "no_instance": "No se guardó de qué instancia es esta tarjeta, así que no se puede actualizar."
       },
       "errorReason": {
-        "odoo_error": "Falló el read_group contra la instancia.",
-        "chart_failed": "build_chart_payload devolvió None.",
-        "unexpected": "Excepción no prevista al refrescar.",
-        "generic": "No se pudo refrescar."
+        "odoo_error": "La instancia devolvió un error al consultar.",
+        "chart_failed": "La consulta corrió pero no devolvió datos para el gráfico.",
+        "unexpected": "Error inesperado al actualizar esta tarjeta.",
+        "generic": "No se pudo actualizar esta tarjeta.",
+        "no_credentials": "No tienes credenciales cargadas para esta instancia.",
+        "instance_gone": "La instancia ya no existe o ya no tienes acceso.",
+        "auth_failed": "La instancia rechazó el inicio de sesión."
       },
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "No se pudo generar el archivo. Probá de nuevo."
+        "failed": "No se pudo generar el archivo. Inténtalo de nuevo."
       },
       "presets": {
-        "title": "Tableros preset por rol",
-        "subtitle": "Rutinas del catálogo cuyo compose es sólo pin. Corren con tus credenciales y dejan sus gráficos acá.",
+        "title": "Tableros predefinidos por rol",
+        "subtitle": "Rutinas que sólo publican gráficos. Corren con tus credenciales y dejan sus tarjetas aquí.",
         "apply": "Armar este tablero",
         "building": "Armando…",
-        "failed": "No se pudo armar el tablero. Probá de nuevo.",
-        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar.",
+        "failed": "No se pudo armar el tablero. Inténtalo de nuevo.",
+        "tooManyRuns": "Hay varias cosas corriendo. Espera unos segundos y vuelve a intentarlo.",
         "partial": "Se armaron {published} de {declared} tarjetas. Los otros pasos no devolvieron datos agrupados en esta instancia, así que no hay gráfico para mostrar.",
         "none": "No se armó ninguna tarjeta: los pasos de este tablero no devolvieron datos agrupados en esta instancia."
-      }
+      },
+      "instance": {
+        "title": "Datos de {name}",
+        "none": "Sin instancia",
+        "noneHint": "No se guardó de qué instancia es esta tarjeta, así que no se puede actualizar."
+      },
+      "refreshAllDisabled": "Ninguna tarjeta se puede actualizar: son históricas, archivos o no se sabe de qué instancia son."
     },
     "WriteGate": {
       "note": "Sin cuenta, el demo público es de solo lectura: las consultas funcionan, pero esta escritura no se ejecuta en Odoo.",
@@ -1066,9 +1092,9 @@
     },
     "Dashboard": {
       "title": "Tablero",
-      "subtitle": "Tus números, en una sola pantalla. Se actualizan de una y podés cambiarles el período.",
+      "subtitle": "Tus números, en una sola pantalla. Se actualizan al instante y puedes cambiarles el período.",
       "empty": "Tu tablero está vacío",
-      "emptyHint": "Agregá al tablero los gráficos de tus conversaciones, o armalo de un click con uno de los tableros de abajo.",
+      "emptyHint": "Agrega al tablero los gráficos de tus conversaciones, o ármalo de un clic con uno de los tableros de abajo.",
       "refreshAll": "Actualizar todo",
       "refreshingAll": "Actualizando…",
       "refresh": "Actualizar esta tarjeta",
@@ -1102,29 +1128,39 @@
         "no_groupby": "No tiene un desglose que volver a calcular.",
         "no_model": "No sabemos de dónde salió este número.",
         "not_chart": "Es un archivo guardado, no una consulta.",
-        "generic": "No hacía falta actualizarla."
+        "generic": "No hacía falta actualizarla.",
+        "no_instance": "No sabemos de qué sistema salió esta tarjeta, así que no se puede actualizar."
       },
       "errorReason": {
         "odoo_error": "No pudimos conectarnos con tu sistema para esta tarjeta.",
         "chart_failed": "La consulta corrió pero no devolvió datos para el gráfico.",
         "unexpected": "Algo salió mal con esta tarjeta.",
-        "generic": "No se pudo actualizar esta tarjeta."
+        "generic": "No se pudo actualizar esta tarjeta.",
+        "no_credentials": "Falta tu conexión con este sistema.",
+        "instance_gone": "Este sistema ya no está disponible.",
+        "auth_failed": "No pudimos entrar a este sistema."
       },
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "No se pudo generar el archivo. Probá de nuevo."
+        "failed": "No se pudo generar el archivo. Inténtalo de nuevo."
       },
       "presets": {
-        "title": "Armá tu tablero de un click",
-        "subtitle": "Elegí el que se parezca a tu día y quedan las tarjetas listas. Después las cambiás.",
+        "title": "Arma tu tablero de un clic",
+        "subtitle": "Elige el que se parezca a tu día y quedan las tarjetas listas. Después las cambias.",
         "apply": "Armar este tablero",
         "building": "Armando…",
-        "failed": "No se pudo armar el tablero. Probá de nuevo.",
-        "tooManyRuns": "Hay varias cosas corriendo. Esperá unos segundos y volvé a intentar.",
+        "failed": "No se pudo armar el tablero. Inténtalo de nuevo.",
+        "tooManyRuns": "Hay varias cosas corriendo. Espera unos segundos y vuelve a intentarlo.",
         "partial": "Se armaron {published} de {declared} gráficos. Para el resto no hay datos suficientes en esta empresa.",
         "none": "No hay datos suficientes en esta empresa para armar este tablero."
-      }
+      },
+      "instance": {
+        "title": "Datos de {name}",
+        "none": "Origen desconocido",
+        "noneHint": "No sabemos de qué sistema salió esta tarjeta, así que no se puede actualizar."
+      },
+      "refreshAllDisabled": "Ninguna tarjeta se puede actualizar ahora."
     },
     "WriteGate": {
       "note": "Para hacer cambios necesitas una cuenta. Puedes seguir preguntando todo lo que quieras.",
@@ -1135,7 +1171,7 @@
   "Intro": {
     "modal": {
       "title": "Estás probando TheOdooAgent",
-      "subtitle": "Esto es lo que verán tus clientes.",
+      "subtitle": "Estás en un Odoo de ejemplo, con la vista de implementador. Con «Ver como cliente» ves lo que verían tus clientes.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · IA incluida"
       },
@@ -1162,8 +1198,8 @@
         "partnerTag": "Modelo de negocio"
       },
       "what": {
-        "heading": "Pruébalo como lo verá tu cliente",
-        "line": "Esto corre sobre un Odoo demo. Envía una consulta y verás exactamente lo que vería un usuario final.",
+        "heading": "Pruébalo tú mismo",
+        "line": "Esto corre sobre un Odoo de ejemplo. Envía una consulta y mira qué responde; con «Ver como cliente», en el menú de la izquierda, ves lo que vería un usuario final.",
         "chip1": "Facturas vencidas de más de 450k",
         "chip2": "Ventas por vendedor del mes pasado",
         "chip3": "Crea un contacto: María López, maria@acme.com"
@@ -1334,14 +1370,15 @@
       "showKey": "Mostrar clave",
       "submit": "Enviar invitación",
       "emailHasAccount": "Ese email ya tiene una cuenta.",
-      "seatLimit": "No hay seats libres de ese tipo. Mejorá el plan para agregar más.",
+      "seatLimit": "No hay seats libres de ese tipo. Mejora el plan para agregar más.",
       "error": "No se pudo crear la invitación. Intenta de nuevo.",
       "emailSent": "Email de invitación enviado.",
       "emailFailed": "Invitación creada, pero no se pudo enviar el email. Copia el link de abajo.",
       "copy": "Copiar",
       "copied": "Copiado",
       "noSeatsWarning": "Alcanzaste el máximo de usuarios",
-      "noSeatsLink": "Agregar"
+      "noSeatsLink": "Agregar",
+      "invalidEmail": "Ese email no parece válido: revisa que tenga un dominio completo (ej.: nombre@empresa.com)."
     },
     "edit": {
       "button": "Editar",
@@ -1372,7 +1409,7 @@
     "myTitleClient": "Tu conexión a Odoo",
     "myTitleAdmin": "Tus conexiones a Odoo",
     "subtitleClient": "Carga tu usuario y API key para empezar a chatear con los datos de tu empresa.",
-    "subtitleAdmin": "Tus credenciales personales para cada instancia con la que chateás.",
+    "subtitleAdmin": "Tus credenciales personales para cada instancia con la que chateas.",
     "noInstance": "Todavía no tienes una instancia asignada.",
     "backToSettings": "Volver a configuración",
     "timezoneTitle": "Zona horaria",
@@ -1383,7 +1420,8 @@
     "timezoneEffective": "Tus agendados usan {timezone}.",
     "timezoneUseDetected": "Usar la de este dispositivo ({timezone})",
     "timezoneExistingNote": "Los agendados que ya creaste mantienen la zona con la que se crearon.",
-    "timezoneFailed": "No se pudo guardar la zona horaria."
+    "timezoneFailed": "No se pudo guardar la zona horaria.",
+    "timezoneSearch": "Buscar zona (ej.: Buenos Aires, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1516,7 +1554,7 @@
         "heading": "Capacidades transversales",
         "memory": {
           "label": "Conversación con memoria real",
-          "body": "Entiende referencias a la respuesta anterior —“¿y en marzo?”, “las vencidas de esas”, “dale, seguí”— sin que haya que repetir la consulta completa."
+          "body": "Entiende referencias a la respuesta anterior —“¿y en marzo?”, “las vencidas de esas”, “sí, sigue”— sin que haya que repetir la consulta completa."
         },
         "languages": {
           "label": "Multi-idioma",
@@ -1532,7 +1570,7 @@
         },
         "customModules": {
           "label": "Tu ERP a medida, el agente lo entiende solo",
-          "body": "Si tenés módulos propios o de OCA, o campos hechos con Studio, el agente puede aprender a responder consultas sobre esos modelos leyendo los menús y las vistas que Odoo ya tiene: nombres, etiquetas y reglas de negocio declaradas en los filtros de búsqueda. Sin que nadie le enseñe nada a mano y sin configuración previa de tu lado."
+          "body": "Si tienes módulos propios o de OCA, o campos hechos con Studio, el agente puede aprender a responder consultas sobre esos modelos leyendo los menús y las vistas que Odoo ya tiene: nombres, etiquetas y reglas de negocio declaradas en los filtros de búsqueda. Sin que nadie le enseñe nada a mano y sin configuración previa de tu lado."
         }
       }
     },
@@ -1583,7 +1621,7 @@
     },
     "roadmap": {
       "heading": "Lo que estamos evaluando construir después",
-      "lead": "Esto no es un changelog ni una lista de promesas: es el menú abierto de los frentes que tenemos sobre la mesa hoy. No hay fechas comprometidas, y el orden lo define en buena medida lo que nos pidan los implementadores. Si algo de acá te desbloquea un cliente concreto, queremos saberlo.",
+      "lead": "Esto no es un changelog ni una lista de promesas: es el menú abierto de los frentes que tenemos sobre la mesa hoy. No hay fechas comprometidas, y el orden lo define en buena medida lo que nos pidan los implementadores. Si algo de aquí te desbloquea un cliente concreto, queremos saberlo.",
       "queries": {
         "label": "Más preguntas por dominio",
         "body": "Márgenes por producto, categorías vía líneas de compra, país y geografía, etiquetas, almacenes en remitos. ¿Cuál te falta primero?"
@@ -1608,13 +1646,13 @@
         "label": "Robustez interna de la plataforma",
         "body": "Más pruebas automatizadas sobre la capa de administración y facturación del producto. No afecta a las instancias de tus clientes; es solidez nuestra."
       },
-      "cta": "Contanos qué te serviría más",
+      "cta": "Cuéntanos qué te serviría más",
       "ctaNote": "Va directo por email a quien lo construye. Sin formularios ni tickets.",
       "emailSubject": "Roadmap TheOdooAgent — feedback de implementador"
     },
     "closing": {
-      "heading": "¿Lo querés probar sobre una instancia real?",
-      "body": "Conectá una instancia con tu propio usuario de Odoo y probalo con datos reales antes de ofrecérselo a un cliente. La conexión es por API key: no instala módulos ni modifica la estructura de tu Odoo.",
+      "heading": "¿Quieres probarlo sobre una instancia real?",
+      "body": "Conecta una instancia con tu propio usuario de Odoo y pruébalo con datos reales antes de ofrecérselo a un cliente. La conexión es por API key: no instala módulos ni modifica la estructura de tu Odoo.",
       "primary": "Conectar una instancia",
       "secondary": "Ver planes"
     }
@@ -1633,9 +1671,9 @@
     "stepCount": "{count, plural, one {# paso} other {# pasos}}",
     "partialNote": "Algunos pasos no se pudieron completar. El informe se generó igual, con esas secciones anotadas.",
     "emptyCatalog": "No hay Rutinas disponibles para esta instancia.",
-    "noInstance": "Conectá una instancia de Odoo para poder ejecutar Rutinas.",
+    "noInstance": "Conecta una instancia de Odoo para poder ejecutar Rutinas.",
     "startFailed": "No se pudo iniciar la Rutina.",
-    "tooManyRuns": "Hay demasiadas Rutinas corriendo ahora mismo. Probá de nuevo en unos segundos.",
+    "tooManyRuns": "Hay demasiadas Rutinas corriendo ahora mismo. Inténtalo de nuevo en unos segundos.",
     "downloadFailed": "No se pudo generar el archivo.",
     "unavailableTitle": "No disponibles en esta instancia",
     "unavailable": {
@@ -1694,12 +1732,12 @@
       "system": "Del sistema",
       "org": "De mi organización",
       "mine": "Mías",
-      "others": "Privadas de otras personas (las administrás)"
+      "others": "Privadas de otras personas (las administras)"
     },
     "save": {
       "cta": "Guardar como Rutina",
       "title": "Guardar esta conversación como Rutina",
-      "subtitle": "Elegí qué preguntas entran. Después las vas a poder correr todas juntas cuando quieras.",
+      "subtitle": "Elige qué preguntas entran. Después las vas a poder correr todas juntas cuando quieras.",
       "nameLabel": "Nombre de la Rutina",
       "namePlaceholder": "Ej: Cierre de mes comercial",
       "save": "Guardar",
@@ -1710,7 +1748,7 @@
       "llmWarning": "Esta pregunta se interpreta con un modelo de lenguaje: va a funcionar, pero el resultado puede variar entre corridas.",
       "loadFailed": "No pudimos leer esta conversación.",
       "saveFailed": "No pudimos guardar la Rutina.",
-      "noOrg": "Necesitás una organización para guardar Rutinas."
+      "noOrg": "Necesitas una organización para guardar Rutinas."
     },
     "actions": {
       "fork": "Clonar",
@@ -1727,16 +1765,16 @@
     },
     "editor": {
       "newTitle": "Nueva Rutina",
-      "newSubtitle": "Escribí las preguntas que querés que se hagan cada vez. Cada una tiene que entenderse sola.",
+      "newSubtitle": "Escribe las preguntas que quieres que se hagan cada vez. Cada una tiene que entenderse sola.",
       "editTitle": "Editar Rutina",
-      "editSubtitle": "Cambiá las preguntas, el orden o el nombre. Probala antes de guardar.",
-      "notAllowed": "No podés editar esta Rutina. Cloná una copia para hacerle cambios.",
+      "editSubtitle": "Cambia las preguntas, el orden o el nombre. Pruébala antes de guardar.",
+      "notAllowed": "No puedes editar esta Rutina. Clona una copia para hacerle cambios.",
       "nameLabel": "Nombre",
       "namePlaceholder": "Ej: Radar de cobranzas",
       "descriptionLabel": "Descripción",
       "descriptionPlaceholder": "Opcional: para qué sirve",
       "stepsTitle": "Preguntas",
-      "stepsHint": "Una por línea, en el orden en que querés que se hagan. Escribilas completas: cada una se ejecuta sin las anteriores.",
+      "stepsHint": "Una por línea, en el orden en que quieres que se hagan. Escríbelas completas: cada una se ejecuta sin las anteriores.",
       "stepPlaceholder": "Ej: facturas vencidas de este mes",
       "stepAria": "Paso {n}",
       "addStep": "Agregar pregunta",
@@ -1744,23 +1782,23 @@
       "moveUp": "Subir",
       "moveDown": "Bajar",
       "resolvesTo": "Consulta: {model}",
-      "assistTitle": "¿No sabés por dónde empezar?",
-      "assistHint": "Contanos qué querés revisar y te proponemos las preguntas. Después las editás como quieras.",
+      "assistTitle": "¿No sabes por dónde empezar?",
+      "assistHint": "Cuéntanos qué quieres revisar y te proponemos las preguntas. Después las editas como quieras.",
       "assistPlaceholder": "Ej: revisar cobranzas todos los lunes",
       "assistCta": "Proponer",
-      "assistEmpty": "No pudimos proponer preguntas ahora. Escribilas a mano — funciona igual.",
-      "dryRunTitle": "Probala antes de guardar",
+      "assistEmpty": "No pudimos proponer preguntas ahora. Escríbelas a mano — funciona igual.",
+      "dryRunTitle": "Pruébala antes de guardar",
       "dryRunHint": "Corre las preguntas con tus datos reales y te muestra qué devolvería cada una hoy. No guarda nada.",
       "dryRunCta": "Probar",
       "dryRunFailed": "No pudimos correr la prueba.",
-      "dryRunBusy": "Hay muchas corridas en curso. Probá de nuevo en un momento.",
+      "dryRunBusy": "Hay muchas corridas en curso. Inténtalo de nuevo en un momento.",
       "readyToSave": "Listo para guardar.",
-      "nothingUsableYet": "Escribí al menos una pregunta que se entienda sola.",
+      "nothingUsableYet": "Escribe al menos una pregunta que se entienda sola.",
       "cancel": "Cancelar",
       "save": "Guardar cambios",
       "create": "Crear Rutina",
       "saveFailed": "No pudimos guardar los cambios.",
-      "noUsableSteps": "Ninguna de las preguntas puede correr sola. Revisá los avisos de cada una.",
+      "noUsableSteps": "Ninguna de las preguntas puede correr sola. Revisa los avisos de cada una.",
       "versionNote": "Versión actual: {version}. Cambiar las preguntas crea una versión nueva; las corridas anteriores quedan guardadas con la versión con la que corrieron.",
       "stepStatus": {
         "ok": "OK",
@@ -1774,7 +1812,7 @@
       "orgDefault": "Toda la organización",
       "nothingGrantable": "Todavía no hay Rutinas compartidas para administrar.",
       "privateTitle": "Privadas de cada persona",
-      "privateHint": "No se pueden habilitar por usuario: primero su autor (o vos) tiene que compartirlas con la organización.",
+      "privateHint": "No se pueden habilitar por usuario: primero su autor (o tú) tiene que compartirlas con la organización.",
       "privateNotGrantable": "Es una Rutina privada. Compartila primero con la organización.",
       "loadFailed": "No pudimos cargar los permisos.",
       "saveFailed": "No pudimos guardar el cambio.",
@@ -1859,23 +1897,35 @@
       "title": "Ejecutar contra la instancia",
       "otherInstance": "Otra instancia",
       "confirm": "Confirmar"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Esta Rutina agregó # gráfico a tu Tablero.} other {Esta Rutina agregó # gráficos a tu Tablero.}}",
+    "openDashboard": "Abrir el Tablero"
   },
   "Chat": {
     "openInOdoo": "Abrir en Odoo"
   },
   "Snapshot": {
     "title": "Esto ya sé de tu negocio",
-    "hint": "Preguntame por cualquiera de estos números.",
+    "hint": "Pregúntame por cualquiera de estos números.",
     "model": {
       "resPartner": "Contactos",
       "productProduct": "Productos",
       "saleOrder": "Ventas",
       "accountMove": "Facturas",
       "crmLead": "Oportunidades",
-      "purchaseOrder": "Compras"
+      "purchaseOrder": "Compras",
+      "projectProject": "Proyectos",
+      "projectTask": "Tareas",
+      "timesheet": "Partes de horas",
+      "stockQuant": "Existencias por ubicación",
+      "posOrder": "Ventas de mostrador"
     },
     "titleDemo": "Esto ya sé de {instance}",
-    "hintDemo": "Es una empresa de ejemplo. Preguntame por cualquiera de estos números."
+    "hintDemo": "Es una empresa de ejemplo. Pregúntame por cualquiera de estos números."
+  },
+  "DataUntil": {
+    "label": "Datos hasta {date}",
+    "hintDemo": "Esta empresa de ejemplo tiene datos hasta esa fecha: un período posterior va a dar vacío.",
+    "hint": "Los datos de esta instancia llegan hasta esa fecha."
   }
 }

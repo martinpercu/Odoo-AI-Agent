@@ -16,6 +16,9 @@ import { useIntro } from "@/hooks/use-intro";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { useChatContext } from "@/components/app-shell";
+import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
+import { isUsableFor } from "@/lib/suggestions";
 import { track } from "@/lib/analytics";
 
 const FOCUSABLE =
@@ -72,6 +75,8 @@ export function HowItWorksPanel() {
   const router = useRouter();
   const { isHowItWorksPanelOpen, closeHowItWorksPanel } = useIntro();
   const { createChat, sendMessage } = useChatContext();
+  const { activeConfigId } = useOdooConfig();
+  const usage = useInstanceUsage(activeConfigId)?.usage;
   const { user } = useAuth();
   const { meData } = useSession();
 
@@ -137,10 +142,11 @@ export function HowItWorksPanel() {
     sendMessage(text, id);
   }
 
+  // X-06 — "¿Hay productos sin stock?" no se ofrece donde no hay inventario (#32).
   const chips = [
-    { id: "how_top_customers", text: t("what.chip3") },
-    { id: "how_out_of_stock", text: t("what.chip4") },
-  ] as const;
+    { id: "how_top_customers", text: t("what.chip3"), model: "sale.order" },
+    { id: "how_out_of_stock", text: t("what.chip4"), model: "stock.quant" },
+  ].filter((chip) => isUsableFor(chip.model, usage));
 
   const secureItems = [
     { icon: Check, label: t("secure.item1") },

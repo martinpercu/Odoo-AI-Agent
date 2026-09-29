@@ -12,7 +12,7 @@
  */
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { BarChart3, TrendingUp, PieChart as PieIcon, Table as TableIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -35,6 +35,8 @@ export type ChartViewType = ChartSSEEvent["chart_type"];
 
 // Brand indigo palette for pie charts (Rule 3: odoo-purple is logo-only)
 export const PIE_COLORS = ["#6366F1", "#818CF8", "#A5B4FC", "#C7D2FE", "#E0E7FF"];
+/** La porción "Otros" va en gris: no es un grupo más, es lo que el top dejó afuera. */
+const OTHERS_FILL = "var(--color-text-muted)";
 
 /**
  * ⚠️ **El locale es el de la APP y es obligatorio.** Estaba fijo en `"en-US"`: el
@@ -162,6 +164,125 @@ export function collapseForPie(
   const tail = data.slice(maxSlices - 1);
   const value = tail.reduce((acc, d) => acc + (d.value ?? 0), 0);
   return [...head, { label: `${otherLabel} (${tail.length})`, value }];
+}
+
+/**
+ * F-11 — los datos de una torta: lo de `collapseForPie` y, en un ranking, la porción
+ * "Otros" REAL (`meta.others`: el total general menos el top, B-23). Sin ella, una torta
+ * de "top 5 clientes" mostraba a los 5 como si fueran el 100 % del negocio.
+ */
+export function pieDataFor(
+  data: ChartSSEEvent["data"],
+  meta: ChartSSEEvent["meta"],
+  otherLabel: string
+): { data: ChartSSEEvent["data"]; othersIndex: number | null } {
+  const others = meta.others ?? 0;
+  if (others <= 0) {
+    const collapsed = collapseForPie(data, otherLabel);
+    // Si `collapseForPie` plegó la cola, su última porción es la de "Otros".
+    return { data: collapsed, othersIndex: collapsed.length < data.length ? collapsed.length - 1 : null };
+  }
+  const head = data.slice(0, PIE_MAX_SLICES - 1);
+  const tail = data.slice(PIE_MAX_SLICES - 1).reduce((acc, d) => acc + (d.value ?? 0), 0);
+  return { data: [...head, { label: otherLabel, value: others + tail }], othersIndex: head.length };
+}
+
+/**
+ * F-11 — el nombre de una fila de ranking, ENTERO, en hasta dos líneas. Truncar a 12
+ * caracteres dejaba "Aislamientos …" y "Electrónica S…": en un ranking el nombre es el
+ * dato. Lo que no entra ni en dos líneas se corta, con el nombre completo en el tooltip.
+ */
+/** Ancho estimado de un carácter a 11px — conservador: las razones sociales vienen en MAYÚSCULAS. */
+const TICK_CHAR_PX = 7.4;
+
+function WrappedTick(props: { x?: number; y?: number; payload?: { value?: string }; width: number }) {
+  const { x = 0, y = 0, payload, width } = props;
+  const label = String(payload?.value ?? "");
+  const perLine = Math.max(8, Math.floor(width / TICK_CHAR_PX));
+  const words = label.split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+  for (const w of words) {
+    const next = current ? `${current} ${w}` : w;
+    if (next.length <= perLine) current = next;
+    else {
+      if (current) lines.push(current);
+      current = w;
+    }
+  }
+  if (current) lines.push(current);
+  const shown = lines.slice(0, 2);
+  if (lines.length > 2) shown[1] = truncateLabel(`${shown[1]} ${lines.slice(2).join(" ")}`, perLine);
+  if (shown[0] && shown[0].length > perLine) shown[0] = truncateLabel(shown[0], perLine);
+  const dy = shown.length > 1 ? -6 : 4;
+  return (
+    <text x={x - 4} y={y + dy} textAnchor="end" fontSize={11} fill="var(--color-text-secondary)">
+      <title>{label}</title>
+      {shown.map((line, i) => (
+        <tspan key={i} x={x - 4} dy={i === 0 ? 0 : 13}>
+          {line}
+        </tspan>
+      ))}
+    </text>
+  );
+}
+
+/**
+ * F-11 — el pie de totales, rotulado por su ÁMBITO (B-23).
+ *
+ * En un ranking hay dos números y no son el mismo: la suma del top ("Total del top 5")
+ * y, si el backend lo midió, el total general. Rotular "Total global" a la suma del top
+ * era afirmar que esos 5 clientes son todo el negocio. Fuera de un ranking, `total` ya
+ * es el total de todos los grupos.
+ */
+export function ChartTotals({
+  meta,
+  compact = false,
+}: {
+  meta: ChartSSEEvent["meta"];
+  /** El Tablero: una sola línea, el número principal. */
+  compact?: boolean;
+}) {
+  const t = useTranslations("ChatMessages.chart");
+  const locale = useLocale();
+  const fmt = (v: number) =>
+    formatValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals, locale);
+
+  const rows: { label: string; value: number }[] = [];
+  if (meta.scope === "top_n" && meta.top_total != null) {
+    rows.push({ label: t("topTotal", { n: meta.top_n ?? 0 }), value: meta.top_total });
+    if (meta.total_scope === "all" && meta.total != null && meta.total !== meta.top_total) {
+      rows.push({ label: t("overallTotal"), value: meta.total });
+    }
+  } else if (meta.total != null) {
+    rows.push({ label: t("globalTotal"), value: meta.total });
+  }
+  if (rows.length === 0) return null;
+
+  if (compact) {
+    const [main, ...rest] = rows;
+    return (
+      <span
+        className="flex min-w-0 flex-col"
+        title={rest.map((r) => `${r.label}: ${fmt(r.value)}`).join(" · ") || undefined}
+      >
+        <span className="truncate text-micro text-text-muted">{main.label}</span>
+        <span className="truncate font-technical text-body font-semibold text-accent">
+          {fmt(main.value)}
+        </span>
+      </span>
+    );
+  }
+  return (
+    <div className="mt-3 space-y-1 border-t border-border pt-3">
+      {rows.map((row) => (
+        <div key={row.label} className="flex items-center justify-between gap-3">
+          <span className="text-small text-text-secondary">{row.label}</span>
+          <span className="font-technical text-body font-semibold text-accent">{fmt(row.value)}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export const VIEW_TYPES: { type: ChartViewType; Icon: LucideIcon }[] = [
@@ -328,9 +449,74 @@ export function ChartPlot({
   otherLabel?: string;
 }) {
   const locale = useLocale();
-  const viewData = viewType === "pie" ? collapseForPie(data, otherLabel) : data;
-  const isHorizontalBar = viewType === "bar" && horizontalBar;
-  const boxHeight = isHorizontalBar ? Math.max(viewData.length * 40, 200) : height;
+  const pie = viewType === "pie" ? pieDataFor(data, meta, otherLabel) : null;
+  const viewData = pie ? pie.data : data;
+  // F-11 — un ranking va en barras HORIZONTALES siempre: es la única forma de que el
+  // nombre (el dato de un ranking) se lea entero. Fuera de un ranking lo decide el
+  // contenedor por ancho, como antes.
+  const isRanking = meta.scope === "top_n";
+  const isHorizontalBar = viewType === "bar" && (horizontalBar || isRanking);
+  const longestLabel = viewData.reduce((m, d) => Math.max(m, String(d.label ?? "").length), 0);
+  const yAxisWidth = isRanking ? Math.min(190, Math.max(90, longestLabel * TICK_CHAR_PX)) : 100;
+  const boxHeight = isHorizontalBar ? Math.max(viewData.length * (isRanking ? 44 : 40), 200) : height;
+
+  if (pie) {
+    const pieTotal = pie.data.reduce((acc, d) => acc + (d.value ?? 0), 0);
+    const colorAt = (i: number) =>
+      i === pie.othersIndex ? OTHERS_FILL : PIE_COLORS[i % PIE_COLORS.length];
+    /**
+     * F-11 — la leyenda es NUESTRA y no la de recharts: aquélla ordena alfabéticamente
+     * (el ranking quedaba desordenado) y corta los nombres. Acá va en el orden del
+     * payload —el del ranking—, con el nombre entero y su porcentaje. Todo dentro de la
+     * misma altura fija que los otros formatos: el Tablero depende de esa paridad.
+     */
+    return (
+      <div style={{ height }} className="flex w-full flex-col gap-2">
+        <div className="min-h-0 flex-1">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={viewData}
+                cx="50%"
+                cy="50%"
+                innerRadius="48%"
+                outerRadius="92%"
+                paddingAngle={2}
+                dataKey="value"
+                nameKey="label"
+              >
+                {viewData.map((_, i) => (
+                  <Cell key={i} fill={colorAt(i)} />
+                ))}
+              </Pie>
+              <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <ul className="max-h-[45%] shrink-0 space-y-0.5 overflow-y-auto">
+          {viewData.map((d, i) => {
+            const label = String(d.label ?? "");
+            const pct = pieTotal > 0 ? Math.round(((d.value ?? 0) / pieTotal) * 100) : 0;
+            return (
+              <li key={i} className="flex items-center gap-2 text-small">
+                <span
+                  aria-hidden
+                  className="h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ background: colorAt(i) }}
+                />
+                <span className="min-w-0 flex-1 truncate text-text-secondary" title={label}>
+                  {label}
+                </span>
+                <span className="shrink-0 font-technical tabular-nums text-text-secondary">
+                  {pct}%
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div style={{ width: "100%", height: boxHeight }}>
@@ -344,13 +530,30 @@ export function ChartPlot({
                 tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
                 tickFormatter={(v) => formatAxisValue(v, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
               />
-              <YAxis
-                dataKey="label"
-                type="category"
-                width={100}
-                tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
-                tickFormatter={(v) => truncateLabel(v, 12)}
-              />
+              {isRanking ? (
+                <YAxis
+                  dataKey="label"
+                  type="category"
+                  width={yAxisWidth}
+                  interval={0}
+                  tick={(tp) => (
+                    <WrappedTick
+                      x={Number(tp.x)}
+                      y={Number(tp.y)}
+                      payload={tp.payload as { value?: string }}
+                      width={yAxisWidth}
+                    />
+                  )}
+                />
+              ) : (
+                <YAxis
+                  dataKey="label"
+                  type="category"
+                  width={100}
+                  tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
+                  tickFormatter={(v) => truncateLabel(v, 12)}
+                />
+              )}
               <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
               <Bar dataKey="value" fill="var(--brand)" radius={[0, 4, 4, 0]} />
             </BarChart>
@@ -370,7 +573,7 @@ export function ChartPlot({
               <Bar dataKey="value" fill="var(--brand)" radius={[4, 4, 0, 0]} />
             </BarChart>
           )
-        ) : viewType === "line" ? (
+        ) : (
           <AreaChart data={viewData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
             <defs>
               <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
@@ -397,28 +600,6 @@ export function ChartPlot({
               fill="url(#purpleGradient)"
             />
           </AreaChart>
-        ) : (
-          <PieChart>
-            <Pie
-              data={viewData}
-              cx="50%"
-              cy="50%"
-              innerRadius={Math.max(20, Math.round(boxHeight * 0.18))}
-              outerRadius={Math.max(45, Math.round(boxHeight * 0.36))}
-              paddingAngle={2}
-              dataKey="value"
-              nameKey="label"
-              label={({ name, percent }) =>
-                `${truncateLabel(name ?? "", 10)} ${((percent ?? 0) * 100).toFixed(0)}%`
-              }
-              labelLine={{ stroke: "var(--color-text-secondary)", strokeWidth: 1 }}
-            >
-              {viewData.map((_, i) => (
-                <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip content={(props) => <ChartTooltip {...props} meta={meta} />} />
-          </PieChart>
         )}
       </ResponsiveContainer>
     </div>

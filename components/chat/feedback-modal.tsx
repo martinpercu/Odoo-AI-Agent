@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useId, useState } from "react";
 import { X, Flag, Loader2, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { FeedbackCategory } from "@/lib/types";
 import { submitFeedback } from "@/lib/api";
+import { A11yModal } from "@/components/intro/a11y-modal";
 
 interface FeedbackModalProps {
   chatId: string;
@@ -23,6 +23,7 @@ const CATEGORIES: { value: FeedbackCategory; labelKey: string }[] = [
 
 export function FeedbackModal({ chatId, messageId, configId, onClose }: FeedbackModalProps) {
   const t = useTranslations("Feedback");
+  const titleId = useId();
 
   const [category, setCategory] = useState<FeedbackCategory | null>(null);
   const [comment, setComment] = useState("");
@@ -51,28 +52,22 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
     }
   }
 
+  // F-07 — sobre `A11yModal`: role="dialog", Escape, trampa de foco y foco de vuelta al
+  // cerrar. Antes era un div suelto: Escape no hacía nada y el Tab se iba al chat de atrás.
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.15, ease: "easeOut" }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.97 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="w-full max-w-md rounded-lg border border-border bg-surface shadow-lg"
-        >
+    <A11yModal
+      open
+      onClose={onClose}
+      labelledBy={titleId}
+      containerClassName="items-center p-4"
+      className="w-full max-w-md"
+    >
+        <div className="w-full rounded-card border border-border bg-surface shadow-lg">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
             <div className="flex items-center gap-2">
               <Flag size={16} strokeWidth={1.5} className="text-accent" />
-              <h2 className="text-subheading">{t("title")}</h2>
+              <h2 id={titleId} className="text-subheading">{t("title")}</h2>
             </div>
             <button
               onClick={onClose}
@@ -94,11 +89,13 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
               <div className="px-5 py-5 space-y-5">
                 {/* Category */}
                 <div className="space-y-2">
-                  <p className="text-small font-medium text-text-secondary">{t("categoryLabel")}</p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <p id={`${titleId}-category`} className="text-small font-medium text-text-secondary">{t("categoryLabel")}</p>
+                  <div role="group" aria-labelledby={`${titleId}-category`} className="grid grid-cols-2 gap-2">
                     {CATEGORIES.map(({ value, labelKey }) => (
                       <button
                         key={value}
+                        type="button"
+                        aria-pressed={category === value}
                         onClick={() => setCategory(category === value ? null : value)}
                         className={`rounded-md border px-3 py-2 text-small text-left transition-colors ${
                           category === value
@@ -114,8 +111,9 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
 
                 {/* Comment */}
                 <div className="space-y-2">
-                  <p className="text-small font-medium text-text-secondary">{t("commentLabel")}</p>
+                  <label htmlFor={`${titleId}-comment`} className="block text-small font-medium text-text-secondary">{t("commentLabel")}</label>
                   <textarea
+                    id={`${titleId}-comment`}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder={t("commentPlaceholder")}
@@ -126,8 +124,9 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
 
                 {/* Expected response */}
                 <div className="space-y-2">
-                  <p className="text-small font-medium text-text-secondary">{t("expectedResponseLabel")}</p>
+                  <label htmlFor={`${titleId}-expected`} className="block text-small font-medium text-text-secondary">{t("expectedResponseLabel")}</label>
                   <textarea
+                    id={`${titleId}-expected`}
                     value={expectedResponse}
                     onChange={(e) => setExpectedResponse(e.target.value)}
                     placeholder={t("expectedResponsePlaceholder")}
@@ -156,8 +155,7 @@ export function FeedbackModal({ chatId, messageId, configId, onClose }: Feedback
               </div>
             </>
           )}
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+    </A11yModal>
   );
 }

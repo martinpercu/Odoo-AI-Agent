@@ -11,21 +11,25 @@ import {
   FileText,
   Minus,
   RefreshCw,
+  Server,
   X,
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import type { DashboardRefreshResult, PinnedChart, PinnedInsight } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
+import { useAudience } from "@/hooks/use-audience";
 import { useAudienceT } from "@/hooks/use-audience-translations";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { instanceLabelById } from "@/lib/instance-label";
+import { isPinRefreshable } from "@/lib/pins";
 import {
   ChartPlot,
   ChartTable,
   ChartTypeSwitcher,
+  ChartTotals,
   chartIconFor,
-  formatValue,
 } from "@/components/charts/chart-plot";
 import type { ChartViewType } from "@/components/charts/chart-plot";
 
@@ -61,7 +65,6 @@ export function DashboardCard({ pin, refreshState, period }: DashboardCardProps)
   const t = useAudienceT("Dashboard");
   const tChart = useTranslations("ChatMessages.chart");
   const { unpin, refreshPin } = usePinnedInsights();
-  const { isDemoMode, activeConfig } = useOdooConfig();
   const [refreshing, setRefreshing] = useState(false);
 
   if (pin.kind !== "chart") return <DocumentCard pin={pin} />;
@@ -82,14 +85,7 @@ export function DashboardCard({ pin, refreshState, period }: DashboardCardProps)
         }
       }}
       onRemove={() => unpin(pin.id)}
-      canRefresh={
-        // `refreshable` lo decide el backend; `undefined` (pins que llegaron por un
-        // endpoint que no lo manda) cae al comportamiento anterior: refrescable si es
-        // "en vivo". Nunca en demo, donde la instancia no es del usuario.
-        (pin.refreshable ?? (pin.query_context?.volatility ?? "variable") === "variable") &&
-        !isDemoMode &&
-        activeConfig !== null
-      }
+      canRefresh={isPinRefreshable(pin)}
       t={t}
       tChart={tChart}
     />
@@ -117,7 +113,6 @@ function ChartCard({
   tChart: ReturnType<typeof useTranslations>;
 }) {
   const { chart } = pin;
-  const locale = useLocale();
   // "Sin datos" también cuando hay filas pero ninguna tiene un valor numérico: un pin
   // con un payload que no se puede dibujar pintaba un recuadro vacío sin decir nada.
   const hasPlottableData = chart.data.some((row) => typeof row.value === "number");
@@ -127,17 +122,6 @@ function ChartCard({
   // El default es `true` para no marcar como atemporal un pin que llegó de un endpoint
   // que todavía no manda el veredicto: decir de más es peor que no decir.
   const followsPeriod = pin.date_dependent ?? true;
-  const total =
-    chart.meta.total != null
-      ? formatValue(
-          chart.meta.total,
-          chart.meta.value_format,
-          chart.meta.currency_symbol,
-          chart.meta.no_decimals,
-          locale
-        )
-      : null;
-
   const viewLabels: Record<ChartViewType, string> = {
     bar: tChart("viewAs.bar"),
     line: tChart("viewAs.line"),
@@ -178,6 +162,7 @@ function ChartCard({
               />
             )}
             <RefreshBadge state={refreshState} t={t} />
+            <InstanceChip pin={pin} t={t} />
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
@@ -228,13 +213,8 @@ function ChartCard({
 
       {/* Pie: total + selector de formato */}
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
-        {total !== null ? (
-          <span className="min-w-0 truncate font-technical text-body font-semibold text-accent">
-            {total}
-          </span>
-        ) : (
-          <span aria-hidden />
-        )}
+        {/* F-11 — rotulado por su ámbito: en un ranking es "Total del top N". */}
+        <ChartTotals meta={chart.meta} compact />
         {chart.data.length > 0 && (
           <ChartTypeSwitcher
             value={viewType}
@@ -245,6 +225,55 @@ function ChartCard({
         )}
       </div>
     </motion.div>
+  );
+}
+
+/**
+ * De qué instancia es la tarjeta (X-01, A5 — el Tablero mezcla instancias a propósito).
+ *
+ * - Con nombre: sólo para el implementador. Un `CLIENT_USER` tiene una sola instancia y
+ *   nombrarla en cada tarjeta no distingue nada (misma regla que el cartel del sidebar);
+ *   por audiencia y no por rol, así la vista previa "ver como cliente" es fiel.
+ * - Sin instancia (`null`): para TODOS, porque es lo que explica que la tarjeta no se
+ *   pueda actualizar. Esconderlo deja un botón que falta sin razón visible.
+ */
+function InstanceChip({
+  pin,
+  t,
+  className = "",
+}: {
+  pin: PinnedInsight;
+  t: ReturnType<typeof useTranslations>;
+  className?: string;
+}) {
+  const { audience } = useAudience();
+  const { configs } = useOdooConfig();
+
+  if (pin.odoo_config_id === null) {
+    return (
+      <span className={className}>
+        <Badge
+          tone="warning"
+          label={t("instance.none")}
+          title={t("instance.noneHint")}
+          icon={<Server size={10} strokeWidth={1.5} />}
+        />
+      </span>
+    );
+  }
+  if (audience !== "builder") return null;
+  // La etiqueta la resuelve el backend; la lista local cubre el pin optimista.
+  const name = pin.instance_label || instanceLabelById(configs, pin.odoo_config_id);
+  if (!name) return null;
+  return (
+    <span className={`inline-flex min-w-0 max-w-full ${className}`}>
+      <Badge
+        tone="muted"
+        label={name}
+        title={t("instance.title", { name })}
+        icon={<Server size={10} strokeWidth={1.5} />}
+      />
+    </span>
   );
 }
 
@@ -293,8 +322,22 @@ function RefreshBadge({
  * backend rompe el render (next-intl lanza si falta la clave). Un motivo desconocido
  * tiene que degradar a "no se pudo actualizar", no tumbar el Tablero.
  */
-const SKIP_KEYS = ["static", "no_context", "no_groupby", "no_model", "not_chart"] as const;
-const ERROR_KEYS = ["odoo_error", "chart_failed", "unexpected"] as const;
+const SKIP_KEYS = [
+  "static",
+  "no_context",
+  "no_groupby",
+  "no_model",
+  "not_chart",
+  "no_instance",
+] as const;
+const ERROR_KEYS = [
+  "odoo_error",
+  "chart_failed",
+  "unexpected",
+  "no_credentials",
+  "instance_gone",
+  "auth_failed",
+] as const;
 
 function skipKey(reason?: string): string {
   return (SKIP_KEYS as readonly string[]).includes(reason ?? "") ? reason! : "generic";
@@ -310,7 +353,7 @@ function Badge({
   title,
   icon,
 }: {
-  tone: "live" | "muted" | "ok" | "error";
+  tone: "live" | "muted" | "ok" | "error" | "warning";
   label: string;
   title?: string;
   icon?: React.ReactNode;
@@ -320,17 +363,18 @@ function Badge({
     muted: "bg-raised text-text-muted",
     ok: "bg-accent-subtle text-accent",
     error: "bg-error-subtle text-error",
+    warning: "bg-warning-subtle text-warning-solid",
   } as const;
   return (
     <span
       title={title}
-      className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-micro font-medium ${tones[tone]}`}
+      className={`inline-flex min-w-0 max-w-full items-center gap-1 rounded-md px-1.5 py-0.5 text-micro font-medium ${tones[tone]}`}
     >
       {tone === "live" && !icon && (
         <span className="h-1.5 w-1.5 rounded-full bg-success-solid" />
       )}
       {icon}
-      {label}
+      <span className="truncate">{label}</span>
     </span>
   );
 }
@@ -366,9 +410,12 @@ function DocumentCard({ pin }: { pin: PinnedInsight }) {
           <FileText size={14} strokeWidth={1.5} />
         )}
       </div>
-      <p className="min-w-0 flex-1 truncate text-small font-medium text-foreground">
-        {pin.metadata.filename}
-      </p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-small font-medium text-foreground">
+          {pin.metadata.filename}
+        </p>
+        <InstanceChip pin={pin} t={t} className="mt-1" />
+      </div>
       <a
         href={url}
         download={isExcel || undefined}

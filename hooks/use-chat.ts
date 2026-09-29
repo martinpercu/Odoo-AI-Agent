@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type {
   Message,
   MessageMetadata,
@@ -15,7 +15,8 @@ import type {
   NoCredentialsMetadata,
 } from "@/lib/types";
 import type { TraceEntry } from "@/components/chat/langgraph-trace-panel";
-import { API_BASE, NETWORK_ERROR, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
+import { userFacingError } from "@/lib/user-facing-error";
+import { API_BASE, executeAction as executeActionAPI, uploadImage as uploadImageAPI, fetchChatHistory, fetchMyConversations, deleteChat as deleteChatAPI } from "@/lib/api";
 import { applyVisitorHeader } from "@/lib/demo-visitor";
 import { getAccessToken } from "@/lib/supabase";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
@@ -155,8 +156,10 @@ export function useChat(chatId?: string, userId?: string) {
   const chatGroups = groupChatsByDate(displayChats);
 
   const deleteChat = useCallback(async (chatId: string) => {
-    const target = chatsRef.current.find((c) => c.id === chatId)
-      ?? serverChatsRef.current.find((c) => c.id === chatId);
+    // El id real de la base (`conversationId`) sólo lo tiene la copia del server; la
+    // optimista puede seguir viva al lado (F-03), así que se busca primero la del server.
+    const target = serverChatsRef.current.find((c) => c.id === chatId)
+      ?? chatsRef.current.find((c) => c.id === chatId);
     const idForApi = target?.conversationId ?? chatId;
     const result = await deleteChatAPI(idForApi);
     if (result.success) {
@@ -169,11 +172,24 @@ export function useChat(chatId?: string, userId?: string) {
     return result;
   }, [currentChatId]);
 
+  /**
+   * F-02 — el número del último pedido de la lista. Una respuesta que vuelve después de
+   * otro pedido más nuevo se descarta: si no, cambiar de instancia rápido (o el refresco
+   * al terminar un stream) podía pintar la lista de la instancia ANTERIOR debajo del
+   * cartel de la nueva, y el sidebar quedaba con los chats de otra empresa.
+   */
+  const conversationsSeqRef = useRef(0);
+
   const loadServerConversations = useCallback(async (offset: number) => {
     if (!IS_AUTH_ENABLED || !userId) return;
+    // F-02 — sin instancia todavía no se pide: el pedido saldría SIN filtro y su
+    // respuesta (todas las instancias) podía llegar después de la filtrada y pisarla.
+    if (!showAllInstances && !activeConfigId) return;
+    const seq = ++conversationsSeqRef.current;
     // Sin filtro cuando el usuario pidió ver todo. El backend ignora "demo" solo.
     const filterConfigId = showAllInstances ? null : activeConfigId;
     const result = await fetchMyConversations(50, offset, filterConfigId);
+    if (seq !== conversationsSeqRef.current) return;
     if (!result.success || !result.conversations) return;
     setOtherInstancesCount(result.otherCount ?? 0);
     const loaded: Chat[] = result.conversations.map((c) => {
@@ -192,20 +208,31 @@ export function useChat(chatId?: string, userId?: string) {
       };
     });
     if (offset === 0) {
-      // Preserve in-memory messages: check both optimistic (chats) and already-migrated (serverChats).
-      const localById = new Map([
-        ...serverChatsRef.current.map((c) => [c.id, c] as [string, Chat]),
-        ...chatsRef.current.map((c) => [c.id, c] as [string, Chat]),
-      ]);
-      const merged = loaded.map((s) => {
-        const local = localById.get(s.id);
-        return local && local.messages.length > 0 ? { ...s, messages: local.messages } : s;
+      /**
+       * F-03 — el merge se hace sobre el estado VIGENTE, no sobre una foto.
+       *
+       * Antes se armaba con `chatsRef`/`serverChatsRef` (el estado del último render) y
+       * se aplicaba reemplazando `serverChats` y SACANDO de `chats` todo chat que ya
+       * volvía del server. Si el usuario mandaba el mensaje siguiente en el mismo frame
+       * en que llegaba esta respuesta —encadenar justo después de una respuesta lenta—,
+       * la foto no tenía ese turno: el chat salía de `chats` sin él, la burbuja
+       * desaparecía y los chunks del stream ya no encontraban su mensaje.
+       *
+       * Ahora: la lista del server conserva los mensajes que YA tenía (updater funcional)
+       * y un chat optimista con mensajes se queda en `chats`, que es la copia que manda
+       * (`currentChat` la busca primero y `updateChat` actualiza las dos). La barra
+       * lateral no se duplica: `displayChats` sólo muestra el optimista si el server
+       * todavía no lo devolvió.
+       */
+      const serverIds = new Set(loaded.map((c) => c.id));
+      setChats((prev) => prev.filter((c) => !serverIds.has(c.id) || c.messages.length > 0));
+      setServerChats((prev) => {
+        const prevById = new Map(prev.map((c) => [c.id, c] as [string, Chat]));
+        return loaded.map((s) => {
+          const local = prevById.get(s.id);
+          return local && local.messages.length > 0 ? { ...s, messages: local.messages } : s;
+        });
       });
-      setChats((prev) => {
-        const serverIds = new Set(loaded.map((c) => c.id));
-        return prev.filter((c) => !serverIds.has(c.id));
-      });
-      setServerChats(merged);
       setServerOffset(0);
       setHasMore(hasMoreAfter(result.total, loaded.length, 0));
       return;
@@ -213,6 +240,13 @@ export function useChat(chatId?: string, userId?: string) {
     setServerChats((prev) => [...prev, ...loaded]);
     setHasMore(hasMoreAfter(result.total, loaded.length, offset));
   }, [userId, activeConfigId, showAllInstances]);
+
+  // El `finally` de un stream corre segundos después de que se mandó el mensaje: tiene que
+  // refrescar con la instancia de AHORA, no con la que había en el closure (F-02).
+  const loadServerConversationsRef = useRef(loadServerConversations);
+  useEffect(() => {
+    loadServerConversationsRef.current = loadServerConversations;
+  }, [loadServerConversations]);
 
   const loadMoreConversations = useCallback(() => {
     const next = serverOffset + 50;
@@ -242,7 +276,13 @@ export function useChat(chatId?: string, userId?: string) {
   );
 
   const sendMessage = useCallback(
-    async (content: string, explicitChatIdOrImage?: string | File, maybeImage?: File) => {
+    async (
+      content: string,
+      explicitChatIdOrImage?: string | File,
+      maybeImage?: File,
+      /** X-07 — lo que el usuario VIO (la etiqueta del chip); `content` es lo que se manda. */
+      displayText?: string
+    ) => {
       // Resolve overloaded args: sendMessage(content, chatId?, image?)
       let explicitChatId: string | undefined;
       let image: File | undefined;
@@ -253,15 +293,19 @@ export function useChat(chatId?: string, userId?: string) {
         image = explicitChatIdOrImage;
       }
 
+      // Sólo cuenta si difiere: una etiqueta igual al valor no agrega nada.
+      const shown = displayText && displayText !== content ? displayText : undefined;
+
       let targetId = explicitChatId ?? currentChatId;
       if (!targetId) {
-        targetId = createChat(content || "Image upload");
+        targetId = createChat(shown || content || "Image upload");
       }
 
       const userMessage: Message = {
         id: `msg-${Date.now()}`,
         role: "user",
-        content,
+        content: shown ?? content,
+        ...(shown && { value: content }),
         timestamp: new Date(),
         ...(image && { imageUrl: URL.createObjectURL(image) }),
       };
@@ -309,10 +353,20 @@ export function useChat(chatId?: string, userId?: string) {
           const result = await uploadImageAPI(targetId, image, activeConfigId!, locale);
 
           if (!result.success) {
+            const noSession = !(await getAccessToken());
             updateChat(targetId, (c) => ({
               ...c,
               messages: c.messages.map((m) =>
-                m.id === assistantId ? { ...m, content: `⚠️ ${result.error || "Upload failed"}` } : m
+                m.id === assistantId
+                  ? {
+                      ...m,
+                      content: `⚠️ ${userFacingError(result.error, {
+                        anonymous: noSession,
+                        connection: t("connectionError"),
+                        generic: t("somethingWentWrong"),
+                      })}`,
+                    }
+                  : m
               ),
             }));
             return;
@@ -370,6 +424,9 @@ export function useChat(chatId?: string, userId?: string) {
           headers: sseHeaders,
           body: JSON.stringify({
             message: content,
+            // X-07 — el back la guarda en el checkpoint y `/history` la devuelve como
+            // `content` (con `value` = lo mandado). Sin ella la deduce de las opciones.
+            ...(shown && { display_text: shown }),
             config_id: activeConfigId,
             language: locale,
             // Vista previa "como lo ve tu cliente" (PLAN_INSTANCIAS/07 Idea 3). Sólo
@@ -429,8 +486,6 @@ export function useChat(chatId?: string, userId?: string) {
         let buffer = "";
         let charts: ChartSSEEvent[] = [];
         let recordLinks: RecordLinksEvent[] = [];
-        // Watermark: safe default = not show. Only shows when backend explicitly sends show: true.
-        let showWatermark: boolean | undefined = undefined;
 
         // Throttle state updates to once per animation frame to avoid
         // triggering a React re-render + ReactMarkdown re-parse on every SSE chunk.
@@ -443,7 +498,6 @@ export function useChat(chatId?: string, userId?: string) {
           const meta = lastMetadata;
           const chartSnap = charts;
           const recordLinksSnap = recordLinks;
-          const wm = showWatermark;
           updateChat(targetId, (c) => ({
             ...c,
             messages: c.messages.map((m) =>
@@ -454,7 +508,6 @@ export function useChat(chatId?: string, userId?: string) {
                     ...(meta && { metadata: meta }),
                     ...(chartSnap.length > 0 && { charts: chartSnap }),
                     ...(recordLinksSnap.length > 0 && { recordLinks: recordLinksSnap }),
-                    watermark: wm,
                   }
                 : m
             ),
@@ -493,7 +546,17 @@ export function useChat(chatId?: string, userId?: string) {
                 currentEventType = "message";
                 try {
                   const entry = JSON.parse(raw) as TraceEntry;
-                  setTraceEntries((prev) => [...prev, { ts: entry.ts, level: entry.level, node: entry.node, message: entry.message }]);
+                  setTraceEntries((prev) => [
+                    ...prev,
+                    {
+                      ts: entry.ts,
+                      level: entry.level,
+                      node: entry.node,
+                      message: entry.message,
+                      // B-24 — la consulta real del executor; el panel la muestra al expandir.
+                      ...(entry.detail && typeof entry.detail === "object" && { detail: entry.detail }),
+                    },
+                  ]);
                 } catch { /* ignore malformed trace */ }
                 continue;
               }
@@ -537,10 +600,6 @@ export function useChat(chatId?: string, userId?: string) {
                         filename: parsed.filename,
                       } satisfies ExcelExportMetadata;
                       text = "";
-                    } else if (parsed.type === "watermark") {
-                      // Watermark event comes at the start. show: false = paid client.
-                      showWatermark = typeof parsed.show === "boolean" ? parsed.show : false;
-                      continue;
                     } else if (parsed.type === "audio") {
                       // TTS chunk — enqueue for gapless playback, never touches
                       // the visible chat content.
@@ -569,7 +628,6 @@ export function useChat(chatId?: string, userId?: string) {
                                 content: finalContent,
                                 ...(charts.length > 0 && { charts }),
                                 ...(recordLinks.length > 0 && { recordLinks }),
-                                watermark: showWatermark,
                               }
                             : m
                         ),
@@ -628,7 +686,14 @@ export function useChat(chatId?: string, userId?: string) {
           // User stopped streaming — keep what we have
         } else {
           // Show error in the assistant message
-          const errorMsg = (err as Error).message || "Error de conexión";
+          // F-13 (A12) — "API error: 500" o "Failed to fetch" no son para una persona: el
+          // de red se traduce siempre y, sin sesión, cualquier cosa técnica es el neutro.
+          const errorMsg = userFacingError((err as Error).message, {
+            // Sin sesión de Supabase = el visitante del demo (tenga o no identidad efímera).
+            anonymous: !(await getAccessToken()),
+            connection: t("connectionError"),
+            generic: t("somethingWentWrong"),
+          });
           updateChat(targetId, (c) => ({
             ...c,
             messages: c.messages.map((m) =>
@@ -640,7 +705,7 @@ export function useChat(chatId?: string, userId?: string) {
         abortControllerRef.current = null;
         setIsStreaming(false);
         // Reload server list so the new thread gets its real title from the backend
-        loadServerConversations(0);
+        loadServerConversationsRef.current(0);
       }
     },
     [
@@ -654,7 +719,6 @@ export function useChat(chatId?: string, userId?: string) {
       isConfigured,
       locale,
       t,
-      loadServerConversations,
       audioPlayer,
       meData?.voice_features?.tts,
     ]
@@ -693,10 +757,13 @@ export function useChat(chatId?: string, userId?: string) {
           throw err;
         }
 
-        const errorText =
-          result.error === NETWORK_ERROR
-            ? t("connectionError")
-            : result.error || t("actionFailed");
+        // F-13 (A12) — el `detail` del back ya viene neutro para el anónimo (B-13); esto
+        // es la defensa de este lado: nada técnico llega a quien no tiene sesión.
+        const errorText = userFacingError(result.error, {
+          anonymous: !(await getAccessToken()),
+          connection: t("connectionError"),
+          generic: t("actionFailed"),
+        });
         const errorMessage: Message = {
           id: `msg-${Date.now()}`,
           role: "assistant",
@@ -818,6 +885,16 @@ export function useChat(chatId?: string, userId?: string) {
     [activeConfigId]
   );
 
+  /**
+   * X-07 — elegir un chip: se MANDA el `value` y la burbuja muestra la etiqueta que se
+   * tocó ("Equipo de ventas", no "comerciales"). El `value` es lo que el backend compara
+   * contra las opciones que ofreció; la etiqueta es sólo lo que se ve.
+   */
+  const sendChoice = useCallback(
+    (value: string, label?: string) => sendMessage(value, undefined, undefined, label),
+    [sendMessage]
+  );
+
   const clearChats = useCallback(() => {
     // Sin esto, un chat ya pedido no se vuelve a pedir nunca: la lista se vacía pero
     // el id sigue marcado como cargado, y la página queda en blanco.
@@ -843,6 +920,7 @@ export function useChat(chatId?: string, userId?: string) {
     currentChatId,
     setCurrentChatId,
     sendMessage,
+    sendChoice,
     isStreaming,
     isLoadingHistory,
     stopStreaming,

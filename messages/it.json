@@ -32,7 +32,9 @@
     "backToMyView": "Torna alla mia vista",
     "viewAsClientInfo": "I clienti vedono un layout più arioso e l’agente dice “cliente” invece di “res.partner”.",
     "showAllInstances": "mostra tutti",
-    "openMenu": "Apri menu"
+    "openMenu": "Apri menu",
+    "cycleInstance": "Cambia istanza",
+    "nextInstance": "Successiva: {name}"
   },
   "UserMenu": {
     "guest": "Ospite",
@@ -66,7 +68,6 @@
     "suggestions": {
       "inventory": "Visualizza l'inventario attuale dei prodotti",
       "invoices": "Mostra le fatture in sospeso",
-      "inventoryCheck": "Controlla le scorte di prodotto",
       "employees": "Elenca i dipendenti per reparto",
       "billingByClient": "Fatturazione per cliente nel 2024",
       "salesReport": "Genera report mensile delle vendite",
@@ -75,10 +76,13 @@
       "topProducts": "Prodotti più venduti nel Q3 2025",
       "salesByClientMonth": "Quanto abbiamo venduto per cliente a febbraio?",
       "purchasesBySupplier": "Acquisti per fornitore nel 2025",
-      "paymentsByClientNov": "Totale pagamenti per cliente a novembre",
       "paymentsByClientJan": "Totale pagamenti per cliente a gennaio",
       "salesBySellerYear": "Vendite per venditore quest'anno",
-      "salesBySeller2024": "Vendite per venditore nel 2024"
+      "stockByWarehouse": "Giacenze per magazzino",
+      "restock": "Quali prodotti devo riordinare?",
+      "opportunitiesByStage": "Opportunità per fase",
+      "hoursByProject": "Ore registrate per progetto questo mese",
+      "overdueTasks": "Quali attività sono scadute?"
     },
     "noCredsBanner": "Configura le tue credenziali per chattare",
     "noCredsCta": "Vai a Connessione"
@@ -145,7 +149,9 @@
         "pie": "Torta",
         "table": "Tabella"
       },
-      "others": "Altri"
+      "others": "Altri",
+      "topTotal": "Totale della top {n}",
+      "overallTotal": "Totale generale"
     },
     "actionProposal": {
       "editField": "Modifica",
@@ -156,7 +162,8 @@
       "validationError": "Correggi i campi evidenziati e riprova.",
       "confirm": "Conferma azione",
       "yes": "Sì",
-      "no": "No"
+      "no": "No",
+      "expired": "Questa proposta non è più valida. Se ti serve ancora, richiedila."
     },
     "audit": {
       "title": "Cronologia azioni",
@@ -173,7 +180,8 @@
       "cta": "Vai alle Impostazioni"
     },
     "connectionError": "Non siamo riusciti a completare la richiesta. Controlla la connessione e riprova.",
-    "actionFailed": "Non è stato possibile eseguire l'azione."
+    "actionFailed": "Non è stato possibile eseguire l'azione.",
+    "somethingWentWrong": "Qualcosa è andato storto. Riprova tra qualche secondo."
   },
   "ChatHistory": {
     "loading": "Caricamento conversazione...",
@@ -203,7 +211,6 @@
         "features": {
           "seat": "1 posto",
           "dailyLimit": "Limite giornaliero di chat",
-          "watermark": "Filigrana sulle risposte",
           "forever": "Gratuito per sempre"
         }
       },
@@ -214,8 +221,7 @@
         "cta": "Abbonati",
         "features": {
           "seat": "1 posto completo",
-          "noLimit": "Nessun limite di chat",
-          "noWatermark": "Nessuna filigrana"
+          "noLimit": "Nessun limite di chat"
         }
       },
       "enterprise": {
@@ -225,7 +231,7 @@
         "features": {
           "seatsFrom": "Da 10 posti (5 gratuiti + 5 a pagamento)",
           "seatsTo": "Fino a 105 posti (5 gratuiti + 100 a pagamento)",
-          "freeSeats": "Posti gratuiti con filigrana inclusi",
+          "freeSeats": "Posti gratuiti inclusi",
           "idealFor": "Ideale per implementatori Odoo"
         }
       }
@@ -239,7 +245,7 @@
       "paidSlots": "Posti a pagamento",
       "freeSlots": "Posti gratuiti",
       "price": "Prezzo",
-      "freeSlotNote": "I posti gratuiti mostrano sempre una filigrana e hanno limiti di utilizzo. I posti a pagamento hanno accesso completo senza restrizioni."
+      "freeSlotNote": "I posti gratuiti hanno limiti di utilizzo. I posti a pagamento hanno accesso completo senza restrizioni."
     },
     "founding": {
       "name": "Founding Partner",
@@ -536,7 +542,8 @@
     "historicBadge": "Storico",
     "refreshTooltip": "Aggiorna dati",
     "downloadTooltip": "Scarica",
-    "openDashboard": "Apri il cruscotto"
+    "openDashboard": "Apri il cruscotto",
+    "noInstance": "Non si sa da quale istanza provenga questa scheda, quindi non si può aggiornare."
   },
   "Notifications": {
     "title": "Avvisi",
@@ -616,7 +623,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Modalità demo — stai guardando {instance}, un'azienda di esempio.",
     "previewAsClientBanner": "Stai vedendo {instance} come lo vedrebbe il tuo cliente finale: menu ridotto, meno densità e l'agente senza gergo tecnico.",
-    "previewAsClientHint": "Prova a vederlo come lo vede il tuo cliente, dal menu di sinistra."
+    "previewAsClientHint": "Prova a vederlo come lo vede il tuo cliente, dal menu di sinistra.",
+    "emailPlaceholder": "tu@esempio.it",
+    "showPassword": "Mostra password",
+    "hidePassword": "Nascondi password"
   },
   "Onboarding": {
     "step1Label": "Connessione Odoo",
@@ -736,7 +746,6 @@
       "colType": "Tipo",
       "colPlan": "Piano",
       "colSlots": "Posti",
-      "colWatermark": "Filigrana",
       "colUsers": "Utenti",
       "colCreated": "Creato",
       "colActions": "Azioni",
@@ -752,7 +761,6 @@
       "editTier": "Piano",
       "editPaidSlots": "Posti a pagamento",
       "editFreeSlots": "Posti gratuiti",
-      "editWatermark": "Mostra filigrana",
       "editSave": "Salva",
       "editCancel": "Annulla",
       "editSuccess": "Abbonamento aggiornato.",
@@ -942,16 +950,24 @@
       "title": "Traccia LangGraph",
       "expand": "Mostra tracce",
       "collapse": "Nascondi tracce",
-      "empty": "Nessun evento ancora. Le tracce appaiono mentre l'agente elabora."
+      "empty": "Nessun evento ancora. Le tracce appaiono mentre l'agente elabora.",
+      "detail": {
+        "model": "Modello",
+        "method": "Metodo",
+        "groupby": "Raggruppato per",
+        "count": "Record",
+        "cached": "Dalla cache",
+        "domain": "Dominio"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Esecuzione · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Cruscotto",
+      "subtitle": "Ogni scheda interroga di nuovo la sua istanza con lo stesso criterio con cui è stata creata: i numeri si aggiornano senza passare dall'agente.",
       "empty": "Il tuo cruscotto è vuoto",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Aggiungi grafici dalla chat o esegui una Routine che pubblica nel cruscotto. Ogni scheda ricorda la query che l'ha generata.",
       "refreshAll": "Aggiorna tutto",
       "refreshingAll": "Aggiornamento…",
       "refresh": "Aggiorna questa scheda",
@@ -969,10 +985,10 @@
         "applied": "Dal {start} al {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Dal vivo",
+        "historic": "Storico",
+        "noPeriod": "Non dipende dal periodo",
+        "noPeriodHint": "Questa query non ha una data modificabile senza alterare il risultato, quindi il periodo del cruscotto non la cambia."
       },
       "state": {
         "updated": "Aggiornato",
@@ -980,34 +996,44 @@
         "failed": "Non riuscito"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "static": "Periodo chiuso: non cambia.",
+        "no_context": "Salvata prima che il cruscotto ricordasse la query.",
+        "no_groupby": "Non ha una suddivisione da ricalcolare.",
+        "no_model": "Non è stato salvato da quale modello proviene.",
+        "not_chart": "È un file, non una query.",
+        "generic": "Non serviva aggiornarla.",
+        "no_instance": "L'istanza di questa scheda non è stata salvata, quindi non si può aggiornare."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "odoo_error": "L'istanza ha restituito un errore per la query.",
+        "chart_failed": "La query è stata eseguita ma non ha restituito dati per il grafico.",
+        "unexpected": "Errore imprevisto durante l'aggiornamento di questa scheda.",
+        "generic": "Impossibile aggiornare questa scheda.",
+        "no_credentials": "Non hai credenziali caricate per questa istanza.",
+        "instance_gone": "L'istanza non esiste più o non hai più accesso.",
+        "auth_failed": "L'istanza ha rifiutato l'accesso."
       },
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Non è stato possibile generare il file. Riprova."
+        "failed": "Impossibile generare il file. Riprova."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Cruscotti predefiniti per ruolo",
+        "subtitle": "Routine che pubblicano solo grafici. Vengono eseguite con le tue credenziali e lasciano qui le loro schede.",
         "apply": "Crea questo cruscotto",
         "building": "Creazione…",
         "failed": "Non è stato possibile creare il cruscotto. Riprova.",
         "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
         "partial": "Create {published} schede su {declared}. Gli altri passaggi non hanno restituito dati raggruppati su questa istanza, quindi non c'è nulla da rappresentare.",
         "none": "Nessuna scheda creata: i passaggi di questa dashboard non hanno restituito dati raggruppati su questa istanza."
-      }
+      },
+      "instance": {
+        "title": "Dati di {name}",
+        "none": "Nessuna istanza",
+        "noneHint": "L'istanza di questa scheda non è stata salvata, quindi non si può aggiornare."
+      },
+      "refreshAllDisabled": "Nessuna scheda si può aggiornare: sono storiche, file o la loro istanza è sconosciuta."
     },
     "WriteGate": {
       "note": "Senza account la demo pubblica è in sola lettura: le interrogazioni funzionano, ma questa scrittura non viene eseguita su Odoo.",
@@ -1102,13 +1128,17 @@
         "no_groupby": "Non c'è una ripartizione da ricalcolare.",
         "no_model": "Non sappiamo da dove arriva questo numero.",
         "not_chart": "È un file salvato, non una query.",
-        "generic": "Non serviva aggiornarla."
+        "generic": "Non serviva aggiornarla.",
+        "no_instance": "Non sappiamo da quale sistema viene questa scheda, quindi non si può aggiornare."
       },
       "errorReason": {
         "odoo_error": "Non siamo riusciti a raggiungere il tuo sistema per questa scheda.",
         "chart_failed": "La query è andata a buon fine ma non ha restituito dati da rappresentare.",
         "unexpected": "Qualcosa è andato storto con questa scheda.",
-        "generic": "Non è stato possibile aggiornare questa scheda."
+        "generic": "Non è stato possibile aggiornare questa scheda.",
+        "no_credentials": "Manca la tua connessione a questo sistema.",
+        "instance_gone": "Questo sistema non è più disponibile.",
+        "auth_failed": "Non siamo riusciti ad accedere a questo sistema."
       },
       "export": {
         "pdf": "PDF",
@@ -1124,7 +1154,13 @@
         "tooManyRuns": "Ci sono più elaborazioni in corso. Attendi qualche secondo e riprova.",
         "partial": "Creati {published} grafici su {declared}. Per il resto non ci sono dati sufficienti in questa azienda.",
         "none": "Non ci sono dati sufficienti in questa azienda per creare questa dashboard."
-      }
+      },
+      "instance": {
+        "title": "Dati di {name}",
+        "none": "Origine sconosciuta",
+        "noneHint": "Non sappiamo da quale sistema viene questa scheda, quindi non si può aggiornare."
+      },
+      "refreshAllDisabled": "Nessuna scheda si può aggiornare ora."
     },
     "WriteGate": {
       "note": "Per apportare modifiche serve un account. Puoi continuare a chiedere tutto ciò che vuoi.",
@@ -1135,7 +1171,7 @@
   "Intro": {
     "modal": {
       "title": "Stai testando TheOdooAgent",
-      "subtitle": "Questo è quello che vedranno i tuoi clienti.",
+      "subtitle": "Sei su un Odoo di esempio, con la vista da implementatore. Con «Vista cliente» vedi quello che vedrebbero i tuoi clienti.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · IA inclusa"
       },
@@ -1162,8 +1198,8 @@
         "partnerTag": "Modello di business"
       },
       "what": {
-        "heading": "Provalo come lo vedrà il tuo cliente",
-        "line": "Questo gira su un Odoo demo. Invia una query e vedi esattamente cosa vedranno i tuoi utenti finali.",
+        "heading": "Provalo tu stesso",
+        "line": "Questo gira su un Odoo di esempio. Invia una domanda e guarda cosa risponde; con «Vista cliente», nel menu a sinistra, vedi quello che vedrebbe un utente finale.",
         "chip1": "Fatture scadute oltre 450.000",
         "chip2": "Vendite per agente il mese scorso",
         "chip3": "Crea contatto: María López"
@@ -1341,7 +1377,8 @@
       "copy": "Copia",
       "copied": "Copiato",
       "noSeatsWarning": "Limite utenti raggiunto",
-      "noSeatsLink": "Aggiungi"
+      "noSeatsLink": "Aggiungi",
+      "invalidEmail": "Questa email non sembra valida: controlla che abbia un dominio completo (es.: nome@azienda.com)."
     },
     "edit": {
       "button": "Modifica",
@@ -1383,7 +1420,8 @@
     "timezoneEffective": "Le tue programmazioni usano {timezone}.",
     "timezoneUseDetected": "Usa quello di questo dispositivo ({timezone})",
     "timezoneExistingNote": "Le programmazioni già create mantengono il fuso orario con cui sono state create.",
-    "timezoneFailed": "Non è stato possibile salvare il fuso orario."
+    "timezoneFailed": "Non è stato possibile salvare il fuso orario.",
+    "timezoneSearch": "Cerca fuso orario (es.: Roma, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1859,7 +1897,9 @@
       "title": "Esegui sull'istanza",
       "otherInstance": "Un'altra istanza",
       "confirm": "Conferma"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Questa Routine ha aggiunto # grafico al tuo cruscotto.} other {Questa Routine ha aggiunto # grafici al tuo cruscotto.}}",
+    "openDashboard": "Apri il cruscotto"
   },
   "Chat": {
     "openInOdoo": "Apri in Odoo"
@@ -1873,9 +1913,19 @@
       "saleOrder": "Vendite",
       "accountMove": "Fatture",
       "crmLead": "Opportunità",
-      "purchaseOrder": "Acquisti"
+      "purchaseOrder": "Acquisti",
+      "projectProject": "Progetti",
+      "projectTask": "Attività",
+      "timesheet": "Registrazioni ore",
+      "stockQuant": "Giacenze per ubicazione",
+      "posOrder": "Vendite al banco"
     },
     "titleDemo": "Quello che so già di {instance}",
     "hintDemo": "È un'azienda di esempio. Chiedimi di uno qualsiasi di questi numeri."
+  },
+  "DataUntil": {
+    "label": "Dati fino a {date}",
+    "hintDemo": "Questa azienda di esempio ha dati fino a quella data: un periodo successivo risulterà vuoto.",
+    "hint": "I dati di questa istanza arrivano fino a quella data."
   }
 }

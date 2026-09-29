@@ -352,7 +352,6 @@ function EditSubscriptionModal({
   const [tier, setTier] = useState(org.subscription.tier);
   const [paidSlots, setPaidSlots] = useState(org.subscription.paid_slots_limit);
   const [freeSlots, setFreeSlots] = useState(org.subscription.free_slots_limit);
-  const [watermark, setWatermark] = useState(org.subscription.show_watermark);
   const [sttSlots, setSttSlots] = useState(org.subscription.stt_slots_limit ?? 0);
   const [ttsSlots, setTtsSlots] = useState(org.subscription.tts_slots_limit ?? 0);
   const [saving, setSaving] = useState(false);
@@ -363,7 +362,6 @@ function EditSubscriptionModal({
       tier,
       paid_slots_limit: paidSlots,
       free_slots_limit: freeSlots,
-      show_watermark: watermark,
       stt_slots_limit: sttSlots,
       tts_slots_limit: ttsSlots,
     });
@@ -464,18 +462,6 @@ function EditSubscriptionModal({
               <p className="mt-1 text-micro text-text-muted">{t("orgs.editSlotsHint")}</p>
             </div>
           </div>
-
-          <label className="flex cursor-pointer items-center gap-2">
-            <input
-              type="checkbox"
-              checked={watermark}
-              onChange={(e) => setWatermark(e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-body text-foreground">
-              {t("orgs.editWatermark")}
-            </span>
-          </label>
         </div>
 
         <div className="mt-6 flex justify-end gap-2">
@@ -695,7 +681,6 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                   tier: payload.tier ?? o.subscription.tier,
                   paid_slots_limit: payload.paid_slots_limit ?? o.subscription.paid_slots_limit,
                   free_slots_limit: payload.free_slots_limit ?? o.subscription.free_slots_limit,
-                  show_watermark: payload.show_watermark ?? o.subscription.show_watermark,
                   stt_slots_limit: payload.stt_slots_limit ?? o.subscription.stt_slots_limit,
                   tts_slots_limit: payload.tts_slots_limit ?? o.subscription.tts_slots_limit,
                 },
@@ -889,7 +874,6 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
               <th className="px-3 py-2 text-left">{t("orgs.colFounder")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colPlan")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colSlots")}</th>
-              <th className="px-3 py-2 text-center">{t("orgs.colWatermark")}</th>
               <th className="px-3 py-2 text-center">{t("orgs.colUsers")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colCreated")}</th>
               <th className="px-3 py-2 text-left">{t("orgs.colActions")}</th>
@@ -921,9 +905,6 @@ function OrgsTab({ t }: { t: ReturnType<typeof useTranslations> }) {
                 </td>
                 <td className="px-3 py-2 font-technical text-text-secondary">
                   {org.subscription.paid_slots_limit}P / {org.subscription.free_slots_limit}F
-                </td>
-                <td className="px-3 py-2 text-center text-text-secondary">
-                  {org.subscription.show_watermark ? "✓" : "—"}
                 </td>
                 <td className="px-3 py-2 text-center text-foreground">{org.user_count}</td>
                 <td className="px-3 py-2 text-small text-text-secondary">

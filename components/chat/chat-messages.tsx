@@ -19,6 +19,7 @@ import { SuccessCard } from "./success-card";
 import { ValidationPrompt } from "./validation-prompt";
 import { OdooActionButton } from "./odoo-action-button";
 import { ActionProposalButton } from "./action-proposal-button";
+import { SalesMeasureCard } from "./sales-measure-card";
 import { SelectionCard } from "./selection-card";
 import { ReportTypeCard } from "./report-type-card";
 import { ReportOfferCard } from "./report-offer-card";
@@ -89,7 +90,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const t = useTranslations("ChatMessages");
   const locale = useLocale();
   const avatarSize = useIconSize("inline");
-  const { executeAction, sendMessage, currentChatId } = useChatContext();
+  const { executeAction, sendChoice, currentChatId } = useChatContext();
   const { meData } = useSession();
   const { activeConfigId } = useOdooConfig();
   const allowFeedback = meData?.user?.allow_feedback === true;
@@ -213,21 +214,30 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                                 metadata={message.metadata}
                                 onPick={handleAggReport}
                               />
+                            ) : message.metadata.kind === "sales_measure" ? (
+                              <SalesMeasureCard
+                                metadata={message.metadata}
+                                onSelect={sendChoice}
+                                initialSelected={message.choice}
+                              />
                             ) : message.metadata.kind === "stage_drilldown" ? (
                               <StageDrilldownCard
                                 metadata={message.metadata}
-                                onSelect={(value) => sendMessage(value)}
+                                onSelect={sendChoice}
+                                initialSelected={message.choice}
                               />
                             ) : (
                               <ReportTypeCard
                                 metadata={message.metadata}
-                                onSelect={(value) => sendMessage(value)}
+                                onSelect={sendChoice}
+                                initialSelected={message.choice}
                               />
                             )
                           ) : (
                             <SelectionCard
                               metadata={message.metadata}
-                              onSelect={(value) => sendMessage(value)}
+                              onSelect={sendChoice}
+                              initialSelected={message.choice}
                             />
                           ))}
                         {message.metadata.type === "file_attachment" && (
@@ -254,12 +264,6 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                           <RecordLinksCard key={`record-links-${ri}`} event={event} />
                         ))}
                       </>
-                    )}
-                    {/* Watermark: show unless explicitly set to false (safe default = show) */}
-                    {message.watermark === true && message.content && (
-                      <p className="mt-3 text-micro text-text-muted select-none">
-                        Powered by The Odoo Agent
-                      </p>
                     )}
                   </>
                 )}

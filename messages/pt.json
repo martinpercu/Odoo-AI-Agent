@@ -32,7 +32,9 @@
     "backToMyView": "Voltar à minha vista",
     "viewAsClientInfo": "Os clientes veem uma disposição mais espaçada e o agente diz “cliente” em vez de “res.partner”.",
     "showAllInstances": "ver todos",
-    "openMenu": "Abrir menu"
+    "openMenu": "Abrir menu",
+    "cycleInstance": "Trocar instância",
+    "nextInstance": "Próxima: {name}"
   },
   "UserMenu": {
     "guest": "Convidado",
@@ -66,7 +68,6 @@
     "suggestions": {
       "inventory": "Ver o inventário atual de produtos",
       "invoices": "Mostrar faturas pendentes",
-      "inventoryCheck": "Verificar inventário de produtos",
       "employees": "Listar funcionários por departamento",
       "billingByClient": "Faturamento por cliente em 2024",
       "salesReport": "Gerar relatório de vendas mensal",
@@ -75,10 +76,13 @@
       "topProducts": "Produtos mais vendidos no T3 2025",
       "salesByClientMonth": "Quanto vendemos por cliente em fevereiro?",
       "purchasesBySupplier": "Compras por fornecedor em 2025",
-      "paymentsByClientNov": "Total de pagamentos por cliente em novembro",
       "paymentsByClientJan": "Total de pagamentos por cliente em janeiro",
       "salesBySellerYear": "Vendas por vendedor este ano",
-      "salesBySeller2024": "Vendas por vendedor em 2024"
+      "stockByWarehouse": "Estoque por depósito",
+      "restock": "Quais produtos preciso repor?",
+      "opportunitiesByStage": "Oportunidades por etapa",
+      "hoursByProject": "Horas lançadas por projeto este mês",
+      "overdueTasks": "Quais tarefas estão atrasadas?"
     },
     "noCredsBanner": "Configure suas credenciais para começar a conversar",
     "noCredsCta": "Ir para Conexão"
@@ -145,7 +149,9 @@
         "pie": "Pizza",
         "table": "Tabela"
       },
-      "others": "Outros"
+      "others": "Outros",
+      "topTotal": "Total do top {n}",
+      "overallTotal": "Total geral"
     },
     "actionProposal": {
       "editField": "Editar",
@@ -156,7 +162,8 @@
       "validationError": "Corrija os campos destacados e tente novamente.",
       "confirm": "Confirmar ação",
       "yes": "Sim",
-      "no": "Não"
+      "no": "Não",
+      "expired": "Esta proposta não está mais válida. Se ainda precisar, peça de novo."
     },
     "audit": {
       "title": "Histórico de Ações",
@@ -173,7 +180,8 @@
       "cta": "Ir para Configurações"
     },
     "connectionError": "Não conseguimos concluir a consulta. Verifique a ligação e tente novamente.",
-    "actionFailed": "Não foi possível executar a ação."
+    "actionFailed": "Não foi possível executar a ação.",
+    "somethingWentWrong": "Algo deu errado. Tente de novo em alguns segundos."
   },
   "ChatHistory": {
     "loading": "Carregando conversa...",
@@ -203,7 +211,6 @@
         "features": {
           "seat": "1 assento",
           "dailyLimit": "Limite diário de chats",
-          "watermark": "Marca d'água nas respostas",
           "forever": "Grátis para sempre"
         }
       },
@@ -214,8 +221,7 @@
         "cta": "Assinar",
         "features": {
           "seat": "1 assento completo",
-          "noLimit": "Sem limite de chats",
-          "noWatermark": "Sem marca d'água"
+          "noLimit": "Sem limite de chats"
         }
       },
       "enterprise": {
@@ -225,7 +231,7 @@
         "features": {
           "seatsFrom": "A partir de 10 assentos (5 grátis + 5 pagos)",
           "seatsTo": "Até 105 assentos (5 grátis + 100 pagos)",
-          "freeSeats": "Assentos gratuitos com marca d'água incluídos",
+          "freeSeats": "Assentos gratuitos incluídos",
           "idealFor": "Ideal para implementadores Odoo"
         }
       }
@@ -239,7 +245,7 @@
       "paidSlots": "Assentos pagos",
       "freeSlots": "Assentos gratuitos",
       "price": "Preço",
-      "freeSlotNote": "Assentos gratuitos sempre mostram marca d'água e têm limites de uso. Assentos pagos têm acesso completo sem restrições."
+      "freeSlotNote": "Assentos gratuitos têm limites de uso. Assentos pagos têm acesso completo sem restrições."
     },
     "founding": {
       "name": "Founding Partner",
@@ -536,7 +542,8 @@
     "historicBadge": "Histórico",
     "refreshTooltip": "Atualizar dados",
     "downloadTooltip": "Baixar",
-    "openDashboard": "Abrir o painel"
+    "openDashboard": "Abrir o painel",
+    "noInstance": "Não se sabe de qual instância é este cartão, então ele não pode ser atualizado."
   },
   "Notifications": {
     "title": "Alertas",
@@ -616,7 +623,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Modo Demo — está a ver {instance}, uma empresa de exemplo.",
     "previewAsClientBanner": "Está a ver {instance} como o veria o seu cliente final: menu reduzido, menos densidade e o agente sem jargão técnico.",
-    "previewAsClientHint": "Experimente vê-lo como o seu cliente, no menu da esquerda."
+    "previewAsClientHint": "Experimente vê-lo como o seu cliente, no menu da esquerda.",
+    "emailPlaceholder": "voce@exemplo.com",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha"
   },
   "Onboarding": {
     "step1Label": "Conexão Odoo",
@@ -736,7 +746,6 @@
       "colType": "Tipo",
       "colPlan": "Plano",
       "colSlots": "Slots",
-      "colWatermark": "Marca d'água",
       "colUsers": "Usuários",
       "colCreated": "Criada",
       "colActions": "Ações",
@@ -752,7 +761,6 @@
       "editTier": "Plano",
       "editPaidSlots": "Slots pagos",
       "editFreeSlots": "Slots gratuitos",
-      "editWatermark": "Mostrar marca d'água",
       "editSave": "Salvar",
       "editCancel": "Cancelar",
       "editSuccess": "Assinatura atualizada.",
@@ -942,16 +950,24 @@
       "title": "LangGraph trace",
       "expand": "Mostrar traces",
       "collapse": "Ocultar traces",
-      "empty": "Sem eventos ainda. Os traces aparecem quando o agente processa."
+      "empty": "Sem eventos ainda. Os traces aparecem quando o agente processa.",
+      "detail": {
+        "model": "Modelo",
+        "method": "Método",
+        "groupby": "Agrupado por",
+        "count": "Registros",
+        "cached": "Do cache",
+        "domain": "Domínio"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Executando · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Painel",
+      "subtitle": "Cada cartão volta a consultar sua instância com o mesmo critério com que foi criado: os números se atualizam sem passar pelo agente.",
       "empty": "O seu painel está vazio",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Adicione gráficos pelo chat ou execute uma Rotina que publique no Painel. Cada cartão lembra a consulta que o gerou.",
       "refreshAll": "Atualizar tudo",
       "refreshingAll": "A atualizar…",
       "refresh": "Atualizar este cartão",
@@ -969,10 +985,10 @@
         "applied": "A mostrar de {start} a {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Ao vivo",
+        "historic": "Histórico",
+        "noPeriod": "Não depende do período",
+        "noPeriodHint": "Esta consulta não tem uma data que possa mudar sem alterar o resultado, então o período do Painel não a modifica."
       },
       "state": {
         "updated": "Atualizado",
@@ -980,34 +996,44 @@
         "failed": "Falhou"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "static": "É um período fechado: não muda.",
+        "no_context": "Foi salvo antes de o Painel lembrar a consulta.",
+        "no_groupby": "Não tem um detalhamento para recalcular.",
+        "no_model": "Não foi salvo de qual modelo vem.",
+        "not_chart": "É um arquivo, não uma consulta.",
+        "generic": "Não era preciso atualizá-lo.",
+        "no_instance": "Não foi salva a instância deste cartão, então ele não pode ser atualizado."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "odoo_error": "A instância retornou um erro na consulta.",
+        "chart_failed": "A consulta rodou mas não retornou dados para o gráfico.",
+        "unexpected": "Erro inesperado ao atualizar este cartão.",
+        "generic": "Não foi possível atualizar este cartão.",
+        "no_credentials": "Você não tem credenciais carregadas para esta instância.",
+        "instance_gone": "A instância não existe mais ou você não tem mais acesso.",
+        "auth_failed": "A instância recusou o login."
       },
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Não foi possível gerar o ficheiro. Tente novamente."
+        "failed": "Não foi possível gerar o arquivo. Tente de novo."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Painéis predefinidos por perfil",
+        "subtitle": "Rotinas que só publicam gráficos. Rodam com suas credenciais e deixam seus cartões aqui.",
         "apply": "Montar este painel",
         "building": "A montar…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
         "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
         "partial": "Foram criados {published} de {declared} cartões. As outras etapas não retornaram dados agrupados nesta instância, então não há gráfico para mostrar.",
         "none": "Nenhum cartão foi criado: as etapas deste painel não retornaram dados agrupados nesta instância."
-      }
+      },
+      "instance": {
+        "title": "Dados de {name}",
+        "none": "Sem instância",
+        "noneHint": "Não foi salva a instância deste cartão, então ele não pode ser atualizado."
+      },
+      "refreshAllDisabled": "Nenhum cartão pode ser atualizado: são históricos, arquivos ou não se sabe de qual instância são."
     },
     "WriteGate": {
       "note": "Sem conta, a demo pública é somente leitura: as consultas funcionam, mas esta gravação não é executada no Odoo.",
@@ -1102,13 +1128,17 @@
         "no_groupby": "Não tem uma repartição para recalcular.",
         "no_model": "Não sabemos de onde veio este número.",
         "not_chart": "É um ficheiro guardado, não uma consulta.",
-        "generic": "Não precisava de ser atualizado."
+        "generic": "Não precisava de ser atualizado.",
+        "no_instance": "Não sabemos de qual sistema veio este cartão, então ele não pode ser atualizado."
       },
       "errorReason": {
         "odoo_error": "Não conseguimos ligar ao seu sistema para este cartão.",
         "chart_failed": "A consulta correu mas não devolveu dados para o gráfico.",
         "unexpected": "Algo correu mal com este cartão.",
-        "generic": "Não foi possível atualizar este cartão."
+        "generic": "Não foi possível atualizar este cartão.",
+        "no_credentials": "Falta a sua conexão com este sistema.",
+        "instance_gone": "Este sistema não está mais disponível.",
+        "auth_failed": "Não conseguimos entrar neste sistema."
       },
       "export": {
         "pdf": "PDF",
@@ -1124,7 +1154,13 @@
         "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
         "partial": "Foram criados {published} de {declared} gráficos. Não há dados suficientes nesta empresa para o restante.",
         "none": "Não há dados suficientes nesta empresa para montar este painel."
-      }
+      },
+      "instance": {
+        "title": "Dados de {name}",
+        "none": "Origem desconhecida",
+        "noneHint": "Não sabemos de qual sistema veio este cartão, então ele não pode ser atualizado."
+      },
+      "refreshAllDisabled": "Nenhum cartão pode ser atualizado agora."
     },
     "WriteGate": {
       "note": "Para fazer alterações você precisa de uma conta. Pode continuar perguntando o que quiser.",
@@ -1135,7 +1171,7 @@
   "Intro": {
     "modal": {
       "title": "Você está testando o TheOdooAgent",
-      "subtitle": "Isto é o que seus clientes verão.",
+      "subtitle": "Você está em um Odoo de exemplo, com a visão de implementador. Com «Ver como cliente» você vê o que seus clientes veriam.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-label · IA incluída"
       },
@@ -1162,8 +1198,8 @@
         "partnerTag": "Modelo de negócio"
       },
       "what": {
-        "heading": "Experimente como seu cliente faria",
-        "line": "Isto roda em um Odoo demo. Envie uma consulta e veja exatamente o que seus usuários finais verão.",
+        "heading": "Experimente você mesmo",
+        "line": "Isto roda em um Odoo de exemplo. Envie uma consulta e veja o que ele responde; com «Ver como cliente», no menu da esquerda, você vê o que um usuário final veria.",
         "chip1": "Faturas vencidas acima de 250000",
         "chip2": "Vendas por vendedor no mês passado",
         "chip3": "Criar contato: María López"
@@ -1341,7 +1377,8 @@
       "copy": "Copiar",
       "copied": "Copiado",
       "noSeatsWarning": "Limite de usuários atingido",
-      "noSeatsLink": "Adicionar"
+      "noSeatsLink": "Adicionar",
+      "invalidEmail": "Esse e-mail não parece válido: verifique se tem um domínio completo (ex.: nome@empresa.com)."
     },
     "edit": {
       "button": "Editar",
@@ -1383,7 +1420,8 @@
     "timezoneEffective": "Seus agendamentos usam {timezone}.",
     "timezoneUseDetected": "Usar o deste dispositivo ({timezone})",
     "timezoneExistingNote": "Os agendamentos já criados mantêm o fuso horário com que foram criados.",
-    "timezoneFailed": "Não foi possível salvar o fuso horário."
+    "timezoneFailed": "Não foi possível salvar o fuso horário.",
+    "timezoneSearch": "Buscar fuso (ex.: São Paulo, Lisboa)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1859,7 +1897,9 @@
       "title": "Executar na instância",
       "otherInstance": "Outra instância",
       "confirm": "Confirmar"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Esta Rotina adicionou # gráfico ao seu Painel.} other {Esta Rotina adicionou # gráficos ao seu Painel.}}",
+    "openDashboard": "Abrir o Painel"
   },
   "Chat": {
     "openInOdoo": "Abrir no Odoo"
@@ -1873,9 +1913,19 @@
       "saleOrder": "Vendas",
       "accountMove": "Faturas",
       "crmLead": "Oportunidades",
-      "purchaseOrder": "Compras"
+      "purchaseOrder": "Compras",
+      "projectProject": "Projetos",
+      "projectTask": "Tarefas",
+      "timesheet": "Apontamentos de horas",
+      "stockQuant": "Estoque por local",
+      "posOrder": "Vendas de balcão"
     },
     "titleDemo": "O que já sei sobre {instance}",
     "hintDemo": "É uma empresa de exemplo. Pergunte-me sobre qualquer um destes números."
+  },
+  "DataUntil": {
+    "label": "Dados até {date}",
+    "hintDemo": "Esta empresa de exemplo tem dados até essa data: um período posterior vai vir vazio.",
+    "hint": "Os dados desta instância vão até essa data."
   }
 }

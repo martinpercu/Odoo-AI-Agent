@@ -7,12 +7,15 @@ import {
   suggestionsForInstance,
   type Suggestion,
 } from "@/lib/suggestions";
-import { fetchInstanceUsage } from "@/lib/api";
+import { useInstanceUsage } from "@/hooks/use-instance-usage";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 
-const ROTATION_INTERVAL = 4000;
-const FADE_OUT_MS = 1600;
-const FADE_IN_MS = 750;
+// F-07 — el fundido era de ~1,6 s: durante ese tiempo las tarjetas estaban a medio
+// opacar y un click o un Tab caían sobre algo que se estaba yendo. Ahora es corto, la
+// rotación se pausa con el mouse O con el foco adentro, y con "reducir movimiento" no rota.
+const ROTATION_INTERVAL = 7000;
+const FADE_OUT_MS = 250;
+const FADE_IN_MS = 250;
 const FADE_OUT_S = FADE_OUT_MS / 1000;
 const FADE_IN_S = FADE_IN_MS / 1000;
 
@@ -27,9 +30,13 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
    * El uso real de la instancia (quick-wins §7). Se pide **después** del render y
    * sin bloquear: la primera medición puede costar ~1s contra una instancia
    * grande, y el carrusel no puede esperarla. Hasta que llega se muestra el pool
-   * completo, que es el comportamiento de siempre.
+   * completo, que es el comportamiento de siempre. Compartido con el resumen (F-01).
+   *
+   * ⚠️ **La excepción de demo se sacó** (PLAN_INSTANCIAS/05 §4): con el parque,
+   * `comercial` no tiene inventario y `retail` no tiene CRM, así que sin filtrar le
+   * ofrecemos a un visitante una pregunta cuya respuesta es vacía.
    */
-  const [usage, setUsage] = useState<Record<string, number> | null>(null);
+  const usage = useInstanceUsage(activeConfigId)?.usage ?? null;
   const poolRef = useRef<Suggestion[]>(suggestionsForInstance(null));
 
   const [visible, setVisible] = useState<Suggestion[]>(getRandomSuggestions(4));
@@ -56,25 +63,6 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
   }
 
   useEffect(() => {
-    // ⚠️ **La excepción de demo se sacó** (PLAN_INSTANCIAS/05 §4). Decía "en demo no
-    // se filtra: la instancia de demo es nuestra y tiene de todo", y era cierto
-    // mientras hubo UNA. Con el parque es lo contrario: `comercial` no tiene
-    // inventario y `retail` no tiene CRM, así que sin filtrar le ofrecemos a un
-    // visitante "¿qué tengo que reponer?" sobre una agencia comercial y la respuesta
-    // es vacía — el peor primer resultado posible, y justo donde se decide si el
-    // producto sirve. Que esto funcione depende de que el backend SONDEE las
-    // instancias de demo (`capability_cache.py`), cosa que ahora hace.
-    if (!activeConfigId) return;
-    let vivo = true;
-    fetchInstanceUsage(activeConfigId).then((u) => {
-      if (vivo) setUsage(u);
-    });
-    return () => {
-      vivo = false;
-    };
-  }, [activeConfigId]);
-
-  useEffect(() => {
     poolRef.current = suggestionsForInstance(usage);
     // Si el filtro sacó alguna de las que están en pantalla, se refrescan ya:
     // dejar una sugerencia que sabemos que va a devolver "no hay registros" es
@@ -87,6 +75,8 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
   }, [usage]);
 
   useEffect(() => {
+    // Con "reducir movimiento" no rota: las 4 del arranque se quedan quietas.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     scheduleNext();
     return clearTimer;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -102,8 +92,19 @@ export function SuggestionCarousel({ onSelect, getLabel }: Props) {
     scheduleNext();
   }
 
+  function handleBlur(e: React.FocusEvent<HTMLDivElement>) {
+    // Sólo cuando el foco SALE del carrusel, no al pasar de una tarjeta a otra.
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+    handleMouseLeave();
+  }
+
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleBlur}
+    >
       <motion.div
         animate={{ opacity: show ? 1 : 0 }}
         transition={{ duration: show ? FADE_IN_S : FADE_OUT_S, ease: "easeOut" }}

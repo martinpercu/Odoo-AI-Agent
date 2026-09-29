@@ -59,6 +59,14 @@ export interface ActionProposalMetadata {
   type: "action_proposal";
   action: ActionContext;
   labels: ActionLabels;
+  /**
+   * Sólo al REABRIR un chat (X-05): el estado que deriva el backend en `/history`.
+   * `executed` = ya se ejecutó · `pending` = es la última y sigue abierta · `expired` =
+   * ya no se puede ejecutar. ⚠️ **Sólo `pending` ofrece ejecutar**: rehidratar una
+   * propuesta vieja con el botón activo es invitar a crear dos veces el mismo registro.
+   * En vivo (stream) no viene y la tarjeta se comporta como siempre.
+   */
+  status?: "pending" | "executed" | "expired";
 }
 
 // Selection prompt for ambiguity resolution (from SSE)
@@ -180,6 +188,32 @@ export interface StageDrilldownSelectionMetadata {
   options: StageDrilldownOption[];
 }
 
+/**
+ * X-03 (A4, A19, AA-5) — "ventas": ¿pedidos de venta o facturación?
+ *
+ * **No bloquea**: la respuesta ya llegó calculada con `current` y estos chips ofrecen la
+ * otra fuente. Se contesta como `stage_drilldown`: mandando el `value` como mensaje.
+ * ⚠️ La elección vive en el ESTADO DEL CHAT, del lado del backend — el front **no** la
+ * guarda (ni localStorage ni preferencia): el mismo humano puede preguntar lo mismo en
+ * otro chat y querer decir la otra cosa.
+ */
+export interface SalesMeasureOption {
+  value: string;
+  label: string;
+  source: "orders" | "invoices";
+  /** La fuente con la que se respondió ESTE turno. */
+  selected: boolean;
+}
+
+export interface SalesMeasureSelectionMetadata {
+  type: "selection_prompt";
+  kind: "sales_measure";
+  current: "orders" | "invoices";
+  /** `true` la primera vez en el chat (el texto termina preguntando); después sólo ofrece cambiar. */
+  asked: boolean;
+  options: SalesMeasureOption[];
+}
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
@@ -190,7 +224,8 @@ export type KindedSelectionMetadata =
   | PersonRoleSelectionMetadata
   | ReportOfferSelectionMetadata
   | AggReportSelectionMetadata
-  | StageDrilldownSelectionMetadata;
+  | StageDrilldownSelectionMetadata
+  | SalesMeasureSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -238,6 +273,7 @@ export type MessageMetadata =
   | ReportOfferSelectionMetadata
   | AggReportSelectionMetadata
   | StageDrilldownSelectionMetadata
+  | SalesMeasureSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;
@@ -251,8 +287,16 @@ export interface Message {
   charts?: ChartSSEEvent[];
   recordLinks?: RecordLinksEvent[];
   imageUrl?: string;
-  /** Whether to show "Powered by The Odoo Agent" watermark. Undefined = show (safe default). */
-  watermark?: boolean;
+  /**
+   * X-07 — en un mensaje del usuario nacido de un chip: lo que se MANDÓ (`value`),
+   * cuando `content` es la etiqueta que el usuario tocó. La burbuja muestra `content`.
+   */
+  value?: string;
+  /**
+   * X-05 — en un mensaje del agente con opciones: el `value` que el usuario eligió en el
+   * turno siguiente. Sale de `/history` y hace que el chip vuelva marcado al reabrir.
+   */
+  choice?: string;
 }
 
 export interface Chat {
@@ -312,6 +356,20 @@ export interface ChartMeta {
   model: string;
   period: string | null;
   total: number;
+  group_by_field?: string;
+  /**
+   * B-23 / F-11 — de QUÉ es `total`. `"all"` = el total general real (todos los grupos);
+   * `"top_n"` = sólo se conoce la suma de las filas que vinieron. ⚠️ Nunca rotular
+   * "Total global" a la suma de un top: era el bug.
+   */
+  total_scope?: "all" | "top_n";
+  /** Presente en un ranking: el gráfico es un top N, no el universo. */
+  scope?: "top_n";
+  top_n?: number;
+  /** La suma de las filas del top. */
+  top_total?: number;
+  /** Lo que queda fuera del top (`total - top_total`) → la porción "Otros" de la torta. */
+  others?: number;
 }
 
 export type PinVolatility = "variable" | "static";
@@ -355,12 +413,14 @@ export interface PinRefreshability {
 export interface DashboardRefreshResult {
   pin_id: string;
   status: "ok" | "skipped" | "error";
-  /** Código, no frase: `static` · `no_context` · `no_groupby` · `odoo_error` … */
+  /** Código, no frase: `static` · `no_context` · `no_instance` · `odoo_error` · `auth_failed` … */
   reason?: string;
   date_dependent?: boolean;
   override_applied?: boolean;
   payload?: ChartSSEEvent;
   refreshed_at?: string;
+  /** La instancia contra la que se refrescó ESTA tarjeta (la del pin, X-01). */
+  odoo_config_id?: string | null;
 }
 
 export interface ChartSSEEvent {
@@ -430,7 +490,25 @@ export interface EntitySearchResult {
 
 // ---- Pinned Insights ----
 
-export interface PinnedChart extends PinRefreshability {
+/**
+ * De qué instancia es un pin (X-01, decisión A5 del plan de auditorías).
+ *
+ * El Tablero es POR USUARIO y mezcla instancias a propósito, así que cada tarjeta dice
+ * la suya y el backend la refresca contra ESA — nunca contra la activa. Los dos campos
+ * llegan en `GET /me/pins`; en los pins optimistas (recién fijados en esta sesión) no
+ * están hasta el próximo `loadAllPins`.
+ *
+ * ⚠️ `odoo_config_id: null` es "no se guardó de qué instancia es" (un pin anterior al
+ * estampado que el backfill no pudo resolver), NO "de ninguna": se muestra y se dice
+ * por qué no se refresca, en vez de adivinar una.
+ */
+export interface PinInstance {
+  odoo_config_id?: string | null;
+  /** Ya resuelto por el backend con la misma precedencia que `instanceLabel()`. */
+  instance_label?: string | null;
+}
+
+export interface PinnedChart extends PinRefreshability, PinInstance {
   kind: "chart";
   id: string;
   pinnedAt: string;
@@ -441,7 +519,7 @@ export interface PinnedChart extends PinRefreshability {
   query_context?: PinQueryContext;
 }
 
-export interface PinnedFile {
+export interface PinnedFile extends PinInstance {
   kind: "file";
   id: string;
   pinnedAt: string;
@@ -450,7 +528,7 @@ export interface PinnedFile {
   metadata: FileAttachmentMetadata;
 }
 
-export interface PinnedExcel {
+export interface PinnedExcel extends PinInstance {
   kind: "excel";
   id: string;
   pinnedAt: string;
@@ -592,7 +670,6 @@ export interface MeOrg {
 
 export interface MeSubscription {
   tier: SubscriptionTier;
-  show_watermark: boolean;
   paid_slots_limit: number;
   free_slots_limit: number;
   is_active: boolean;
@@ -883,7 +960,6 @@ export interface SuperAdminSubscription {
   tier: string;
   paid_slots_limit: number;
   free_slots_limit: number;
-  show_watermark: boolean;
   is_active: boolean;
   /** Voice feature quotas (-1 = unlimited, 0 = not contracted). */
   stt_slots_limit?: number;

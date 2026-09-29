@@ -32,7 +32,9 @@
     "backToMyView": "Zurück zu meiner Ansicht",
     "viewAsClientInfo": "Kunden sehen eine luftigere Ansicht, und der Agent sagt „Kunde“ statt „res.partner“.",
     "showAllInstances": "alle anzeigen",
-    "openMenu": "Menü öffnen"
+    "openMenu": "Menü öffnen",
+    "cycleInstance": "Instanz wechseln",
+    "nextInstance": "Nächste: {name}"
   },
   "UserMenu": {
     "guest": "Gast",
@@ -66,7 +68,6 @@
     "suggestions": {
       "inventory": "Aktuellen Produktbestand anzeigen",
       "invoices": "Ausstehende Rechnungen anzeigen",
-      "inventoryCheck": "Produktbestand prüfen",
       "employees": "Mitarbeiter nach Abteilung auflisten",
       "billingByClient": "Abrechnung nach Kunde im Jahr 2024",
       "salesReport": "Monatlichen Verkaufsbericht erstellen",
@@ -75,10 +76,13 @@
       "topProducts": "Meistverkaufte Produkte im Q3 2025",
       "salesByClientMonth": "Wie viel haben wir im Februar pro Kunde verkauft?",
       "purchasesBySupplier": "Einkäufe nach Lieferant in 2025",
-      "paymentsByClientNov": "Gesamtzahlungen pro Kunde im November",
       "paymentsByClientJan": "Gesamtzahlungen pro Kunde im Januar",
       "salesBySellerYear": "Verkäufe nach Verkäufer dieses Jahr",
-      "salesBySeller2024": "Verkäufe nach Verkäufer in 2024"
+      "stockByWarehouse": "Bestand nach Lager",
+      "restock": "Welche Produkte muss ich nachbestellen?",
+      "opportunitiesByStage": "Verkaufschancen nach Phase",
+      "hoursByProject": "Erfasste Stunden nach Projekt in diesem Monat",
+      "overdueTasks": "Welche Aufgaben sind überfällig?"
     },
     "noCredsBanner": "Konfiguriere deine Zugangsdaten, um zu chatten",
     "noCredsCta": "Zur Verbindung"
@@ -145,7 +149,9 @@
         "pie": "Kreis",
         "table": "Tabelle"
       },
-      "others": "Andere"
+      "others": "Andere",
+      "topTotal": "Summe der Top {n}",
+      "overallTotal": "Gesamtsumme"
     },
     "actionProposal": {
       "editField": "Bearbeiten",
@@ -156,7 +162,8 @@
       "validationError": "Bitte korrigieren Sie die markierten Felder.",
       "confirm": "Aktion bestätigen",
       "yes": "Ja",
-      "no": "Nein"
+      "no": "Nein",
+      "expired": "Dieser Vorschlag ist nicht mehr gültig. Wenn du ihn noch brauchst, frag erneut danach."
     },
     "audit": {
       "title": "Aktionsverlauf",
@@ -173,7 +180,8 @@
       "cta": "Zu den Einstellungen"
     },
     "connectionError": "Die Abfrage konnte nicht abgeschlossen werden. Prüfe die Verbindung und versuche es erneut.",
-    "actionFailed": "Die Aktion konnte nicht ausgeführt werden."
+    "actionFailed": "Die Aktion konnte nicht ausgeführt werden.",
+    "somethingWentWrong": "Etwas ist schiefgelaufen. Versuch es in ein paar Sekunden erneut."
   },
   "ChatHistory": {
     "loading": "Konversation wird geladen...",
@@ -203,7 +211,6 @@
         "features": {
           "seat": "1 Platz",
           "dailyLimit": "Tägliches Chat-Limit",
-          "watermark": "Wasserzeichen auf Antworten",
           "forever": "Für immer kostenlos"
         }
       },
@@ -214,8 +221,7 @@
         "cta": "Abonnieren",
         "features": {
           "seat": "1 vollständiger Platz",
-          "noLimit": "Kein Chat-Limit",
-          "noWatermark": "Kein Wasserzeichen"
+          "noLimit": "Kein Chat-Limit"
         }
       },
       "enterprise": {
@@ -225,7 +231,7 @@
         "features": {
           "seatsFrom": "Ab 10 Plätze (5 kostenlos + 5 kostenpflichtig)",
           "seatsTo": "Bis zu 105 Plätze (5 kostenlos + 100 kostenpflichtig)",
-          "freeSeats": "Kostenlose Plätze mit Wasserzeichen inklusive",
+          "freeSeats": "Kostenlose Plätze inklusive",
           "idealFor": "Ideal für Odoo-Implementierer"
         }
       }
@@ -239,7 +245,7 @@
       "paidSlots": "Kostenpflichtige Plätze",
       "freeSlots": "Kostenlose Plätze",
       "price": "Preis",
-      "freeSlotNote": "Kostenlose Plätze zeigen immer ein Wasserzeichen und haben Nutzungslimits. Kostenpflichtige Plätze haben vollen, uneingeschränkten Zugriff."
+      "freeSlotNote": "Kostenlose Plätze haben Nutzungslimits. Kostenpflichtige Plätze haben vollen, uneingeschränkten Zugriff."
     },
     "founding": {
       "name": "Founding Partner",
@@ -536,7 +542,8 @@
     "historicBadge": "Historisch",
     "refreshTooltip": "Daten aktualisieren",
     "downloadTooltip": "Herunterladen",
-    "openDashboard": "Dashboard öffnen"
+    "openDashboard": "Dashboard öffnen",
+    "noInstance": "Es ist unbekannt, aus welcher Instanz diese Karte stammt, daher kann sie nicht aktualisiert werden."
   },
   "Notifications": {
     "title": "Benachrichtigungen",
@@ -616,7 +623,10 @@
     "requestAccessEmail": "martin@theodooagent.com",
     "demoBannerNamed": "Demo-Modus — du siehst {instance}, ein Beispielunternehmen.",
     "previewAsClientBanner": "Du siehst {instance} so, wie es dein Endkunde sähe: gekürztes Menü, luftigere Darstellung und der Agent ohne Fachjargon.",
-    "previewAsClientHint": "Sieh es dir aus Kundensicht an — über das linke Menü."
+    "previewAsClientHint": "Sieh es dir aus Kundensicht an — über das linke Menü.",
+    "emailPlaceholder": "du@beispiel.de",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen"
   },
   "Onboarding": {
     "step1Label": "Odoo-Verbindung",
@@ -736,7 +746,6 @@
       "colType": "Typ",
       "colPlan": "Plan",
       "colSlots": "Slots",
-      "colWatermark": "Wasserzeichen",
       "colUsers": "Benutzer",
       "colCreated": "Erstellt",
       "colActions": "Aktionen",
@@ -752,7 +761,6 @@
       "editTier": "Plan",
       "editPaidSlots": "Bezahlte Slots",
       "editFreeSlots": "Kostenlose Slots",
-      "editWatermark": "Wasserzeichen anzeigen",
       "editSave": "Speichern",
       "editCancel": "Abbrechen",
       "editSuccess": "Abonnement aktualisiert.",
@@ -942,16 +950,24 @@
       "title": "LangGraph trace",
       "expand": "Traces anzeigen",
       "collapse": "Traces ausblenden",
-      "empty": "Noch keine Ereignisse. Traces erscheinen während der Agent arbeitet."
+      "empty": "Noch keine Ereignisse. Traces erscheinen während der Agent arbeitet.",
+      "detail": {
+        "model": "Modell",
+        "method": "Methode",
+        "groupby": "Gruppiert nach",
+        "count": "Datensätze",
+        "cached": "Aus dem Cache",
+        "domain": "Domain"
+      }
     },
     "ChatMessages": {
       "typingIndicator": "Ausführen · query"
     },
     "Dashboard": {
-      "title": "Insights dashboard",
-      "subtitle": "Each card re-runs its query_context against the instance — a direct read_group, no graph and no LLM.",
+      "title": "Dashboard",
+      "subtitle": "Jede Karte fragt ihre Instanz mit denselben Kriterien erneut ab wie bei der Erstellung: Die Zahlen werden ohne den Agenten aktualisiert.",
       "empty": "Ihr Dashboard ist leer",
-      "emptyHint": "Pin charts from the chat or run a Routine with compose.pin. The pin stores model, domain and groupby.",
+      "emptyHint": "Fügen Sie Diagramme aus dem Chat hinzu oder führen Sie eine Routine aus, die ins Dashboard veröffentlicht. Jede Karte merkt sich ihre Abfrage.",
       "refreshAll": "Alle aktualisieren",
       "refreshingAll": "Wird aktualisiert…",
       "refresh": "Diese Karte aktualisieren",
@@ -969,10 +985,10 @@
         "applied": "Vom {start} bis {end}."
       },
       "badge": {
-        "live": "variable",
-        "historic": "static",
-        "noPeriod": "No date_filter",
-        "noPeriodHint": "The query_context has no rewritable date_filter, so the period override is ignored instead of altering the domain."
+        "live": "Live",
+        "historic": "Historisch",
+        "noPeriod": "Zeitraumunabhängig",
+        "noPeriodHint": "Diese Abfrage hat kein Datum, das sich ändern lässt, ohne das Ergebnis zu verfälschen – der Dashboard-Zeitraum wirkt sich nicht aus."
       },
       "state": {
         "updated": "Aktualisiert",
@@ -980,18 +996,22 @@
         "failed": "Fehlgeschlagen"
       },
       "skipReason": {
-        "static": "chart_volatility marked it static: closed period.",
-        "no_context": "Pin with no query_context (pre-Phase 6).",
-        "no_groupby": "Without groupby_fields there is no chart payload to rebuild.",
-        "no_model": "primary_model missing from the query_context.",
-        "not_chart": "content_type is not chart.",
-        "generic": "Skipped."
+        "static": "Abgeschlossener Zeitraum: ändert sich nicht.",
+        "no_context": "Gespeichert, bevor das Dashboard die Abfrage speicherte.",
+        "no_groupby": "Keine Aufschlüsselung zum Neuberechnen.",
+        "no_model": "Das Quellmodell wurde nicht gespeichert.",
+        "not_chart": "Das ist eine Datei, keine Abfrage.",
+        "generic": "Keine Aktualisierung nötig.",
+        "no_instance": "Für diese Karte wurde keine Instanz gespeichert, daher kann sie nicht aktualisiert werden."
       },
       "errorReason": {
-        "odoo_error": "The read_group against the instance failed.",
-        "chart_failed": "build_chart_payload returned None.",
-        "unexpected": "Unhandled exception while refreshing.",
-        "generic": "Could not refresh."
+        "odoo_error": "Die Instanz hat bei der Abfrage einen Fehler zurückgegeben.",
+        "chart_failed": "Die Abfrage lief, lieferte aber keine Daten für das Diagramm.",
+        "unexpected": "Unerwarteter Fehler beim Aktualisieren dieser Karte.",
+        "generic": "Diese Karte konnte nicht aktualisiert werden.",
+        "no_credentials": "Für diese Instanz sind keine Zugangsdaten hinterlegt.",
+        "instance_gone": "Die Instanz existiert nicht mehr oder du hast keinen Zugriff mehr.",
+        "auth_failed": "Die Instanz hat die Anmeldung abgelehnt."
       },
       "export": {
         "pdf": "PDF",
@@ -999,15 +1019,21 @@
         "failed": "Die Datei konnte nicht erstellt werden. Bitte erneut versuchen."
       },
       "presets": {
-        "title": "Role dashboard presets",
-        "subtitle": "Catalog Routines whose compose is only pin. They run with your credentials and drop their charts here.",
+        "title": "Vordefinierte Dashboards nach Rolle",
+        "subtitle": "Routinen, die nur Diagramme veröffentlichen. Sie laufen mit Ihren Zugangsdaten und legen ihre Karten hier ab.",
         "apply": "Dieses Dashboard erstellen",
         "building": "Wird erstellt…",
         "failed": "Das Dashboard konnte nicht erstellt werden. Bitte erneut versuchen.",
         "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
         "partial": "{published} von {declared} Karten erstellt. Die übrigen Schritte lieferten auf dieser Instanz keine gruppierten Daten, daher gibt es nichts darzustellen.",
         "none": "Keine Karte erstellt: Die Schritte dieses Dashboards lieferten auf dieser Instanz keine gruppierten Daten."
-      }
+      },
+      "instance": {
+        "title": "Daten aus {name}",
+        "none": "Keine Instanz",
+        "noneHint": "Für diese Karte wurde keine Instanz gespeichert, daher kann sie nicht aktualisiert werden."
+      },
+      "refreshAllDisabled": "Keine Karte kann aktualisiert werden: Sie sind historisch, Dateien oder ihre Instanz ist unbekannt."
     },
     "WriteGate": {
       "note": "Ohne Konto ist die öffentliche Demo schreibgeschützt: Abfragen funktionieren, aber dieser Schreibvorgang wird nicht in Odoo ausgeführt.",
@@ -1102,13 +1128,17 @@
         "no_groupby": "Es gibt keine Aufschlüsselung zum Neuberechnen.",
         "no_model": "Wir wissen nicht, woher diese Zahl stammt.",
         "not_chart": "Eine gespeicherte Datei, keine Abfrage.",
-        "generic": "Eine Aktualisierung war nicht nötig."
+        "generic": "Eine Aktualisierung war nicht nötig.",
+        "no_instance": "Wir wissen nicht, aus welchem System diese Karte stammt, daher kann sie nicht aktualisiert werden."
       },
       "errorReason": {
         "odoo_error": "Wir konnten Ihr System für diese Karte nicht erreichen.",
         "chart_failed": "Die Abfrage lief, lieferte aber nichts zum Darstellen.",
         "unexpected": "Mit dieser Karte ist etwas schiefgelaufen.",
-        "generic": "Diese Karte konnte nicht aktualisiert werden."
+        "generic": "Diese Karte konnte nicht aktualisiert werden.",
+        "no_credentials": "Deine Verbindung zu diesem System fehlt.",
+        "instance_gone": "Dieses System ist nicht mehr verfügbar.",
+        "auth_failed": "Wir konnten uns bei diesem System nicht anmelden."
       },
       "export": {
         "pdf": "PDF",
@@ -1124,7 +1154,13 @@
         "tooManyRuns": "Es laufen gerade mehrere Vorgänge. Warten Sie kurz und versuchen Sie es erneut.",
         "partial": "{published} von {declared} Diagrammen erstellt. Für den Rest gibt es in diesem Unternehmen nicht genug Daten.",
         "none": "In diesem Unternehmen gibt es nicht genug Daten für dieses Dashboard."
-      }
+      },
+      "instance": {
+        "title": "Daten aus {name}",
+        "none": "Unbekannte Quelle",
+        "noneHint": "Wir wissen nicht, aus welchem System diese Karte stammt, daher kann sie nicht aktualisiert werden."
+      },
+      "refreshAllDisabled": "Derzeit kann keine Karte aktualisiert werden."
     },
     "WriteGate": {
       "note": "Für Änderungen benötigen Sie ein Konto. Fragen können Sie weiterhin alles, was Sie möchten.",
@@ -1135,7 +1171,7 @@
   "Intro": {
     "modal": {
       "title": "Sie testen TheOdooAgent",
-      "subtitle": "So wird es Ihre Kunden sehen.",
+      "subtitle": "Sie sind in einem Beispiel-Odoo, in der Implementierer-Ansicht. Mit „Kundenansicht“ sehen Sie, was Ihre Kunden sehen würden.",
       "chips": {
         "anyOdoo": "Community & Enterprise v12–v19 · White-Label · KI inklusive"
       },
@@ -1162,8 +1198,8 @@
         "partnerTag": "Geschäftsmodell"
       },
       "what": {
-        "heading": "Testen Sie es wie Ihr Kunde",
-        "line": "Dies läuft auf einem Demo-Odoo. Senden Sie eine Anfrage und sehen Sie genau, was Ihre Endnutzer sehen werden.",
+        "heading": "Probieren Sie es selbst",
+        "line": "Dies läuft auf einem Beispiel-Odoo. Senden Sie eine Anfrage und sehen Sie, was es antwortet; mit „Kundenansicht“ im linken Menü sehen Sie, was ein Endnutzer sehen würde.",
         "chip1": "Überfällige Rechnungen über 380k",
         "chip2": "Umsatz nach Vertriebsmitarbeiter letzten Monat",
         "chip3": "Kontakt erstellen: María López"
@@ -1341,7 +1377,8 @@
       "copy": "Kopieren",
       "copied": "Kopiert",
       "noSeatsWarning": "Benutzerlimit erreicht",
-      "noSeatsLink": "Hinzufügen"
+      "noSeatsLink": "Hinzufügen",
+      "invalidEmail": "Diese E-Mail scheint ungültig: Prüfen Sie, ob sie eine vollständige Domain hat (z. B. name@firma.de)."
     },
     "edit": {
       "button": "Bearbeiten",
@@ -1383,7 +1420,8 @@
     "timezoneEffective": "Deine Planungen verwenden {timezone}.",
     "timezoneUseDetected": "Die dieses Geräts verwenden ({timezone})",
     "timezoneExistingNote": "Bereits erstellte Planungen behalten die Zeitzone, mit der sie angelegt wurden.",
-    "timezoneFailed": "Zeitzone konnte nicht gespeichert werden."
+    "timezoneFailed": "Zeitzone konnte nicht gespeichert werden.",
+    "timezoneSearch": "Zeitzone suchen (z. B. Berlin, Madrid)"
   },
   "FoundingPartner": {
     "badge": "Founding Partner",
@@ -1859,7 +1897,9 @@
       "title": "Ausführen auf der Instanz",
       "otherInstance": "Andere Instanz",
       "confirm": "Bestätigen"
-    }
+    },
+    "pinsPublished": "{count, plural, one {Diese Routine hat # Diagramm zu deinem Dashboard hinzugefügt.} other {Diese Routine hat # Diagramme zu deinem Dashboard hinzugefügt.}}",
+    "openDashboard": "Dashboard öffnen"
   },
   "Chat": {
     "openInOdoo": "In Odoo öffnen"
@@ -1873,9 +1913,19 @@
       "saleOrder": "Umsatz",
       "accountMove": "Rechnungen",
       "crmLead": "Chancen",
-      "purchaseOrder": "Einkäufe"
+      "purchaseOrder": "Einkäufe",
+      "projectProject": "Projekte",
+      "projectTask": "Aufgaben",
+      "timesheet": "Zeiterfassungen",
+      "stockQuant": "Bestand nach Lagerort",
+      "posOrder": "Kassenverkäufe"
     },
     "titleDemo": "Was ich über {instance} bereits weiß",
     "hintDemo": "Das ist ein Beispielunternehmen. Frag mich nach diesen Zahlen."
+  },
+  "DataUntil": {
+    "label": "Daten bis {date}",
+    "hintDemo": "Diese Beispielfirma hat Daten bis zu diesem Datum: ein späterer Zeitraum bleibt leer.",
+    "hint": "Die Daten dieser Instanz reichen bis zu diesem Datum."
   }
 }

@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Loader2, X, Pencil, Check, AlertTriangle, Lock } from "lucide-react";
+import { Loader2, X, Pencil, Check, AlertTriangle, Lock, Clock } from "lucide-react";
 import type { ActionProposalMetadata, ActionContext, EntitySearchResult } from "@/lib/types";
 import { EntityAutocomplete } from "./entity-autocomplete";
 import { AuditHistoryPopover } from "./audit-history-popover";
@@ -105,7 +105,10 @@ const dirtyTransition = { duration: 0.25, ease: "easeInOut" as const };
 
 export function ActionProposalButton({ metadata, onAction }: ActionProposalButtonProps) {
   const [loading, setLoading] = useState(false);
-  const [completed, setCompleted] = useState(false);
+  // X-05 — al reabrir un chat el backend dice en qué quedó. `executed` vuelve como
+  // "Completado" (no se puede ejecutar dos veces); `expired` se muestra sin botones.
+  const [completed, setCompleted] = useState(metadata.status === "executed");
+  const expired = metadata.status === "expired";
   const [rejected, setRejected] = useState(false);
   const [editedVals, setEditedVals] = useState<Record<string, unknown>>({ ...metadata.action.vals });
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -359,7 +362,7 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
                 </div>
 
                 {/* Edit toggle */}
-                {!loading && !blocked && (
+                {!loading && !blocked && !expired && (
                   <button
                     type="button"
                     onClick={() => setEditingField(isEditing ? null : key)}
@@ -422,6 +425,13 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
         )}
       </AnimatePresence>
 
+      {expired ? (
+        <p className="mt-4 flex items-start gap-2 text-small text-text-secondary">
+          <Clock size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <span>{t("actionProposal.expired")}</span>
+        </p>
+      ) : (
+      <>
       {blocked && <AccountRequiredNote detail={accountRequiredDetail ?? undefined} />}
 
       {/* Action buttons */}
@@ -444,6 +454,8 @@ export function ActionProposalButton({ metadata, onAction }: ActionProposalButto
           {metadata.labels.cancel_btn}
         </button>
       </div>
+      </>
+      )}
     </motion.div>
   );
 }

@@ -28,14 +28,14 @@ interface EmailCopy {
 
 const COPY: Record<SupportedEmailLang, EmailCopy> = {
   es: {
-    subject: "{org_name}: activá tu acceso a {company_name}",
-    preheader: "Creá tu cuenta en un clic. El enlace vence el {expiry_date}.",
+    subject: "{org_name}: activa tu acceso a {company_name}",
+    preheader: "Crea tu cuenta en un clic. El enlace vence el {expiry_date}.",
     heading: "{org_name} te dio acceso a:<br>{company_name}",
-    body: "Creá tu cuenta y empezá a consultar tu Odoo en lenguaje natural.",
+    body: "Crea tu cuenta y empieza a consultar tu Odoo en lenguaje natural.",
     cta: "Crear mi cuenta",
     expiry: "El enlace vence el {expiry_date}.",
-    fallback: "¿No te anda el botón? Pegá este enlace en tu navegador:",
-    ignore: "Si no esperabas este email, ignoralo.",
+    fallback: "¿No funciona el botón? Pega este enlace en tu navegador:",
+    ignore: "Si no esperabas este email, ignóralo.",
     companyFallback: "Tu instancia de Odoo",
   },
   en: {

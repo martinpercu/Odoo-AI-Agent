@@ -147,7 +147,7 @@ export default function RoutineRunDetailPage() {
           <div className="min-w-0">
             <h1 className="truncate text-heading">{routine?.name ?? t("deletedRoutine")}</h1>
             <p className="mt-1 text-small text-text-muted">
-              {when ? new Date(when).toLocaleString() : ""}
+              {when ? new Date(when).toLocaleString(locale) : ""}
               {run.step_total
                 ? ` · ${t("progress", { done: run.step_done, total: run.step_total })}`
                 : ""}

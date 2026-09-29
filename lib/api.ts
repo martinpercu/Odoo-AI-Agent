@@ -12,6 +12,8 @@ import type {
   AppNotification,
   NotificationSettings,
   Message,
+  MessageMetadata,
+  RecordLinksEvent,
   EntitySearchResult,
   MeResponse,
   ServerConversation,
@@ -1325,6 +1327,15 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
   if (!id || !chatId || !messageId || !contentType) return null;
 
   const payload = r.payload;
+  // X-01 — de qué instancia es. `null` se transporta tal cual: "no se sabe" no es "ninguna".
+  const instance = {
+    ...(r.odoo_config_id !== undefined && {
+      odoo_config_id: (r.odoo_config_id as string | null) || null,
+    }),
+    ...(r.instance_label !== undefined && {
+      instance_label: (r.instance_label as string | null) || null,
+    }),
+  };
 
   if (contentType === "chart") {
     if (!payload) return null;
@@ -1339,6 +1350,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       messageId,
       chartIndex,
       chart: payload as ChartSSEEvent,
+      ...instance,
       ...(queryContext && { query_context: queryContext }),
       // Fase 5 — el veredicto viene resuelto del backend (`pin_refresh.describe`);
       // acá sólo se transporta. Sólo `/me/pins` los manda: en el resto quedan
@@ -1357,6 +1369,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       chatId,
       messageId,
       metadata: payload as FileAttachmentMetadata,
+      ...instance,
     };
   }
 
@@ -1369,6 +1382,7 @@ function normalizePin(raw: unknown, fallbackChatId?: string): PinnedInsight | nu
       chatId,
       messageId,
       metadata: payload as ExcelExportMetadata,
+      ...instance,
     };
   }
 
@@ -1646,12 +1660,21 @@ export interface RefreshPinResult {
   /** ¿Se llegó a aplicar el override en ESTE refresh? */
   overrideApplied?: boolean;
   error?: string;
+  /** Código del backend cuando falla (hoy: `no_instance`). */
+  reason?: string;
 }
 
+/**
+ * Refrescar UNA tarjeta.
+ *
+ * ⚠️ **No manda instancia** (X-01, A5): el backend refresca cada pin contra la SUYA
+ * (`pinned_insights.odoo_config_id`) y el `config_id` del cuerpo lo ignora. Mandar la
+ * activa era cómo una tarjeta de Kestrel terminaba con los números de Ladera.
+ * Un pin sin instancia vuelve `409 {reason: "no_instance"}` → `reason` en el resultado.
+ */
 export async function refreshPin(
   chatId: string,
   pinId: string,
-  configId: string,
   language: string,
   /** Fase 5 — el período global del Tablero. Se ignora en un pin atemporal. */
   period?: DashboardPeriod
@@ -1661,7 +1684,6 @@ export async function refreshPin(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        config_id: configId,
         language,
         ...(period && { date_override: period }),
       }),
@@ -1684,7 +1706,11 @@ export async function refreshPin(
       };
     }
 
-    return { success: false, error: extractError(data.detail, "Refresh failed") };
+    return {
+      success: false,
+      error: extractError(data.detail, "Refresh failed"),
+      ...(typeof data.reason === "string" && { reason: data.reason }),
+    };
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: "Network error: Could not connect to backend" };
@@ -1709,7 +1735,6 @@ export interface RefreshAllPinsResult {
  * entero (auth, instancia inalcanzable), no que falló una tarjeta.
  */
 export async function refreshAllPins(
-  configId: string,
   language: string,
   period?: DashboardPeriod,
   pinIds?: string[]
@@ -1718,8 +1743,8 @@ export async function refreshAllPins(
     const res = await authFetch(`${API_BASE}/me/pins/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // Sin `config_id` (X-01): cada tarjeta se refresca contra SU instancia.
       body: JSON.stringify({
-        config_id: configId,
         language,
         ...(period && { date_override: period }),
         ...(pinIds && { pin_ids: pinIds }),
@@ -1850,6 +1875,59 @@ export interface FetchChatHistoryResult {
   error?: string;
 }
 
+/**
+ * X-05 — los `events` que guardó el backend, traducidos a la MISMA forma que arma el
+ * stream (`hooks/use-chat.ts`): `chart` y `record_links` se acumulan; `selection_prompt`,
+ * `action_proposal` y `export` ocupan el único lugar de `metadata`, y gana el último —
+ * igual que en vivo. Si esta regla difiere de la del stream, reabrir un chat muestra otra
+ * cosa que la que se vio, que es justo el bug que esto arregla.
+ */
+function hydrateEvents(events: unknown): Partial<Message> {
+  if (!Array.isArray(events) || events.length === 0) return {};
+  const charts: ChartSSEEvent[] = [];
+  const recordLinks: RecordLinksEvent[] = [];
+  let metadata: MessageMetadata | undefined;
+  for (const ev of events) {
+    if (!ev || typeof ev !== "object") continue;
+    const e = ev as Record<string, unknown>;
+    if (e.type === "chart") charts.push(e as unknown as ChartSSEEvent);
+    else if (e.type === "record_links") recordLinks.push(e as unknown as RecordLinksEvent);
+    else if (e.type === "selection_prompt" || e.type === "action_proposal")
+      metadata = e as unknown as MessageMetadata;
+    else if (e.type === "export")
+      metadata = {
+        type: "excel_export",
+        export_url: e.export_url as string,
+        filename: e.filename as string,
+      };
+  }
+  return {
+    ...(metadata && { metadata }),
+    ...(charts.length > 0 && { charts }),
+    ...(recordLinks.length > 0 && { recordLinks }),
+  };
+}
+
+/**
+ * X-05 — qué chip se eligió: si el mensaje del usuario que sigue a unas opciones mandó
+ * el `value` de una de ellas, esa queda marcada al reabrir (en vez de volver a ofrecerse
+ * como si nadie hubiera contestado).
+ */
+function withChoices(messages: Message[]): Message[] {
+  return messages.map((m, i) => {
+    const meta = m.metadata;
+    const next = messages[i + 1];
+    if (m.role !== "assistant" || meta?.type !== "selection_prompt" || next?.role !== "user")
+      return m;
+    const sent = (next.value ?? next.content).trim();
+    const values: string[] =
+      "kind" in meta
+        ? meta.options.map((o) => ("value" in o ? String(o.value) : ""))
+        : meta.options.map((o) => String(o.index));
+    return values.includes(sent) ? { ...m, choice: sent } : m;
+  });
+}
+
 export async function fetchChatHistory(
   chatId: string,
   configId: string
@@ -1859,13 +1937,19 @@ export async function fetchChatHistory(
     const res = await authFetch(`${API_BASE}/chat/${chatId}/history?${params}`);
     const data = await res.json();
     if (res.ok) {
-      const messages: Message[] = (data.messages ?? data).map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (m: any) => ({
-          ...m,
-          role: m.role === "human" ? "user" : m.role === "ai" ? "assistant" : m.role,
-          timestamp: new Date(m.timestamp ?? m.created_at ?? Date.now()),
-        })
+      const messages = withChoices(
+        (data.messages ?? data).map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (m: any): Message => {
+            const { events, ...rest } = m;
+            return {
+              ...rest,
+              role: m.role === "human" ? "user" : m.role === "ai" ? "assistant" : m.role,
+              timestamp: new Date(m.timestamp ?? m.created_at ?? Date.now()),
+              ...hydrateEvents(events),
+            };
+          }
+        )
       );
       return { success: true, messages };
     }
@@ -2169,7 +2253,6 @@ export interface UpdateOrgSubscriptionPayload {
   tier?: string;
   paid_slots_limit?: number;
   free_slots_limit?: number;
-  show_watermark?: boolean;
   /** Voice feature quotas (-1 = unlimited, 0 = not contracted). */
   stt_slots_limit?: number;
   tts_slots_limit?: number;
@@ -2891,26 +2974,36 @@ export async function executeListingExcelAction(
   }
 }
 
+/** Lo que devuelve `GET /routines/instance-usage` (quick-wins §7, X-04, X-06). */
+export interface InstanceUsageInfo {
+  /** `{modelo: cantidad}` — incluye `stock.quant`, proyectos, tareas, partes y POS (X-06). */
+  usage: Record<string, number>;
+  /** "AAAA-MM-DD": la última fecha de NEGOCIO con datos (X-04, A6). `null` = no se sabe. */
+  dataUntil: string | null;
+}
+
 /**
- * `{modelo: cantidad}` de la instancia (quick-wins §7) — para filtrar las
- * sugerencias del chat contra lo que el tenant realmente usa.
+ * El uso real de la instancia — para filtrar sugerencias, armar el resumen y el cartel
+ * "datos hasta". Leerlo con `useInstanceUsage` (`hooks/use-instance-usage.ts`), que lo
+ * comparte entre pantallas: esta función no cachea.
  *
- * **Best-effort y no bloqueante:** un fallo devuelve `{}`, que el filtro
- * interpreta como "no lo sabemos" y muestra todas las sugerencias. Sugerir de más
- * es mucho mejor que esconderle al usuario algo que sí podía preguntar.
+ * **Best-effort y no bloqueante:** un fallo devuelve `null`, que el filtro interpreta como
+ * "no lo sabemos" y muestra todas las sugerencias. Sugerir de más es mucho mejor que
+ * esconderle al usuario algo que sí podía preguntar.
  */
-export async function fetchInstanceUsage(
-  configId: string
-): Promise<Record<string, number>> {
+export async function fetchInstanceUsage(configId: string): Promise<InstanceUsageInfo | null> {
   try {
     const res = await authFetch(
       `${API_BASE}/routines/instance-usage?config_id=${encodeURIComponent(configId)}`
     );
-    if (!res.ok) return {};
+    if (!res.ok) return null;
     const data = await res.json();
-    return (data.usage ?? {}) as Record<string, number>;
+    return {
+      usage: (data.usage ?? {}) as Record<string, number>,
+      dataUntil: typeof data.data_until === "string" && data.data_until ? data.data_until : null,
+    };
   } catch {
-    return {};
+    return null;
   }
 }
 

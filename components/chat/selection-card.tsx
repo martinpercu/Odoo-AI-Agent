@@ -8,17 +8,22 @@ import type { SelectionPromptMetadata } from "@/lib/types";
 
 interface SelectionCardProps {
   metadata: SelectionPromptMetadata;
-  onSelect: (value: string) => void;
+  /** X-07 — `value` es el índice que se manda; `label`, el nombre que la burbuja muestra. */
+  onSelect: (value: string, label: string) => void;
+  /** X-05 — el índice ya elegido al reabrir el chat (sale de `/history`). */
+  initialSelected?: string;
 }
 
-export function SelectionCard({ metadata, onSelect }: SelectionCardProps) {
-  const [selected, setSelected] = useState<number | null>(null);
+export function SelectionCard({ metadata, onSelect, initialSelected }: SelectionCardProps) {
+  const [selected, setSelected] = useState<number | null>(
+    initialSelected != null && initialSelected !== "" ? Number(initialSelected) : null
+  );
   const t = useTranslations("ChatMessages");
 
-  function handleSelect(index: number) {
+  function handleSelect(index: number, label: string) {
     if (selected !== null) return;
     setSelected(index);
-    onSelect(String(index));
+    onSelect(String(index), label);
   }
 
   return (
@@ -36,7 +41,7 @@ export function SelectionCard({ metadata, onSelect }: SelectionCardProps) {
           return (
             <button
               key={option.index}
-              onClick={() => handleSelect(option.index)}
+              onClick={() => handleSelect(option.index, option.name)}
               disabled={selected !== null}
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-left text-body transition-colors ${
                 isSelected

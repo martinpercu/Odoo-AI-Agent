@@ -135,7 +135,7 @@ interface LockupProps extends MarkProps {
 
 /**
  * Lockup — Mark + Wordmark, horizontal.
- * Use for headers, footers, "powered by" badges.
+ * Use for headers and footers.
  */
 export function Lockup({
   Mark = MarkB,
@@ -174,11 +174,5 @@ export function Lockup({
 
    // Loading state — animated pulse
    <MarkI size={48} className="animate-pulse" />
-
-   // "Powered by" footer (Client)
-   <div style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 11 }}>
-     <span>Powered by</span>
-     <Lockup size={14} wordColor="currentColor" />
-   </div>
 
    ============================================================ */

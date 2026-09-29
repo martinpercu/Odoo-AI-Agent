@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { usePinnedInsights } from "@/hooks/use-pinned-insights";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
+import { useAudience } from "@/hooks/use-audience";
 import { IntroProvider } from "@/hooks/use-intro";
 import { PartnerNudgeProvider } from "@/hooks/use-partner-nudge";
 import { IntroModal } from "@/components/intro/intro-modal";
@@ -75,6 +76,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { loadAllPins } = usePinnedInsights();
   const { activeConfigId, setActiveConfigId } = useOdooConfig();
   const isBuilder = meData?.user?.role === "ADMIN" || meData?.user?.role === "SUPERADMIN";
+  const { audience } = useAudience();
 
   // El historial se pide YA filtrado por instancia (ver `fetchMyConversations`), así que
   // cambiar de instancia — o pedir "ver todos" — es volver a pedir la primera página.
@@ -177,7 +179,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
               <PinnedSidebar />
               <FlyingPinPortal />
-              {user && isBuilder && <LangGraphTracePanel entries={chat.traceEntries} />}
+              {/* F-05 (A3) — en la vista previa "ver como cliente" tampoco: un cliente no
+                  ve los nodos del grafo, y la vista previa tiene que ser fiel. */}
+              {user && isBuilder && audience === "builder" && (
+                <LangGraphTracePanel entries={chat.traceEntries} />
+              )}
             </div>
             <IntroModal />
             <IntroPanel />
