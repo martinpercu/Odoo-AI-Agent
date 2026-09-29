@@ -1917,7 +1917,7 @@
       "projectProject": "திட்டங்கள்",
       "projectTask": "பணிகள்",
       "timesheet": "மணிநேரப் பதிவுகள்",
-      "stockQuant": "இடம் வாரியாக இருப்பு",
+      "stockQuant": "இருப்பில் உள்ள பொருட்கள் (கிடங்கு வாரியாக)",
       "posOrder": "கவுண்டர் விற்பனை"
     },
     "titleDemo": "What I already know about {instance}",

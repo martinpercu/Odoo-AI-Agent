@@ -1917,7 +1917,7 @@
       "projectProject": "Progetti",
       "projectTask": "Attività",
       "timesheet": "Registrazioni ore",
-      "stockQuant": "Giacenze per ubicazione",
+      "stockQuant": "Prodotti a magazzino (per deposito)",
       "posOrder": "Vendite al banco"
     },
     "titleDemo": "Quello che so già di {instance}",

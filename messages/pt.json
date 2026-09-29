@@ -1917,7 +1917,7 @@
       "projectProject": "Projetos",
       "projectTask": "Tarefas",
       "timesheet": "Apontamentos de horas",
-      "stockQuant": "Estoque por local",
+      "stockQuant": "Produtos em estoque (por depósito)",
       "posOrder": "Vendas de balcão"
     },
     "titleDemo": "O que já sei sobre {instance}",

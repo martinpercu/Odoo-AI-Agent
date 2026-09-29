@@ -1917,7 +1917,7 @@
       "projectProject": "प्रकल्प",
       "projectTask": "कामे",
       "timesheet": "तासांच्या नोंदी",
-      "stockQuant": "ठिकाणनिहाय साठा",
+      "stockQuant": "साठ्यातील उत्पादने (गोदामनिहाय)",
       "posOrder": "काउंटर विक्री"
     },
     "titleDemo": "What I already know about {instance}",

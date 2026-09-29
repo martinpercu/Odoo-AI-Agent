@@ -1917,7 +1917,7 @@
       "projectProject": "પ્રોજેક્ટ",
       "projectTask": "કાર્યો",
       "timesheet": "કલાકની નોંધો",
-      "stockQuant": "સ્થાન મુજબ સ્ટોક",
+      "stockQuant": "સ્ટોકમાં ઉત્પાદનો (ગોદામ મુજબ)",
       "posOrder": "કાઉન્ટર વેચાણ"
     },
     "titleDemo": "What I already know about {instance}",

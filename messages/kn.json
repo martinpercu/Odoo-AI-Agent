@@ -1917,7 +1917,7 @@
       "projectProject": "ಯೋಜನೆಗಳು",
       "projectTask": "ಕಾರ್ಯಗಳು",
       "timesheet": "ಗಂಟೆಗಳ ದಾಖಲೆಗಳು",
-      "stockQuant": "ಸ್ಥಳದ ಪ್ರಕಾರ ಸ್ಟಾಕ್",
+      "stockQuant": "ಸ್ಟಾಕ್‌ನಲ್ಲಿರುವ ಉತ್ಪನ್ನಗಳು (ಗೋದಾಮು ವಾರು)",
       "posOrder": "ಕೌಂಟರ್ ಮಾರಾಟ"
     },
     "titleDemo": "What I already know about {instance}",

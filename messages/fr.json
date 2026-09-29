@@ -1917,7 +1917,7 @@
       "projectProject": "Projets",
       "projectTask": "Tâches",
       "timesheet": "Feuilles de temps",
-      "stockQuant": "Stock par emplacement",
+      "stockQuant": "Produits en stock (par entrepôt)",
       "posOrder": "Ventes en caisse"
     },
     "titleDemo": "Ce que je sais déjà de {instance}",

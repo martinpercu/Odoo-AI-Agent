@@ -1917,7 +1917,7 @@
       "projectProject": "Projects",
       "projectTask": "Tasks",
       "timesheet": "Timesheet entries",
-      "stockQuant": "Stock by location",
+      "stockQuant": "Products in stock (per warehouse)",
       "posOrder": "Point of sale orders"
     },
     "titleDemo": "What I already know about {instance}",
