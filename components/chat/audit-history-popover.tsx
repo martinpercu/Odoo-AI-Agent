@@ -144,6 +144,9 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
                           {entry.action_type} &middot; {entry.model}
                         </span>
                       </div>
+                      {entry.record_name && (
+                        <div className="ml-6 text-text-secondary">{entry.record_name}</div>
+                      )}
                       {/* `changes` ya viene con la etiqueta localizada de cada campo y su
                           antes/después: es lo que el usuario editó sobre la propuesta. */}
                       {entry.has_edits && entry.changes?.length > 0 && (

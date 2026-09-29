@@ -1991,6 +1991,8 @@ export interface AuditEntryBuilder {
   changes: AuditChange[];
   has_edits: boolean;
   created_at: string;
+  /** B-36 — el nombre del registro que tocó la acción ("P00001"). Ausente con un back viejo. */
+  record_name?: string | null;
 }
 
 /**
