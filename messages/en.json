@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Your invoice {docnum} has been issued.",
-        "order": "Your order {docnum} is confirmed.",
-        "purchase": "Purchase order {docnum} was created.",
+        "order": "Your order {docnum} was created as a draft.",
+        "purchase": "Purchase order {docnum} was created as a draft.",
         "delivery": "Your shipment {docnum} is being prepared.",
         "payment": "Your payment {docnum} was recorded.",
         "contact": "Added to your contacts.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Confirm invoice",
-          "order": "Confirm order",
-          "purchase": "Confirm purchase order",
+          "order": "Create order",
+          "purchase": "Create purchase order",
           "payment": "Confirm payment",
           "generic": "Confirm"
         },

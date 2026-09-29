@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Tu factura {docnum} quedó emitida.",
-        "order": "Confirmamos tu pedido {docnum}.",
-        "purchase": "Tu orden de compra {docnum} fue creada.",
+        "order": "Tu pedido {docnum} quedó en borrador.",
+        "purchase": "Tu pedido de compra {docnum} quedó en borrador.",
         "delivery": "Tu envío {docnum} está en preparación.",
         "payment": "Tu pago {docnum} quedó registrado.",
         "contact": "Agregamos a tus contactos.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Confirmar factura",
-          "order": "Confirmar pedido",
-          "purchase": "Confirmar orden de compra",
+          "order": "Crear pedido",
+          "purchase": "Crear pedido de compra",
           "payment": "Confirmar pago",
           "generic": "Confirmar"
         },

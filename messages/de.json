@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Deine Rechnung {docnum} wurde ausgestellt.",
-        "order": "Deine Bestellung {docnum} ist bestätigt.",
-        "purchase": "Bestellung {docnum} wurde erstellt.",
+        "order": "Dein Auftrag {docnum} wurde als Entwurf angelegt.",
+        "purchase": "Bestellung {docnum} wurde als Entwurf angelegt.",
         "delivery": "Deine Sendung {docnum} wird vorbereitet.",
         "payment": "Deine Zahlung {docnum} wurde verbucht.",
         "contact": "Zu deinen Kontakten hinzugefügt.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Rechnung bestätigen",
-          "order": "Bestellung bestätigen",
-          "purchase": "Bestellung bestätigen",
+          "order": "Auftrag anlegen",
+          "purchase": "Bestellung anlegen",
           "payment": "Zahlung bestätigen",
           "generic": "Bestätigen"
         },
