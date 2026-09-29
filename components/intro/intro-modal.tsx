@@ -25,8 +25,10 @@ import { A11yModal } from "@/components/intro/a11y-modal";
 const EXAMPLE_PROMPTS = [
   { id: "overdue_invoices", model: "account.move" },
   { id: "top_customers", model: "sale.order" },
-  // ⚠️ La clave dice "stock_check" pero el texto es un reporte mensual: sin filtro.
-  { id: "stock_check", model: undefined },
+  // F-14 — era "Crear reporte mes marzo", que no decía de qué y el agente contestaba
+  // con otra pregunta. Ahora es de stock, como dice la clave (que no cambia: es el id
+  // de analytics), y como tal no se ofrece donde no hay inventario.
+  { id: "stock_check", model: "stock.quant" },
 ] as const;
 
 const CHIPS = [

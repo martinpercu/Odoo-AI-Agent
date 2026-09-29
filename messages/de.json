@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "Wie viele überfällige Rechnungen gibt es diesen Monat?",
         "top_customers": "Top 5 Kunden nach Umsatz",
-        "stock_check": "Bericht für März erstellen"
+        "stock_check": "Welche Produkte haben den höchsten Bestand?"
       },
       "ctaPrimary": "Demo erkunden",
       "ctaSecondary": "Verbinden Sie Ihr Odoo (kostenlos)",

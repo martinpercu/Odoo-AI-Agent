@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "Quantas faturas vencidas há este mês?",
         "top_customers": "Top 5 clientes por receita",
-        "stock_check": "Criar relatório mês março"
+        "stock_check": "Quais produtos têm mais estoque?"
       },
       "ctaPrimary": "Explorar o demo",
       "ctaSecondary": "Conecte seu Odoo (grátis)",
