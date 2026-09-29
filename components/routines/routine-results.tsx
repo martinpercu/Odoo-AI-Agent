@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, LayoutDashboard } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
 import type {
@@ -12,7 +12,7 @@ import type {
   RoutineRunDetail,
 } from "@/lib/types";
 import { RoutineAttributionTable } from "@/components/routines/routine-attribution";
-import { RoutineValueCard } from "@/components/routines/routine-delta";
+import { RoutineDelta, RoutineValueCard } from "@/components/routines/routine-delta";
 
 /**
  * Los resultados de una corrida terminada: los números y su lectura.
@@ -32,15 +32,19 @@ export function RoutineResults({
   routine?: Routine;
 }) {
   const t = useTranslations("Routines");
+  const locale = useLocale();
 
   const entries = Object.values(run.results ?? {});
   const derived = entries.filter((e) => e.kind === "derived");
   const pinsNotice = <RoutinePinsNotice run={run} />;
   if (derived.length === 0) return pinsNotice;
 
-  const stepLabel = (key: string) =>
-    routine?.steps?.find((s) => s.key === key)?.label ?? key;
-  const formatAmount = makeAmountFormatter(entries);
+  // X-10 — un derivado trae su nombre visible (`label`, B-21: "Variación",
+  // "Diferencia"); la clave es un identificador del catálogo y se mostraba en
+  // mayúsculas ("ABSOLUTO"). El paso sólo queda como respaldo de un back viejo.
+  const labelFor = (entry: RoutineResultEntry) =>
+    entry.label || routine?.steps?.find((s) => s.key === entry.key)?.label || entry.key;
+  const formatAmount = makeAmountFormatter(entries, locale);
 
   const scalars = derived.filter((d) => d.op === "pct_change" || d.op === "diff");
   const attributions = derived.filter((d) => d.op === "attribution");
@@ -57,7 +61,7 @@ export function RoutineResults({
             <ScalarCard
               key={d.key}
               entry={d}
-              label={stepLabel(d.key)}
+              label={labelFor(d)}
               formatAmount={formatAmount}
             />
           ))}
@@ -113,11 +117,12 @@ function ScalarCard({
   };
 
   if (entry.op === "pct_change") {
+    // X-10 — la tarjeta de la VARIACIÓN muestra la variación. Mostraba el total actual
+    // con un chip chico al lado, y el número grande de "Variación" era un monto.
     return (
       <RoutineValueCard
         label={label}
-        value={formatAmount(data.current ?? 0)}
-        change={entry.data as unknown as RoutinePctChange}
+        value={<RoutineDelta change={entry.data as unknown as RoutinePctChange} size="lg" />}
         narrative={entry.narrative}
         note={entry.note}
       />
@@ -153,7 +158,10 @@ function SkippedNote({ entry }: { entry: RoutineResultEntry }) {
  * ser la del navegador). Sin decimales para las monedas que no los usan — mostrar
  * "₲1.500,00" delata que el número lo formateó alguien que no conoce la moneda.
  */
-function makeAmountFormatter(entries: RoutineResultEntry[]): (value: number) => string {
+function makeAmountFormatter(
+  entries: RoutineResultEntry[],
+  locale: string
+): (value: number) => string {
   const NO_DECIMALS = new Set(["PYG", "CLP", "JPY", "KRW", "VND", "IDR", "UGX", "RWF"]);
   let symbol = "";
   let iso: string | undefined;
@@ -167,7 +175,7 @@ function makeAmountFormatter(entries: RoutineResultEntry[]): (value: number) => 
   }
   const decimals = iso && NO_DECIMALS.has(iso.toUpperCase()) ? 0 : 2;
   return (value: number) =>
-    `${symbol}${value.toLocaleString(undefined, {
+    `${symbol}${value.toLocaleString(locale, {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     })}`;

@@ -1353,6 +1353,8 @@ export interface RoutineResultEntry {
   kind: string;
   /** Sólo en los derivados: qué operación produjo el dato. */
   op?: string;
+  /** Sólo en los derivados: su nombre visible, ya en el idioma de la corrida (B-21). */
+  label?: string;
   status: RoutineStepStatus;
   data: Record<string, unknown>;
   reason: string | null;

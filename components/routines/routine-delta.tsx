@@ -1,7 +1,8 @@
 "use client";
 
 import { ArrowDownRight, ArrowUpRight, Minus, Sparkles, TriangleAlert } from "lucide-react";
-import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import type { RoutinePctChange } from "@/lib/types";
 
@@ -39,11 +40,13 @@ export function RoutineDelta({
   size = "md",
 }: {
   change: RoutinePctChange;
-  size?: "sm" | "md";
+  /** `lg` = la variación ES el número de la tarjeta (X-10), no un chip al lado de otro. */
+  size?: "sm" | "md" | "lg";
 }) {
   const t = useTranslations("Routines");
+  const locale = useLocale();
   const direction = change.direction;
-  const iconSize = size === "sm" ? 14 : 16;
+  const iconSize = size === "sm" ? 14 : size === "lg" ? 24 : 16;
 
   // Sin base de comparación no hay porcentaje que mostrar — y el texto lo dice.
   const text =
@@ -51,11 +54,11 @@ export function RoutineDelta({
       ? t("delta.new")
       : direction === "flat"
         ? t("delta.flat")
-        : `${direction === "up" ? "+" : "−"}${formatPct(change.pct)}`;
+        : `${direction === "up" ? "+" : "−"}${formatPct(change.pct, locale)}`;
 
   return (
     <span
-      className={`inline-flex items-center gap-1 text-small font-medium ${TONE[direction]}`}
+      className={`inline-flex items-center gap-1 ${size === "lg" ? "text-heading tabular-nums" : "text-small font-medium"} ${TONE[direction]}`}
       title={t(`delta.title.${direction}`)}
     >
       <Icon direction={direction} size={iconSize} />
@@ -64,11 +67,12 @@ export function RoutineDelta({
   );
 }
 
-function formatPct(pct: number | null): string {
+function formatPct(pct: number | null, locale: string): string {
   if (pct === null) return "";
-  const abs = Math.abs(pct);
-  // Sin decimales cuando son redondos: "400%" se lee mejor que "400,00%".
-  return `${Number.isInteger(abs) ? abs : abs.toFixed(2)}%`;
+  // Sin decimales cuando son redondos: "400%" se lee mejor que "400,00%". Con el
+  // locale de la APP (X-10): `toFixed` escribía "0.30%" en una pantalla en castellano,
+  // al lado de una frase del backend que dice "bajó 0,3%".
+  return `${Math.abs(pct).toLocaleString(locale, { maximumFractionDigits: 2 })}%`;
 }
 
 /**
@@ -85,7 +89,7 @@ export function RoutineValueCard({
   note,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   change?: RoutinePctChange;
   narrative?: string;
   note?: string | null;
@@ -94,7 +98,11 @@ export function RoutineValueCard({
     <div className="rounded-card border border-border bg-base p-4">
       <p className="text-micro uppercase tracking-wide text-text-muted">{label}</p>
       <div className="mt-1 flex flex-wrap items-baseline gap-2">
-        <span className="text-heading tabular-nums">{value}</span>
+        {typeof value === "string" ? (
+          <span className="text-heading tabular-nums">{value}</span>
+        ) : (
+          value
+        )}
         {change && <RoutineDelta change={change} />}
       </div>
       {narrative && <p className="mt-2 text-small text-text-secondary">{narrative}</p>}
