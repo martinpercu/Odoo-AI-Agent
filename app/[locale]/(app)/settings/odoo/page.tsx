@@ -25,6 +25,7 @@ import { ConnectionStatusBadge } from "@/components/odoo/connection-status-badge
 import { ConnectionInvalidBanner } from "@/components/odoo/connection-invalid-banner";
 import { CredentialForm } from "@/components/odoo/credential-form";
 import { TimezoneSection } from "@/components/settings/timezone-section";
+import { ROUTINES_VISIBLE } from "@/lib/feature-flags";
 
 /** A single instance the current user can self-manage credentials for (spec §6.5/§6.6). */
 function MyConnectionRow({ config, isClient }: { config: OdooConfigSummary; isClient: boolean }) {
@@ -207,10 +208,13 @@ export default function MyOdooConnectionPage() {
 
       {/* Fase 4 · F3 — la zona horaria vive acá, y no en `/settings`, porque es una
           preferencia PERSONAL: un CLIENT_USER también agenda Rutinas y no tiene acceso
-          a la pantalla de administración. */}
-      <div className="mt-6">
-        <TimezoneSection />
-      </div>
+          a la pantalla de administración. Hoy sólo decide la hora de las Rutinas
+          agendadas, así que se esconde con ellas. */}
+      {ROUTINES_VISIBLE && (
+        <div className="mt-6">
+          <TimezoneSection />
+        </div>
+      )}
     </div>
     </div>
   );
