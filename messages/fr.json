@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Essayez vous-même",
         "line": "Ceci tourne sur un Odoo d'exemple. Envoyez une requête et voyez ce qu'il répond ; activez « Vue client » dans le menu de gauche pour voir ce que verrait un utilisateur final.",
-        "chip1": "Factures échues de plus de 450k",
+        "chip1": "Les 5 factures échues les plus élevées",
         "chip2": "Ventes par commercial le mois dernier",
         "chip3": "Créer un contact : María López"
       },

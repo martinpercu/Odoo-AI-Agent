@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Pruébalo tú mismo",
         "line": "Esto corre sobre un Odoo de ejemplo. Envía una consulta y mira qué responde; con «Ver como cliente», en el menú de la izquierda, ves lo que vería un usuario final.",
-        "chip1": "Facturas vencidas de más de 450k",
+        "chip1": "Las 5 facturas vencidas de mayor monto",
         "chip2": "Ventas por vendedor del mes pasado",
         "chip3": "Crea un contacto: María López, maria@acme.com"
       },

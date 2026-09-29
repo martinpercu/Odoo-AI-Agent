@@ -196,6 +196,8 @@ export function IntroPanel() {
   // cero no se ofrece (mismo filtro que el carrusel). F-15: ni "el mes pasado" donde
   // los datos terminan antes.
   const allChips: { id: string; text: string; model?: string; period?: SuggestionPeriod }[] = [
+    // F-16 — sin umbral: "más de 450k" es poco en ARS/PYG y mucho en EUR (Ladera no
+    // tenía ninguna). Un top por monto contesta en cualquier moneda.
     { id: "overdue_invoices", text: t("what.chip1"), model: "account.move" },
     { id: "sales_by_rep", text: t("what.chip2"), model: "sale.order", period: "last_month" },
     { id: "create_contact", text: t("what.chip3"), model: undefined },

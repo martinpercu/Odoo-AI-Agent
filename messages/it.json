@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Provalo tu stesso",
         "line": "Questo gira su un Odoo di esempio. Invia una domanda e guarda cosa risponde; con «Vista cliente», nel menu a sinistra, vedi quello che vedrebbe un utente finale.",
-        "chip1": "Fatture scadute oltre 450.000",
+        "chip1": "Le 5 fatture scadute più alte",
         "chip2": "Vendite per agente il mese scorso",
         "chip3": "Crea contatto: María López"
       },

@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Experimente você mesmo",
         "line": "Isto roda em um Odoo de exemplo. Envie uma consulta e veja o que ele responde; com «Ver como cliente», no menu da esquerda, você vê o que um usuário final veria.",
-        "chip1": "Faturas vencidas acima de 250000",
+        "chip1": "As 5 faturas vencidas de maior valor",
         "chip2": "Vendas por vendedor no mês passado",
         "chip3": "Criar contato: María López"
       },

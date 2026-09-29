@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Probieren Sie es selbst",
         "line": "Dies läuft auf einem Beispiel-Odoo. Senden Sie eine Anfrage und sehen Sie, was es antwortet; mit „Kundenansicht“ im linken Menü sehen Sie, was ein Endnutzer sehen würde.",
-        "chip1": "Überfällige Rechnungen über 380k",
+        "chip1": "Die 5 höchsten überfälligen Rechnungen",
         "chip2": "Umsatz nach Vertriebsmitarbeiter letzten Monat",
         "chip3": "Kontakt erstellen: María López"
       },
