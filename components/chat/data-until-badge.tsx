@@ -13,8 +13,13 @@ import { formatDataUntil, shouldShowDataUntil } from "@/lib/data-until";
  * Lee el mismo `instance-usage` que el resumen y el carrusel (una sola respuesta por
  * instancia, F-01), así que no suma pedidos. No dibuja nada mientras no llegó el dato o
  * cuando no vale la pena decirlo (`shouldShowDataUntil`).
+ *
+ * ⚠️ El `display` lo pone quien lo usa (F-17): con un `inline-flex` fijo acá, el
+ * `hidden md:inline-flex` del cartel del demo no escondía nada — dos utilidades de
+ * `display` no se resuelven por el orden en `className` sino por el del CSS — y en mobile
+ * el chip se montaba sobre el CTA.
  */
-export function DataUntilBadge({ className = "" }: { className?: string }) {
+export function DataUntilBadge({ className = "inline-flex" }: { className?: string }) {
   const t = useTranslations("DataUntil");
   const locale = useLocale();
   const { activeConfigId, isDemoMode } = useOdooConfig();
@@ -26,7 +31,7 @@ export function DataUntilBadge({ className = "" }: { className?: string }) {
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap ${className}`}
+      className={`shrink-0 items-center gap-1 whitespace-nowrap ${className}`}
       title={isDemoMode ? t("hintDemo") : t("hint")}
     >
       <CalendarClock size={14} strokeWidth={1.5} className="shrink-0" aria-hidden />

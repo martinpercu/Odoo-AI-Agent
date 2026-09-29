@@ -88,7 +88,7 @@ export function InstanceSnapshot() {
         {isDemoMode && demoName ? t("titleDemo", { instance: demoName }) : t("title")}
       </p>
       {/* X-04 — hasta cuándo llegan estos números (sólo si vale la pena decirlo). */}
-      <DataUntilBadge className="text-micro text-text-muted" />
+      <DataUntilBadge className="inline-flex text-micro text-text-muted" />
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map((tile) => (
