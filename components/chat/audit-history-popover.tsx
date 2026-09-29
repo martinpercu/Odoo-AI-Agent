@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Clock, CheckCircle2, Loader2 } from "lucide-react";
 import { fetchAuditHistory, isClientAuditEntry } from "@/lib/api";
 import type { AuditEntry } from "@/lib/api";
@@ -31,6 +31,9 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("ChatMessages");
+  // F-19 — la fecha con el locale de la APP: `toLocaleString()` sin argumento usa el
+  // del navegador y escribía "9/29/2026, 10:46:08 AM" en una pantalla en castellano.
+  const locale = useLocale();
   const { isPreviewingAsClient } = useAudience();
 
   // ⚠️ La caché se llavea por chat Y por audiencia. Antes era un `loaded` booleano, que
@@ -127,7 +130,7 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
                         </div>
                       )}
                       <div className="ml-6 mt-0.5 text-text-muted">
-                        {new Date(entry.ts).toLocaleString()}
+                        {new Date(entry.ts).toLocaleString(locale)}
                       </div>
                     </div>
                   ) : (
@@ -150,7 +153,7 @@ export function AuditHistoryPopover({ chatId }: AuditHistoryPopoverProps) {
                         </div>
                       )}
                       <div className="ml-6 mt-0.5 text-text-muted">
-                        {new Date(entry.created_at).toLocaleString()}
+                        {new Date(entry.created_at).toLocaleString(locale)}
                       </div>
                     </div>
                   )
