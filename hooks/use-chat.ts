@@ -598,6 +598,7 @@ export function useChat(chatId?: string, userId?: string) {
                         type: "excel_export",
                         export_url: parsed.export_url,
                         filename: parsed.filename,
+                        ...(typeof parsed.message_id === "string" && { message_id: parsed.message_id }),
                       } satisfies ExcelExportMetadata;
                       text = "";
                     } else if (parsed.type === "audio") {

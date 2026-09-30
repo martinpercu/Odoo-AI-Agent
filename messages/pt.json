@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Sua fatura {docnum} foi emitida.",
-        "order": "Seu pedido {docnum} está confirmado.",
-        "purchase": "Pedido de compra {docnum} foi criado.",
+        "order": "Seu pedido {docnum} foi criado como rascunho.",
+        "purchase": "Pedido de compra {docnum} foi criado como rascunho.",
         "delivery": "Seu envio {docnum} está em preparação.",
         "payment": "Seu pagamento {docnum} foi registrado.",
         "contact": "Adicionado aos seus contatos.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Confirmar fatura",
-          "order": "Confirmar pedido",
-          "purchase": "Confirmar pedido de compra",
+          "order": "Criar pedido",
+          "purchase": "Criar pedido de compra",
           "payment": "Confirmar pagamento",
           "generic": "Confirmar"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "Quantas faturas vencidas há este mês?",
         "top_customers": "Top 5 clientes por receita",
-        "stock_check": "Criar relatório mês março"
+        "stock_check": "Quais produtos têm mais estoque?"
       },
       "ctaPrimary": "Explorar o demo",
       "ctaSecondary": "Conecte seu Odoo (grátis)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Experimente você mesmo",
         "line": "Isto roda em um Odoo de exemplo. Envie uma consulta e veja o que ele responde; com «Ver como cliente», no menu da esquerda, você vê o que um usuário final veria.",
-        "chip1": "Faturas vencidas acima de 250000",
+        "chip1": "As 5 faturas vencidas de maior valor",
         "chip2": "Vendas por vendedor no mês passado",
         "chip3": "Criar contato: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "Projetos",
       "projectTask": "Tarefas",
       "timesheet": "Apontamentos de horas",
-      "stockQuant": "Estoque por local",
+      "stockQuant": "Produtos em estoque (por depósito)",
       "posOrder": "Vendas de balcão"
     },
     "titleDemo": "O que já sei sobre {instance}",

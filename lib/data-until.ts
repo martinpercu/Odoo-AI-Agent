@@ -11,7 +11,7 @@
 const STALE_AFTER_DAYS = 35;
 
 /** "AAAA-MM-DD" → Date LOCAL. `new Date("2026-07-31")` es UTC y al oeste de Greenwich da el 30. */
-function parseLocalDate(iso: string): Date | null {
+export function parseLocalDate(iso: string): Date | null {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
   if (!m) return null;
   return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));

@@ -36,7 +36,10 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
   const { currentChatId } = useChatContext();
   const { isPinned, togglePinChart } = usePinnedInsights();
   const chatId = currentChatId ?? "";
-  const pinIdentifier = `${chatId}:${messageId}:${chartIndex}`;
+  // X-09 — el id del backend manda sobre el local: es el que vuelve en `/history`, así
+  // que el pin sigue reconociéndose al reabrir el chat.
+  const pinMessageId = chart.message_id ?? messageId;
+  const pinIdentifier = `${chatId}:${pinMessageId}:${chartIndex}`;
   const chartPinned = isPinned("chart", pinIdentifier);
 
   // Detect narrow container via ResizeObserver for container-query-like behavior
@@ -118,7 +121,7 @@ export function OdooChartCard({ chart, messageId, chartIndex }: OdooChartCardPro
           <div className="flex shrink-0 items-center gap-1">
             <PinToggleButton
               pinned={chartPinned}
-              onToggle={() => togglePinChart(chatId, messageId, chartIndex, chart)}
+              onToggle={() => togglePinChart(chatId, pinMessageId, chartIndex, chart)}
               volatility={chart.query_context?.volatility}
             />
             {chart.export_url && (

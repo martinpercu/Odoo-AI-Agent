@@ -39,7 +39,7 @@ export function ExcelExportCard({ metadata, messageId }: ExcelExportCardProps) {
         </div>
         <PinToggleButton
           pinned={excelPinned}
-          onToggle={() => togglePinExcel(chatId, messageId, metadata)}
+          onToggle={() => togglePinExcel(chatId, metadata.message_id ?? messageId, metadata)}
         />
         <a
           href={fullUrl}

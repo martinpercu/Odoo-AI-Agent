@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "உங்கள் விலைப்பட்டியல் {docnum} வழங்கப்பட்டது.",
-        "order": "உங்கள் ஆர்டர் {docnum} உறுதிப்படுத்தப்பட்டது.",
-        "purchase": "கொள்முதல் ஆர்டர் {docnum} உருவாக்கப்பட்டது.",
+        "order": "உங்கள் ஆர்டர் {docnum} வரைவாக உருவாக்கப்பட்டது.",
+        "purchase": "கொள்முதல் ஆர்டர் {docnum} வரைவாக உருவாக்கப்பட்டது.",
         "delivery": "உங்கள் கப்பல் ஏற்றுமதி {docnum} தயாரிக்கப்படுகிறது.",
         "payment": "உங்கள் கட்டணம் {docnum} பதிவு செய்யப்பட்டது.",
         "contact": "உங்கள் தொடர்புகளில் சேர்க்கப்பட்டது.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "விலைப்பட்டியலை உறுதிப்படுத்தவும்",
-          "order": "ஆர்டரை உறுதிப்படுத்தவும்",
-          "purchase": "கொள்முதல் ஆர்டரை உறுதிப்படுத்தவும்",
+          "order": "ஆர்டரை உருவாக்கவும்",
+          "purchase": "கொள்முதல் ஆர்டரை உருவாக்கவும்",
           "payment": "கட்டணத்தை உறுதிப்படுத்தவும்",
           "generic": "உறுதிப்படுத்தவும்"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "How many overdue invoices are there this month?",
         "top_customers": "Top 5 customers by revenue",
-        "stock_check": "Create March month report"
+        "stock_check": "Which products have the most stock?"
       },
       "ctaPrimary": "Explore the demo",
       "ctaSecondary": "Connect your Odoo (free)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Try it yourself",
         "line": "This runs on a sample Odoo. Send a query and see what it answers; switch on “View as client” in the left menu to see what an end user would see.",
-        "chip1": "Overdue invoices over 450k",
+        "chip1": "Top 5 overdue invoices by amount",
         "chip2": "Sales by rep last month",
         "chip3": "Create a contact: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "திட்டங்கள்",
       "projectTask": "பணிகள்",
       "timesheet": "மணிநேரப் பதிவுகள்",
-      "stockQuant": "இடம் வாரியாக இருப்பு",
+      "stockQuant": "இருப்பில் உள்ள பொருட்கள் (கிடங்கு வாரியாக)",
       "posOrder": "கவுண்டர் விற்பனை"
     },
     "titleDemo": "What I already know about {instance}",

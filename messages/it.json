@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "La tua fattura {docnum} è stata emessa.",
-        "order": "Il tuo ordine {docnum} è confermato.",
-        "purchase": "L'ordine di acquisto {docnum} è stato creato.",
+        "order": "Il tuo ordine {docnum} è stato creato in bozza.",
+        "purchase": "L'ordine di acquisto {docnum} è stato creato in bozza.",
         "delivery": "La tua spedizione {docnum} è in preparazione.",
         "payment": "Il pagamento {docnum} è stato registrato.",
         "contact": "Aggiunto ai tuoi contatti.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Conferma fattura",
-          "order": "Conferma ordine",
-          "purchase": "Conferma ordine d'acquisto",
+          "order": "Crea ordine",
+          "purchase": "Crea ordine d'acquisto",
           "payment": "Conferma pagamento",
           "generic": "Conferma"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "Quante fatture scadute ci sono questo mese?",
         "top_customers": "Top 5 clienti per fatturato",
-        "stock_check": "Crea report mese di marzo"
+        "stock_check": "Quali prodotti hanno più giacenza?"
       },
       "ctaPrimary": "Esplora la demo",
       "ctaSecondary": "Connetti il tuo Odoo (gratis)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Provalo tu stesso",
         "line": "Questo gira su un Odoo di esempio. Invia una domanda e guarda cosa risponde; con «Vista cliente», nel menu a sinistra, vedi quello che vedrebbe un utente finale.",
-        "chip1": "Fatture scadute oltre 450.000",
+        "chip1": "Le 5 fatture scadute più alte",
         "chip2": "Vendite per agente il mese scorso",
         "chip3": "Crea contatto: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "Progetti",
       "projectTask": "Attività",
       "timesheet": "Registrazioni ore",
-      "stockQuant": "Giacenze per ubicazione",
+      "stockQuant": "Prodotti a magazzino (per deposito)",
       "posOrder": "Vendite al banco"
     },
     "titleDemo": "Quello che so già di {instance}",

@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Votre facture {docnum} a été émise.",
-        "order": "Votre commande {docnum} est confirmée.",
-        "purchase": "Le bon de commande {docnum} a été créé.",
+        "order": "Votre commande {docnum} a été créée en brouillon.",
+        "purchase": "Le bon de commande {docnum} a été créé en brouillon.",
         "delivery": "Votre livraison {docnum} est en préparation.",
         "payment": "Votre paiement {docnum} a été enregistré.",
         "contact": "Ajouté à vos contacts.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Confirmer la facture",
-          "order": "Confirmer la commande",
-          "purchase": "Confirmer le bon de commande",
+          "order": "Créer la commande",
+          "purchase": "Créer le bon de commande",
           "payment": "Confirmer le paiement",
           "generic": "Confirmer"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "Combien de factures échues ce mois-ci ?",
         "top_customers": "Top 5 clients par chiffre d'affaires",
-        "stock_check": "Créer rapport mois de mars"
+        "stock_check": "Quels produits ont le plus de stock ?"
       },
       "ctaPrimary": "Explorer la démo",
       "ctaSecondary": "Connectez votre Odoo (gratuit)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Essayez vous-même",
         "line": "Ceci tourne sur un Odoo d'exemple. Envoyez une requête et voyez ce qu'il répond ; activez « Vue client » dans le menu de gauche pour voir ce que verrait un utilisateur final.",
-        "chip1": "Factures échues de plus de 450k",
+        "chip1": "Les 5 factures échues les plus élevées",
         "chip2": "Ventes par commercial le mois dernier",
         "chip3": "Créer un contact : María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "Projets",
       "projectTask": "Tâches",
       "timesheet": "Feuilles de temps",
-      "stockQuant": "Stock par emplacement",
+      "stockQuant": "Produits en stock (par entrepôt)",
       "posOrder": "Ventes en caisse"
     },
     "titleDemo": "Ce que je sais déjà de {instance}",

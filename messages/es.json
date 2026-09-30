@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Tu factura {docnum} quedó emitida.",
-        "order": "Confirmamos tu pedido {docnum}.",
-        "purchase": "Tu orden de compra {docnum} fue creada.",
+        "order": "Tu pedido {docnum} quedó en borrador.",
+        "purchase": "Tu pedido de compra {docnum} quedó en borrador.",
         "delivery": "Tu envío {docnum} está en preparación.",
         "payment": "Tu pago {docnum} quedó registrado.",
         "contact": "Agregamos a tus contactos.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Confirmar factura",
-          "order": "Confirmar pedido",
-          "purchase": "Confirmar orden de compra",
+          "order": "Crear pedido",
+          "purchase": "Crear pedido de compra",
           "payment": "Confirmar pago",
           "generic": "Confirmar"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "¿Cuántas facturas vencidas hay este mes?",
         "top_customers": "Top 5 clientes por ingresos",
-        "stock_check": "Crear reporte mes marzo"
+        "stock_check": "¿Qué productos tienen más stock?"
       },
       "ctaPrimary": "Explora el demo",
       "ctaSecondary": "Conecta tu Odoo (gratis)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Pruébalo tú mismo",
         "line": "Esto corre sobre un Odoo de ejemplo. Envía una consulta y mira qué responde; con «Ver como cliente», en el menú de la izquierda, ves lo que vería un usuario final.",
-        "chip1": "Facturas vencidas de más de 450k",
+        "chip1": "Las 5 facturas vencidas de mayor monto",
         "chip2": "Ventas por vendedor del mes pasado",
         "chip3": "Crea un contacto: María López, maria@acme.com"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "Proyectos",
       "projectTask": "Tareas",
       "timesheet": "Partes de horas",
-      "stockQuant": "Existencias por ubicación",
+      "stockQuant": "Productos con stock (por depósito)",
       "posOrder": "Ventas de mostrador"
     },
     "titleDemo": "Esto ya sé de {instance}",

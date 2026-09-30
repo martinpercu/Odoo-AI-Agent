@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "તમારું ઇન્વૉઇસ {docnum} જારી થયું.",
-        "order": "તમારો ઓર્ડર {docnum} કન્ફર્મ થયો.",
-        "purchase": "ખરીદ ઓર્ડર {docnum} બન્યો.",
+        "order": "તમારો ઓર્ડર {docnum} ડ્રાફ્ટ તરીકે બન્યો.",
+        "purchase": "ખરીદ ઓર્ડર {docnum} ડ્રાફ્ટ તરીકે બન્યો.",
         "delivery": "તમારું શિપમેન્ટ {docnum} તૈયાર થઈ રહ્યું છે.",
         "payment": "તમારી ચૂકવણી {docnum} નોંધાઈ.",
         "contact": "તમારા સંપર્કોમાં ઉમેરાયું.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "ઇન્વૉઇસ કન્ફર્મ કરો",
-          "order": "ઓર્ડર કન્ફર્મ કરો",
-          "purchase": "ખરીદ ઓર્ડર કન્ફર્મ કરો",
+          "order": "ઓર્ડર બનાવો",
+          "purchase": "ખરીદ ઓર્ડર બનાવો",
           "payment": "ચૂકવણી કન્ફર્મ કરો",
           "generic": "કન્ફર્મ કરો"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "How many overdue invoices are there this month?",
         "top_customers": "Top 5 customers by revenue",
-        "stock_check": "Create March month report"
+        "stock_check": "Which products have the most stock?"
       },
       "ctaPrimary": "Explore the demo",
       "ctaSecondary": "Connect your Odoo (free)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Try it yourself",
         "line": "This runs on a sample Odoo. Send a query and see what it answers; switch on “View as client” in the left menu to see what an end user would see.",
-        "chip1": "Overdue invoices over 450k",
+        "chip1": "Top 5 overdue invoices by amount",
         "chip2": "Sales by rep last month",
         "chip3": "Create a contact: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "પ્રોજેક્ટ",
       "projectTask": "કાર્યો",
       "timesheet": "કલાકની નોંધો",
-      "stockQuant": "સ્થાન મુજબ સ્ટોક",
+      "stockQuant": "સ્ટોકમાં ઉત્પાદનો (ગોદામ મુજબ)",
       "posOrder": "કાઉન્ટર વેચાણ"
     },
     "titleDemo": "What I already know about {instance}",

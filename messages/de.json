@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Deine Rechnung {docnum} wurde ausgestellt.",
-        "order": "Deine Bestellung {docnum} ist bestätigt.",
-        "purchase": "Bestellung {docnum} wurde erstellt.",
+        "order": "Dein Auftrag {docnum} wurde als Entwurf angelegt.",
+        "purchase": "Bestellung {docnum} wurde als Entwurf angelegt.",
         "delivery": "Deine Sendung {docnum} wird vorbereitet.",
         "payment": "Deine Zahlung {docnum} wurde verbucht.",
         "contact": "Zu deinen Kontakten hinzugefügt.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Rechnung bestätigen",
-          "order": "Bestellung bestätigen",
-          "purchase": "Bestellung bestätigen",
+          "order": "Auftrag anlegen",
+          "purchase": "Bestellung anlegen",
           "payment": "Zahlung bestätigen",
           "generic": "Bestätigen"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "Wie viele überfällige Rechnungen gibt es diesen Monat?",
         "top_customers": "Top 5 Kunden nach Umsatz",
-        "stock_check": "Bericht für März erstellen"
+        "stock_check": "Welche Produkte haben den höchsten Bestand?"
       },
       "ctaPrimary": "Demo erkunden",
       "ctaSecondary": "Verbinden Sie Ihr Odoo (kostenlos)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Probieren Sie es selbst",
         "line": "Dies läuft auf einem Beispiel-Odoo. Senden Sie eine Anfrage und sehen Sie, was es antwortet; mit „Kundenansicht“ im linken Menü sehen Sie, was ein Endnutzer sehen würde.",
-        "chip1": "Überfällige Rechnungen über 380k",
+        "chip1": "Die 5 höchsten überfälligen Rechnungen",
         "chip2": "Umsatz nach Vertriebsmitarbeiter letzten Monat",
         "chip3": "Kontakt erstellen: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "Projekte",
       "projectTask": "Aufgaben",
       "timesheet": "Zeiterfassungen",
-      "stockQuant": "Bestand nach Lagerort",
+      "stockQuant": "Artikel auf Lager (je Lager)",
       "posOrder": "Kassenverkäufe"
     },
     "titleDemo": "Was ich über {instance} bereits weiß",

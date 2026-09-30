@@ -27,7 +27,7 @@ import { useChatContext } from "@/components/app-shell";
 import { useOdooConfig } from "@/hooks/use-odoo-config";
 import { useInstanceUsage } from "@/hooks/use-instance-usage";
 import { useAudience } from "@/hooks/use-audience";
-import { isUsableFor } from "@/lib/suggestions";
+import { isUsableFor, type SuggestionPeriod } from "@/lib/suggestions";
 import { useAuth } from "@/hooks/use-auth";
 import { useSession } from "@/hooks/use-session";
 import { clearOnboardingSkipped } from "@/lib/post-auth";
@@ -104,7 +104,7 @@ export function IntroPanel() {
   const { isPanelOpen, closePanel } = useIntro();
   const { createChat, sendMessage } = useChatContext();
   const { activeConfigId } = useOdooConfig();
-  const usage = useInstanceUsage(activeConfigId)?.usage;
+  const usageInfo = useInstanceUsage(activeConfigId);
   const isBuilder = useAudience().audience === "builder";
   const { user } = useAuth();
   const { meData } = useSession();
@@ -193,12 +193,16 @@ export function IntroPanel() {
 
   // 2 · Qué hace — interactive example chips.
   // X-06 — cada chip dice qué modelo consulta; lo que la instancia activa midió en
-  // cero no se ofrece (mismo filtro que el carrusel).
-  const chips = [
+  // cero no se ofrece (mismo filtro que el carrusel). F-15: ni "el mes pasado" donde
+  // los datos terminan antes.
+  const allChips: { id: string; text: string; model?: string; period?: SuggestionPeriod }[] = [
+    // F-16 — sin umbral: "más de 450k" es poco en ARS/PYG y mucho en EUR (Ladera no
+    // tenía ninguna). Un top por monto contesta en cualquier moneda.
     { id: "overdue_invoices", text: t("what.chip1"), model: "account.move" },
-    { id: "sales_by_rep", text: t("what.chip2"), model: "sale.order" },
+    { id: "sales_by_rep", text: t("what.chip2"), model: "sale.order", period: "last_month" },
     { id: "create_contact", text: t("what.chip3"), model: undefined },
-  ].filter((chip) => isUsableFor(chip.model, usage));
+  ];
+  const chips = allChips.filter((chip) => isUsableFor(chip, usageInfo));
 
   // 3 · Por qué es distinto.
   const diffRows = [

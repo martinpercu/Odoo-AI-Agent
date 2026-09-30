@@ -1899,6 +1899,7 @@ function hydrateEvents(events: unknown): Partial<Message> {
         type: "excel_export",
         export_url: e.export_url as string,
         filename: e.filename as string,
+        ...(typeof e.message_id === "string" && { message_id: e.message_id }),
       };
   }
   return {
@@ -1990,6 +1991,8 @@ export interface AuditEntryBuilder {
   changes: AuditChange[];
   has_edits: boolean;
   created_at: string;
+  /** B-36 — el nombre del registro que tocó la acción ("P00001"). Ausente con un back viejo. */
+  record_name?: string | null;
 }
 
 /**

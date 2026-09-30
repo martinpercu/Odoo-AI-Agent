@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "Your invoice {docnum} has been issued.",
-        "order": "Your order {docnum} is confirmed.",
-        "purchase": "Purchase order {docnum} was created.",
+        "order": "Your order {docnum} was created as a draft.",
+        "purchase": "Purchase order {docnum} was created as a draft.",
         "delivery": "Your shipment {docnum} is being prepared.",
         "payment": "Your payment {docnum} was recorded.",
         "contact": "Added to your contacts.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "Confirm invoice",
-          "order": "Confirm order",
-          "purchase": "Confirm purchase order",
+          "order": "Create order",
+          "purchase": "Create purchase order",
           "payment": "Confirm payment",
           "generic": "Confirm"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "How many overdue invoices are there this month?",
         "top_customers": "Top 5 customers by revenue",
-        "stock_check": "Create March month report"
+        "stock_check": "Which products have the most stock?"
       },
       "ctaPrimary": "Explore the demo",
       "ctaSecondary": "Connect your Odoo (free)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Try it yourself",
         "line": "This runs on a sample Odoo. Send a query and see what it answers; switch on “View as client” in the left menu to see what an end user would see.",
-        "chip1": "Overdue invoices over 450k",
+        "chip1": "Top 5 overdue invoices by amount",
         "chip2": "Sales by rep last month",
         "chip3": "Create a contact: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "Projects",
       "projectTask": "Tasks",
       "timesheet": "Timesheet entries",
-      "stockQuant": "Stock by location",
+      "stockQuant": "Products in stock (per warehouse)",
       "posOrder": "Point of sale orders"
     },
     "titleDemo": "What I already know about {instance}",

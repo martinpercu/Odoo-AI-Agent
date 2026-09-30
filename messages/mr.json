@@ -1048,8 +1048,8 @@
     "ActionSuccess": {
       "create": {
         "invoice": "तुमचे बीजक {docnum} जारी केले.",
-        "order": "तुमची ऑर्डर {docnum} निश्चित झाली.",
-        "purchase": "खरेदी ऑर्डर {docnum} तयार केली.",
+        "order": "तुमची ऑर्डर {docnum} मसुदा म्हणून तयार झाली.",
+        "purchase": "खरेदी ऑर्डर {docnum} मसुदा म्हणून तयार केली.",
         "delivery": "तुमची शिपमेंट {docnum} तयार होत आहे.",
         "payment": "तुमचे पेमेंट {docnum} रेकॉर्ड केले.",
         "contact": "तुमच्या संपर्कांमध्ये जोडले.",
@@ -1074,8 +1074,8 @@
       "verb": {
         "create": {
           "invoice": "बीजक निश्चित करा",
-          "order": "ऑर्डर निश्चित करा",
-          "purchase": "खरेदी ऑर्डर निश्चित करा",
+          "order": "ऑर्डर तयार करा",
+          "purchase": "खरेदी ऑर्डर तयार करा",
           "payment": "पेमेंट निश्चित करा",
           "generic": "निश्चित करा"
         },
@@ -1179,7 +1179,7 @@
       "tryThis": {
         "overdue_invoices": "How many overdue invoices are there this month?",
         "top_customers": "Top 5 customers by revenue",
-        "stock_check": "Create March month report"
+        "stock_check": "Which products have the most stock?"
       },
       "ctaPrimary": "Explore the demo",
       "ctaSecondary": "Connect your Odoo (free)",
@@ -1200,7 +1200,7 @@
       "what": {
         "heading": "Try it yourself",
         "line": "This runs on a sample Odoo. Send a query and see what it answers; switch on “View as client” in the left menu to see what an end user would see.",
-        "chip1": "Overdue invoices over 450k",
+        "chip1": "Top 5 overdue invoices by amount",
         "chip2": "Sales by rep last month",
         "chip3": "Create a contact: María López"
       },
@@ -1917,7 +1917,7 @@
       "projectProject": "प्रकल्प",
       "projectTask": "कामे",
       "timesheet": "तासांच्या नोंदी",
-      "stockQuant": "ठिकाणनिहाय साठा",
+      "stockQuant": "साठ्यातील उत्पादने (गोदामनिहाय)",
       "posOrder": "काउंटर विक्री"
     },
     "titleDemo": "What I already know about {instance}",

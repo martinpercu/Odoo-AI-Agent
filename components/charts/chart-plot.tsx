@@ -11,7 +11,7 @@
  * guaraní termina mostrándose de dos maneras en dos pantallas.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { BarChart3, TrendingUp, PieChart as PieIcon, Table as TableIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -432,6 +432,9 @@ export function ChartTable({
  * `horizontalBar` lo decide el CONTENEDOR, no este componente: en el chat sale de un
  * ResizeObserver sobre la burbuja y en el Tablero de la densidad de la grilla. Medir acá
  * obligaría a cada contenedor a pelearse con el mismo observer.
+ *
+ * ⚠️ La excepción es el ranking angosto (F-18): ése sí se mide acá, porque depende del
+ * ancho del DIBUJO y le pasa igual al chat y al Tablero en un celular.
  */
 export function ChartPlot({
   data,
@@ -459,6 +462,19 @@ export function ChartPlot({
   const longestLabel = viewData.reduce((m, d) => Math.max(m, String(d.label ?? "").length), 0);
   const yAxisWidth = isRanking ? Math.min(190, Math.max(90, longestLabel * TICK_CHAR_PX)) : 100;
   const boxHeight = isHorizontalBar ? Math.max(viewData.length * (isRanking ? 44 : 40), 200) : height;
+
+  // F-18 — el ancho del dibujo, medido sólo para un ranking: en angosto el eje de nombres
+  // se llevaba casi todo y las barras quedaban en ~20 px con un único tick.
+  const [plotEl, setPlotEl] = useState<HTMLDivElement | null>(null);
+  const [plotWidth, setPlotWidth] = useState<number | null>(null);
+  useEffect(() => {
+    if (!plotEl || !isRanking) return;
+    const observer = new ResizeObserver(([entry]) => setPlotWidth(entry.contentRect.width));
+    observer.observe(plotEl);
+    return () => observer.disconnect();
+  }, [plotEl, isRanking]);
+  const rankingAsList =
+    isHorizontalBar && isRanking && plotWidth !== null && plotWidth < RANKING_LIST_MAX_PX;
 
   if (pie) {
     const pieTotal = pie.data.reduce((acc, d) => acc + (d.value ?? 0), 0);
@@ -518,8 +534,16 @@ export function ChartPlot({
     );
   }
 
+  if (rankingAsList) {
+    return (
+      <div ref={setPlotEl} className="w-full">
+        <RankingList data={viewData} meta={meta} locale={locale} />
+      </div>
+    );
+  }
+
   return (
-    <div style={{ width: "100%", height: boxHeight }}>
+    <div ref={setPlotEl} style={{ width: "100%", height: boxHeight }}>
       <ResponsiveContainer width="100%" height="100%">
         {viewType === "bar" ? (
           isHorizontalBar ? (
@@ -603,6 +627,48 @@ export function ChartPlot({
         )}
       </ResponsiveContainer>
     </div>
+  );
+}
+
+/** Por debajo de este ancho, un ranking se dibuja como lista y no con ejes (F-18). */
+const RANKING_LIST_MAX_PX = 420;
+
+/**
+ * F-18 — un ranking en angosto: el nombre ENTERO a lo ancho, el valor al lado y la barra
+ * abajo, proporcional al primero. Con ejes, a 375 px el nombre y la barra se disputaban
+ * el mismo renglón y perdía la barra. Es HTML y no SVG: el nombre se parte solo, sin
+ * estimar anchos de caracteres.
+ */
+function RankingList({
+  data,
+  meta,
+  locale,
+}: {
+  data: ChartSSEEvent["data"];
+  meta: ChartSSEEvent["meta"];
+  locale: string;
+}) {
+  const max = data.reduce((m, d) => Math.max(m, Math.abs(d.value ?? 0)), 0);
+  return (
+    <ol className="space-y-3">
+      {data.map((d, i) => {
+        const value = d.value ?? 0;
+        const pct = max > 0 ? Math.max((Math.abs(value) / max) * 100, 2) : 0;
+        return (
+          <li key={i}>
+            <div className="flex items-baseline justify-between gap-3 text-small">
+              <span className="min-w-0 break-words text-text-secondary">{String(d.label ?? "")}</span>
+              <span className="shrink-0 font-technical tabular-nums text-foreground">
+                {formatValue(value, meta.value_format, meta.currency_symbol, meta.no_decimals, locale)}
+              </span>
+            </div>
+            <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-raised" aria-hidden>
+              <div className="h-full rounded-full bg-accent" style={{ width: `${pct}%` }} />
+            </div>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
