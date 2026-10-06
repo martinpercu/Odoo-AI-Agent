@@ -1514,12 +1514,12 @@
       "readOnlyLabel": "Por ahora, solo lectura: no hay escritura disponible en este dominio.",
       "sales": {
         "name": "Ventas / CRM",
-        "read": "Conteos, rankings (“los 5 productos más vendidos”) y agregaciones agrupadas por vendedor, equipo, categoría o mes. Filtros por fecha, incluida la fecha de cierre de oportunidades, y filtro por vendedor o cliente nombrado con desambiguación cuando hay varias coincidencias. Calcula tasa de conversión (win rate) y pipeline ponderado por probabilidad en el backend, nunca con el modelo de lenguaje. Entiende “mis oportunidades” y filtra por el usuario logueado.",
+        "read": "Conteos, rankings (“los 5 productos más vendidos”) y desgloses por vendedor, equipo, etapa, motivo de pérdida, categoría o mes. El pipeline son tus oportunidades abiertas; las ganadas y las perdidas se cuentan por la fecha en que se cerraron, y se pueden comparar dos períodos (“este trimestre contra el anterior”). Filtra por fecha —incluidos los cierres futuros (“las que cierran el mes que viene”) y la fecha de cierre vencida—, por etapa (“en negociación”), por equipo (con sólo nombrarlo: “las del southeast”), por motivo de pérdida (“perdidas por precio”), por prioridad y por vendedor o cliente nombrado, con desambiguación cuando hay varias coincidencias. Calcula en el backend, nunca con el modelo de lenguaje, la tasa de conversión (total o por vendedor o equipo), el pipeline ponderado por probabilidad y el ciclo de venta (días hasta ganar). Entiende “mis oportunidades”, las repreguntas cortas (“¿y el trimestre pasado?”, “¿y las del equipo West?”) y las actividades por cliente o por tipo. Resume cómo viene un equipo, un cliente o un vendedor (“¿cómo viene el equipo West este trimestre?”), pone dos equipos lado a lado, encuentra las oportunidades estancadas (tiempo desde el último cambio de etapa), lee tus objetivos mensuales de venta y cruza las ganadas con la facturación (“¿cuánto les facturamos a los clientes que ganamos este año?”). Si un dato está vacío en tu instancia (campañas, fuentes, etiquetas, objetivos), lo dice.",
         "w1": "Pedidos de venta: crear, editar, confirmar, cancelar y enviar por email",
         "w2": "Oportunidades: cambiar de etapa, marcar ganada o perdida con motivo, asignar vendedor",
         "w3": "Convertir un lead en oportunidad",
-        "w4": "Agendar una llamada o una reunión",
-        "limit": "Crear una oportunidad nueva desde cero por chat todavía no está disponible."
+        "w4": "Crear una oportunidad desde cero (cliente, monto, fecha de cierre, equipo, vendedor, etapa), agendar una llamada, una reunión o una tarea en la fecha que pidas (“mañana”, “el viernes”, “en 3 días”), y mover una oportunidad de etapa o reasignarla por nombre, aunque haya varias con el mismo (“la que está en Outreach”, “#809”)",
+        "limit": "Todavía no disponible: borrar oportunidades por chat, ni cargarles etiquetas al crearlas."
       },
       "finance": {
         "name": "Finanzas",
