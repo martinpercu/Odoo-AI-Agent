@@ -3560,24 +3560,39 @@ function recordCardQuery(params: Record<string, string | undefined>): string {
   return q.toString();
 }
 
-/** La tarjeta de un registro: ficha curada, rótulos y valores ya formateados. */
-export async function getRecordCard(
+/** Pedidos de tarjeta en curso, por URL. Ver `getRecordCard`. */
+const recordCardInFlight = new Map<string, Promise<RecordCardResult>>();
+
+/** La tarjeta de un registro: ficha curada, rótulos y valores ya formateados.
+ *
+ * ⚠️ Dos pedidos idénticos simultáneos comparten la MISMA llamada. En desarrollo React
+ * monta el componente dos veces (Strict Mode) y la tarjeta esperaba a la segunda
+ * llamada para dibujarse; con esto sale con la primera. Sólo se comparte mientras
+ * está en curso: abrir la tarjeta de nuevo después siempre lee el dato fresco. */
+export function getRecordCard(
   model: string,
   recordId: number,
   opts: { configId: string; language: string; audience?: "client" }
 ): Promise<RecordCardResult> {
-  try {
-    const qs = recordCardQuery({
-      config_id: opts.configId, language: opts.language, audience: opts.audience,
-    });
-    const res = await authFetch(
-      `${API_BASE}/records/${encodeURIComponent(model)}/${recordId}?${qs}`
-    );
-    return await recordCardResult(res);
-  } catch (err) {
-    if (err instanceof LimitReachedError) throw err;
-    return { ok: false, status: 0, errorCode: NETWORK_ERROR, detail: null };
-  }
+  const qs = recordCardQuery({
+    config_id: opts.configId, language: opts.language, audience: opts.audience,
+  });
+  const url = `${API_BASE}/records/${encodeURIComponent(model)}/${recordId}?${qs}`;
+  const pending = recordCardInFlight.get(url);
+  if (pending) return pending;
+
+  const request = (async (): Promise<RecordCardResult> => {
+    try {
+      return await recordCardResult(await authFetch(url));
+    } catch (err) {
+      if (err instanceof LimitReachedError) throw err;
+      return { ok: false, status: 0, errorCode: NETWORK_ERROR, detail: null };
+    } finally {
+      recordCardInFlight.delete(url);
+    }
+  })();
+  recordCardInFlight.set(url, request);
+  return request;
 }
 
 /** Guarda SÓLO los campos cambiados. La respuesta es la tarjeta releída. */
