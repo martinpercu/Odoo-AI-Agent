@@ -1941,6 +1941,7 @@
     "cancel": "Cancel",
     "saved": "Saved",
     "openInOdoo": "Open in Odoo",
+    "newTab": "Opens in a new tab",
     "searchPlaceholder": "Search…",
     "searching": "Searching…",
     "noResults": "No results",

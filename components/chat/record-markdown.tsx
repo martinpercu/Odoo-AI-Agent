@@ -3,6 +3,7 @@
 import { Children, cloneElement, isValidElement, useEffect, useMemo, useRef } from "react";
 import type { ReactElement, ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
+import { ChevronRight } from "lucide-react";
 import type { Components } from "react-markdown";
 
 import type { RecordLinksEvent, RecordRef } from "@/lib/types";
@@ -40,7 +41,7 @@ export function RecordMarkdown({ content, event, onOpen }: RecordMarkdownProps) 
 
     // `node` (el hast) se saca para no pasarlo como atributo al DOM.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const Ol: Components["ol"] = ({ node, start, children, ...rest }) => {
+    const Ol: Components["ol"] = ({ node, start, children, className, ...rest }) => {
       let n = Number(start) || 1;
       const numbered = Children.map(children, (child: ReactNode) => {
         if (!isValidElement(child)) return child;
@@ -48,19 +49,52 @@ export function RecordMarkdown({ content, event, onOpen }: RecordMarkdownProps) 
           recordPosition: n++,
         });
       });
-      return <ol start={start} {...rest}>{numbered}</ol>;
+      // El número lo dibuja cada renglón (adentro de su zona clickeable), no el marcador
+      // del navegador: así el hover cubre el renglón entero, número incluido.
+      return (
+        <ol
+          start={start}
+          {...rest}
+          className={`${className ?? ""} !my-2 !list-none !pl-0`}
+        >
+          {numbered}
+        </ol>
+      );
     };
 
     const Li = (props: React.ComponentProps<"li"> & { node?: unknown; recordPosition?: number }) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { node, recordPosition, children, ...rest } = props;
-      const rec = recordPosition ? byPosition.get(recordPosition) : undefined;
-      if (!rec) return <li {...rest}>{children}</li>;
+      // Un `<li>` de una lista con viñetas (sin número) queda como siempre.
+      if (!recordPosition) return <li {...rest}>{children}</li>;
+      const rec = byPosition.get(recordPosition);
+
+      // ⚠️ Grupo CON NOMBRE (`group/row`): la burbuja del agente ya es un `group` (el que
+      // muestra "Reportar" al pasar el mouse), y un `group-hover` a secas se encendía en
+      // todos los renglones a la vez apenas el mouse entraba al mensaje.
+      const number = (
+        <span className="min-w-[2.5ch] shrink-0 text-small tabular-nums text-text-muted transition-colors duration-150 group-hover/row:text-accent">
+          {recordPosition}.
+        </span>
+      );
+      // Un renglón = una línea: lo que no entra termina en "…". `[&>p]:inline`: en una
+      // lista "suelta" react-markdown envuelve el renglón en un `<p>`.
+      const body = (
+        <span className="min-w-0 truncate [&>p]:!m-0 [&>p]:inline">{children}</span>
+      );
+      const row = "flex max-w-full items-center gap-2 py-1";
+
+      if (!rec) {
+        return (
+          <li {...rest} className="!mb-0">
+            <div className={row}>{number}{body}</div>
+          </li>
+        );
+      }
       return (
-        <li {...rest}>
+        <li {...rest} className="!mb-0">
           <button
             type="button"
-            title={event.tooltip}
             onClick={() =>
               onOpenRef.current({
                 model: event.model,
@@ -71,9 +105,17 @@ export function RecordMarkdown({ content, event, onOpen }: RecordMarkdownProps) 
                 openLabel: event.open_label,
               })
             }
-            className="cursor-pointer text-left underline decoration-accent/40 decoration-dotted underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+            className={`group/row ${row} cursor-pointer rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
           >
-            {children}
+            {number}
+            {body}
+            {/* Pegado al final del TEXTO, no del bloque: el renglón mide lo que mide su texto. */}
+            <ChevronRight
+              size={15}
+              strokeWidth={1.75}
+              aria-hidden
+              className="shrink-0 text-text-muted opacity-50 transition-all duration-150 ease-out group-hover/row:translate-x-0.5 group-hover/row:scale-125 group-hover/row:text-accent group-hover/row:opacity-100 group-hover/row:[stroke-width:2.75]"
+            />
           </button>
         </li>
       );
