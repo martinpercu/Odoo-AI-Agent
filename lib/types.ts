@@ -460,6 +460,9 @@ export interface OdooRecordLink {
   id: number;
   name: string;
   url: string;
+  /** El número del renglón en el listado del texto ("11." en la página 2). Falta en
+   * eventos anteriores al 2026-10-05. */
+  position?: number;
 }
 
 export interface RecordLinksEvent {
@@ -467,6 +470,58 @@ export interface RecordLinksEvent {
   model: string; // technical — never display
   tooltip: string; // already localized by the backend
   records: OdooRecordLink[];
+  /** El cuerpo del mensaje es el listado numerado del back: cada renglón se vuelve
+   * clickeable por `position` y la lista NO se repite en chips. Ausente = false. */
+  inline?: boolean;
+  /** El modelo tiene tarjeta (`GET /records/{model}/{id}`); si no, el click abre Odoo. */
+  card?: boolean;
+  /** "Abrir este contacto en tu Odoo" — ya localizado. */
+  open_label?: string;
+}
+
+/** Lo mínimo para abrir la tarjeta de un registro desde cualquier lugar del chat. */
+export interface RecordRef {
+  model: string;
+  id: number;
+  name: string;
+  url: string;
+  card: boolean;
+  openLabel?: string;
+}
+
+export type RecordFieldType =
+  | "char" | "text" | "integer" | "float" | "monetary" | "date" | "datetime"
+  | "selection" | "boolean" | "many2one" | "many2many" | "one2many" | string;
+
+export interface RecordM2OValue {
+  id: number;
+  name: string;
+}
+
+/** Un campo de la tarjeta (contrato `record-card.md` §2). `display` ya viene formateado
+ * en el idioma; `value` es lo que se edita. */
+export interface RecordCardField {
+  name: string;
+  label: string;
+  type: RecordFieldType;
+  value: unknown;
+  display: string;
+  editable: boolean;
+  required: boolean;
+  options?: { value: string; label: string }[];
+}
+
+export interface RecordCardData {
+  model: string; // técnico — no mostrar
+  id: number;
+  title: string;
+  url: string | null;
+  open_label: string;
+  can_edit: boolean;
+  edit_blocked_reason: string | null;
+  edit_blocked_text: string | null;
+  fields: RecordCardField[];
+  updated_fields?: string[];
 }
 
 /** TTS audio chunk SSE event — see PLAN_STT_TTS.md Etapa 5. Emitted only when

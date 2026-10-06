@@ -1927,5 +1927,28 @@
     "label": "Daten bis {date}",
     "hintDemo": "Diese Beispielfirma hat Daten bis zu diesem Datum: ein späterer Zeitraum bleibt leer.",
     "hint": "Die Daten dieser Instanz reichen bis zu diesem Datum."
+  },
+  "RecordCard": {
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "loading": "Wird geladen…",
+    "loadError": "Dieser Datensatz konnte nicht geöffnet werden.",
+    "networkError": "Server nicht erreichbar. Bitte erneut versuchen.",
+    "saveError": "Die Änderung konnte nicht gespeichert werden.",
+    "fixFields": "Bitte die markierten Felder prüfen.",
+    "save": "Speichern",
+    "saving": "Wird gespeichert…",
+    "cancel": "Abbrechen",
+    "saved": "Gespeichert",
+    "openInOdoo": "In Odoo öffnen",
+    "searchPlaceholder": "Suchen…",
+    "searching": "Suche…",
+    "noResults": "Keine Ergebnisse",
+    "clear": "Entfernen",
+    "errors": {
+      "required": "Dieses Feld ist erforderlich.",
+      "invalid_value": "Dieser Wert ist ungültig.",
+      "not_editable": "Dieses Feld kann nicht bearbeitet werden."
+    }
   }
 }

@@ -1927,5 +1927,28 @@
     "label": "Data through {date}",
     "hintDemo": "This sample company has data through that date: a later period will come back empty.",
     "hint": "This instance has data through that date."
+  },
+  "RecordCard": {
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading…",
+    "loadError": "I couldn't open this record.",
+    "networkError": "Can't reach the server. Try again.",
+    "saveError": "The change couldn't be saved.",
+    "fixFields": "Check the highlighted fields.",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "saved": "Saved",
+    "openInOdoo": "Open in Odoo",
+    "searchPlaceholder": "Search…",
+    "searching": "Searching…",
+    "noResults": "No results",
+    "clear": "Clear",
+    "errors": {
+      "required": "This field is required.",
+      "invalid_value": "This value isn't valid.",
+      "not_editable": "This field can't be edited."
+    }
   }
 }

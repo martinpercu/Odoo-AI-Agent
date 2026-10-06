@@ -8,7 +8,7 @@ import { User, KeyRound, ArrowRight, Flag } from "lucide-react";
 import { MarkB, MarkI } from "@/components/AgentMark";
 import { useIconSize } from "@/hooks/use-icon-size";
 import { useAudienceT } from "@/hooks/use-audience-translations";
-import type { Message, AggReportOption, ReportOfferOption } from "@/lib/types";
+import type { Message, AggReportOption, ReportOfferOption, RecordRef } from "@/lib/types";
 import { executeAggReportAction, executeListingExcelAction } from "@/lib/api";
 import { useChatContext } from "@/components/app-shell";
 import { useSession } from "@/hooks/use-session";
@@ -26,6 +26,8 @@ import { ReportOfferCard } from "./report-offer-card";
 import { AggReportCard } from "./agg-report-card";
 import { StageDrilldownCard } from "./stage-drilldown-card";
 import { RecordLinksCard } from "./record-links-card";
+import { RecordCardModal } from "./record-card-modal";
+import { RecordMarkdown } from "./record-markdown";
 import { OdooFileCard } from "./odoo-file-card";
 import { OdooChartCard } from "./odoo-chart-card";
 import { ExcelExportCard } from "./excel-export-card";
@@ -85,6 +87,11 @@ function TypingIndicator() {
   );
 }
 
+/** El `record_links` de este mensaje cuyo listado se vuelve clickeable en el texto. */
+function inlineRecords(message: Message) {
+  return message.recordLinks?.find((e) => e.inline && e.records.some((r) => r.position)) ?? null;
+}
+
 export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("ChatMessages");
@@ -96,6 +103,16 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
   const allowFeedback = meData?.user?.allow_feedback === true;
 
   const [feedbackMessageId, setFeedbackMessageId] = useState<string | null>(null);
+  const [openRecord, setOpenRecord] = useState<RecordRef | null>(null);
+
+  /** Un registro listado: con tarjeta, la abre; sin tarjeta, Odoo en pestaña nueva. */
+  function handleOpenRecord(ref: RecordRef) {
+    if (ref.card && activeConfigId) {
+      setOpenRecord(ref);
+      return;
+    }
+    window.open(ref.url, "_blank", "noopener,noreferrer");
+  }
 
   async function handleAggReport(opt: AggReportOption) {
     if (!currentChatId || !activeConfigId) return;
@@ -179,7 +196,17 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                 ) : (
                   <>
                     <div className="markdown-content text-body [&>*:last-child]:!mb-0">
-                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                      {/* Con `inline`, cada renglón del listado numerado abre su registro
+                          y la lista NO se repite debajo (contrato record-links §10). */}
+                      {inlineRecords(message) ? (
+                        <RecordMarkdown
+                          content={message.content}
+                          event={inlineRecords(message)!}
+                          onOpen={handleOpenRecord}
+                        />
+                      ) : (
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      )}
                     </div>
                     {message.metadata && (
                       <>
@@ -260,9 +287,15 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                     )}
                     {message.recordLinks && message.recordLinks.length > 0 && (
                       <>
-                        {message.recordLinks.map((event, ri) => (
-                          <RecordLinksCard key={`record-links-${ri}`} event={event} />
-                        ))}
+                        {message.recordLinks.map((event, ri) =>
+                          event === inlineRecords(message) ? null : (
+                            <RecordLinksCard
+                              key={`record-links-${ri}`}
+                              event={event}
+                              onOpen={handleOpenRecord}
+                            />
+                          )
+                        )}
                       </>
                     )}
                   </>
@@ -284,6 +317,16 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
           </motion.div>
         );
       })}
+
+      {openRecord && activeConfigId && (
+        <RecordCardModal
+          key={`${openRecord.model}:${openRecord.id}`}
+          record={openRecord}
+          configId={activeConfigId}
+          chatId={currentChatId}
+          onClose={() => setOpenRecord(null)}
+        />
+      )}
 
       {/* Feedback modal */}
       {feedbackMessageId !== null && currentChatId && activeConfigId && (

@@ -14,6 +14,8 @@ import type {
   Message,
   MessageMetadata,
   RecordLinksEvent,
+  RecordCardData,
+  RecordM2OValue,
   EntitySearchResult,
   MeResponse,
   ServerConversation,
@@ -3514,5 +3516,121 @@ export async function setMyTimezone(
   } catch (err) {
     if (err instanceof LimitReachedError) throw err;
     return { success: false, error: NETWORK_ERROR };
+  }
+}
+
+
+// ---- Tarjeta flotante de un registro (contrato back `DOCS/contracts/record-card.md`) ----
+
+export type RecordCardResult =
+  | { ok: true; card: RecordCardData }
+  | {
+      ok: false;
+      status: number;
+      /** `account_required` · `invalid_fields` · `not_found` · `odoo_error` · `no_card` · … */
+      errorCode: string | null;
+      detail: string | null;
+      /** Errores por campo de un PATCH: `{campo: "required" | "invalid_value" | "not_editable"}`. */
+      fields?: Record<string, string>;
+    };
+
+async function recordCardResult(res: Response): Promise<RecordCardResult> {
+  let data: Record<string, unknown> = {};
+  try {
+    data = await res.json();
+  } catch {
+    /* cuerpo vacío o no-JSON: queda el status */
+  }
+  if (res.ok) return { ok: true, card: data as unknown as RecordCardData };
+  // FastAPI anida en `detail` lo que levanta un HTTPException ({detail: {error_code}}).
+  const nested = typeof data.detail === "object" && data.detail !== null
+    ? (data.detail as Record<string, unknown>) : null;
+  return {
+    ok: false,
+    status: res.status,
+    errorCode: ((data.error_code ?? nested?.error_code ?? (typeof data.detail === "string" ? data.detail : null)) as string | null) ?? null,
+    detail: typeof data.detail === "string" ? data.detail : null,
+    ...(data.fields ? { fields: data.fields as Record<string, string> } : {}),
+  };
+}
+
+function recordCardQuery(params: Record<string, string | undefined>): string {
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) if (v) q.set(k, v);
+  return q.toString();
+}
+
+/** La tarjeta de un registro: ficha curada, rótulos y valores ya formateados. */
+export async function getRecordCard(
+  model: string,
+  recordId: number,
+  opts: { configId: string; language: string; audience?: "client" }
+): Promise<RecordCardResult> {
+  try {
+    const qs = recordCardQuery({
+      config_id: opts.configId, language: opts.language, audience: opts.audience,
+    });
+    const res = await authFetch(
+      `${API_BASE}/records/${encodeURIComponent(model)}/${recordId}?${qs}`
+    );
+    return await recordCardResult(res);
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { ok: false, status: 0, errorCode: NETWORK_ERROR, detail: null };
+  }
+}
+
+/** Guarda SÓLO los campos cambiados. La respuesta es la tarjeta releída. */
+export async function patchRecordCard(
+  model: string,
+  recordId: number,
+  opts: {
+    configId: string;
+    language: string;
+    chatId?: string | null;
+    audience?: "client";
+    values: Record<string, unknown>;
+  }
+): Promise<RecordCardResult> {
+  try {
+    const res = await authFetch(
+      `${API_BASE}/records/${encodeURIComponent(model)}/${recordId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          config_id: opts.configId,
+          language: opts.language,
+          values: opts.values,
+          ...(opts.chatId && { chat_id: opts.chatId }),
+          ...(opts.audience && { audience: opts.audience }),
+        }),
+      }
+    );
+    return await recordCardResult(res);
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return { ok: false, status: 0, errorCode: NETWORK_ERROR, detail: null };
+  }
+}
+
+/** Candidatos de un many2one editable de la tarjeta (`name_search`, ≤20). */
+export async function getRecordFieldOptions(
+  model: string,
+  recordId: number,
+  field: string,
+  opts: { configId: string; language: string; q: string }
+): Promise<RecordM2OValue[]> {
+  try {
+    const qs = recordCardQuery({ config_id: opts.configId, language: opts.language, q: opts.q });
+    const res = await authFetch(
+      `${API_BASE}/records/${encodeURIComponent(model)}/${recordId}/options/${encodeURIComponent(field)}?${qs}`
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data.options) ? (data.options as RecordM2OValue[]) : [];
+  } catch (err) {
+    if (err instanceof LimitReachedError) throw err;
+    return [];
   }
 }

@@ -1927,5 +1927,28 @@
     "label": "Dati fino a {date}",
     "hintDemo": "Questa azienda di esempio ha dati fino a quella data: un periodo successivo risulterà vuoto.",
     "hint": "I dati di questa istanza arrivano fino a quella data."
+  },
+  "RecordCard": {
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "loading": "Caricamento…",
+    "loadError": "Non riesco ad aprire questo record.",
+    "networkError": "Server non raggiungibile. Riprova.",
+    "saveError": "Non è stato possibile salvare la modifica.",
+    "fixFields": "Controlla i campi evidenziati.",
+    "save": "Salva",
+    "saving": "Salvataggio…",
+    "cancel": "Annulla",
+    "saved": "Salvato",
+    "openInOdoo": "Apri in Odoo",
+    "searchPlaceholder": "Cerca…",
+    "searching": "Ricerca…",
+    "noResults": "Nessun risultato",
+    "clear": "Rimuovi",
+    "errors": {
+      "required": "Questo campo è obbligatorio.",
+      "invalid_value": "Questo valore non è valido.",
+      "not_editable": "Questo campo non è modificabile."
+    }
   }
 }
