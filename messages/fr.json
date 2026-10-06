@@ -1927,5 +1927,29 @@
     "label": "Données jusqu'à {date}",
     "hintDemo": "Cette entreprise d'exemple a des données jusqu'à cette date : une période postérieure sera vide.",
     "hint": "Les données de cette instance vont jusqu'à cette date."
+  },
+  "RecordCard": {
+    "edit": "Modifier",
+    "close": "Fermer",
+    "loading": "Chargement…",
+    "loadError": "Impossible d'ouvrir cet enregistrement.",
+    "networkError": "Serveur injoignable. Réessayez.",
+    "saveError": "La modification n'a pas pu être enregistrée.",
+    "fixFields": "Vérifiez les champs signalés.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "cancel": "Annuler",
+    "saved": "Enregistré",
+    "openInOdoo": "Ouvrir dans Odoo",
+    "newTab": "S'ouvre dans un nouvel onglet",
+    "searchPlaceholder": "Rechercher…",
+    "searching": "Recherche…",
+    "noResults": "Aucun résultat",
+    "clear": "Effacer",
+    "errors": {
+      "required": "Ce champ est obligatoire.",
+      "invalid_value": "Cette valeur n'est pas valide.",
+      "not_editable": "Ce champ n'est pas modifiable."
+    }
   }
 }

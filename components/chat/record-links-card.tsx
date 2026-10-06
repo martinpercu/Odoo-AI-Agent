@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import type { RecordLinksEvent } from "@/lib/types";
+import type { RecordLinksEvent, RecordRef } from "@/lib/types";
 
 interface RecordLinksCardProps {
   event: RecordLinksEvent;
+  /** Con `event.card`, el chip abre la tarjeta del registro en vez de ir a Odoo. */
+  onOpen?: (ref: RecordRef) => void;
 }
 
 /**
@@ -23,7 +25,7 @@ interface RecordLinksCardProps {
  * `event.model` es técnico y **nunca** se muestra; `event.tooltip` ya viene
  * localizado del backend y se usa tal cual.
  */
-export function RecordLinksCard({ event }: RecordLinksCardProps) {
+export function RecordLinksCard({ event, onOpen }: RecordLinksCardProps) {
   const t = useTranslations("Chat");
   const records = event.records ?? [];
   if (records.length === 0) return null;
@@ -40,24 +42,55 @@ export function RecordLinksCard({ event }: RecordLinksCardProps) {
         {t("openInOdoo")}
       </p>
       <div className="flex flex-wrap gap-2">
-        {records.map((record) => (
-          <a
-            key={record.id}
-            href={record.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={event.tooltip}
-            className="group flex items-center gap-1.5 rounded-btn border border-accent/30 bg-surface px-3 py-1.5 text-small text-foreground shadow-sm transition-colors hover:border-accent hover:bg-raised hover:text-accent"
-          >
-            {record.name}
+        {records.map((record) => {
+          const chipClass =
+            "group flex items-center gap-1.5 rounded-btn border border-accent/30 bg-surface px-3 py-1.5 text-small text-foreground shadow-sm transition-colors hover:border-accent hover:bg-raised hover:text-accent";
+          const arrow = (
             <ArrowUpRight
               size={13}
               strokeWidth={1.5}
               className="shrink-0 text-accent/60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               aria-hidden
             />
-          </a>
-        ))}
+          );
+          // Con tarjeta, el chip la abre (adentro está el botón para ir a Odoo).
+          if (event.card && onOpen) {
+            return (
+              <button
+                key={record.id}
+                type="button"
+                title={event.tooltip}
+                onClick={() =>
+                  onOpen({
+                    model: event.model,
+                    id: record.id,
+                    name: record.name,
+                    url: record.url,
+                    card: true,
+                    openLabel: event.open_label,
+                  })
+                }
+                className={chipClass}
+              >
+                {record.name}
+                {arrow}
+              </button>
+            );
+          }
+          return (
+            <a
+              key={record.id}
+              href={record.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={event.tooltip}
+              className={chipClass}
+            >
+              {record.name}
+              {arrow}
+            </a>
+          );
+        })}
       </div>
     </motion.div>
   );
