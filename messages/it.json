@@ -1514,12 +1514,12 @@
       "readOnlyLabel": "Per ora solo lettura: in questo dominio non è disponibile la scrittura.",
       "sales": {
         "name": "Vendite / CRM",
-        "read": "Conteggi, classifiche (“i 5 prodotti più venduti”) e aggregazioni raggruppate per venditore, team, categoria o mese. Filtri per data, inclusa la data di chiusura delle opportunità, e filtro per venditore o cliente nominato con disambiguazione quando ci sono più corrispondenze. Tasso di conversione (win rate) e pipeline ponderata per probabilità sono calcolati nel backend, mai dal modello linguistico. Capisce “le mie opportunità” e filtra per l'utente collegato.",
+        "read": "Conteggi, classifiche (“i 5 prodotti più venduti”) e suddivisioni per venditore, team, fase, motivo di perdita, categoria o mese. La pipeline sono le tue opportunità aperte; quelle vinte e perse si contano per la data di chiusura, ed è possibile confrontare due periodi (“questo trimestre rispetto al precedente”). Filtra per data — comprese le date di chiusura future (“quelle che chiudono il mese prossimo”) e le date di chiusura scadute —, per fase (“in trattativa”), per team (basta nominarlo: “quelle del southeast”), per motivo di perdita (“perse per il prezzo”), per priorità e per venditore o cliente nominato, con disambiguazione quando ci sono più corrispondenze. Il tasso di conversione (totale o per venditore o team), la pipeline ponderata per probabilità e la durata del ciclo di vendita (giorni fino alla vittoria) sono calcolati nel backend, mai dal modello linguistico. Capisce “le mie opportunità”, le domande di seguito brevi (“e il trimestre scorso?”, “e il team West?”) e le attività per cliente o per tipo. Riassume come sta andando un team, un cliente o un venditore (“come sta andando il team West questo trimestre?”), mette due team a confronto, trova le opportunità ferme (tempo dall'ultimo cambio di fase), legge i tuoi obiettivi mensili di vendita e incrocia le opportunità vinte con la fatturazione (“quanto abbiamo fatturato ai clienti che abbiamo vinto quest'anno?”). Se un dato è vuoto nella tua istanza (campagne, fonti, etichette, obiettivi), lo dice.",
         "w1": "Ordini di vendita: creare, modificare, confermare, annullare e inviare per email",
         "w2": "Opportunità: cambiare fase, segnare vinta o persa con motivo, assegnare un venditore",
         "w3": "Convertire un lead in opportunità",
-        "w4": "Programmare una chiamata o una riunione",
-        "limit": "Creare una nuova opportunità da zero via chat non è ancora disponibile."
+        "w4": "Creare un'opportunità da zero (cliente, importo, data di chiusura, team, venditore, fase), programmare una chiamata, una riunione o un'attività nella data che chiedi (“domani”, “venerdì”, “tra 3 giorni”), e spostare un'opportunità di fase o riassegnarla per nome, anche quando più opportunità hanno lo stesso (“quella in Outreach”, “#809”)",
+        "limit": "Non ancora disponibile: eliminare opportunità via chat, né aggiungere etichette al momento della creazione."
       },
       "finance": {
         "name": "Finanza",

@@ -83,7 +83,16 @@ const DOMAINS: readonly {
   {
     key: "sales",
     icon: ShoppingCart,
-    models: ["sale.order", "sale.order.line", "crm.lead", "res.users", "mail.activity"],
+    models: [
+      "sale.order",
+      "sale.order.line",
+      "crm.lead",
+      "crm.team",
+      "crm.stage",
+      "crm.lost.reason",
+      "res.users",
+      "mail.activity",
+    ],
     writeCount: 4,
     hasLimit: true,
   },

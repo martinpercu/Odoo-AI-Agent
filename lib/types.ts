@@ -214,6 +214,41 @@ export interface SalesMeasureSelectionMetadata {
   options: SalesMeasureOption[];
 }
 
+/**
+ * Ofertas de alcance (back `helpers/scope_offers.py`, 2026-10-05): la respuesta ya llegó
+ * calculada con la lectura `current` y los chips ofrecen la otra. Mismo trato que
+ * `sales_measure`: no bloquea y se contesta mandando el `value` como mensaje.
+ * `deadline_scope` — "cierran de hoy a fin de año" (`upcoming`, la de por defecto) o
+ * "incluir las abiertas con el cierre vencido" (`with_overdue`).
+ * `summary_period` — el resumen de un equipo/cliente sin período: este año (`this_year`)
+ * o toda la historia (`all_time`).
+ */
+export interface ScopeOfferOption<K extends string = string> {
+  label: string;
+  value: string;
+  key: K;
+  /** La lectura con la que se respondió ESTE turno. */
+  selected: boolean;
+}
+
+export interface DeadlineScopeSelectionMetadata {
+  type: "selection_prompt";
+  kind: "deadline_scope";
+  current: "upcoming" | "with_overdue";
+  options: ScopeOfferOption<"upcoming" | "with_overdue">[];
+}
+
+export interface SummaryPeriodSelectionMetadata {
+  type: "selection_prompt";
+  kind: "summary_period";
+  current: "this_year" | "all_time";
+  options: ScopeOfferOption<"this_year" | "all_time">[];
+}
+
+export type ScopeOfferSelectionMetadata =
+  | DeadlineScopeSelectionMetadata
+  | SummaryPeriodSelectionMetadata;
+
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
   | ReportTypeSelectionMetadata
@@ -225,7 +260,8 @@ export type KindedSelectionMetadata =
   | ReportOfferSelectionMetadata
   | AggReportSelectionMetadata
   | StageDrilldownSelectionMetadata
-  | SalesMeasureSelectionMetadata;
+  | SalesMeasureSelectionMetadata
+  | ScopeOfferSelectionMetadata;
 
 // File attachment for PDF reports (from action response).
 // The PDF now arrives in-memory as base64 (no persisted URL) and is downloaded
@@ -276,6 +312,7 @@ export type MessageMetadata =
   | AggReportSelectionMetadata
   | StageDrilldownSelectionMetadata
   | SalesMeasureSelectionMetadata
+  | ScopeOfferSelectionMetadata
   | FileAttachmentMetadata
   | ExcelExportMetadata
   | NoCredentialsMetadata;

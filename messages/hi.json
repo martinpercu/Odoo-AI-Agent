@@ -1514,12 +1514,12 @@
       "readOnlyLabel": "Read-only for now: no writes available in this domain.",
       "sales": {
         "name": "Sales / CRM",
-        "read": "Counts, rankings (“top 5 best-selling products”) and aggregations grouped by salesperson, team, category or month. Date filters, including opportunity closing date, plus filtering by a named salesperson or customer with disambiguation when there are several matches. Conversion rate (win rate) and probability-weighted pipeline are computed in the backend, never by the language model. It understands “my opportunities” and filters by the logged-in user.",
+        "read": "Counts, rankings (“top 5 best-selling products”) and breakdowns by salesperson, team, stage, lost reason, category or month. The pipeline is your open opportunities; won and lost deals are counted by the date they closed, and two periods can be compared (“this quarter vs last”). Filters by date — including future closing dates (“closing next month”) and overdue closing dates —, by stage (“in negotiation”), by team (just by naming it: “the southeast ones”), by lost reason (“deals lost on price”), by priority and by a named salesperson or customer, with disambiguation when several match. Win rate (overall or per salesperson or team), probability-weighted pipeline and sales cycle length (days to win) are computed in the backend, never by the language model. It understands “my opportunities”, short follow-ups (“and last quarter?”, “and the West team?”), and activities by customer or type. It summarizes how a team, customer or salesperson is doing (“how's the West team doing this quarter?”), puts two teams side by side, finds stalled deals (time since the last stage change), reads your monthly sales targets and crosses won deals with invoicing (“how much did we invoice the customers we won this year?”). If a field is empty in your instance (campaigns, sources, tags, targets) it says so.",
         "w1": "Sales orders: create, edit, confirm, cancel and send by email",
         "w2": "Opportunities: move stage, mark won or lost with a reason, assign a salesperson",
         "w3": "Convert a lead into an opportunity",
-        "w4": "Schedule a call or a meeting",
-        "limit": "Creating a brand-new opportunity from scratch over chat is not available yet."
+        "w4": "Create an opportunity from scratch (customer, amount, closing date, team, salesperson, stage), schedule a call, a meeting or a to-do on the date you ask for (“tomorrow”, “on Friday”, “in 3 days”), and move an opportunity to another stage or reassign it by name — even when several share a name (“the one in Outreach”, “#809”)",
+        "limit": "Not available yet: deleting opportunities over chat, or adding tags when creating them."
       },
       "finance": {
         "name": "Finance",
