@@ -10,6 +10,7 @@ import { IS_AUTH_ENABLED } from "@/lib/supabase";
 import { isOwnSessionMe, resolvePostAuthPath } from "@/lib/post-auth";
 import { Loader2, Zap } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
+import { LegalLinks } from "@/components/legal/legal-links";
 
 function LoginContent() {
   const t = useTranslations("Auth");
@@ -161,6 +162,8 @@ function LoginContent() {
             </button>
           </div>
         )}
+
+        <LegalLinks className="mt-6" />
       </div>
     </div>
   );

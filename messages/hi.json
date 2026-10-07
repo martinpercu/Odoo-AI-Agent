@@ -611,7 +611,7 @@
     "goToLogin": "साइन इन पर जाएं",
     "demoBannerShort": "डेमो मोड",
     "foundingTitle": "Welcome to the<br></br>Founding Partners program",
-    "foundingLine1": "You're joining as a founding partner of TheOdooAgent. During the <prog>program</prog>, your usage and your clients' is 100% free.",
+    "foundingLine1": "You're joining as a founding partner of TheOdooAgent. During the <prog>program</prog> (60 days from when you connect your first Odoo instance), your usage and your clients' is 100% free.",
     "foundingLine2": "Your feedback shapes our roadmap. When the <prog>program</prog> ends, you keep the founder partner rate for life: $1/user.",
     "foundingScarcity": "Limited spots",
     "programTooltip": "The Founding Partners benefit lasts at least 2 months, extendable based on collaboration.",
@@ -1259,7 +1259,7 @@
     "nudge": {
       "eyebrow": "FOR ODOO IMPLEMENTERS",
       "title": "What you're testing, you can resell under your own brand.",
-      "body": "Connect it to your clients' Odoo, with your identity. Free until one of your clients uses it.",
+      "body": "Connect it to your clients' Odoo, with your brand. From the moment you connect your first instance you get 60 days free, for you and your clients.",
       "ctaPrimary": "Start free",
       "ctaSecondary": "How it works for partners",
       "pill": "For implementers",
@@ -1951,5 +1951,10 @@
       "invalid_value": "यह मान मान्य नहीं है।",
       "not_editable": "यह फ़ील्ड संपादित नहीं की जा सकती।"
     }
+  },
+  "Legal": {
+    "terms": "शर्तें",
+    "privacy": "गोपनीयता",
+    "accept": "मैं <terms>सेवा की शर्तें</terms> और <privacy>गोपनीयता नीति</privacy> (अंग्रेज़ी में) स्वीकार करता/करती हूँ।"
   }
 }

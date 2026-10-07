@@ -26,10 +26,12 @@ interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
   login(email: string, password: string): Promise<{ error?: string }>;
+  /** `termsVersion`: the LEGAL_VERSION the person accepted on the signup form. */
   register(
     email: string,
     password: string,
     lang?: string,
+    termsVersion?: string,
   ): Promise<{ error?: string; accessToken?: string }>;
   logout(): void;
   /** Step 1 of password recovery: email the user a 6-digit OTP. */
@@ -125,14 +127,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   }, []);
 
-  const register = useCallback(async (email: string, password: string, lang?: string) => {
+  const register = useCallback(async (
+    email: string,
+    password: string,
+    lang?: string,
+    termsVersion?: string,
+  ) => {
     const emailLang = normalizeEmailLang(lang);
+    const metadata: Record<string, string> = {};
+    // Persist the chosen language so transactional emails arrive localized.
+    // Unsupported locales are dropped → email falls back to bilingual EN/ES.
+    if (emailLang) metadata.lang = emailLang;
+    // Proof of WHICH Terms/Privacy text the person accepted, and when. It lives in
+    // Supabase's user_metadata (auth.users.raw_user_meta_data), so no backend change
+    // was needed to keep it.
+    if (termsVersion) {
+      metadata.terms_version = termsVersion;
+      metadata.terms_accepted_at = new Date().toISOString();
+    }
     const { data, error } = await supabase!.auth.signUp({
       email,
       password,
-      // Persist the chosen language so transactional emails arrive localized.
-      // Unsupported locales are dropped → email falls back to bilingual EN/ES.
-      options: emailLang ? { data: { lang: emailLang } } : undefined,
+      options: Object.keys(metadata).length ? { data: metadata } : undefined,
     });
     if (error) return { error: error.message };
     return { accessToken: data.session?.access_token };

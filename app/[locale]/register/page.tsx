@@ -12,6 +12,9 @@ import { Loader2, Zap, Check } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { FoundingInfoModal } from "@/components/pricing/founding-info-modal";
+import { LegalConsent } from "@/components/legal/legal-consent";
+import { LegalLinks } from "@/components/legal/legal-links";
+import { LEGAL_VERSION } from "@/lib/legal/types";
 
 const ACCESS_CODE = process.env.NEXT_PUBLIC_ACCESS_CODE ?? "odoopower";
 
@@ -30,6 +33,7 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [codeTouched, setCodeTouched] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const accessCodeValid = accessCode === ACCESS_CODE;
   // Only scold once the user has left the field — never mid-typing.
@@ -67,7 +71,7 @@ export default function RegisterPage() {
     setError(null);
     setIsSubmitting(true);
     try {
-      const result = await register(email, password, locale);
+      const result = await register(email, password, locale, LEGAL_VERSION);
       if (result.error) {
         setError(result.error);
         return;
@@ -214,6 +218,8 @@ export default function RegisterPage() {
             />
           </div>
 
+          <LegalConsent id="register-terms" checked={acceptedTerms} onChange={setAcceptedTerms} />
+
           {error && (
             <p className="rounded-md bg-error-subtle px-3 py-2 text-body text-error">
               {error}
@@ -264,6 +270,7 @@ export default function RegisterPage() {
             </button>
           </div>
         )}
+        <LegalLinks className="mt-6" />
       </div>
 
       <FoundingInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />

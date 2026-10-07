@@ -10,6 +10,7 @@ import { FoundingPartnerPricing } from "@/components/pricing/founding-partner-pr
 import { getBillingState, BETA_BILLING_DEFAULTS } from "@/lib/api";
 import { useSession } from "@/hooks/use-session";
 import type { BillingState } from "@/lib/types";
+import { LegalLinks } from "@/components/legal/legal-links";
 
 /** $1.4 → "$1.40", $7 → "$7". */
 function formatPrice(value: number): string {
@@ -100,6 +101,8 @@ export default function PricingPage() {
             </p>
           </motion.div>
         )}
+
+        <LegalLinks className="mt-10" />
       </div>
     </div>
   );
