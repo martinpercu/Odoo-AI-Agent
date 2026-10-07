@@ -611,7 +611,7 @@
     "goToLogin": "Ir a iniciar sesión",
     "demoBannerShort": "Modo Demo",
     "foundingTitle": "Bienvenido al programa de<br></br>Founding Partners",
-    "foundingLine1": "Estás entrando como Founding Partner de TheOdooAgent. Durante el <prog>programa</prog> tu uso y el de tus clientes es 100% gratis.",
+    "foundingLine1": "Estás entrando como Founding Partner de TheOdooAgent. Durante el <prog>programa</prog> (60 días desde que conectas tu primera instancia de Odoo), tu uso y el de tus clientes es 100% gratis.",
     "foundingLine2": "Tu feedback define nuestro roadmap. Al finalizar el <prog>programa</prog> te queda la tarifa de founder partner de por vida: $1/usuario.",
     "foundingScarcity": "Cupos Limitados",
     "programTooltip": "El beneficio del programa Founding Partners dura mínimo 2 meses, extendibles según colaboración.",
@@ -1259,7 +1259,7 @@
     "nudge": {
       "eyebrow": "PARA IMPLEMENTADORES DE ODOO",
       "title": "Esto que estás probando, lo revendes con tu marca.",
-      "body": "Conéctalo al Odoo de tus clientes, con tu identidad. Gratis hasta que un cliente tuyo lo use.",
+      "body": "Conéctalo al Odoo de tus clientes, con tu marca. Desde que conectas tu primera instancia tienes 60 días gratis, para ti y para tus clientes.",
       "ctaPrimary": "Empieza gratis",
       "ctaSecondary": "Cómo funciona?",
       "pill": "Para implementadores",
