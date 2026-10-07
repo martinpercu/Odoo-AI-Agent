@@ -1951,5 +1951,10 @@
       "invalid_value": "Este valor no es válido.",
       "not_editable": "Este campo no se puede editar."
     }
+  },
+  "Legal": {
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "accept": "Acepto los <terms>Términos del servicio</terms> y la <privacy>Política de privacidad</privacy> (en inglés)."
   }
 }
