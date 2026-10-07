@@ -1906,7 +1906,7 @@
     "openInOdoo": "Odoo ನಲ್ಲಿ ತೆರೆ"
   },
   "Snapshot": {
-    "title": "ನಿಮ್ಮ ವ್ಯವಹಾರದ ಬಗ್ಗೆ ನನಗೆ ಈಗಾಗಲೇ ಇಷ್ಟು ಗೊತ್ತು",
+    "title": "ನಿಮ್ಮ ವ್ಯವಹಾರ ಒಂದು ನೋಟದಲ್ಲಿ",
     "hint": "ಈ ಸಂಖ್ಯೆಗಳಲ್ಲಿ ಯಾವುದರ ಬಗ್ಗೆಯಾದರೂ ಕೇಳಿ.",
     "model": {
       "resPartner": "ಸಂಪರ್ಕಗಳು",
@@ -1921,8 +1921,7 @@
       "stockQuant": "ಸ್ಟಾಕ್‌ನಲ್ಲಿರುವ ಉತ್ಪನ್ನಗಳು (ಗೋದಾಮು ವಾರು)",
       "posOrder": "ಕೌಂಟರ್ ಮಾರಾಟ"
     },
-    "titleDemo": "What I already know about {instance}",
-    "hintDemo": "This is a sample company. Ask me about any of these numbers."
+    "titleDemo": "{instance} at a glance"
   },
   "DataUntil": {
     "label": "{date} ವರೆಗಿನ ಡೇಟಾ",

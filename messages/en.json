@@ -1906,7 +1906,7 @@
     "openInOdoo": "Open in Odoo"
   },
   "Snapshot": {
-    "title": "Here's what I already know about your business",
+    "title": "Your business at a glance",
     "hint": "Ask me about any of these numbers.",
     "model": {
       "resPartner": "Contacts",
@@ -1921,8 +1921,7 @@
       "stockQuant": "Products in stock (per warehouse)",
       "posOrder": "Point of sale orders"
     },
-    "titleDemo": "What I already know about {instance}",
-    "hintDemo": "This is a sample company. Ask me about any of these numbers."
+    "titleDemo": "{instance} at a glance"
   },
   "DataUntil": {
     "label": "Data through {date}",
