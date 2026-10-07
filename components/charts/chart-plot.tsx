@@ -34,7 +34,7 @@ import type { ChartSSEEvent } from "@/lib/types";
 export type ChartViewType = ChartSSEEvent["chart_type"];
 
 // Brand indigo palette for pie charts (Rule 3: odoo-purple is logo-only)
-export const PIE_COLORS = ["#6366F1", "#818CF8", "#A5B4FC", "#C7D2FE", "#E0E7FF"];
+export const PIE_COLORS = ["#6163F0", "#818CF8", "#A5B4FC", "#C7D2FE", "#E0E7FF"];
 /** La porción "Otros" va en gris: no es un grupo más, es lo que el top dejó afuera. */
 const OTHERS_FILL = "var(--color-text-muted)";
 

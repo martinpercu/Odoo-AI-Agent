@@ -12,6 +12,7 @@ import {
   Building2,
   Lock,
   Users,
+  X,
 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { listOdooConfigs } from "@/lib/api";
@@ -102,13 +103,21 @@ export default function InstancesPage() {
           <h1 className="text-heading">{t("title")}</h1>
         </div>
         {isPartner && configs && configs.length > 0 && (
+          // Con el formulario abierto el mismo botón pasa a CERRARLO, con estilo
+          // secundario: un segundo "+ Agregar" encima del formulario ya abierto no
+          // dice qué hace.
           <button
             type="button"
             onClick={() => setAdding((v) => !v)}
-            className="flex h-btn-sm items-center gap-1.5 rounded-btn bg-accent px-3 text-small font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+            aria-expanded={adding}
+            className={`flex h-btn-sm items-center gap-1.5 rounded-btn px-3 text-small font-medium transition-colors ${
+              adding
+                ? "border border-border bg-surface text-text-secondary hover:bg-raised hover:text-foreground"
+                : "bg-accent text-white shadow-sm hover:bg-accent-hover"
+            }`}
           >
-            <Plus size={16} strokeWidth={1.5} />
-            {t("addInstance")}
+            {adding ? <X size={16} strokeWidth={1.5} /> : <Plus size={16} strokeWidth={1.5} />}
+            {adding ? t("closeAdd") : t("addInstance")}
           </button>
         )}
       </div>

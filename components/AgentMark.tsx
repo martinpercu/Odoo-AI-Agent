@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 
-const INDIGO = '#6366F1';
+const INDIGO = '#6163F0';
 const ODOO = '#714B67';
 
 interface MarkProps {
@@ -168,7 +168,7 @@ export function Lockup({
    <Lockup size={28} wordColor="#1C1917" />
 
    // App icon (filled brand)
-   <div style={{ background: '#6366F1', padding: 14, borderRadius: 12 }}>
+   <div style={{ background: '#6163F0', padding: 14, borderRadius: 12 }}>
      <MarkB size={36} fg="#fff" accent="#fff" odoo="#fff" />
    </div>
 

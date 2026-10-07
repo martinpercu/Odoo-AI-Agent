@@ -11,7 +11,7 @@
    SHARED BRAND
    ============================================================ */
 :root {
-  --brand: #6366F1;          /* Indigo 500 — único acento */
+  --brand: #6163F0;          /* Indigo 500 corrido un pelo — único acento. Blanco encima: 4,61:1 (AA); #6366F1 daba 4,47 */
   --brand-hover: #4F46E5;    /* Indigo 600 */
   --odoo-purple: #714B67;    /* Guiño Odoo — sólo en mark */
   --cursor-expand-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5v14'/%3E%3Cpath d='M7 12h14'/%3E%3Cpath d='M15 6l6 6-6 6'/%3E%3C/svg%3E") 21 12, e-resize;
@@ -103,7 +103,7 @@
   --state-info-subtle:    rgba(96, 165, 250, 0.12);
 
   /* Accent subtle */
-  --accent-subtle: rgba(99, 102, 241, 0.14);
+  --accent-subtle: rgba(97, 99, 240, 0.14);
 }
 
 /* ============================================================

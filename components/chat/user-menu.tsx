@@ -186,7 +186,9 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
               siempre Builder y la pregunta no se hacía. Es justo la rama por la que
               pasa el demo, así que sin esto la vista previa "como cliente" cambiaba la
               densidad y dejaba el menú entero: la mitad de lo que se quiere mostrar.
-              `HowItWorksSidebarItem` NO se gatea — se muestra a todos los roles. */}
+              `HowItWorksSidebarItem` es SÓLO de la audiencia cliente (2026-10-07): el
+              visitante del demo entra como implementador y no lo ve; con "ver como
+              cliente" sí, porque es lo que vería su cliente. */}
           {!isClient && (
             <IntroSidebarItem
               collapsed={collapsed}
@@ -195,12 +197,14 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             />
           )}
 
-          {/* How does it work? */}
-          <HowItWorksSidebarItem
-            collapsed={collapsed}
-            onOpened={onNavigate}
-            className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
-          />
+          {/* How does it work? — sólo audiencia cliente */}
+          {isClient && (
+            <HowItWorksSidebarItem
+              collapsed={collapsed}
+              onOpened={onNavigate}
+              className={`${sidebarItemClass} ${collapsed ? "justify-center" : ""}`}
+            />
+          )}
 
           {!isClient && (
             <>
@@ -491,21 +495,16 @@ export function UserMenu({ collapsed = false, onNavigate }: UserMenuProps) {
             <div className="my-1 border-t border-border" />
             <div className="px-1">
               {!isClient && <IntroSidebarItem onOpened={close} className={itemClass} />}
-              <HowItWorksSidebarItem onOpened={close} className={itemClass} />
+              {isClient && <HowItWorksSidebarItem onOpened={close} className={itemClass} />}
 
-              {/* Implementer manual + pricing — Builder-only (white-label) */}
+              {/* Implementer manual — Builder-only (white-label).
+                  ⚠️ "Planes" NO va acá (2026-10-07): quien ya tiene cuenta ya tiene un
+                  plan. Sólo lo ve el visitante sin cuenta, en la rama anónima. */}
               {!isClient && (
-                <>
-                  <Link href="/implementers" onClick={close} className={itemClass}>
-                    <BookOpen size={iconInline} strokeWidth={1.5} className="shrink-0" />
-                    <span className="flex-1">{t("implementerManual")}</span>
-                  </Link>
-
-                  <Link href="/pricing" onClick={close} className={itemClass}>
-                    <Tag size={iconInline} strokeWidth={1.5} className="shrink-0" />
-                    <span className="flex-1">{t("pricing")}</span>
-                  </Link>
-                </>
+                <Link href="/implementers" onClick={close} className={itemClass}>
+                  <BookOpen size={iconInline} strokeWidth={1.5} className="shrink-0" />
+                  <span className="flex-1">{t("implementerManual")}</span>
+                </Link>
               )}
 
               <button onClick={toggleTheme} className={itemClass}>
