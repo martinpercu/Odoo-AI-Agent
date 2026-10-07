@@ -1280,6 +1280,7 @@
     "title": "Istanze",
     "addInstance": "Aggiungi istanza",
     "addFirstInstance": "Aggiungi la tua prima istanza",
+    "closeAdd": "Annulla",
     "empty": "Nessuna istanza ancora.",
     "backToList": "Indietro",
     "notFound": "Istanza non trovata.",

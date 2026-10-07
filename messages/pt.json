@@ -1280,6 +1280,7 @@
     "title": "Instâncias",
     "addInstance": "Adicionar instância",
     "addFirstInstance": "Adicionar sua primeira instância",
+    "closeAdd": "Cancelar",
     "empty": "Nenhuma instância ainda.",
     "backToList": "Voltar",
     "notFound": "Instância não encontrada.",

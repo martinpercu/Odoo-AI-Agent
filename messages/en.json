@@ -1280,6 +1280,7 @@
     "title": "Instances",
     "addInstance": "Add instance",
     "addFirstInstance": "Add your first instance",
+    "closeAdd": "Cancel",
     "empty": "No instances yet.",
     "backToList": "Back",
     "notFound": "Instance not found.",

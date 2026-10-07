@@ -1280,6 +1280,7 @@
     "title": "Instancias",
     "addInstance": "Agregar instancia",
     "addFirstInstance": "Agregar tu primera instancia",
+    "closeAdd": "Cancelar",
     "empty": "Todavía no hay instancias.",
     "backToList": "Volver",
     "notFound": "Instancia no encontrada.",

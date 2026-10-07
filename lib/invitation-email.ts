@@ -198,7 +198,7 @@ export function buildInvitationEmail(params: BuildInvitationEmailParams): BuiltI
               <!-- CTA button -->
               <table cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:${expiry ? "16px" : "0"}">
                 <tr>
-                  <td style="border-radius:10px;background:#6366F1">
+                  <td style="border-radius:10px;background:#6163F0">
                     <a href="${safeUrl}"
                        style="display:inline-block;padding:13px 28px;color:#fff;text-decoration:none;font-size:15px;font-weight:600;border-radius:10px;line-height:1">${escapeHtml(c.cta)}</a>
                   </td>

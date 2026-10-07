@@ -1280,6 +1280,7 @@
     "title": "Instanzen",
     "addInstance": "Instanz hinzufügen",
     "addFirstInstance": "Erste Instanz hinzufügen",
+    "closeAdd": "Abbrechen",
     "empty": "Noch keine Instanzen.",
     "backToList": "Zurück",
     "notFound": "Instanz nicht gefunden.",

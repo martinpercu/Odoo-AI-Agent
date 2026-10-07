@@ -631,12 +631,15 @@ function UsersSection() {
             {users.map((user) => (
               <div
                 key={user.id}
-                className="flex flex-col gap-2 rounded-md border border-border p-3 text-body sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-2 rounded-md border border-border p-3 text-body"
               >
+                {/* Siempre apilado (mail arriba, chips abajo): la tarjeta de Settings es
+                    angosta aun en pantalla grande, y en fila el mail se truncaba y los chips
+                    quedaban desparejos entre una fila y otra. */}
                 <div className="min-w-0">
-                  <p className="font-medium truncate">{user.email}</p>
+                  <p className="font-medium truncate" title={user.email}>{user.email}</p>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap shrink-0">
+                <div className="flex items-center gap-2 flex-wrap">
                   {/* Role selector — disabled for own account */}
                   <select
                     value={user.role}
@@ -717,8 +720,10 @@ function UsersSection() {
                       `featureAvailable` ni puede devolver un "límite alcanzado".
                       ⚠️ Sólo se muestra para CLIENT_USER: un ADMIN puede por rol y el
                       toggle no haría nada — un control que no cambia nada enseña a
-                      desconfiar de los que sí. */}
-                  {user.role === "CLIENT_USER" && (
+                      desconfiar de los que sí.
+                      ⚠️ Y escondido con Rutinas apagadas (`ROUTINES_VISIBLE`): sería un
+                      permiso sobre una sección que el cliente no puede ver. */}
+                  {ROUTINES_VISIBLE && user.role === "CLIENT_USER" && (
                     <button
                       onClick={() => handleAuthorToggle(user.id, !user.can_author_routines)}
                       className={`rounded-md px-2 py-1 text-micro font-medium transition-colors ${
