@@ -109,9 +109,11 @@ export function InstanceSnapshot() {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-micro text-text-muted">
-        {isDemoMode && demoName ? t("hintDemo") : t("hint")}
-      </p>
+      {/* En demo no va pie: "es una empresa de ejemplo" ya lo dice el cartel del demo,
+          arriba de todo, y repetirlo acá era ruido. */}
+      {!(isDemoMode && demoName) && (
+        <p className="mt-3 text-micro text-text-muted">{t("hint")}</p>
+      )}
     </motion.div>
   );
 }

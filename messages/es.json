@@ -1906,7 +1906,7 @@
     "openInOdoo": "Abrir en Odoo"
   },
   "Snapshot": {
-    "title": "Esto ya sé de tu negocio",
+    "title": "Tu negocio en cifras",
     "hint": "Pregúntame por cualquiera de estos números.",
     "model": {
       "resPartner": "Contactos",
@@ -1921,8 +1921,7 @@
       "stockQuant": "Productos con stock (por depósito)",
       "posOrder": "Ventas de mostrador"
     },
-    "titleDemo": "Esto ya sé de {instance}",
-    "hintDemo": "Es una empresa de ejemplo. Pregúntame por cualquiera de estos números."
+    "titleDemo": "{instance} en cifras"
   },
   "DataUntil": {
     "label": "Datos hasta {date}",

@@ -1906,7 +1906,7 @@
     "openInOdoo": "Ouvrir dans Odoo"
   },
   "Snapshot": {
-    "title": "Voici ce que je sais déjà de votre activité",
+    "title": "Votre activité en un coup d'œil",
     "hint": "Posez-moi une question sur n'importe lequel de ces chiffres.",
     "model": {
       "resPartner": "Contacts",
@@ -1921,8 +1921,7 @@
       "stockQuant": "Produits en stock (par entrepôt)",
       "posOrder": "Ventes en caisse"
     },
-    "titleDemo": "Ce que je sais déjà de {instance}",
-    "hintDemo": "C'est une entreprise d'exemple. Posez-moi une question sur ces chiffres."
+    "titleDemo": "{instance} en un coup d'œil"
   },
   "DataUntil": {
     "label": "Données jusqu'à {date}",

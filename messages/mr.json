@@ -1906,7 +1906,7 @@
     "openInOdoo": "Odoo मध्ये उघडा"
   },
   "Snapshot": {
-    "title": "तुमच्या व्यवसायाबद्दल मला हे आधीच माहीत आहे",
+    "title": "तुमचा व्यवसाय एका दृष्टीक्षेपात",
     "hint": "यापैकी कोणत्याही आकड्याबद्दल मला विचारा.",
     "model": {
       "resPartner": "संपर्क",
@@ -1921,8 +1921,7 @@
       "stockQuant": "साठ्यातील उत्पादने (गोदामनिहाय)",
       "posOrder": "काउंटर विक्री"
     },
-    "titleDemo": "What I already know about {instance}",
-    "hintDemo": "This is a sample company. Ask me about any of these numbers."
+    "titleDemo": "{instance} at a glance"
   },
   "DataUntil": {
     "label": "{date} पर्यंतचा डेटा",
