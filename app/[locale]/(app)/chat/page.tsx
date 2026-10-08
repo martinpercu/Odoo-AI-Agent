@@ -55,7 +55,7 @@ export default function NewChatPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       {isDemoMode && <DemoBanner />}
       {isDemoMode && <PartnerNudge />}
       {isClientBlocked && (
@@ -68,31 +68,39 @@ export default function NewChatPage() {
           </Link>
         </div>
       )}
-      <div className="flex flex-1 items-center justify-center px-4">
-        <div className="w-full max-w-2xl">
+      {/* El centro SCROLLEA y el input queda fijo abajo: en una pantalla baja
+          (iPhone SE) el contenido no entra, y sin `overflow-y-auto` + `min-h-0`
+          empujaba el input fuera de la pantalla sin forma de llegar a él.
+          ⚠️ Se centra con `m-auto` en el hijo, no con `items-center`: éste, con
+          overflow, recorta por arriba Y por abajo; `m-auto` centra si entra y
+          arranca desde arriba si no. */}
+      <div className="flex min-h-0 flex-1 overflow-y-auto px-4">
+        <div className="m-auto w-full max-w-2xl py-6 short:py-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="mb-10 text-center"
+            className="mb-10 text-center short:mb-6 short:flex short:items-center short:gap-4 short:text-left"
           >
             {brandLogoUrl ? (
-              <div className="mx-auto mb-6 flex items-center justify-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-card bg-accent-subtle">
-                  <MarkB size={36} fg="currentColor" className="text-accent" />
+              <div className="mx-auto mb-6 flex items-center justify-center gap-4 short:mx-0 short:mb-0 short:shrink-0 short:gap-2">
+                <div className="flex h-16 w-16 items-center justify-center rounded-card bg-accent-subtle short:h-12 short:w-12">
+                  <MarkB size={36} fg="currentColor" className="text-accent short:size-7" />
                 </div>
-                <ArrowLeftRight size={20} strokeWidth={1.5} className="text-text-muted" />
-                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-card border border-border bg-surface">
+                <ArrowLeftRight size={20} strokeWidth={1.5} className="text-text-muted short:size-4" />
+                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-card border border-border bg-surface short:h-12 short:w-12">
                   <img src={brandLogoUrl} alt={brandName ?? ""} className="h-full w-full object-contain" />
                 </div>
               </div>
             ) : (
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-card bg-accent-subtle">
-                <MarkB size={36} fg="currentColor" className="text-accent" />
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-card bg-accent-subtle short:mx-0 short:mb-0 short:h-12 short:w-12 short:shrink-0">
+                <MarkB size={36} fg="currentColor" className="text-accent short:size-7" />
               </div>
             )}
-            <h2 className="mb-3 text-display">{t("heading")}</h2>
-            <p className="text-body text-text-secondary">{t("subheading")}</p>
+            <div>
+              <h2 className="mb-3 text-display text-display-short-fit short:mb-1">{t("heading")}</h2>
+              <p className="text-body text-text-secondary">{t("subheading")}</p>
+            </div>
           </motion.div>
 
           {/* Primer valor en 60 segundos (quick-wins §9): la hoja en blanco se

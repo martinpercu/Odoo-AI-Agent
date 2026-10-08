@@ -163,7 +163,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <RightPanelContext.Provider value={{ activeTab, setActiveTab }}>
         <IntroProvider>
           <PartnerNudgeProvider>
-            <div className="flex h-screen overflow-hidden bg-base">
+            <div className="flex h-dvh overflow-hidden bg-base">
               <Sidebar
                 chatGroups={chat.chatGroups}
                 currentChatId={chat.currentChatId}
