@@ -1,5 +1,13 @@
 // AgentMark.tsx — Logo components for TheOdooAgent
-// Drop into your components folder. Works with any React 18+ setup.
+//
+// ⚠️ La marca vive en DOS lugares, y nada más:
+//   1. Acá, como componentes (MarkB/MarkI/Wordmark/Lockup) — todo lo que se dibuja dentro
+//      de la app.
+//   2. `app/icon.svg` — el MISMO dibujo que MarkB, como archivo, para la pestaña del
+//      navegador. De él salen `app/favicon.ico` y `app/apple-icon.png` con
+//      `node scripts/generate-icons.mjs`; no se editan a mano.
+// Si cambia el dibujo o el color, se cambia en los dos y se corre el script. No hay copias
+// en `public/`: había, quedaron con el violeta viejo y nadie las usaba.
 
 import * as React from 'react';
 
