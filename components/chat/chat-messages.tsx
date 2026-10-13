@@ -249,7 +249,8 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
                                 initialSelected={message.choice}
                               />
                             ) : message.metadata.kind === "deadline_scope" ||
-                              message.metadata.kind === "summary_period" ? (
+                              message.metadata.kind === "summary_period" ||
+                              message.metadata.kind === "due_scope" ? (
                               <ScopeOfferCard
                                 metadata={message.metadata}
                                 onSelect={sendChoice}

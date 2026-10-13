@@ -1515,24 +1515,26 @@
       "readOnlyLabel": "Por ahora, solo lectura: no hay escritura disponible en este dominio.",
       "sales": {
         "name": "Ventas / CRM",
-        "read": "Conteos, rankings (“los 5 productos más vendidos”) y desgloses por vendedor, equipo, etapa, motivo de pérdida, categoría o mes. El pipeline son tus oportunidades abiertas; las ganadas y las perdidas se cuentan por la fecha en que se cerraron, y se pueden comparar dos períodos (“este trimestre contra el anterior”). Filtra por fecha —incluidos los cierres futuros (“las que cierran el mes que viene”) y la fecha de cierre vencida—, por etapa (“en negociación”), por equipo (con sólo nombrarlo: “las del southeast”), por motivo de pérdida (“perdidas por precio”), por prioridad y por vendedor o cliente nombrado, con desambiguación cuando hay varias coincidencias. Calcula en el backend, nunca con el modelo de lenguaje, la tasa de conversión (total o por vendedor o equipo), el pipeline ponderado por probabilidad y el ciclo de venta (días hasta ganar). Entiende “mis oportunidades”, las repreguntas cortas (“¿y el trimestre pasado?”, “¿y las del equipo West?”) y las actividades por cliente o por tipo. Resume cómo viene un equipo, un cliente o un vendedor (“¿cómo viene el equipo West este trimestre?”), pone dos equipos lado a lado, encuentra las oportunidades estancadas (tiempo desde el último cambio de etapa), lee tus objetivos mensuales de venta y cruza las ganadas con la facturación (“¿cuánto les facturamos a los clientes que ganamos este año?”). Si un dato está vacío en tu instancia (campañas, fuentes, etiquetas, objetivos), lo dice.",
-        "w1": "Pedidos de venta: crear, editar, confirmar, cancelar y enviar por email",
+        "read": "Conteos, rankings (“los 5 productos más vendidos”) y desgloses por vendedor, equipo, etapa, motivo de pérdida, categoría o mes. El pipeline son tus oportunidades abiertas; las ganadas y las perdidas se cuentan por la fecha en que se cerraron, y se pueden comparar dos períodos (“este trimestre contra el anterior”). Filtra por fecha —incluidos los cierres futuros (“las que cierran el mes que viene”) y la fecha de cierre vencida—, por etapa (“en negociación”), por equipo (con sólo nombrarlo: “las del southeast”), por motivo de pérdida (“perdidas por precio”), por prioridad y por vendedor o cliente nombrado, con desambiguación cuando hay varias coincidencias. Calcula en el backend, nunca con el modelo de lenguaje, la tasa de conversión (total o por vendedor o equipo), el pipeline ponderado por probabilidad y el ciclo de venta (días hasta ganar). Entiende “mis oportunidades”, las repreguntas cortas (“¿y el trimestre pasado?”, “¿y las del equipo West?”) y las actividades por cliente o por tipo. Resume cómo viene un equipo, un cliente o un vendedor (“¿cómo viene el equipo West este trimestre?”), pone dos equipos lado a lado, encuentra las oportunidades estancadas (tiempo desde el último cambio de etapa), lee tus objetivos mensuales de venta y cruza las ganadas con la facturación (“¿cuánto les facturamos a los clientes que ganamos este año?”). Si un dato está vacío en tu instancia (campañas, fuentes, etiquetas, objetivos), lo dice. Margen por producto, sobre el costo del producto (el costo de hoy, y la respuesta lo aclara).",
+        "w1": "Pedidos de venta: crear, editar, confirmar y cancelar",
         "w2": "Oportunidades: cambiar de etapa, marcar ganada o perdida con motivo, asignar vendedor",
         "w3": "Convertir un lead en oportunidad",
-        "w4": "Crear una oportunidad desde cero (cliente, monto, fecha de cierre, equipo, vendedor, etapa), agendar una llamada, una reunión o una tarea en la fecha que pidas (“mañana”, “el viernes”, “en 3 días”), y mover una oportunidad de etapa o reasignarla por nombre, aunque haya varias con el mismo (“la que está en Outreach”, “#809”)",
-        "limit": "Todavía no disponible: borrar oportunidades por chat, ni cargarles etiquetas al crearlas."
+        "w4": "Crear una oportunidad desde cero (cliente, monto, fecha de cierre, equipo, vendedor, etapa), agendar una llamada, una reunión o una tarea en la fecha que pidas (“mañana”, “el viernes”, “en 3 días”), y mover una oportunidad de etapa o reasignarla por nombre, eligiéndola de una lista cuando varias tienen el mismo nombre (o diciendo “la que está en Outreach”, “#809”)",
+        "limit": "Todavía no disponible: borrar oportunidades por chat, cargarles etiquetas al crearlas ni mandar un presupuesto o pedido por mail."
       },
       "finance": {
         "name": "Finanzas",
-        "read": "Filtros de estado sobre facturas y notas de crédito (vencidas, pagadas, parciales, a cobrar, a pagar) y antigüedad de cobros en tramos de mora de 30, 60 y 90+ días, calculada en Python: no depende de módulos de Enterprise. Cualquier resultado se puede bajar en PDF o Excel con fila de totales.",
+        "read": "Cuentas por cobrar y por pagar: quién debe cuánto y desde cuándo (tramos de 30, 60 y más de 90 días), qué vence esta semana o en los próximos N días, y facturas vencidas, pagadas, pagadas en parte y en borrador, notas de crédito y facturas de proveedor, todo calculado en Python sin módulos Enterprise. Cobros y pagos, también por diario; cuántos días tardan los clientes en pagar (promedio y mediana), condiciones de pago, cuánto de lo cobrado fue a facturas ya vencidas, y los cobros de un cliente con la factura que saldó cada uno. Resumen de un período y cierre de mes en una sola respuesta (facturado, cobrado, compras, IVA, vencido a la fecha), promedios mensuales y comparación entre períodos. IVA: débito, crédito, la posición y la base imponible de cualquier período, separado por letra de comprobante (A/B) en la localización argentina. Cuenta clientes, no facturas («¿cuántos clientes nos deben?», «clientes nuevos este mes», «nos deben y no compran hace 60 días»), arma el ranking de deudores y sigue la conversación sobre él («sin ese, ¿cuánto queda?», «de esos, ¿cuánto debe cada uno?»), y reparte lo facturado por vendedor, categoría de producto, depósito (con las ventas de mostrador aparte) y día. Una revisión del mes marca picos, facturas fuera de lo común y borradores viejos. Cuando una pregunta admite dos lecturas razonables («pendientes este mes»: ¿toda la deuda a la fecha o sólo lo que vence este mes?) contesta la de siempre y ofrece la otra con un toque. Cualquier resultado se descarga en PDF o Excel con fila de totales.",
         "w1": "Facturas: crear y editar",
-        "w2": "Facturas existentes: validar, cancelar y enviar por email"
+        "w2": "Facturas existentes: validar (publicar) y cancelar",
+        "w3": "Publicar varias facturas en borrador de una vez, de un cliente o de un período (hasta 20), con la lista y el total antes de confirmar",
+        "limit": "Todavía no se puede por chat: registrar o aplicar un cobro, facturar un pedido de venta y mandar por mail. Si se lo pides, lo dice con claridad (nunca afirma haberlo hecho) y muestra lo que sirve, como las facturas impagas del cliente, la más vieja primero."
       },
       "inventory": {
         "name": "Inventario / Compras",
-        "read": "Catálogo con precio y existencia, filtro por disponibilidad de stock y ordenamiento por precio o por stock. Lectura sobre órdenes de compra, sus líneas y remitos.",
+        "read": "Catálogo con precio y stock disponible, filtro por disponibilidad y orden por precio o stock. Stock por depósito, qué hay que reponer (según tus reglas de reabastecimiento) y el plazo de entrega que declara cada proveedor. Lectura de pedidos de compra, sus líneas y transferencias.",
         "w1": "Productos del catálogo: crear y editar",
-        "w2": "Órdenes de compra y remitos ya existentes: confirmar, cancelar, validar y enviar",
+        "w2": "Pedidos de compra existentes: confirmar y cancelar. Transferencias: confirmar, validar y cancelar",
         "limit": "Dar de alta una orden de compra nueva desde cero por chat todavía no está disponible."
       },
       "contacts": {
@@ -1571,7 +1573,7 @@
         },
         "customModules": {
           "label": "Tu ERP a medida, el agente lo entiende solo",
-          "body": "Si tienes módulos propios o de OCA, o campos hechos con Studio, el agente puede aprender a responder consultas sobre esos modelos leyendo los menús y las vistas que Odoo ya tiene: nombres, etiquetas y reglas de negocio declaradas en los filtros de búsqueda. Sin que nadie le enseñe nada a mano y sin configuración previa de tu lado."
+          "body": "Si tienes módulos propios u OCA, o campos de Studio, el agente puede aprender a responder sobre esos modelos leyendo los menús y las vistas que Odoo ya tiene: nombres, etiquetas y reglas de negocio declaradas en los filtros de búsqueda. Nadie tiene que enseñárselo a mano: lo activamos para tu instancia cuando la conectas."
         }
       }
     },
@@ -1625,7 +1627,7 @@
       "lead": "Esto no es un changelog ni una lista de promesas: es el menú abierto de los frentes que tenemos sobre la mesa hoy. No hay fechas comprometidas, y el orden lo define en buena medida lo que nos pidan los implementadores. Si algo de aquí te desbloquea un cliente concreto, queremos saberlo.",
       "queries": {
         "label": "Más preguntas por dominio",
-        "body": "Márgenes por producto, categorías vía líneas de compra, país y geografía, etiquetas, almacenes en remitos. ¿Cuál te falta primero?"
+        "body": "País y geografía, etiquetas, categorías en las compras y el punto de venta como un área propia. ¿Cuál necesitas primero?"
       },
       "custom": {
         "label": "Más profundidad en módulos propios y OCA",
@@ -1633,7 +1635,7 @@
       },
       "typos": {
         "label": "Tolerancia a errores de tipeo más amplia",
-        "body": "Hoy corrige tipeos en fechas, estados y tipo de consulta. La idea es extenderlo a más tipos de consulta."
+        "body": "Hoy corrige errores de tipeo en fechas, estados, tipo de consulta y nombres de clientes. La idea es extenderlo a más tipos de consulta."
       },
       "tracing": {
         "label": "Trazabilidad más fina para diagnóstico",

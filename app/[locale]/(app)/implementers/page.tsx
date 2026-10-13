@@ -99,9 +99,14 @@ const DOMAINS: readonly {
   {
     key: "finance",
     icon: Receipt,
-    models: ["account.move", "account.payment", "account.bank.statement"],
-    writeCount: 2,
-    hasLimit: false,
+    models: [
+      "account.move",
+      "account.payment",
+      "account.bank.statement",
+      "account.payment.term",
+    ],
+    writeCount: 3,
+    hasLimit: true,
   },
   {
     key: "inventory",
@@ -112,6 +117,9 @@ const DOMAINS: readonly {
       "purchase.order",
       "purchase.order.line",
       "stock.picking",
+      "stock.quant",
+      "stock.warehouse.orderpoint",
+      "product.supplierinfo",
     ],
     writeCount: 2,
     hasLimit: true,

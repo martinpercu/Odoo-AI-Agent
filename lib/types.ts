@@ -222,6 +222,8 @@ export interface SalesMeasureSelectionMetadata {
  * "incluir las abiertas con el cierre vencido" (`with_overdue`).
  * `summary_period` — el resumen de un equipo/cliente sin período: este año (`this_year`)
  * o toda la historia (`all_time`).
+ * `due_scope` — "pendientes de pago este mes": la deuda a la fecha (`to_date`, la de por
+ * defecto) o sólo lo que vence en el período (`due_in_period`). Vuelta 17 de facturación.
  */
 export interface ScopeOfferOption<K extends string = string> {
   label: string;
@@ -245,9 +247,17 @@ export interface SummaryPeriodSelectionMetadata {
   options: ScopeOfferOption<"this_year" | "all_time">[];
 }
 
+export interface DueScopeSelectionMetadata {
+  type: "selection_prompt";
+  kind: "due_scope";
+  current: "to_date" | "due_in_period";
+  options: ScopeOfferOption<"to_date" | "due_in_period">[];
+}
+
 export type ScopeOfferSelectionMetadata =
   | DeadlineScopeSelectionMetadata
-  | SummaryPeriodSelectionMetadata;
+  | SummaryPeriodSelectionMetadata
+  | DueScopeSelectionMetadata;
 
 // All `selection_prompt` variants that carry a `kind` field and button options.
 export type KindedSelectionMetadata =
