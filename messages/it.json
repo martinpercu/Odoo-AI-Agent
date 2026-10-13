@@ -1515,24 +1515,26 @@
       "readOnlyLabel": "Per ora solo lettura: in questo dominio non è disponibile la scrittura.",
       "sales": {
         "name": "Vendite / CRM",
-        "read": "Conteggi, classifiche (“i 5 prodotti più venduti”) e suddivisioni per venditore, team, fase, motivo di perdita, categoria o mese. La pipeline sono le tue opportunità aperte; quelle vinte e perse si contano per la data di chiusura, ed è possibile confrontare due periodi (“questo trimestre rispetto al precedente”). Filtra per data — comprese le date di chiusura future (“quelle che chiudono il mese prossimo”) e le date di chiusura scadute —, per fase (“in trattativa”), per team (basta nominarlo: “quelle del southeast”), per motivo di perdita (“perse per il prezzo”), per priorità e per venditore o cliente nominato, con disambiguazione quando ci sono più corrispondenze. Il tasso di conversione (totale o per venditore o team), la pipeline ponderata per probabilità e la durata del ciclo di vendita (giorni fino alla vittoria) sono calcolati nel backend, mai dal modello linguistico. Capisce “le mie opportunità”, le domande di seguito brevi (“e il trimestre scorso?”, “e il team West?”) e le attività per cliente o per tipo. Riassume come sta andando un team, un cliente o un venditore (“come sta andando il team West questo trimestre?”), mette due team a confronto, trova le opportunità ferme (tempo dall'ultimo cambio di fase), legge i tuoi obiettivi mensili di vendita e incrocia le opportunità vinte con la fatturazione (“quanto abbiamo fatturato ai clienti che abbiamo vinto quest'anno?”). Se un dato è vuoto nella tua istanza (campagne, fonti, etichette, obiettivi), lo dice.",
-        "w1": "Ordini di vendita: creare, modificare, confermare, annullare e inviare per email",
+        "read": "Conteggi, classifiche (“i 5 prodotti più venduti”) e suddivisioni per venditore, team, fase, motivo di perdita, categoria o mese. La pipeline sono le tue opportunità aperte; quelle vinte e perse si contano per la data di chiusura, ed è possibile confrontare due periodi (“questo trimestre rispetto al precedente”). Filtra per data — comprese le date di chiusura future (“quelle che chiudono il mese prossimo”) e le date di chiusura scadute —, per fase (“in trattativa”), per team (basta nominarlo: “quelle del southeast”), per motivo di perdita (“perse per il prezzo”), per priorità e per venditore o cliente nominato, con disambiguazione quando ci sono più corrispondenze. Il tasso di conversione (totale o per venditore o team), la pipeline ponderata per probabilità e la durata del ciclo di vendita (giorni fino alla vittoria) sono calcolati nel backend, mai dal modello linguistico. Capisce “le mie opportunità”, le domande di seguito brevi (“e il trimestre scorso?”, “e il team West?”) e le attività per cliente o per tipo. Riassume come sta andando un team, un cliente o un venditore (“come sta andando il team West questo trimestre?”), mette due team a confronto, trova le opportunità ferme (tempo dall'ultimo cambio di fase), legge i tuoi obiettivi mensili di vendita e incrocia le opportunità vinte con la fatturazione (“quanto abbiamo fatturato ai clienti che abbiamo vinto quest'anno?”). Se un dato è vuoto nella tua istanza (campagne, fonti, etichette, obiettivi), lo dice. Margine per prodotto, sul costo del prodotto (il costo di oggi, e la risposta lo precisa).",
+        "w1": "Ordini di vendita: creare, modificare, confermare e annullare",
         "w2": "Opportunità: cambiare fase, segnare vinta o persa con motivo, assegnare un venditore",
         "w3": "Convertire un lead in opportunità",
-        "w4": "Creare un'opportunità da zero (cliente, importo, data di chiusura, team, venditore, fase), programmare una chiamata, una riunione o un'attività nella data che chiedi (“domani”, “venerdì”, “tra 3 giorni”), e spostare un'opportunità di fase o riassegnarla per nome, anche quando più opportunità hanno lo stesso (“quella in Outreach”, “#809”)",
-        "limit": "Non ancora disponibile: eliminare opportunità via chat, né aggiungere etichette al momento della creazione."
+        "w4": "Creare un'opportunità da zero (cliente, importo, data di chiusura, team, venditore, fase), programmare una chiamata, una riunione o un'attività nella data che chiedi (“domani”, “venerdì”, “tra 3 giorni”), e spostare un'opportunità di fase o riassegnarla per nome, scegliendola da un elenco quando più opportunità hanno lo stesso (o dicendo “quella in Outreach”, “#809”)",
+        "limit": "Non ancora disponibile: eliminare opportunità via chat, aggiungere etichette al momento della creazione, né inviare un preventivo o un ordine per email."
       },
       "finance": {
         "name": "Finanza",
-        "read": "Filtri di stato su fatture e note di credito (scadute, pagate, parziali, da incassare, da pagare) e anzianità dei crediti a fasce di 30, 60 e 90+ giorni, calcolata in Python: non dipende da moduli Enterprise. Qualsiasi risultato è scaricabile in PDF o Excel con riga dei totali.",
+        "read": "Crediti e debiti: chi deve quanto e da quando (fasce di 30, 60 e oltre 90 giorni), cosa scade questa settimana o nei prossimi N giorni, e fatture scadute, pagate, pagate in parte e in bozza, note di credito e fatture fornitore, tutto calcolato in Python senza moduli Enterprise. Incassi e pagamenti, anche per registro; quanti giorni impiegano i clienti a pagare (media e mediana), termini di pagamento, quanto dell'incassato è andato a fatture già scadute, e gli incassi di un cliente con la fattura che ciascuno ha saldato. Riepilogo di un periodo e chiusura del mese in un'unica risposta (fatturato, incassato, acquisti, IVA, scaduto a oggi), medie mensili e confronto tra periodi. IVA: a debito, a credito, la posizione netta e l'imponibile di qualsiasi periodo, separati per lettera del documento (A/B) nella localizzazione argentina. Conta clienti, non fatture (“quanti clienti ci devono soldi?”, “nuovi clienti questo mese”, “ci devono e non comprano da 60 giorni”), stila la classifica dei debitori e prosegue la conversazione su di essa (“senza quello, quanto resta?”, “di questi, quanto deve ciascuno?”), e ripartisce il fatturato per venditore, categoria di prodotto, magazzino (con le vendite al banco a parte) e giorno. Una revisione del mese segnala picchi, fatture fuori dall'ordinario e bozze vecchie. Quando una domanda ammette due letture ragionevoli (“in sospeso questo mese”: tutto il debito a oggi o solo ciò che scade questo mese?), risponde con quella abituale e offre l'altra con un tocco. Qualsiasi risultato è scaricabile in PDF o Excel con riga dei totali.",
         "w1": "Fatture: creare e modificare",
-        "w2": "Fatture esistenti: validare, annullare e inviare per email"
+        "w2": "Fatture esistenti: validare (registrare) e annullare",
+        "w3": "Registrare più fatture in bozza in una volta, di un cliente o di un periodo (fino a 20), con l'elenco e il totale prima di confermare",
+        "limit": "Non ancora disponibile via chat: registrare o applicare un incasso, fatturare un ordine di vendita e inviare per email. Se glielo chiedi, lo dice chiaramente (non afferma mai di averlo fatto) e mostra ciò che serve, come le fatture non pagate del cliente, dalla più vecchia."
       },
       "inventory": {
         "name": "Magazzino / Acquisti",
-        "read": "Catalogo con prezzo e giacenza, filtro per disponibilità di stock e ordinamento per prezzo o per giacenza. Lettura su ordini di acquisto, relative righe e trasferimenti.",
+        "read": "Catalogo con prezzo e giacenza, filtro per disponibilità e ordinamento per prezzo o per giacenza. Giacenza per magazzino, cosa va riordinato (secondo le tue regole di riordino) e il tempo di consegna dichiarato da ciascun fornitore. Lettura su ordini di acquisto, relative righe e trasferimenti.",
         "w1": "Prodotti di catalogo: creare e modificare",
-        "w2": "Ordini di acquisto e trasferimenti già esistenti: confermare, annullare, validare e inviare",
+        "w2": "Ordini di acquisto esistenti: confermare e annullare. Trasferimenti: confermare, validare e annullare",
         "limit": "Creare un nuovo ordine di acquisto da zero via chat non è ancora disponibile."
       },
       "contacts": {
@@ -1571,7 +1573,7 @@
         },
         "customModules": {
           "label": "Il tuo ERP su misura, capito da solo",
-          "body": "Se hai moduli propri o OCA, o campi creati con Studio, l'agente può imparare a rispondere a domande su quei modelli leggendo i menu e le viste che Odoo già possiede: nomi, etichette e regole di business dichiarate nei filtri di ricerca. Nessuno deve insegnargli nulla a mano e dalla tua parte non c'è niente da configurare in anticipo."
+          "body": "Se hai moduli propri o OCA, o campi di Studio, l'agente può imparare a rispondere a domande su quei modelli leggendo i menu e le viste che Odoo già possiede: nomi, etichette e regole di business dichiarate nei filtri di ricerca. Nessuno deve insegnarglielo a mano: lo attiviamo per la tua istanza quando la colleghi."
         }
       }
     },
@@ -1625,7 +1627,7 @@
       "lead": "Questo non è un changelog né un elenco di promesse: è il menu aperto dei fronti che abbiamo oggi sul tavolo. Non ci sono date impegnate e l'ordine è definito in buona parte da ciò che ci chiedono gli implementatori. Se qualcosa qui ti sblocca un cliente concreto, vogliamo saperlo.",
       "queries": {
         "label": "Più domande per dominio",
-        "body": "Margini per prodotto, categorie tramite righe d'acquisto, paese e geografia, etichette, magazzini nei trasferimenti. Quale ti manca per prima?"
+        "body": "Paese e geografia, etichette, categorie negli acquisti e il punto vendita come area a sé. Quale ti manca per prima?"
       },
       "custom": {
         "label": "Più profondità su moduli propri e OCA",
@@ -1633,7 +1635,7 @@
       },
       "typos": {
         "label": "Tolleranza agli errori di battitura più ampia",
-        "body": "Oggi corregge gli errori su date, stati e tipo di richiesta. L'idea è estenderlo a più tipi di richiesta."
+        "body": "Oggi corregge gli errori di battitura su date, stati, tipo di richiesta e nomi dei clienti. L'idea è estenderlo a più tipi di richiesta."
       },
       "tracing": {
         "label": "Tracciabilità più fine per la diagnosi",

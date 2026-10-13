@@ -1515,24 +1515,26 @@
       "readOnlyLabel": "Lecture seule pour l'instant : aucune écriture disponible dans ce domaine.",
       "sales": {
         "name": "Ventes / CRM",
-        "read": "Comptages, classements (« les 5 produits les plus vendus ») et ventilations par vendeur, équipe, étape, motif de perte, catégorie ou mois. Le pipeline correspond à vos opportunités ouvertes ; les affaires gagnées et perdues sont comptées à leur date de clôture, et deux périodes peuvent être comparées (« ce trimestre par rapport au précédent »). Filtres par date — y compris les dates de clôture futures (« celles qui se clôturent le mois prochain ») et les dates de clôture dépassées —, par étape (« en négociation »), par équipe (il suffit de la nommer : « celles du southeast »), par motif de perte (« perdues à cause du prix »), par priorité et par vendeur ou client nommé, avec désambiguïsation lorsqu'il y a plusieurs correspondances. Le taux de conversion (global ou par vendeur ou équipe), le pipeline pondéré par probabilité et la durée du cycle de vente (jours jusqu'au gain) sont calculés dans le backend, jamais par le modèle de langage. Il comprend « mes opportunités », les relances courtes (« et le trimestre dernier ? », « et l'équipe West ? ») et les activités par client ou par type. Il résume où en est une équipe, un client ou un vendeur (« où en est l'équipe West ce trimestre ? »), compare deux équipes côte à côte, repère les opportunités bloquées (temps écoulé depuis le dernier changement d'étape), lit vos objectifs de vente mensuels et croise les affaires gagnées avec la facturation (« combien avons-nous facturé aux clients gagnés cette année ? »). Si une donnée est vide dans votre instance (campagnes, sources, étiquettes, objectifs), il le signale.",
-        "w1": "Bons de commande client : créer, modifier, confirmer, annuler et envoyer par e-mail",
+        "read": "Comptages, classements (« les 5 produits les plus vendus ») et ventilations par vendeur, équipe, étape, motif de perte, catégorie ou mois. Le pipeline correspond à vos opportunités ouvertes ; les affaires gagnées et perdues sont comptées à leur date de clôture, et deux périodes peuvent être comparées (« ce trimestre par rapport au précédent »). Filtres par date — y compris les dates de clôture futures (« celles qui se clôturent le mois prochain ») et les dates de clôture dépassées —, par étape (« en négociation »), par équipe (il suffit de la nommer : « celles du southeast »), par motif de perte (« perdues à cause du prix »), par priorité et par vendeur ou client nommé, avec désambiguïsation lorsqu'il y a plusieurs correspondances. Le taux de conversion (global ou par vendeur ou équipe), le pipeline pondéré par probabilité et la durée du cycle de vente (jours jusqu'au gain) sont calculés dans le backend, jamais par le modèle de langage. Il comprend « mes opportunités », les relances courtes (« et le trimestre dernier ? », « et l'équipe West ? ») et les activités par client ou par type. Il résume où en est une équipe, un client ou un vendeur (« où en est l'équipe West ce trimestre ? »), compare deux équipes côte à côte, repère les opportunités bloquées (temps écoulé depuis le dernier changement d'étape), lit vos objectifs de vente mensuels et croise les affaires gagnées avec la facturation (« combien avons-nous facturé aux clients gagnés cette année ? »). Si une donnée est vide dans votre instance (campagnes, sources, étiquettes, objectifs), il le signale. Marge par produit, à partir du coût du produit (le coût actuel, et la réponse le précise).",
+        "w1": "Bons de commande client : créer, modifier, confirmer et annuler",
         "w2": "Opportunités : changer d'étape, marquer gagnée ou perdue avec un motif, assigner un vendeur",
         "w3": "Convertir une piste en opportunité",
-        "w4": "Créer une opportunité de zéro (client, montant, date de clôture, équipe, vendeur, étape), planifier un appel, une réunion ou une tâche à la date demandée (« demain », « vendredi », « dans 3 jours »), et changer une opportunité d'étape ou la réassigner par son nom — même quand plusieurs portent le même (« celle en Outreach », « #809 »)",
-        "limit": "Pas encore disponible : supprimer des opportunités par le chat, ni leur ajouter des étiquettes à la création."
+        "w4": "Créer une opportunité de zéro (client, montant, date de clôture, équipe, vendeur, étape), planifier un appel, une réunion ou une tâche à la date demandée (« demain », « vendredi », « dans 3 jours »), et changer une opportunité d'étape ou la réassigner par son nom, en la choisissant dans une liste quand plusieurs portent le même (ou en disant « celle en Outreach », « #809 »)",
+        "limit": "Pas encore disponible : supprimer des opportunités par le chat, leur ajouter des étiquettes à la création, ni envoyer un devis ou une commande par e-mail."
       },
       "finance": {
         "name": "Finance",
-        "read": "Filtres d'état sur les factures et avoirs (échues, payées, partielles, à encaisser, à payer) et ancienneté des créances par tranches de 30, 60 et 90+ jours, calculée en Python : cela ne dépend pas de modules Enterprise. Tout résultat peut être téléchargé en PDF ou Excel avec une ligne de totaux.",
+        "read": "Comptes clients et fournisseurs : qui doit combien et depuis quand (tranches de 30, 60 et plus de 90 jours), ce qui arrive à échéance cette semaine ou dans les N prochains jours, et les factures échues, payées, partiellement payées et en brouillon, les avoirs et les factures fournisseur, le tout calculé en Python sans modules Enterprise. Encaissements et décaissements, aussi par journal ; combien de jours les clients mettent à payer (moyenne et médiane), conditions de paiement, quelle part des encaissements est allée à des factures déjà échues, et les paiements d'un client, chacun avec la facture qu'il a soldée. Résumé d'une période et clôture du mois en une seule réponse (facturé, encaissé, achats, TVA, échu à date), moyennes mensuelles et comparaison entre périodes. TVA : collectée, déductible, la position nette et la base imposable de n'importe quelle période, ventilées par lettre de document (A/B) dans la localisation argentine. Il compte des clients, pas des factures (« combien de clients nous doivent de l'argent ? », « nouveaux clients ce mois-ci », « nous doivent et n'ont rien acheté depuis 60 jours »), classe les débiteurs et poursuit la conversation sur ce classement (« sans celui-là, quel est le total ? », « parmi eux, combien doit chacun ? »), et ventile la facturation par vendeur, catégorie de produit, entrepôt (ventes au comptoir à part) et jour. Une revue du mois signale les pics, les factures inhabituellement élevées et les vieux brouillons. Quand une question admet deux lectures raisonnables (« en attente ce mois-ci » : toute la dette à date, ou seulement ce qui arrive à échéance ce mois-ci ?), il répond selon la lecture par défaut et propose l'autre en un clic. Tout résultat peut être téléchargé en PDF ou Excel avec une ligne de totaux.",
         "w1": "Factures : créer et modifier",
-        "w2": "Factures existantes : valider, annuler et envoyer par e-mail"
+        "w2": "Factures existantes : valider (comptabiliser) et annuler",
+        "w3": "Comptabiliser plusieurs factures en brouillon d'un coup, pour un client ou une période (jusqu'à 20), avec la liste et le total avant de confirmer",
+        "limit": "Pas encore disponible par le chat : enregistrer ou affecter un paiement, facturer une commande client et envoyer par e-mail. Si on le lui demande, il le dit clairement (il ne prétend jamais l'avoir fait) et montre ce qui aide à la place, comme les factures impayées du client, la plus ancienne en premier."
       },
       "inventory": {
         "name": "Inventaire / Achats",
-        "read": "Catalogue avec prix et stock disponible, filtre par disponibilité et tri par prix ou par stock. Lecture sur les bons de commande fournisseur, leurs lignes et les transferts.",
+        "read": "Catalogue avec prix et stock disponible, filtre par disponibilité et tri par prix ou par stock. Stock par entrepôt, ce qu'il faut réapprovisionner (selon vos règles de réapprovisionnement) et le délai de livraison déclaré par chaque fournisseur. Lecture sur les bons de commande fournisseur, leurs lignes et les transferts.",
         "w1": "Produits du catalogue : créer et modifier",
-        "w2": "Bons de commande fournisseur et transferts existants : confirmer, annuler, valider et envoyer",
+        "w2": "Bons de commande fournisseur existants : confirmer et annuler. Transferts : confirmer, valider et annuler",
         "limit": "Créer un bon de commande fournisseur entièrement nouveau par le chat n'est pas encore disponible."
       },
       "contacts": {
@@ -1571,7 +1573,7 @@
         },
         "customModules": {
           "label": "Votre ERP sur mesure, compris tout seul",
-          "body": "Si vous avez vos propres modules ou des modules OCA, ou des champs créés avec Studio, l'agent peut apprendre à répondre aux questions sur ces modèles en lisant les menus et les vues qu'Odoo possède déjà : noms, libellés et règles métier déclarées dans les filtres de recherche. Personne n'a besoin de lui apprendre quoi que ce soit à la main, et vous n'avez rien à configurer au préalable."
+          "body": "Si vous avez vos propres modules ou des modules OCA, ou des champs Studio, l'agent peut apprendre à répondre aux questions sur ces modèles en lisant les menus et les vues qu'Odoo possède déjà : noms, libellés et règles métier déclarées dans les filtres de recherche. Personne n'a besoin de le lui apprendre à la main : nous l'activons pour votre instance quand vous la connectez."
         }
       }
     },
@@ -1625,7 +1627,7 @@
       "lead": "Ce n'est ni un changelog ni une liste de promesses : c'est le menu ouvert des chantiers que nous avons sur la table aujourd'hui. Aucune date n'est engagée, et l'ordre dépend largement de ce que les intégrateurs nous demandent. Si quelque chose ici débloque un client précis chez vous, nous voulons le savoir.",
       "queries": {
         "label": "Plus de questions par domaine",
-        "body": "Marges par produit, catégories via les lignes d'achat, pays et géographie, étiquettes, entrepôts sur les transferts. Laquelle vous manque en premier ?"
+        "body": "Pays et géographie, étiquettes, catégories sur les achats, et le point de vente comme domaine à part entière. Lequel vous manque en premier ?"
       },
       "custom": {
         "label": "Plus de profondeur sur les modules propres et OCA",
@@ -1633,7 +1635,7 @@
       },
       "typos": {
         "label": "Tolérance aux fautes de frappe plus large",
-        "body": "Aujourd'hui il corrige les fautes sur les dates, les états et le type de requête. L'idée est d'étendre cela à davantage de types de requêtes."
+        "body": "Aujourd'hui il corrige les fautes de frappe sur les dates, les états, le type de requête et les noms de clients. L'idée est d'étendre cela à davantage de types de requêtes."
       },
       "tracing": {
         "label": "Traçabilité plus fine pour le diagnostic",

@@ -1515,24 +1515,26 @@
       "readOnlyLabel": "Vorläufig nur lesend: in dieser Domäne sind keine Schreibvorgänge verfügbar.",
       "sales": {
         "name": "Verkauf / CRM",
-        "read": "Zählungen, Rankings („die 5 bestverkauften Produkte“) und Aufschlüsselungen nach Vertriebsmitarbeiter, Team, Phase, Verlustgrund, Kategorie oder Monat. Die Pipeline sind Ihre offenen Verkaufschancen; gewonnene und verlorene werden nach ihrem Abschlussdatum gezählt, und zwei Zeiträume lassen sich vergleichen („dieses Quartal gegenüber dem letzten“). Filter nach Datum – einschließlich künftiger Abschlussdaten („die nächsten Monat abschließen“) und überfälliger Abschlussdaten –, nach Phase („in Verhandlung“), nach Team (es genügt, es zu nennen: „die von southeast“), nach Verlustgrund („wegen des Preises verloren“), nach Priorität und nach benanntem Vertriebsmitarbeiter oder Kunden, mit Rückfrage bei mehreren Treffern. Conversion Rate (gesamt oder pro Vertriebsmitarbeiter bzw. Team), wahrscheinlichkeitsgewichtete Pipeline und Dauer des Verkaufszyklus (Tage bis zum Gewinn) werden im Backend berechnet, nie durch das Sprachmodell. Es versteht „meine Verkaufschancen“, kurze Nachfragen („und das letzte Quartal?“, „und das Team West?“) sowie Aktivitäten nach Kunde oder Typ. Es fasst zusammen, wie ein Team, ein Kunde oder ein Vertriebsmitarbeiter dasteht („wie steht das Team West in diesem Quartal da?“), stellt zwei Teams nebeneinander, findet festgefahrene Verkaufschancen (Zeit seit dem letzten Phasenwechsel), liest Ihre monatlichen Verkaufsziele und gleicht gewonnene Verkaufschancen mit der Fakturierung ab („wie viel haben wir den Kunden in Rechnung gestellt, die wir dieses Jahr gewonnen haben?“). Ist ein Feld in Ihrer Instanz leer (Kampagnen, Quellen, Tags, Ziele), sagt es das.",
-        "w1": "Verkaufsaufträge: erstellen, bearbeiten, bestätigen, abbrechen und per E-Mail senden",
+        "read": "Zählungen, Rankings („die 5 bestverkauften Produkte“) und Aufschlüsselungen nach Vertriebsmitarbeiter, Team, Phase, Verlustgrund, Kategorie oder Monat. Die Pipeline sind Ihre offenen Verkaufschancen; gewonnene und verlorene werden nach ihrem Abschlussdatum gezählt, und zwei Zeiträume lassen sich vergleichen („dieses Quartal gegenüber dem letzten“). Filter nach Datum – einschließlich künftiger Abschlussdaten („die nächsten Monat abschließen“) und überfälliger Abschlussdaten –, nach Phase („in Verhandlung“), nach Team (es genügt, es zu nennen: „die von southeast“), nach Verlustgrund („wegen des Preises verloren“), nach Priorität und nach benanntem Vertriebsmitarbeiter oder Kunden, mit Rückfrage bei mehreren Treffern. Conversion Rate (gesamt oder pro Vertriebsmitarbeiter bzw. Team), wahrscheinlichkeitsgewichtete Pipeline und Dauer des Verkaufszyklus (Tage bis zum Gewinn) werden im Backend berechnet, nie durch das Sprachmodell. Es versteht „meine Verkaufschancen“, kurze Nachfragen („und das letzte Quartal?“, „und das Team West?“) sowie Aktivitäten nach Kunde oder Typ. Es fasst zusammen, wie ein Team, ein Kunde oder ein Vertriebsmitarbeiter dasteht („wie steht das Team West in diesem Quartal da?“), stellt zwei Teams nebeneinander, findet festgefahrene Verkaufschancen (Zeit seit dem letzten Phasenwechsel), liest Ihre monatlichen Verkaufsziele und gleicht gewonnene Verkaufschancen mit der Fakturierung ab („wie viel haben wir den Kunden in Rechnung gestellt, die wir dieses Jahr gewonnen haben?“). Ist ein Feld in Ihrer Instanz leer (Kampagnen, Quellen, Tags, Ziele), sagt es das. Marge pro Produkt, auf Basis der Produktkosten (die heutigen Kosten, und die Antwort sagt das dazu).",
+        "w1": "Verkaufsaufträge: erstellen, bearbeiten, bestätigen und abbrechen",
         "w2": "Verkaufschancen: Phase wechseln, als gewonnen oder verloren mit Grund markieren, Vertriebsmitarbeiter zuweisen",
         "w3": "Einen Lead in eine Verkaufschance umwandeln",
-        "w4": "Eine Verkaufschance von Grund auf anlegen (Kunde, Betrag, Abschlussdatum, Team, Vertriebsmitarbeiter, Phase), einen Anruf, ein Meeting oder eine Aufgabe zum gewünschten Datum planen („morgen“, „am Freitag“, „in 3 Tagen“) und eine Verkaufschance per Name in eine andere Phase verschieben oder neu zuweisen – auch wenn mehrere denselben Namen tragen („die in Outreach“, „#809“)",
-        "limit": "Noch nicht verfügbar: Verkaufschancen per Chat löschen oder beim Anlegen Tags hinzufügen."
+        "w4": "Eine Verkaufschance von Grund auf anlegen (Kunde, Betrag, Abschlussdatum, Team, Vertriebsmitarbeiter, Phase), einen Anruf, ein Meeting oder eine Aufgabe zum gewünschten Datum planen („morgen“, „am Freitag“, „in 3 Tagen“) und eine Verkaufschance per Name in eine andere Phase verschieben oder neu zuweisen – tragen mehrere denselben Namen, per Auswahl aus einer Liste (oder mit „die in Outreach“, „#809“)",
+        "limit": "Noch nicht verfügbar: Verkaufschancen per Chat löschen, beim Anlegen Tags hinzufügen oder ein Angebot bzw. einen Auftrag per E-Mail senden."
       },
       "finance": {
         "name": "Finanzen",
-        "read": "Statusfilter über Rechnungen und Gutschriften (überfällig, bezahlt, teilweise bezahlt, offene Forderungen, offene Verbindlichkeiten) sowie Forderungsalter in Stufen von 30, 60 und 90+ Tagen, in Python berechnet: unabhängig von Enterprise-Modulen. Jedes Ergebnis lässt sich als PDF oder Excel mit Summenzeile herunterladen.",
+        "read": "Forderungen und Verbindlichkeiten: wer wie viel schuldet und seit wann (Stufen von 30, 60 und über 90 Tagen), was diese Woche oder in den nächsten N Tagen fällig wird, sowie überfällige, bezahlte, teilweise bezahlte und Entwurfsrechnungen, Gutschriften und Lieferantenrechnungen – alles in Python berechnet, ohne Enterprise-Module. Zahlungseingänge und -ausgänge, auch nach Journal; wie viele Tage Kunden zum Zahlen brauchen (Mittelwert und Median), Zahlungsbedingungen, welcher Anteil der Eingänge auf bereits überfällige Rechnungen entfiel, und die Zahlungen eines Kunden, jeweils mit der Rechnung, die sie beglichen haben. Zusammenfassung eines Zeitraums und Monatsabschluss in einer einzigen Antwort (fakturiert, eingenommen, Einkäufe, MwSt., bis heute überfällig), Monatsdurchschnitte und Vergleiche zwischen Zeiträumen. MwSt.: Umsatzsteuer, Vorsteuer, die Nettoposition und die Bemessungsgrundlage für jeden Zeitraum, in der argentinischen Lokalisierung nach Belegbuchstabe (A/B) getrennt. Es zählt Kunden, nicht Rechnungen („wie viele Kunden schulden uns etwas?“, „neue Kunden diesen Monat“, „schulden uns etwas und haben seit 60 Tagen nicht gekauft“), erstellt die Rangliste der Schuldner und arbeitet im Gespräch damit weiter („ohne den, wie viel bleibt?“, „wie viel schuldet davon jeder?“) und schlüsselt die Fakturierung nach Vertriebsmitarbeiter, Produktkategorie, Lager (Thekenverkäufe getrennt) und Tag auf. Ein Monatsüberblick markiert Spitzen, ungewöhnlich hohe Rechnungen und alte Entwürfe. Lässt eine Frage zwei vernünftige Lesarten zu („diesen Monat offen“: die gesamte Schuld bis heute oder nur das, was diesen Monat fällig wird?), beantwortet es die Standardlesart und bietet die andere mit einem Klick an. Jedes Ergebnis lässt sich als PDF oder Excel mit Summenzeile herunterladen.",
         "w1": "Rechnungen: erstellen und bearbeiten",
-        "w2": "Bestehende Rechnungen: validieren, abbrechen und per E-Mail senden"
+        "w2": "Bestehende Rechnungen: validieren (buchen) und stornieren",
+        "w3": "Mehrere Entwurfsrechnungen auf einmal buchen, für einen Kunden oder einen Zeitraum (bis zu 20), mit Liste und Summe vor der Bestätigung",
+        "limit": "Per Chat noch nicht verfügbar: eine Zahlung erfassen oder zuordnen, einen Verkaufsauftrag fakturieren und per E-Mail senden. Wird es verlangt, sagt es das klar (es behauptet nie, es getan zu haben) und zeigt stattdessen, was weiterhilft, etwa die offenen Rechnungen des Kunden, die älteste zuerst."
       },
       "inventory": {
         "name": "Lager / Einkauf",
-        "read": "Katalog mit Preis und Bestand, Filter nach Verfügbarkeit und Sortierung nach Preis oder Bestand. Lesezugriff auf Bestellungen, deren Positionen und Lieferscheine.",
+        "read": "Katalog mit Preis und Bestand, Filter nach Verfügbarkeit und Sortierung nach Preis oder Bestand. Bestand pro Lager, was nachbestellt werden muss (nach Ihren Nachbestellregeln) und die von jedem Lieferanten angegebene Lieferzeit. Lesezugriff auf Bestellungen, deren Positionen und Lieferscheine.",
         "w1": "Katalogprodukte: erstellen und bearbeiten",
-        "w2": "Bestehende Bestellungen und Lieferscheine: bestätigen, abbrechen, validieren und senden",
+        "w2": "Bestehende Bestellungen: bestätigen und abbrechen. Lieferscheine: bestätigen, validieren und abbrechen",
         "limit": "Eine völlig neue Bestellung per Chat anzulegen ist noch nicht verfügbar."
       },
       "contacts": {
@@ -1571,7 +1573,7 @@
         },
         "customModules": {
           "label": "Ihr maßgeschneidertes ERP, von selbst verstanden",
-          "body": "Wenn Sie eigene oder OCA-Module oder mit Studio erstellte Felder haben, kann der Agent lernen, Fragen zu diesen Modellen zu beantworten, indem er die Menüs und Ansichten liest, die Odoo bereits hat: Namen, Bezeichnungen und in den Suchfiltern deklarierte Geschäftsregeln. Niemand muss ihm etwas von Hand beibringen, und auf Ihrer Seite ist nichts vorab zu konfigurieren."
+          "body": "Wenn Sie eigene oder OCA-Module oder Studio-Felder haben, kann der Agent lernen, Fragen zu diesen Modellen zu beantworten, indem er die Menüs und Ansichten liest, die Odoo bereits hat: Namen, Bezeichnungen und in den Suchfiltern deklarierte Geschäftsregeln. Niemand muss es ihm von Hand beibringen: Wir schalten es für Ihre Instanz frei, wenn Sie sie verbinden."
         }
       }
     },
@@ -1625,7 +1627,7 @@
       "lead": "Das ist kein Changelog und keine Liste von Versprechen: es ist die offene Auswahl der Themen, die heute auf unserem Tisch liegen. Es gibt keine zugesagten Termine, und die Reihenfolge bestimmt weitgehend, was Implementierer von uns verlangen. Wenn etwas hier bei Ihnen einen konkreten Kunden freischaltet, wollen wir das wissen.",
       "queries": {
         "label": "Mehr Fragen pro Domäne",
-        "body": "Margen pro Produkt, Kategorien über Einkaufspositionen, Land und Geografie, Tags, Lager auf Lieferscheinen. Was fehlt Ihnen zuerst?"
+        "body": "Land und Geografie, Tags, Kategorien bei Einkäufen und Point of Sale als eigener Bereich. Was fehlt Ihnen zuerst?"
       },
       "custom": {
         "label": "Mehr Tiefe bei eigenen und OCA-Modulen",
@@ -1633,7 +1635,7 @@
       },
       "typos": {
         "label": "Breitere Tippfehler-Toleranz",
-        "body": "Heute korrigiert er Tippfehler bei Datumsangaben, Status und Anfragetyp. Die Idee ist, das auf mehr Anfragetypen auszuweiten."
+        "body": "Heute korrigiert er Tippfehler bei Datumsangaben, Status, Anfragetyp und Kundennamen. Die Idee ist, das auf mehr Anfragetypen auszuweiten."
       },
       "tracing": {
         "label": "Feineres Tracing für die Diagnose",

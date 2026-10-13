@@ -1515,24 +1515,26 @@
       "readOnlyLabel": "Read-only for now: no writes available in this domain.",
       "sales": {
         "name": "Sales / CRM",
-        "read": "Counts, rankings (“top 5 best-selling products”) and breakdowns by salesperson, team, stage, lost reason, category or month. The pipeline is your open opportunities; won and lost deals are counted by the date they closed, and two periods can be compared (“this quarter vs last”). Filters by date — including future closing dates (“closing next month”) and overdue closing dates —, by stage (“in negotiation”), by team (just by naming it: “the southeast ones”), by lost reason (“deals lost on price”), by priority and by a named salesperson or customer, with disambiguation when several match. Win rate (overall or per salesperson or team), probability-weighted pipeline and sales cycle length (days to win) are computed in the backend, never by the language model. It understands “my opportunities”, short follow-ups (“and last quarter?”, “and the West team?”), and activities by customer or type. It summarizes how a team, customer or salesperson is doing (“how's the West team doing this quarter?”), puts two teams side by side, finds stalled deals (time since the last stage change), reads your monthly sales targets and crosses won deals with invoicing (“how much did we invoice the customers we won this year?”). If a field is empty in your instance (campaigns, sources, tags, targets) it says so.",
-        "w1": "Sales orders: create, edit, confirm, cancel and send by email",
+        "read": "Counts, rankings (“top 5 best-selling products”) and breakdowns by salesperson, team, stage, lost reason, category or month. The pipeline is your open opportunities; won and lost deals are counted by the date they closed, and two periods can be compared (“this quarter vs last”). Filters by date — including future closing dates (“closing next month”) and overdue closing dates —, by stage (“in negotiation”), by team (just by naming it: “the southeast ones”), by lost reason (“deals lost on price”), by priority and by a named salesperson or customer, with disambiguation when several match. Win rate (overall or per salesperson or team), probability-weighted pipeline and sales cycle length (days to win) are computed in the backend, never by the language model. It understands “my opportunities”, short follow-ups (“and last quarter?”, “and the West team?”), and activities by customer or type. It summarizes how a team, customer or salesperson is doing (“how's the West team doing this quarter?”), puts two teams side by side, finds stalled deals (time since the last stage change), reads your monthly sales targets and crosses won deals with invoicing (“how much did we invoice the customers we won this year?”). If a field is empty in your instance (campaigns, sources, tags, targets) it says so. Margin per product, from the product's cost (today's cost, and the answer says so).",
+        "w1": "Sales orders: create, edit, confirm and cancel",
         "w2": "Opportunities: move stage, mark won or lost with a reason, assign a salesperson",
         "w3": "Convert a lead into an opportunity",
-        "w4": "Create an opportunity from scratch (customer, amount, closing date, team, salesperson, stage), schedule a call, a meeting or a to-do on the date you ask for (“tomorrow”, “on Friday”, “in 3 days”), and move an opportunity to another stage or reassign it by name — even when several share a name (“the one in Outreach”, “#809”)",
-        "limit": "Not available yet: deleting opportunities over chat, or adding tags when creating them."
+        "w4": "Create an opportunity from scratch (customer, amount, closing date, team, salesperson, stage), schedule a call, a meeting or a to-do on the date you ask for (“tomorrow”, “on Friday”, “in 3 days”), and move an opportunity to another stage or reassign it by name, picking it from a list when several share a name (or by saying “the one in Outreach”, “#809”)",
+        "limit": "Not available yet: deleting opportunities over chat, adding tags when creating them, or sending a quote or order by email."
       },
       "finance": {
         "name": "Finance",
-        "read": "Status filters over invoices and credit notes (overdue, paid, partial, receivable, payable) and receivables ageing in 30, 60 and 90+ day buckets, computed in Python: it does not depend on Enterprise modules. Any result can be downloaded as PDF or Excel with a totals row.",
+        "read": "Receivables and payables: who owes what and since when (30, 60 and 90+ day buckets), what falls due this week or in the next N days, and overdue, paid, partially paid and draft invoices, credit notes and vendor bills, all computed in Python without Enterprise modules. Payments received and made, also by journal; how many days customers take to pay (mean and median), payment terms, how much of what came in went to invoices that were already overdue, and a customer's payments matched to the invoice each one settled. Period summaries and month-end close in one answer (invoiced, collected, purchases, VAT, overdue to date), monthly averages and period-over-period comparisons. VAT: output, input, the net position and the taxable base for any period, split by document letter (A/B) on the Argentine localization. It counts customers, not invoices (“how many customers owe us?”, “new customers this month”, “owe us and haven't bought in 60 days”), ranks debtors and follows up on the ranking (“without that one, what's the total?”, “of those, how much does each owe?”), and breaks invoicing down by salesperson, product category, warehouse (point-of-sale sales shown apart) and day. A once-over of the month flags spikes, unusually large invoices and old drafts. When a question has two reasonable readings (“pending this month”: all debt to date, or only what falls due this month?) it answers the default one and offers the other with one tap. Any result can be downloaded as PDF or Excel with a totals row.",
         "w1": "Invoices: create and edit",
-        "w2": "Existing invoices: validate, cancel and send by email"
+        "w2": "Existing invoices: validate (post) and cancel",
+        "w3": "Post several draft invoices at once, for a customer or a period (up to 20), listed with their total before you confirm",
+        "limit": "Not available over chat yet: registering or applying a payment, invoicing a sales order, and sending by email. When asked, it says so plainly (it never claims it did it) and shows what helps instead, such as the customer's unpaid invoices, oldest first."
       },
       "inventory": {
         "name": "Inventory / Purchasing",
-        "read": "Catalogue with price and stock on hand, filtering by stock availability and sorting by price or stock. Read access over purchase orders, their lines and transfers.",
+        "read": "Catalogue with price and stock on hand, filtering by availability and sorting by price or stock. Stock by warehouse, what needs reordering (from your reorder rules) and each supplier's declared lead time. Read access over purchase orders, their lines and transfers.",
         "w1": "Catalogue products: create and edit",
-        "w2": "Existing purchase orders and transfers: confirm, cancel, validate and send",
+        "w2": "Existing purchase orders: confirm and cancel. Transfers: confirm, validate and cancel",
         "limit": "Creating a brand-new purchase order from scratch over chat is not available yet."
       },
       "contacts": {
@@ -1571,7 +1573,7 @@
         },
         "customModules": {
           "label": "Your custom ERP, understood on its own",
-          "body": "If you have your own or OCA modules, or Studio fields, the agent can learn to answer queries about those models by reading the menus and views Odoo already has: names, labels and business rules declared in the search filters. Nobody has to teach it by hand, and there is nothing for you to configure up front."
+          "body": "If you have your own or OCA modules, or Studio fields, the agent can learn to answer queries about those models by reading the menus and views Odoo already has: names, labels and business rules declared in the search filters. Nobody has to teach it by hand: we switch it on for your instance when you connect it."
         }
       }
     },
@@ -1625,7 +1627,7 @@
       "lead": "This is not a changelog or a list of promises: it is the open menu of the fronts on our table today. There are no committed dates, and the order is largely defined by what implementers ask us for. If something here unblocks a specific client of yours, we want to hear it.",
       "queries": {
         "label": "More questions per domain",
-        "body": "Margins per product, categories via purchase lines, country and geography, tags, warehouses on transfers. Which one do you need first?"
+        "body": "Country and geography, tags, categories on purchases, and point-of-sale as an area of its own. Which one do you need first?"
       },
       "custom": {
         "label": "More depth on custom and OCA modules",
@@ -1633,7 +1635,7 @@
       },
       "typos": {
         "label": "Broader typo tolerance",
-        "body": "Today it fixes typos in dates, states and query type. The idea is to extend that to more query types."
+        "body": "Today it fixes typos in dates, states, query type and customer names. The idea is to extend that to more query types."
       },
       "tracing": {
         "label": "Finer tracing for diagnostics",

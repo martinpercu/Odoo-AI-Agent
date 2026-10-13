@@ -13,11 +13,11 @@ interface ScopeOfferCardProps {
   initialSelected?: string;
 }
 
-/** Las lecturas más amplias (con vencidas, toda la historia) llevan el ícono de historia. */
-const WIDER_KEYS = new Set(["with_overdue", "all_time"]);
+/** Las lecturas más amplias (con vencidas, toda la historia, la deuda a la fecha) llevan el ícono de historia. */
+const WIDER_KEYS = new Set(["with_overdue", "all_time", "to_date"]);
 
 /**
- * Ofertas de alcance — `deadline_scope` y `summary_period` (back `helpers/scope_offers.py`).
+ * Ofertas de alcance — `deadline_scope`, `summary_period` y `due_scope` (back `helpers/scope_offers.py`).
  *
  * Mismo patrón que `SalesMeasureCard`: el número ya llegó calculado con la lectura
  * `current`, que se marca como la vigente y no se vuelve a ofrecer. La otra se manda como
