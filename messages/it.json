@@ -1532,10 +1532,10 @@
       },
       "inventory": {
         "name": "Magazzino / Acquisti",
-        "read": "Catalogo con prezzo e giacenza, filtro per disponibilità e ordinamento per prezzo o per giacenza. Giacenza per magazzino, cosa va riordinato (secondo le tue regole di riordino) e il tempo di consegna dichiarato da ciascun fornitore. Lettura su ordini di acquisto, relative righe e trasferimenti.",
+        "read": "Giacenza di un prodotto indicato per magazzino (nella sua unità), prodotti con giacenza per magazzino, valore della giacenza (totale, per categoria e magazzino), esauriti e giacenza negativa. Riordino secondo le regole di riordino: cosa è sotto il minimo (in base alla giacenza disponibile, indicando quali hanno già acquisti in arrivo), cosa suggerisce di ordinare Odoo, quanto manca per arrivare al massimo, ordinato per mancanza. Ricevimenti e consegne: in sospeso, in ritardo, il più vecchio, quelli di un fornitore o cliente indicato. Acquisti: per mese o periodo, per fornitore (classifica, quota sul totale, dipendenza), ciò che resta da ricevere, tempi di consegna dichiarati, lo stesso mese rispetto all'anno precedente e di quanto sono saliti i prezzi d'acquisto per prodotto, categoria o in generale. Margine di listino per prodotto o categoria, e quale categoria pesa di più nelle vendite o nella giacenza.",
         "w1": "Prodotti di catalogo: creare e modificare",
-        "w2": "Ordini di acquisto esistenti: confermare e annullare. Trasferimenti: confermare, validare e annullare",
-        "limit": "Creare un nuovo ordine di acquisto da zero via chat non è ancora disponibile."
+        "w2": "Ordini di acquisto esistenti: confermare e annullare. Ricevimenti e consegne: ricevere (per intero), convalidare e annullare — cercati per fornitore, cliente, anno o numero (se più di uno corrisponde, chiede quale).",
+        "limit": "Un nuovo ordine di acquisto viene proposto con fornitore e righe, da confermare. Ricevere una parte di un ordine e i trasferimenti tra magazzini non sono ancora disponibili: l'agente lo dice e spiega come farlo in Odoo."
       },
       "contacts": {
         "name": "Contatti",
@@ -1549,9 +1549,9 @@
       },
       "projects": {
         "name": "Progetti",
-        "read": "Lettura approfondita su progetti, attività e ore registrate (timesheet).",
-        "w1": "Attività già esistenti: azioni di flusso, per esempio segnarla come completata",
-        "limit": "Creare progetti o attività nuove da zero via chat non è ancora disponibile."
+        "read": "Progetti, attività e ore registrate (timesheet). Ore per persona, cliente o progetto in qualsiasi periodo, fatturabili rispetto a non fatturabili, chi è più carico (ore registrate, o attività aperte per persona — se non si specifica, chiede quale), e fatturazione e ore a confronto con l'anno precedente. Budget rispetto alle ore: quali progetti sono in linea, quali stanno per sforare (90 % o più) o hanno già sforato, ordinati per sforamento in ore, quale va peggio, e il riepilogo di un progetto (ore, budget, attività aperte, scadute e bloccate). Attività: aperte, scadute, bloccate o in revisione, suddivise per progetto e per persona; «le mie attività» e quelle di qualcuno per nome, con seguiti («e quelle scadute?», «e quelle di Marta?», «ordinale per data»).",
+        "w1": "Attività già esistenti: segnarle come completate o spostarle in un'altra fase, cercandole per nome e progetto (se più di una corrisponde, chiede quale).",
+        "limit": "Creare progetti o attività e registrare ore dalla chat non è ancora disponibile: l'agente lo dice e mostra ciò che aiuta (per esempio, le ore già registrate su quell'attività). Non calcola la redditività in denaro per progetto."
       },
       "cross": {
         "heading": "Capacità trasversali",

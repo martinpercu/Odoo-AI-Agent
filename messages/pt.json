@@ -1532,10 +1532,10 @@
       },
       "inventory": {
         "name": "Inventário / Compras",
-        "read": "Catálogo com preço e existências, filtro por disponibilidade e ordenação por preço ou por stock. Stock por armazém, o que é preciso repor (segundo as suas regras de reaprovisionamento) e o prazo de entrega que cada fornecedor declara. Leitura sobre ordens de compra, as suas linhas e guias de remessa.",
+        "read": "Existências de um produto nomeado por depósito (na unidade própria), produtos com existências por depósito, valor das existências (total, por categoria e depósito), sem existências e em negativo. Reposição segundo as regras de reposição: o que está abaixo do mínimo (pelas existências disponíveis, indicando quais já têm compras a caminho), o que o Odoo sugere pedir, quanto falta para chegar ao máximo, ordenado pela falta. Recebimentos e entregas: pendentes, atrasados, o mais antigo, os de um fornecedor ou cliente nomeado. Compras: por mês ou período, por fornecedor (ranking, participação no total, dependência), o que ainda falta receber, prazos declarados, o mesmo mês contra o ano anterior e quanto subiram os preços de compra por produto, categoria ou no geral. Margem de lista por produto ou categoria, e qual categoria pesa mais nas vendas ou nas existências.",
         "w1": "Produtos do catálogo: criar e editar",
-        "w2": "Ordens de compra existentes: confirmar e cancelar. Guias de remessa: confirmar, validar e cancelar",
-        "limit": "Criar uma ordem de compra nova a partir do zero por chat ainda não está disponível."
+        "w2": "Ordens de compra existentes: confirmar e cancelar. Recebimentos e entregas: receber (completas), validar e cancelar — procurados por fornecedor, cliente, ano ou número (se houver várias, pergunta qual).",
+        "limit": "Uma nova ordem de compra é proposta com fornecedor e linhas, para confirmação. Receber uma parte de uma ordem e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo."
       },
       "contacts": {
         "name": "Contactos",
@@ -1549,9 +1549,9 @@
       },
       "projects": {
         "name": "Projetos",
-        "read": "Leitura aprofundada sobre projetos, tarefas e horas registadas (timesheets).",
-        "w1": "Tarefas já existentes: ações de fluxo, por exemplo marcar como concluída",
-        "limit": "Criar projetos ou tarefas novas a partir do zero por chat ainda não está disponível."
+        "read": "Projetos, tarefas e horas registadas (timesheets). Horas por pessoa, cliente ou projeto em qualquer período, faturáveis contra não faturáveis, quem tem mais carga (horas registadas, ou tarefas abertas por pessoa — se não se indicar qual, pergunta), e faturação e horas lado a lado contra o ano anterior. Orçamento contra horas: quais projetos estão dentro do previsto, quais estão prestes a ultrapassar (90 % ou mais) ou já ultrapassaram, ordenados pelo desvio em horas, qual está pior, e o resumo de um projeto (horas, orçamento, tarefas abertas, atrasadas e bloqueadas). Tarefas: abertas, atrasadas, bloqueadas ou em revisão, separadas por projeto e por pessoa; «as minhas tarefas» e as de alguém pelo nome, com seguimentos («e as atrasadas?», «e as da Marta?», «ordena-as por data»).",
+        "w1": "Tarefas já existentes: marcá-las como concluídas ou passá-las para outra etapa, procurando-as pelo nome e pelo projeto (se houver várias que coincidam, pergunta qual).",
+        "limit": "Criar projetos ou tarefas e registar horas pelo chat ainda não está disponível: o agente diz isso e mostra o que ajuda (por exemplo, as horas já registadas nessa tarefa). Não calcula a rentabilidade em dinheiro por projeto."
       },
       "cross": {
         "heading": "Capacidades transversais",

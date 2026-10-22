@@ -1532,10 +1532,10 @@
       },
       "inventory": {
         "name": "Lager / Einkauf",
-        "read": "Katalog mit Preis und Bestand, Filter nach Verfügbarkeit und Sortierung nach Preis oder Bestand. Bestand pro Lager, was nachbestellt werden muss (nach Ihren Nachbestellregeln) und die von jedem Lieferanten angegebene Lieferzeit. Lesezugriff auf Bestellungen, deren Positionen und Lieferscheine.",
+        "read": "Bestand eines genannten Produkts nach Lager (in seiner Einheit), Produkte mit Bestand je Lager, Lagerwert (gesamt, nach Kategorie und Lager), nicht vorrätig und negativer Bestand. Nachbestellung nach den Meldebeständen: was unter dem Minimum liegt (nach Bestand, mit Angabe, welche bereits Bestellungen unterwegs haben), was Odoo zu bestellen vorschlägt, wie viel bis zum Maximum fehlt, sortiert nach Fehlmenge. Wareneingänge und Lieferungen: offene, überfällige, die älteste, die eines genannten Lieferanten oder Kunden. Einkäufe: nach Monat oder Zeitraum, nach Lieferant (Rangliste, Anteil am Gesamtwert, Abhängigkeit), was noch zu empfangen ist, angegebene Lieferzeiten, derselbe Monat gegenüber dem Vorjahr und wie stark die Einkaufspreise je Produkt, Kategorie oder insgesamt gestiegen sind. Listenmarge je Produkt oder Kategorie und welche Kategorie im Umsatz oder im Bestand am stärksten ins Gewicht fällt.",
         "w1": "Katalogprodukte: erstellen und bearbeiten",
-        "w2": "Bestehende Bestellungen: bestätigen und abbrechen. Lieferscheine: bestätigen, validieren und abbrechen",
-        "limit": "Eine völlig neue Bestellung per Chat anzulegen ist noch nicht verfügbar."
+        "w2": "Bestehende Bestellungen: bestätigen und abbrechen. Lieferscheine: vollständig empfangen, validieren und abbrechen — gesucht nach Lieferant, Kunde, Jahr oder Nummer (wenn mehrere passen, wird nachgefragt, welche).",
+        "limit": "Eine neue Bestellung wird mit Lieferant und Positionen zur Bestätigung vorgeschlagen. Eine Teillieferung einer Bestellung zu empfangen und Umlagerungen zwischen Lagern sind noch nicht verfügbar: Der Agent sagt das und erklärt, wie es in Odoo geht."
       },
       "contacts": {
         "name": "Kontakte",
@@ -1549,9 +1549,9 @@
       },
       "projects": {
         "name": "Projekte",
-        "read": "Tiefer Lesezugriff auf Projekte, Aufgaben und erfasste Stunden (Zeiterfassung).",
-        "w1": "Bestehende Aufgaben: Workflow-Aktionen, zum Beispiel als erledigt markieren",
-        "limit": "Völlig neue Projekte oder Aufgaben per Chat anzulegen ist noch nicht verfügbar."
+        "read": "Projekte, Aufgaben und erfasste Stunden (Zeiterfassung). Stunden nach Person, Kunde oder Projekt für jeden Zeitraum, abrechenbar gegenüber nicht abrechenbar, wer am stärksten ausgelastet ist (erfasste Stunden oder offene Aufgaben pro Person — wenn nicht angegeben, wird nachgefragt, welche), sowie Fakturierung und Stunden nebeneinander gegenüber dem Vorjahr. Budget gegenüber Stunden: welche Projekte im Plan liegen, welche das Budget bald überschreiten (90 % oder mehr) oder es schon überschritten haben, sortiert nach Überschreitung in Stunden, welches am schlechtesten steht, und die Zusammenfassung eines Projekts (Stunden, Budget, offene, überfällige und blockierte Aufgaben). Aufgaben: offen, überfällig, blockiert oder in Prüfung, aufgeschlüsselt nach Projekt und Bearbeiter; „meine Aufgaben“ und die von jemandem anhand des Namens, mit Folgefragen („und die überfälligen?“, „und die von Marta?“, „sortiere sie nach Datum“).",
+        "w1": "Bestehende Aufgaben: als erledigt markieren oder in eine andere Phase verschieben, gesucht nach Name und Projekt (wenn mehrere passen, wird nachgefragt, welche).",
+        "limit": "Projekte oder Aufgaben anlegen und Stunden im Chat erfassen ist noch nicht verfügbar: Der Agent sagt das und zeigt, was hilft (zum Beispiel die bereits auf dieser Aufgabe erfassten Stunden). Er berechnet keine Rentabilität in Geld pro Projekt."
       },
       "cross": {
         "heading": "Übergreifende Fähigkeiten",

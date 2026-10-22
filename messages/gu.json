@@ -1532,10 +1532,10 @@
       },
       "inventory": {
         "name": "Inventory / Purchasing",
-        "read": "Catalogue with price and stock on hand, filtering by availability and sorting by price or stock. Stock by warehouse, what needs reordering (from your reorder rules) and each supplier's declared lead time. Read access over purchase orders, their lines and transfers.",
+        "read": "Stock of a named product by warehouse (in its own unit), products in stock per warehouse, stock value (overall, by category and warehouse), out-of-stock and negative stock. Reordering from your reorder rules: what's below the minimum (by stock on hand, noting which already have purchases on the way), what Odoo suggests ordering, how much is missing to reach the maximum, sorted by shortfall. Receipts and deliveries: pending, overdue, the oldest, those of a named supplier or customer. Purchases: by month or period, by supplier (ranking, share of the total, dependency), what's still to be received, declared lead times, the same month against last year, and how much purchase prices went up per product, category or overall. Catalogue margin per product or category, and which category weighs most in sales or in stock.",
         "w1": "Catalogue products: create and edit",
-        "w2": "Existing purchase orders: confirm and cancel. Transfers: confirm, validate and cancel",
-        "limit": "Creating a brand-new purchase order from scratch over chat is not available yet."
+        "w2": "Existing purchase orders: confirm and cancel. Receipts and deliveries: receive (whole), validate and cancel — found by supplier, customer, year or number (it asks which one when several match).",
+        "limit": "A new purchase order is proposed with supplier and lines for you to confirm. Receiving part of an order and transfers between warehouses are not available yet: the agent says so and explains how to do it in Odoo."
       },
       "contacts": {
         "name": "Contacts",
@@ -1549,9 +1549,9 @@
       },
       "projects": {
         "name": "Projects",
-        "read": "Deep read access over projects, tasks and logged hours (timesheets).",
-        "w1": "Existing tasks: workflow actions, for example marking one as done",
-        "limit": "Creating brand-new projects or tasks from scratch over chat is not available yet."
+        "read": "Projects, tasks and logged hours (timesheets). Hours by person, customer or project for any period, billable vs. non-billable, who is most loaded (hours logged, or open tasks per person — it asks when you don't say which), and invoicing and hours side by side against last year. Budget vs. hours: which projects are on track, about to go over (90 % or more) or already over, ranked by overrun in hours, which one is worst, and a one-project summary (hours, budget, open, overdue and blocked tasks). Tasks: open, overdue, blocked or in review, broken down by project and by assignee; \"my tasks\" and anyone's tasks by name, with follow-ups (\"and the overdue ones?\", \"and Marta's?\", \"sort them by date\").",
+        "w1": "Existing tasks: mark as done or move to another stage, found by name and project (it asks which one when several match).",
+        "limit": "Creating projects or tasks and logging hours over chat is not available yet: the agent says so and shows what helps (for example, the hours already logged on that task). It doesn't compute profitability in currency per project."
       },
       "cross": {
         "heading": "Cross-cutting capabilities",
