@@ -1532,10 +1532,10 @@
       },
       "inventory": {
         "name": "Inventaire / Achats",
-        "read": "Catalogue avec prix et stock disponible, filtre par disponibilité et tri par prix ou par stock. Stock par entrepôt, ce qu'il faut réapprovisionner (selon vos règles de réapprovisionnement) et le délai de livraison déclaré par chaque fournisseur. Lecture sur les bons de commande fournisseur, leurs lignes et les transferts.",
+        "read": "Stock d'un produit nommé par entrepôt (dans son unité), produits en stock par entrepôt, valeur du stock (total, par catégorie et entrepôt), ruptures et stock négatif. Réapprovisionnement selon les règles de réapprovisionnement : ce qui est sous le minimum (d'après le stock disponible, en précisant lesquels ont déjà des achats en route), ce qu'Odoo suggère de commander, ce qui manque pour atteindre le maximum, classé par manque. Réceptions et livraisons : en attente, en retard, la plus ancienne, celles d'un fournisseur ou d'un client nommé. Achats : par mois ou période, par fournisseur (classement, part du total, dépendance), ce qui reste à recevoir, délais déclarés, le même mois par rapport à l'année précédente, et de combien ont augmenté les prix d'achat par produit, catégorie ou globalement. Marge catalogue par produit ou catégorie, et quelle catégorie pèse le plus dans les ventes ou le stock.",
         "w1": "Produits du catalogue : créer et modifier",
-        "w2": "Bons de commande fournisseur existants : confirmer et annuler. Transferts : confirmer, valider et annuler",
-        "limit": "Créer un bon de commande fournisseur entièrement nouveau par le chat n'est pas encore disponible."
+        "w2": "Bons de commande fournisseur existants : confirmer et annuler. Réceptions et livraisons : recevoir (en totalité), valider et annuler — recherchés par fournisseur, client, année ou numéro (si plusieurs correspondent, l'agent demande lequel).",
+        "limit": "Un nouveau bon de commande est proposé avec le fournisseur et les lignes, pour confirmation. Recevoir une partie d'une commande et les transferts entre entrepôts ne sont pas encore disponibles : l'agent le dit et explique comment faire dans Odoo."
       },
       "contacts": {
         "name": "Contacts",
@@ -1549,9 +1549,9 @@
       },
       "projects": {
         "name": "Projets",
-        "read": "Lecture approfondie sur les projets, les tâches et les heures saisies (feuilles de temps).",
-        "w1": "Tâches existantes : actions de flux, par exemple marquer une tâche comme terminée",
-        "limit": "Créer des projets ou des tâches entièrement nouveaux par le chat n'est pas encore disponible."
+        "read": "Projets, tâches et heures saisies (feuilles de temps). Heures par personne, client ou projet sur n'importe quelle période, facturables ou non facturables, qui est le plus chargé (heures saisies, ou tâches ouvertes par personne — si ce n'est pas précisé, l'agent demande lequel), et facturation et heures côte à côte par rapport à l'année précédente. Budget par rapport aux heures : quels projets sont dans les temps, lesquels sont sur le point de dépasser (90 % ou plus) ou ont déjà dépassé, classés par dépassement en heures, lequel est le pire, et le résumé d'un projet (heures, budget, tâches ouvertes, en retard et bloquées). Tâches : ouvertes, en retard, bloquées ou en revue, réparties par projet et par responsable ; « mes tâches » et celles de n'importe qui par son nom, avec des suites (« et celles en retard ? », « et celles de Marta ? », « trie-les par date »).",
+        "w1": "Tâches existantes : les marquer comme terminées ou les faire passer à une autre étape, en les recherchant par nom et par projet (si plusieurs correspondent, l'agent demande laquelle).",
+        "limit": "Créer des projets ou des tâches et saisir des heures par le chat n'est pas encore disponible : l'agent le dit et montre ce qui aide (par exemple, les heures déjà saisies sur cette tâche). Il ne calcule pas la rentabilité en argent par projet."
       },
       "cross": {
         "heading": "Capacités transversales",
