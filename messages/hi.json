@@ -1539,9 +1539,9 @@
       },
       "contacts": {
         "name": "Contacts",
-        "read": "It tells customers, vendors, companies and individuals apart. Name search tolerates accents and capitalisation, and for broad listings it offers to filter by type before dumping the whole address book.",
-        "w1": "Contacts: create and edit",
-        "w2": "Automatic classification (customer, vendor, company or plain contact), resolved with a short question when needed"
+        "read": "A named contact's card: email, phone, tax ID (CUIT, NIF…), address, salesperson, and whether it is a customer, a supplier or both (it says so when a field is empty). Lists of customers, suppliers, people or companies, filtered by state or province, salesperson, missing data (no email, no phone) and, in Argentina, VAT status, with follow-ups (\"of those, the Texas ones\", \"add Gustavo's too\", \"the first one's email\"). Name search tolerates accents, capitalisation and typos: if it can't find the name it asks \"did you mean…?\", and when several contacts share a name it asks which one. For the whole address book it offers to filter before listing everything.",
+        "w1": "Contacts: add new ones (with the tax ID checked, VAT status in Argentina, salesperson, and a warning when a similar one already exists), change email, phone, address or salesperson, mark as a supplier, and archive (warning about unpaid invoices). Everything comes as a proposal for you to confirm.",
+        "w2": "Customer, supplier or both, read from Odoo (\"do they buy from us or sell to us?\"). When a new contact doesn't say, it asks: customer, supplier, both or just a contact."
       },
       "hr": {
         "name": "HR",

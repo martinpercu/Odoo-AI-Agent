@@ -1539,9 +1539,9 @@
       },
       "contacts": {
         "name": "Contactos",
-        "read": "Distingue clientes, proveedores, empresas y personas. Búsqueda de nombre tolerante a acentos y mayúsculas, y para listados amplios ofrece filtrar por tipo antes de tirar todo el padrón.",
-        "w1": "Contactos: crear y editar",
-        "w2": "Clasificación automática (cliente, proveedor, empresa o solo contacto), resuelta con una pregunta corta cuando hace falta"
+        "read": "La ficha de un contacto nombrado: mail, teléfono, CUIT/NIF, dirección, vendedor y si es cliente, proveedor o las dos cosas (si un dato no está cargado, lo dice). Listados de clientes, proveedores, personas o empresas, filtrados por provincia o estado, vendedor, dato sin cargar (sin mail, sin teléfono) y, en Argentina, condición frente al IVA, con seguimientos («de esos, los de Texas», «agrégale los de Gustavo», «el mail del primero»). La búsqueda por nombre tolera acentos, mayúsculas y errores de tipeo: si no lo encuentra, pregunta «¿quisiste decir…?», y si hay varios con el mismo nombre, pregunta cuál. Para la libreta entera, ofrece filtrar antes de listar todo.",
+        "w1": "Contactos: dar de alta (con el CUIT/NIF verificado, la condición frente al IVA en Argentina, el vendedor y un aviso si ya existe uno parecido), cambiar mail, teléfono, dirección o vendedor, marcar como proveedor y archivar (avisando si tiene facturas impagas). Todo llega como propuesta para que la confirmes.",
+        "w2": "Cliente, proveedor o las dos cosas, leído de Odoo («¿nos compra o nos vende?»). Si un alta no lo dice, pregunta: cliente, proveedor, las dos cosas o sólo contacto."
       },
       "hr": {
         "name": "RRHH",

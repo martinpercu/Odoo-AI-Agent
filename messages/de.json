@@ -1539,9 +1539,9 @@
       },
       "contacts": {
         "name": "Kontakte",
-        "read": "Unterscheidet Kunden, Lieferanten, Unternehmen und Personen. Die Namenssuche verzeiht Akzente und Groß-/Kleinschreibung, und bei breiten Listen wird angeboten, zuerst nach Typ zu filtern, statt das ganze Adressbuch auszugeben.",
-        "w1": "Kontakte: erstellen und bearbeiten",
-        "w2": "Automatische Klassifizierung (Kunde, Lieferant, Unternehmen oder einfacher Kontakt), bei Bedarf über eine kurze Rückfrage geklärt"
+        "read": "Die Karte eines genannten Kontakts: E-Mail, Telefon, Steuernummer (CUIT, NIF …), Adresse, Vertriebsmitarbeiter und ob er Kunde, Lieferant oder beides ist (fehlt eine Angabe, sagt er es). Listen von Kunden, Lieferanten, Personen oder Unternehmen, gefiltert nach Bundesstaat oder Provinz, Vertriebsmitarbeiter, fehlenden Angaben (ohne E-Mail, ohne Telefon) und in Argentinien nach Umsatzsteuerstatus, mit Anschlussfragen („von diesen die aus Texas“, „füge auch die von Gustavo hinzu“, „die E-Mail des ersten“). Die Namenssuche verzeiht Akzente, Groß-/Kleinschreibung und Tippfehler: Findet er den Namen nicht, fragt er „Meinten Sie …?“, und wenn mehrere Kontakte denselben Namen haben, fragt er, welcher gemeint ist. Für das gesamte Adressbuch bietet er an, vor dem Auflisten zu filtern.",
+        "w1": "Kontakte: neu anlegen (mit geprüfter Steuernummer, Umsatzsteuerstatus in Argentinien, Vertriebsmitarbeiter und einem Hinweis, wenn bereits ein ähnlicher existiert), E-Mail, Telefon, Adresse oder Vertriebsmitarbeiter ändern, als Lieferant markieren und archivieren (mit Hinweis auf unbezahlte Rechnungen). Alles kommt als Vorschlag, den Sie bestätigen.",
+        "w2": "Kunde, Lieferant oder beides, aus Odoo gelesen („kaufen sie bei uns oder verkaufen sie an uns?“). Wenn ein neuer Kontakt es nicht angibt, fragt er nach: Kunde, Lieferant, beides oder nur Kontakt."
       },
       "hr": {
         "name": "Personal",

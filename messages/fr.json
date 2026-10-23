@@ -1539,9 +1539,9 @@
       },
       "contacts": {
         "name": "Contacts",
-        "read": "Il distingue clients, fournisseurs, sociétés et personnes. La recherche par nom tolère les accents et la casse, et pour les listes larges il propose de filtrer par type avant de sortir tout le carnet d'adresses.",
-        "w1": "Contacts : créer et modifier",
-        "w2": "Classification automatique (client, fournisseur, société ou simple contact), résolue par une question courte si nécessaire"
+        "read": "La fiche d'un contact nommé : e-mail, téléphone, identifiant fiscal (CUIT, NIF…), adresse, vendeur et s'il est client, fournisseur ou les deux (il l'indique quand une donnée n'est pas renseignée). Listes de clients, fournisseurs, personnes ou sociétés, filtrées par État ou province, vendeur, donnée manquante (sans e-mail, sans téléphone) et, en Argentine, régime de TVA, avec des questions de suivi (« parmi ceux-là, ceux du Texas », « ajoute aussi ceux de Gustavo », « l'e-mail du premier »). La recherche par nom tolère les accents, la casse et les fautes de frappe : s'il ne trouve pas le nom, il demande « vouliez-vous dire… ? », et quand plusieurs contacts portent le même nom, il demande lequel. Pour tout le carnet d'adresses, il propose de filtrer avant de tout lister.",
+        "w1": "Contacts : créer (avec l'identifiant fiscal vérifié, le régime de TVA en Argentine, le vendeur et un avertissement si un contact similaire existe déjà), modifier l'e-mail, le téléphone, l'adresse ou le vendeur, marquer comme fournisseur et archiver (avec un avertissement en cas de factures impayées). Tout arrive sous forme de proposition à confirmer.",
+        "w2": "Client, fournisseur ou les deux, lu depuis Odoo (« nous achètent-ils ou nous vendent-ils ? »). Quand un nouveau contact ne le précise pas, il demande : client, fournisseur, les deux ou simple contact."
       },
       "hr": {
         "name": "RH",
