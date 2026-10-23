@@ -1539,9 +1539,9 @@
       },
       "contacts": {
         "name": "Contatti",
-        "read": "Distingue clienti, fornitori, aziende e persone. La ricerca per nome tollera accenti e maiuscole e, per elenchi ampi, propone di filtrare per tipo prima di riversare l'intera rubrica.",
-        "w1": "Contatti: creare e modificare",
-        "w2": "Classificazione automatica (cliente, fornitore, azienda o semplice contatto), risolta con una domanda breve quando serve"
+        "read": "La scheda di un contatto indicato per nome: e-mail, telefono, identificativo fiscale (CUIT, NIF…), indirizzo, venditore e se è cliente, fornitore o entrambi (se un dato manca, lo dice). Elenchi di clienti, fornitori, persone o aziende, filtrati per stato o provincia, venditore, dato mancante (senza e-mail, senza telefono) e, in Argentina, condizione IVA, con domande di seguito («tra questi, quelli del Texas», «aggiungi anche quelli di Gustavo», «l'e-mail del primo»). La ricerca per nome tollera accenti, maiuscole ed errori di battitura: se non trova il nome chiede «intendevi…?», e se più contatti hanno lo stesso nome chiede quale. Per l'intera rubrica propone di filtrare prima di elencare tutto.",
+        "w1": "Contatti: creare (con l'identificativo fiscale verificato, la condizione IVA in Argentina, il venditore e un avviso se ne esiste già uno simile), modificare e-mail, telefono, indirizzo o venditore, segnare come fornitore e archiviare (con avviso se ci sono fatture non pagate). Tutto arriva come proposta da confermare.",
+        "w2": "Cliente, fornitore o entrambi, letto da Odoo («ci comprano o ci vendono?»). Quando un nuovo contatto non lo specifica, chiede: cliente, fornitore, entrambi o solo contatto."
       },
       "hr": {
         "name": "Risorse umane",
