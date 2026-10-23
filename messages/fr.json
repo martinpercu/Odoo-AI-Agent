@@ -1572,8 +1572,8 @@
           "body": "Il détecte automatiquement l'édition (Community, Enterprise, OCA) et la version d'Odoo, de la 14 à la 19. Si l'on demande quelque chose que ce module ou ce champ n'a pas installé, il le dit explicitement au lieu d'inventer une réponse."
         },
         "customModules": {
-          "label": "Votre ERP sur mesure, compris tout seul",
-          "body": "Si vous avez vos propres modules ou des modules OCA, ou des champs Studio, l'agent peut apprendre à répondre aux questions sur ces modèles en lisant les menus et les vues qu'Odoo possède déjà : noms, libellés et règles métier déclarées dans les filtres de recherche. Personne n'a besoin de le lui apprendre à la main : nous l'activons pour votre instance quand vous la connectez."
+          "label": "Vos propres modules, pris en compte tout seuls",
+          "body": "Si vous avez vos propres modules ou des modèles Studio, l'agent peut apprendre à répondre aux questions sur ces modèles en lisant les menus et les vues qu'Odoo possède déjà : noms, libellés et règles métier déclarées dans les filtres de recherche. Personne n'a besoin de le lui apprendre à la main : il s'active pour votre instance quand vous la connectez et se tient à jour tout seul."
         }
       }
     },
