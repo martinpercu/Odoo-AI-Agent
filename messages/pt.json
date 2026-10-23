@@ -29,7 +29,7 @@
     "otherInstances": "{count, plural, one {# conversa em outra instância} other {# conversas em outras instâncias}}",
     "onlyActiveInstance": "Ver apenas a instância ativa",
     "viewAsClient": "Ver como cliente",
-    "backToMyView": "Voltar à minha vista",
+    "backToMyView": "Voltar à minha visualização",
     "viewAsClientInfo": "Os clientes veem uma disposição mais espaçada e o agente diz “cliente” em vez de “res.partner”.",
     "showAllInstances": "ver todos",
     "openMenu": "Abrir menu",
@@ -97,17 +97,17 @@
     "micStart": "Gravar mensagem de voz",
     "micCancel": "Descartar gravação",
     "micPause": "Pausar gravação",
-    "micResume": "Continuar a gravar",
+    "micResume": "Continuar gravando",
     "micPlayback": "Ouvir gravação",
     "micPlaybackPause": "Pausar reprodução",
     "micSendVoice": "Enviar gravação",
     "micRecording": "Gravando",
-    "micPaused": "Gravação em pausa",
+    "micPaused": "Gravação pausada",
     "micDenied": "Permissão de microfone negada",
     "transcribing": "Transcrevendo...",
     "transcribeError": "Não foi possível transcrever o áudio",
     "selectConfig": "Escolher uma instância",
-    "ownGroup": "As suas instâncias",
+    "ownGroup": "Suas instâncias",
     "demoGroup": "Empresas de exemplo",
     "placeholderShort": "Pergunte sobre seu Odoo..."
   },
@@ -179,7 +179,7 @@
       "desc": "Você não tem credenciais configuradas para esta conexão Odoo. Configure-as em Configurações para realizar consultas.",
       "cta": "Ir para Configurações"
     },
-    "connectionError": "Não conseguimos concluir a consulta. Verifique a ligação e tente novamente.",
+    "connectionError": "Não conseguimos concluir a consulta. Verifique a conexão e tente novamente.",
     "actionFailed": "Não foi possível executar a ação.",
     "somethingWentWrong": "Algo deu errado. Tente de novo em alguns segundos."
   },
@@ -408,9 +408,9 @@
       "seatsPending": "Pendentes",
       "freeTooPaidError": "Não há vagas pagas disponíveis. Para fazer essa alteração, mova primeiro um usuário pago para gratuito.",
       "paidToFreeError": "Limite de overflow de vagas gratuitas atingido. Não é possível mover mais usuários para gratuito.",
-      "solitaryBannerTitle": "Quer gerir uma equipa?",
-      "solitaryBannerBody": "A sua conta está em modo individual. Contacte-nos para ativar o plano parceiro e gerir múltiplos utilizadores e instâncias.",
-      "solitaryBannerCta": "Contactar",
+      "solitaryBannerTitle": "Quer gerenciar uma equipe?",
+      "solitaryBannerBody": "Sua conta está em modo individual. Entre em contato para ativar o plano de parceiro e gerenciar vários usuários e instâncias.",
+      "solitaryBannerCta": "Entrar em contato",
       "movedInstancesTitle": "Gerenciar instâncias",
       "movedInstancesDesc": "Crie, valide e configure suas instâncias do Odoo na página dedicada.",
       "movedInstancesCta": "Abrir",
@@ -521,13 +521,13 @@
   },
   "PinnedInsights": {
     "title": "Painel",
-    "empty": "O seu painel está vazio",
-    "emptyHint": "Adicione gráficos e ficheiros das suas conversas para os ter à mão.",
+    "empty": "Seu painel está vazio",
+    "emptyHint": "Adicione gráficos e arquivos das suas conversas para tê-los à mão.",
     "pinTooltip": "Adicionar ao painel",
     "unpinTooltip": "Remover do painel",
     "clearAll": "Limpar painel",
     "chartPin": "Gráfico do painel",
-    "filePin": "Ficheiro do painel",
+    "filePin": "Arquivo do painel",
     "excelPin": "Exportação do painel",
     "viewInChat": "Ver no chat",
     "pinnedCount": "{count} no painel",
@@ -611,7 +611,7 @@
     "goToLogin": "Ir para o login",
     "demoBannerShort": "Modo Demo",
     "foundingTitle": "Bem-vindo ao<br></br>programa Founding Partners",
-    "foundingLine1": "Você está entrando como founding partner do TheOdooAgent. Durante o <prog>programa</prog> (60 dias a partir de quando você conecta sua primeira instância do Odoo), o seu uso e o dos seus clientes é 100% grátis.",
+    "foundingLine1": "Você está entrando como founding partner do TheOdooAgent. Durante o <prog>programa</prog> (60 dias a partir de quando você conecta sua primeira instância do Odoo), seu uso e o dos seus clientes é 100% grátis.",
     "foundingLine2": "Seu feedback define o nosso roadmap. Ao terminar o <prog>programa</prog>, você fica com a tarifa de founder partner para sempre: US$ 1/usuário.",
     "foundingScarcity": "Vagas limitadas",
     "programTooltip": "O benefício do programa Founding Partners dura no mínimo 2 meses, extensível conforme colaboração.",
@@ -621,9 +621,9 @@
     "accessCodeError": "O registro é exclusivo para Founding Partners. Para solicitar acesso, entre em contato em <mail>martin@theodooagent.com</mail>",
     "requestAccess": "Ainda sem código? <mail>Pedir acesso</mail>",
     "requestAccessEmail": "martin@theodooagent.com",
-    "demoBannerNamed": "Modo Demo — está a ver {instance}, uma empresa de exemplo.",
-    "previewAsClientBanner": "Está a ver {instance} como o veria o seu cliente final: menu reduzido, menos densidade e o agente sem jargão técnico.",
-    "previewAsClientHint": "Experimente vê-lo como o seu cliente, no menu da esquerda.",
+    "demoBannerNamed": "Modo Demo — você está vendo {instance}, uma empresa de exemplo.",
+    "previewAsClientBanner": "Você está vendo {instance} como seu cliente final veria: menu reduzido, menos densidade e o agente sem jargão técnico.",
+    "previewAsClientHint": "Experimente ver como seu cliente, no menu à esquerda.",
     "emailPlaceholder": "voce@exemplo.com",
     "showPassword": "Mostrar senha",
     "hidePassword": "Ocultar senha"
@@ -777,7 +777,7 @@
       "typeToggleTitle": "Alterar tipo",
       "typeToggleToPartner": "Promover a PARTNER",
       "typeToggleToSolitary": "Reverter a SOLITARY",
-      "typeToggleConfirmPartner": "Promover org {name} a PARTNER? Isso ativa a interface completa para os seus utilizadores.",
+      "typeToggleConfirmPartner": "Promover org {name} a PARTNER? Isso ativa a interface completa para seus usuários.",
       "typeToggleConfirmSolitary": "Reverter org {name} a SOLITARY? A interface do tenant será simplificada.",
       "typeToggleSuccess": "Tipo de organização atualizado.",
       "typeToggleError": "Não foi possível alterar o tipo. Tente novamente.",
@@ -787,7 +787,7 @@
       "founderCurrentDays": "Atualmente {days} dias restantes",
       "founderExtendTitle": "Estender beta",
       "founderExtendDesc": "Adicione ou remova dias de beta gratuita para {name}.",
-      "founderExtendDays": "Dias a adicionar",
+      "founderExtendDays": "Dias para adicionar",
       "founderExtendHint": "Valores negativos encurtam a janela.",
       "founderExtendConfirm": "Aplicar",
       "founderExtendSuccess": "Janela de beta atualizada",
@@ -966,13 +966,13 @@
     "Dashboard": {
       "title": "Painel",
       "subtitle": "Cada cartão volta a consultar sua instância com o mesmo critério com que foi criado: os números se atualizam sem passar pelo agente.",
-      "empty": "O seu painel está vazio",
+      "empty": "Seu painel está vazio",
       "emptyHint": "Adicione gráficos pelo chat ou execute uma Rotina que publique no Painel. Cada cartão lembra a consulta que o gerou.",
       "refreshAll": "Atualizar tudo",
-      "refreshingAll": "A atualizar…",
+      "refreshingAll": "Atualizando…",
       "refresh": "Atualizar este cartão",
       "remove": "Remover do painel",
-      "download": "Descarregar",
+      "download": "Baixar",
       "clearAll": "Limpar painel",
       "period": {
         "label": "Período",
@@ -982,7 +982,7 @@
         "this_quarter": "Este trimestre",
         "this_year": "Este ano",
         "last_12_months": "Últimos 12 meses",
-        "applied": "A mostrar de {start} a {end}."
+        "applied": "Mostrando de {start} a {end}."
       },
       "badge": {
         "live": "Ao vivo",
@@ -1022,9 +1022,9 @@
         "title": "Painéis predefinidos por perfil",
         "subtitle": "Rotinas que só publicam gráficos. Rodam com suas credenciais e deixam seus cartões aqui.",
         "apply": "Montar este painel",
-        "building": "A montar…",
+        "building": "Montando…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
-        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
+        "tooManyRuns": "Há várias coisas rodando. Aguarde alguns segundos e tente novamente.",
         "partial": "Foram criados {published} de {declared} cartões. As outras etapas não retornaram dados agrupados nesta instância, então não há gráfico para mostrar.",
         "none": "Nenhum cartão foi criado: as etapas deste painel não retornaram dados agrupados nesta instância."
       },
@@ -1050,7 +1050,7 @@
         "invoice": "Sua fatura {docnum} foi emitida.",
         "order": "Seu pedido {docnum} foi criado como rascunho.",
         "purchase": "Pedido de compra {docnum} foi criado como rascunho.",
-        "delivery": "Seu envio {docnum} está em preparação.",
+        "delivery": "Seu envio {docnum} está sendo preparado.",
         "payment": "Seu pagamento {docnum} foi registrado.",
         "contact": "Adicionado aos seus contatos.",
         "product": "Seu produto foi criado.",
@@ -1092,14 +1092,14 @@
     },
     "Dashboard": {
       "title": "Painel",
-      "subtitle": "Os seus números num só ecrã. Atualize-os de uma vez e mude o período.",
-      "empty": "O seu painel está vazio",
-      "emptyHint": "Adicione os gráficos das suas conversas, ou monte-o num clique com um dos painéis abaixo.",
+      "subtitle": "Seus números em uma só tela. Atualize todos de uma vez e mude o período.",
+      "empty": "Seu painel está vazio",
+      "emptyHint": "Adicione os gráficos das suas conversas ou monte seu painel com um clique em um dos painéis abaixo.",
       "refreshAll": "Atualizar tudo",
-      "refreshingAll": "A atualizar…",
+      "refreshingAll": "Atualizando…",
       "refresh": "Atualizar este cartão",
       "remove": "Remover do painel",
-      "download": "Descarregar",
+      "download": "Baixar",
       "clearAll": "Limpar painel",
       "period": {
         "label": "Período",
@@ -1109,7 +1109,7 @@
         "this_quarter": "Este trimestre",
         "this_year": "Este ano",
         "last_12_months": "Últimos 12 meses",
-        "applied": "A mostrar de {start} a {end}."
+        "applied": "Mostrando de {start} a {end}."
       },
       "badge": {
         "live": "Ao vivo",
@@ -1124,17 +1124,17 @@
       },
       "skipReason": {
         "static": "É um período fechado: não muda.",
-        "no_context": "Foi guardado antes de conseguirmos memorizar a consulta.",
-        "no_groupby": "Não tem uma repartição para recalcular.",
+        "no_context": "Foi salvo antes de conseguirmos memorizar a consulta.",
+        "no_groupby": "Não tem um detalhamento para recalcular.",
         "no_model": "Não sabemos de onde veio este número.",
-        "not_chart": "É um ficheiro guardado, não uma consulta.",
-        "generic": "Não precisava de ser atualizado.",
+        "not_chart": "É um arquivo salvo, não uma consulta.",
+        "generic": "Não precisava ser atualizado.",
         "no_instance": "Não sabemos de qual sistema veio este cartão, então ele não pode ser atualizado."
       },
       "errorReason": {
-        "odoo_error": "Não conseguimos ligar ao seu sistema para este cartão.",
-        "chart_failed": "A consulta correu mas não devolveu dados para o gráfico.",
-        "unexpected": "Algo correu mal com este cartão.",
+        "odoo_error": "Não conseguimos conectar ao seu sistema para este cartão.",
+        "chart_failed": "A consulta rodou mas não retornou dados para o gráfico.",
+        "unexpected": "Algo deu errado com este cartão.",
         "generic": "Não foi possível atualizar este cartão.",
         "no_credentials": "Falta a sua conexão com este sistema.",
         "instance_gone": "Este sistema não está mais disponível.",
@@ -1143,15 +1143,15 @@
       "export": {
         "pdf": "PDF",
         "excel": "Excel",
-        "failed": "Não foi possível gerar o ficheiro. Tente novamente."
+        "failed": "Não foi possível gerar o arquivo. Tente novamente."
       },
       "presets": {
-        "title": "Monte o seu painel num clique",
-        "subtitle": "Escolha o que se parece com o seu dia e os cartões ficam prontos. Depois pode alterá-los.",
+        "title": "Monte seu painel com um clique",
+        "subtitle": "Escolha o que se parece com o seu dia e os cartões ficam prontos. Depois você pode alterá-los.",
         "apply": "Montar este painel",
-        "building": "A montar…",
+        "building": "Montando…",
         "failed": "Não foi possível montar o painel. Tente novamente.",
-        "tooManyRuns": "Há várias coisas a correr. Aguarde alguns segundos e tente novamente.",
+        "tooManyRuns": "Há várias coisas rodando. Aguarde alguns segundos e tente novamente.",
         "partial": "Foram criados {published} de {declared} gráficos. Não há dados suficientes nesta empresa para o restante.",
         "none": "Não há dados suficientes nesta empresa para montar este painel."
       },
@@ -1163,7 +1163,7 @@
       "refreshAllDisabled": "Nenhum cartão pode ser atualizado agora."
     },
     "WriteGate": {
-      "note": "Para fazer alterações você precisa de uma conta. Pode continuar perguntando o que quiser.",
+      "note": "Para fazer alterações você precisa de uma conta. Você pode continuar perguntando o que quiser.",
       "cta": "Criar uma conta",
       "locked": "Requer conta"
     }
@@ -1496,11 +1496,11 @@
     "hero": {
       "eyebrow": "Para implementadores de Odoo",
       "title": "Manual técnico",
-      "subtitle": "Que partes do Odoo o agente cobre hoje e com que profundidade, como está construído por dentro e o que estamos a avaliar construir a seguir. Escrito para quem instala e mantém Odoo em produção para os seus clientes.",
+      "subtitle": "Que partes do Odoo o agente cobre hoje e com que profundidade, como está construído por dentro e o que estamos avaliando construir em seguida. Escrito para quem instala e mantém Odoo em produção para seus clientes.",
       "updated": "Conteúdo verificado no sistema em produção"
     },
     "nav": {
-      "label": "Secções desta página",
+      "label": "Seções desta página",
       "coverage": "Cobertura por domínio",
       "security": "Segurança e arquitetura",
       "roadmap": "Roadmap aberto"
@@ -1512,52 +1512,52 @@
       "modelsLabel": "Modelos",
       "readLabel": "Leitura",
       "writeLabel": "Escrita confirmada",
-      "readOnlyLabel": "Por agora, apenas leitura: não há escrita disponível neste domínio.",
+      "readOnlyLabel": "Por enquanto, somente leitura: não há escrita disponível neste domínio.",
       "sales": {
         "name": "Vendas / CRM",
-        "read": "Contagens, rankings (“os 5 produtos mais vendidos”) e desagregações por vendedor, equipa, fase, motivo de perda, categoria ou mês. O pipeline são as suas oportunidades abertas; as ganhas e as perdidas são contadas pela data em que foram fechadas, e é possível comparar dois períodos (“este trimestre face ao anterior”). Filtra por data — incluindo datas de fecho futuras (“as que fecham no próximo mês”) e datas de fecho ultrapassadas —, por fase (“em negociação”), por equipa (basta nomeá-la: “as do southeast”), por motivo de perda (“perdidas por preço”), por prioridade e por vendedor ou cliente nomeado, com desambiguação quando há várias correspondências. A taxa de conversão (total ou por vendedor ou equipa), o pipeline ponderado por probabilidade e a duração do ciclo de venda (dias até ganhar) são calculados no backend, nunca pelo modelo de linguagem. Entende “as minhas oportunidades”, perguntas de seguimento curtas (“e o trimestre passado?”, “e as da equipa West?”) e atividades por cliente ou por tipo. Resume como está uma equipa, um cliente ou um vendedor (“como está a equipa West este trimestre?”), coloca duas equipas lado a lado, encontra oportunidades paradas (tempo desde a última mudança de fase), lê os seus objetivos mensais de vendas e cruza as oportunidades ganhas com a faturação (“quanto faturámos aos clientes que ganhámos este ano?”). Se um dado estiver vazio na sua instância (campanhas, origens, etiquetas, objetivos), indica-o. Margem por produto, sobre o custo do produto (o custo de hoje, e a resposta esclarece-o).",
-        "w1": "Ordens de venda: criar, editar, confirmar e cancelar",
-        "w2": "Oportunidades: mudar de fase, marcar como ganha ou perdida com motivo, atribuir vendedor",
+        "read": "Contagens, rankings (“os 5 produtos mais vendidos”) e detalhamentos por vendedor, equipe, etapa, motivo de perda, categoria ou mês. O pipeline são suas oportunidades abertas; as ganhas e as perdidas são contadas pela data em que foram fechadas, e é possível comparar dois períodos (“este trimestre em relação ao anterior”). Filtra por data — incluindo datas de fechamento futuras (“as que fecham no próximo mês”) e datas de fechamento já vencidas —, por etapa (“em negociação”), por equipe (basta citá-la: “as do southeast”), por motivo de perda (“perdidas por preço”), por prioridade e por vendedor ou cliente citado pelo nome, com desambiguação quando há várias correspondências. A taxa de conversão (total ou por vendedor ou equipe), o pipeline ponderado por probabilidade e a duração do ciclo de venda (dias até ganhar) são calculados no backend, nunca pelo modelo de linguagem. Entende “minhas oportunidades”, perguntas de continuação curtas (“e o trimestre passado?”, “e as da equipe West?”) e atividades por cliente ou por tipo. Resume como está uma equipe, um cliente ou um vendedor (“como está a equipe West neste trimestre?”), coloca duas equipes lado a lado, encontra oportunidades paradas (tempo desde a última mudança de etapa), lê suas metas mensais de vendas e cruza as oportunidades ganhas com o faturamento (“quanto faturamos dos clientes que ganhamos este ano?”). Se um dado estiver vazio na sua instância (campanhas, origens, etiquetas, metas), informa isso. Margem por produto, sobre o custo do produto (o custo de hoje, e a resposta deixa isso claro).",
+        "w1": "Pedidos de venda: criar, editar, confirmar e cancelar",
+        "w2": "Oportunidades: mudar de etapa, marcar como ganha ou perdida com motivo, atribuir vendedor",
         "w3": "Converter um lead em oportunidade",
-        "w4": "Criar uma oportunidade de raiz (cliente, montante, data de fecho, equipa, vendedor, fase), agendar uma chamada, uma reunião ou uma tarefa na data que pedir (“amanhã”, “na sexta-feira”, “daqui a 3 dias”), e mudar uma oportunidade de fase ou reatribuí-la pelo nome, escolhendo-a numa lista quando várias têm o mesmo (ou dizendo “a que está em Outreach”, “#809”)",
-        "limit": "Ainda não disponível: eliminar oportunidades por chat, adicionar-lhes etiquetas ao criá-las, nem enviar um orçamento ou uma ordem por email."
+        "w4": "Criar uma oportunidade do zero (cliente, valor, data de fechamento, equipe, vendedor, etapa), agendar uma ligação, uma reunião ou uma tarefa na data que você pedir (“amanhã”, “na sexta”, “daqui a 3 dias”), e mudar uma oportunidade de etapa ou reatribuí-la pelo nome, escolhendo-a em uma lista quando várias têm o mesmo nome (ou dizendo “a que está em Outreach”, “#809”)",
+        "limit": "Ainda não disponível: excluir oportunidades pelo chat, adicionar etiquetas ao criá-las e enviar um orçamento ou um pedido por e-mail."
       },
       "finance": {
         "name": "Finanças",
-        "read": "Contas a receber e a pagar: quem deve quanto e desde quando (intervalos de 30, 60 e mais de 90 dias), o que vence esta semana ou nos próximos N dias, e faturas vencidas, pagas, parcialmente pagas e em rascunho, notas de crédito e faturas de fornecedor, tudo calculado em Python sem módulos Enterprise. Recebimentos e pagamentos, também por diário; quantos dias os clientes demoram a pagar (média e mediana), condições de pagamento, quanto do recebido foi para faturas já vencidas, e os recebimentos de um cliente com a fatura que cada um liquidou. Resumo de um período e fecho do mês numa só resposta (faturado, recebido, compras, IVA, vencido até à data), médias mensais e comparação entre períodos. IVA: liquidado, dedutível, a posição líquida e a base tributável de qualquer período, separados por letra de documento (A/B) na localização argentina. Conta clientes, não faturas (“quantos clientes nos devem?”, “clientes novos este mês”, “devem-nos e não compram há 60 dias”), faz o ranking de devedores e continua a conversa sobre ele (“sem esse, quanto fica?”, “desses, quanto deve cada um?”), e reparte o faturado por vendedor, categoria de produto, armazém (com as vendas ao balcão à parte) e dia. Uma revisão do mês assinala picos, faturas fora do comum e rascunhos antigos. Quando uma pergunta admite duas leituras razoáveis (“pendentes este mês”: toda a dívida até à data ou só o que vence este mês?), responde à habitual e oferece a outra com um toque. Qualquer resultado pode ser descarregado em PDF ou Excel com linha de totais.",
+        "read": "Contas a receber e a pagar: quem deve quanto e desde quando (faixas de 30, 60 e mais de 90 dias), o que vence esta semana ou nos próximos N dias, e faturas vencidas, pagas, parcialmente pagas e em rascunho, notas de crédito e faturas de fornecedor, tudo calculado em Python sem módulos Enterprise. Recebimentos e pagamentos, também por diário; quantos dias os clientes demoram para pagar (média e mediana), condições de pagamento, quanto do recebido foi para faturas já vencidas, e os recebimentos de um cliente com a fatura que cada um quitou. Resumo de um período e fechamento do mês em uma só resposta (faturado, recebido, compras, IVA, vencido até hoje), médias mensais e comparação entre períodos. IVA: cobrado, dedutível, a posição líquida e a base tributável de qualquer período, separados por letra de documento (A/B) na localização argentina. Conta clientes, não faturas (“quantos clientes nos devem?”, “clientes novos este mês”, “nos devem e não compram há 60 dias”), faz o ranking de devedores e continua a conversa sobre ele (“sem esse, quanto fica?”, “desses, quanto cada um deve?”), e distribui o faturado por vendedor, categoria de produto, depósito (com as vendas de balcão à parte) e dia. Uma revisão do mês aponta picos, faturas fora do comum e rascunhos antigos. Quando uma pergunta admite duas leituras razoáveis (“pendentes este mês”: toda a dívida até hoje ou só o que vence este mês?), responde a mais comum e oferece a outra com um toque. Qualquer resultado pode ser baixado em PDF ou Excel com linha de totais.",
         "w1": "Faturas: criar e editar",
         "w2": "Faturas existentes: validar (lançar) e cancelar",
         "w3": "Lançar várias faturas em rascunho de uma vez, de um cliente ou de um período (até 20), com a lista e o total antes de confirmar",
-        "limit": "Ainda não disponível por chat: registar ou aplicar um recebimento, faturar uma ordem de venda e enviar por email. Se lho pedir, di-lo com clareza (nunca afirma tê-lo feito) e mostra o que ajuda, como as faturas por pagar do cliente, a mais antiga primeiro."
+        "limit": "Ainda não disponível pelo chat: registrar ou aplicar um recebimento, faturar um pedido de venda e enviar por e-mail. Se você pedir, o agente diz isso com clareza (nunca afirma ter feito) e mostra o que ajuda, como as faturas em aberto do cliente, a mais antiga primeiro."
       },
       "inventory": {
         "name": "Inventário / Compras",
-        "read": "Existências de um produto nomeado por depósito (na unidade própria), produtos com existências por depósito, valor das existências (total, por categoria e depósito), sem existências e em negativo. Reposição segundo as regras de reposição: o que está abaixo do mínimo (pelas existências disponíveis, indicando quais já têm compras a caminho), o que o Odoo sugere pedir, quanto falta para chegar ao máximo, ordenado pela falta. Recebimentos e entregas: pendentes, atrasados, o mais antigo, os de um fornecedor ou cliente nomeado. Compras: por mês ou período, por fornecedor (ranking, participação no total, dependência), o que ainda falta receber, prazos declarados, o mesmo mês contra o ano anterior e quanto subiram os preços de compra por produto, categoria ou no geral. Margem de lista por produto ou categoria, e qual categoria pesa mais nas vendas ou nas existências.",
+        "read": "Estoque de um produto nomeado por depósito (na unidade própria), produtos em estoque por depósito, valor do estoque (total, por categoria e depósito), sem estoque e negativo. Reposição segundo as regras de reposição: o que está abaixo do mínimo (pelo estoque disponível, indicando quais já têm compras a caminho), o que o Odoo sugere pedir, quanto falta para chegar ao máximo, ordenado pela falta. Recebimentos e entregas: pendentes, atrasados, o mais antigo, os de um fornecedor ou cliente nomeado. Compras: por mês ou período, por fornecedor (ranking, participação no total, dependência), o que ainda falta receber, prazos declarados, o mesmo mês contra o ano anterior e quanto subiram os preços de compra por produto, categoria ou no geral. Margem de lista por produto ou categoria, e qual categoria pesa mais nas vendas ou no estoque.",
         "w1": "Produtos do catálogo: criar e editar",
-        "w2": "Ordens de compra existentes: confirmar e cancelar. Recebimentos e entregas: receber (completas), validar e cancelar — procurados por fornecedor, cliente, ano ou número (se houver várias, pergunta qual).",
-        "limit": "Uma nova ordem de compra é proposta com fornecedor e linhas, para confirmação. Receber uma parte de uma ordem e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo."
+        "w2": "Pedidos de compra existentes: confirmar e cancelar. Recebimentos e entregas: receber (completos), validar e cancelar — buscados por fornecedor, cliente, ano ou número (se houver vários, pergunta qual).",
+        "limit": "Um novo pedido de compra é proposto com fornecedor e linhas, para confirmação. Receber parte de um pedido e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo."
       },
       "contacts": {
-        "name": "Contactos",
-        "read": "Distingue clientes, fornecedores, empresas e pessoas. A pesquisa por nome tolera acentos e maiúsculas e, para listagens amplas, propõe filtrar por tipo antes de despejar toda a base de contactos.",
-        "w1": "Contactos: criar e editar",
-        "w2": "Classificação automática (cliente, fornecedor, empresa ou apenas contacto), resolvida com uma pergunta curta quando é necessário"
+        "name": "Contatos",
+        "read": "A ficha de um contato nomeado: e-mail, telefone, identificação fiscal (CUIT, NIF…), endereço, vendedor e se é cliente, fornecedor ou os dois (se um dado não estiver preenchido, ele avisa). Listas de clientes, fornecedores, pessoas ou empresas, filtradas por estado ou província, vendedor, dado não preenchido (sem e-mail, sem telefone) e, na Argentina, situação perante o IVA, com perguntas de continuação («desses, os do Texas», «adicione também os do Gustavo», «o e-mail do primeiro»). A busca por nome tolera acentos, maiúsculas e erros de digitação: se não encontra o nome, pergunta «você quis dizer…?», e quando vários contatos têm o mesmo nome, pergunta qual. Para a agenda inteira, oferece filtrar antes de listar tudo.",
+        "w1": "Contatos: criar (com a identificação fiscal verificada, a situação perante o IVA na Argentina, o vendedor e um aviso se já existir um parecido), alterar e-mail, telefone, endereço ou vendedor, marcar como fornecedor e arquivar (avisando se há faturas em aberto). Tudo chega como proposta para você confirmar.",
+        "w2": "Cliente, fornecedor ou os dois, lido do Odoo («eles compram de nós ou vendem para nós?»). Quando um novo contato não diz, pergunta: cliente, fornecedor, os dois ou só contato."
       },
       "hr": {
         "name": "RH",
-        "read": "Fichas e mapa de colaboradores, com recibos de vencimento e as suas linhas. As colunas ajustam-se sozinhas ao que a instância tem realmente preenchido: não mostra colunas vazias."
+        "read": "Fichas e lista de funcionários, com holerites e suas linhas. As colunas se ajustam sozinhas ao que a instância realmente tem preenchido: não mostra colunas vazias."
       },
       "projects": {
         "name": "Projetos",
-        "read": "Projetos, tarefas e horas registadas (timesheets). Horas por pessoa, cliente ou projeto em qualquer período, faturáveis contra não faturáveis, quem tem mais carga (horas registadas, ou tarefas abertas por pessoa — se não se indicar qual, pergunta), e faturação e horas lado a lado contra o ano anterior. Orçamento contra horas: quais projetos estão dentro do previsto, quais estão prestes a ultrapassar (90 % ou mais) ou já ultrapassaram, ordenados pelo desvio em horas, qual está pior, e o resumo de um projeto (horas, orçamento, tarefas abertas, atrasadas e bloqueadas). Tarefas: abertas, atrasadas, bloqueadas ou em revisão, separadas por projeto e por pessoa; «as minhas tarefas» e as de alguém pelo nome, com seguimentos («e as atrasadas?», «e as da Marta?», «ordena-as por data»).",
-        "w1": "Tarefas já existentes: marcá-las como concluídas ou passá-las para outra etapa, procurando-as pelo nome e pelo projeto (se houver várias que coincidam, pergunta qual).",
-        "limit": "Criar projetos ou tarefas e registar horas pelo chat ainda não está disponível: o agente diz isso e mostra o que ajuda (por exemplo, as horas já registadas nessa tarefa). Não calcula a rentabilidade em dinheiro por projeto."
+        "read": "Projetos, tarefas e horas lançadas (timesheets). Horas por pessoa, cliente ou projeto em qualquer período, faturáveis contra não faturáveis, quem tem mais carga (horas lançadas, ou tarefas abertas por pessoa — se não se indicar qual, pergunta), e faturamento e horas lado a lado em comparação com o ano anterior. Orçamento contra horas: quais projetos estão dentro do previsto, quais estão prestes a ultrapassar (90 % ou mais) ou já ultrapassaram, ordenados pelo desvio em horas, qual está pior, e o resumo de um projeto (horas, orçamento, tarefas abertas, atrasadas e bloqueadas). Tarefas: abertas, atrasadas, bloqueadas ou em revisão, separadas por projeto e por pessoa; «minhas tarefas» e as de alguém pelo nome, com perguntas de continuação («e as atrasadas?», «e as da Marta?», «ordene por data»).",
+        "w1": "Tarefas já existentes: marcá-las como concluídas ou passá-las para outra etapa, buscando-as pelo nome e pelo projeto (se várias coincidirem, pergunta qual).",
+        "limit": "Criar projetos ou tarefas e lançar horas pelo chat ainda não está disponível: o agente diz isso e mostra o que ajuda (por exemplo, as horas já lançadas nessa tarefa). Não calcula a rentabilidade em dinheiro por projeto."
       },
       "cross": {
         "heading": "Capacidades transversais",
         "memory": {
           "label": "Conversa com memória real",
-          "body": "Entende referências à resposta anterior — “e em março?”, “as vencidas dessas”, “continua” — sem ser preciso repetir a consulta completa."
+          "body": "Entende referências à resposta anterior — “e em março?”, “as vencidas dessas”, “continua” — sem precisar repetir a consulta completa."
         },
         "languages": {
           "label": "Multi-idioma",
@@ -1569,94 +1569,94 @@
         },
         "adapts": {
           "label": "Feito para instâncias reais",
-          "body": "Deteta automaticamente a edição (Community, Enterprise, OCA) e a versão do Odoo, da 14 à 19. Se for pedido algo que esse módulo ou campo não tem instalado, di-lo explicitamente em vez de inventar uma resposta."
+          "body": "Detecta automaticamente a edição (Community, Enterprise, OCA) e a versão do Odoo, da 14 à 19. Se for pedido algo que esse módulo ou campo não tem instalado, diz isso explicitamente em vez de inventar uma resposta."
         },
         "customModules": {
-          "label": "O seu ERP à medida, entendido sozinho",
-          "body": "Se tem módulos próprios ou da OCA, ou campos do Studio, o agente pode aprender a responder a consultas sobre esses modelos lendo os menus e as vistas que o Odoo já tem: nomes, etiquetas e regras de negócio declaradas nos filtros de pesquisa. Ninguém tem de lho ensinar à mão: ativamo-lo para a sua instância quando a liga."
+          "label": "Seu ERP sob medida, entendido sozinho",
+          "body": "Se você tem módulos próprios ou da OCA, ou campos do Studio, o agente pode aprender a responder a consultas sobre esses modelos lendo os menus e as visões que o Odoo já tem: nomes, rótulos e regras de negócio declaradas nos filtros de busca. Ninguém precisa ensiná-lo à mão: nós o ativamos para sua instância quando você a conecta."
         }
       }
     },
     "security": {
       "heading": "Segurança e arquitetura",
-      "lead": "Porque é que um implementador pode confiar em ligar isto à instância de produção de um cliente.",
+      "lead": "Por que um implementador pode confiar em conectar isto à instância de produção de um cliente.",
       "confirm": {
         "label": "Nada é executado sem confirmação humana",
-        "body": "Para qualquer operação de escrita — criar ou editar um registo, mudar um estado — o agente prepara uma proposta e a pessoa tem de a confirmar explicitamente antes de ser executada no Odoo. O agente nunca escreve por iniciativa própria.",
-        "note": "Isto aplica-se de forma igual a toda a escrita que o sistema suporta hoje, em todos os domínios: não existe a categoria “escrita não confirmada”. O que varia entre domínios é quantas ações de escrita já existem, nunca o quão seguras são."
+        "body": "Para qualquer operação de escrita — criar ou editar um registro, mudar um estado — o agente prepara uma proposta e a pessoa precisa confirmá-la explicitamente antes de ser executada no Odoo. O agente nunca escreve por iniciativa própria.",
+        "note": "Isto vale igualmente para toda escrita que o sistema suporta hoje, em todos os domínios: não existe a categoria “escrita não confirmada”. O que varia entre domínios é quantas ações de escrita já existem, nunca o quão seguras são."
       },
       "encryption": {
-        "label": "Credenciais cifradas, nunca em texto simples",
-        "body": "Cada chave de API do Odoo é guardada cifrada com Fernet, cifra simétrica autenticada. A chave nunca fica legível na base de dados nem nos registos."
+        "label": "Credenciais criptografadas, nunca em texto simples",
+        "body": "Cada chave de API do Odoo é armazenada criptografada com Fernet, cifra simétrica autenticada. A chave nunca fica legível no banco de dados nem nos logs."
       },
       "perUser": {
-        "label": "Credenciais por utilizador, não partilhadas",
-        "body": "Cada pessoa liga-se com o seu próprio utilizador e chave de API do Odoo, pelo que o agente respeita as permissões que já existem no Odoo para essa pessoa. Não há uma credencial todo-poderosa partilhada por toda a organização."
+        "label": "Credenciais por usuário, não compartilhadas",
+        "body": "Cada pessoa se conecta com seu próprio usuário e chave de API do Odoo, então o agente respeita as permissões que já existem no Odoo para essa pessoa. Não há uma credencial todo-poderosa compartilhada por toda a organização."
       },
       "jwt": {
-        "label": "Autenticação por token em cada pedido",
-        "body": "Cada chamada à API transporta um JWT e a sua assinatura é verificada criptograficamente contra o JWKS do fornecedor de identidade."
+        "label": "Autenticação por token em cada requisição",
+        "body": "Cada chamada à API carrega um JWT e sua assinatura é verificada criptograficamente contra o JWKS do provedor de identidade."
       },
       "tenancy": {
         "label": "Isolamento multi-tenant real",
-        "body": "Cada organização e cada conversa estão isoladas por um identificador próprio, com controlos explícitos para que um utilizador autenticado não consiga ler o histórico ou os dados de outra organização ou de outro utilizador adivinhando um ID."
+        "body": "Cada organização e cada conversa são isoladas por um identificador próprio, com controles explícitos para que um usuário autenticado não consiga ler o histórico ou os dados de outra organização ou de outro usuário adivinhando um ID."
       },
       "readOnlyMode": {
-        "label": "Modo apenas-leitura para sessões de suporte",
-        "body": "Quando o suporte precisa de olhar para uma instância para diagnosticar, existe um modo que bloqueia qualquer método do Odoo que não esteja explicitamente permitido: lista branca, não lista negra. Assim, nem um erro humano nem um bug podem acabar a escrever na base de dados do cliente durante o suporte."
+        "label": "Modo somente leitura para sessões de suporte",
+        "body": "Quando o suporte precisa olhar uma instância para diagnosticar, existe um modo que bloqueia qualquer método do Odoo que não esteja explicitamente permitido: lista branca, não lista negra. Assim, nem um erro humano nem um bug podem acabar escrevendo no banco de dados do cliente durante o suporte."
       },
       "ssrf": {
-        "label": "Proteção contra URLs internos (SSRF)",
-        "body": "Ao ligar uma instância, o sistema verifica que o URL aponta para um endereço público real antes de tentar a ligação e rejeita endereços internos ou privados. Ninguém pode usar o conector como porta de entrada para uma rede interna."
+        "label": "Proteção contra URLs internas (SSRF)",
+        "body": "Ao conectar uma instância, o sistema verifica que a URL aponta para um endereço público real antes de tentar a conexão e rejeita endereços internos ou privados. Ninguém pode usar o conector como porta de entrada para uma rede interna."
       },
       "deterministic": {
-        "label": "Regras primeiro, IA no fim",
-        "body": "A classificação do que está a ser pedido resolve-se com regras determinísticas. O modelo de linguagem entra apenas no fim, para redigir: nunca para decidir o que escrever no Odoo nem para fazer contas. Os totais e os cálculos são feitos pelo backend, para que nenhum modelo possa inventar um número."
+        "label": "Regras primeiro, IA no final",
+        "body": "A classificação do que está sendo pedido é resolvida com regras determinísticas. O modelo de linguagem entra apenas no final, para redigir: nunca para decidir o que escrever no Odoo nem para fazer contas. Os totais e os cálculos são feitos pelo backend, para que nenhum modelo possa inventar um número."
       },
       "timeouts": {
         "label": "Timeouts em cada chamada ao Odoo",
-        "body": "Todas as chamadas XML-RPC têm limite de tempo. Se uma instância bloquear, o agente não bloqueia com ela."
+        "body": "Todas as chamadas XML-RPC têm limite de tempo. Se uma instância travar, o agente não trava junto."
       },
       "errors": {
         "label": "Os erros não expõem detalhes internos",
-        "body": "Se algo falhar, a pessoa vê uma mensagem neutra e acionável. O detalhe técnico fica apenas nos registos do lado do servidor."
+        "body": "Se algo falhar, a pessoa vê uma mensagem neutra e acionável. O detalhe técnico fica apenas nos logs do lado do servidor."
       }
     },
     "roadmap": {
-      "heading": "O que estamos a avaliar construir a seguir",
-      "lead": "Isto não é um changelog nem uma lista de promessas: é o menu aberto das frentes que temos hoje em cima da mesa. Não há datas comprometidas e a ordem é definida em boa medida pelo que os implementadores nos pedem. Se algo aqui desbloqueia um cliente concreto seu, queremos saber.",
+      "heading": "O que estamos avaliando construir em seguida",
+      "lead": "Isto não é um changelog nem uma lista de promessas: é o menu aberto das frentes que temos hoje sobre a mesa. Não há datas comprometidas e a ordem é definida em boa medida pelo que os implementadores nos pedem. Se algo aqui destrava um cliente concreto seu, queremos saber.",
       "queries": {
         "label": "Mais perguntas por domínio",
-        "body": "País e geografia, etiquetas, categorias nas compras e o ponto de venda como uma área própria. Qual é a que lhe falta primeiro?"
+        "body": "País e geografia, etiquetas, categorias nas compras e o ponto de venda como uma área própria. Qual delas faz mais falta para você?"
       },
       "custom": {
         "label": "Mais profundidade em módulos próprios e OCA",
-        "body": "Hoje o agente já aprende sozinho o vocabulário dos seus módulos personalizados; o passo seguinte é acrescentar mais nuances de filtro e as suas próprias regras de negócio."
+        "body": "Hoje o agente já aprende sozinho o vocabulário dos seus módulos personalizados; o passo seguinte é acrescentar mais nuances de filtro e suas próprias regras de negócio."
       },
       "typos": {
-        "label": "Tolerância a erros de escrita mais ampla",
+        "label": "Tolerância mais ampla a erros de digitação",
         "body": "Hoje corrige erros de digitação em datas, estados, tipo de consulta e nomes de clientes. A ideia é estender isso a mais tipos de consulta."
       },
       "tracing": {
         "label": "Rastreabilidade mais fina para diagnóstico",
-        "body": "Tempos de resposta por cada chamada ao Odoo, e não apenas por passo do agente: útil quando é preciso mostrar a um cliente onde está realmente a lentidão."
+        "body": "Tempos de resposta por cada chamada ao Odoo, e não apenas por etapa do agente: útil quando é preciso mostrar a um cliente onde está de fato a lentidão."
       },
       "progress": {
-        "label": "Progresso em direto em operações longas",
-        "body": "Indicadores de a ligar, em fila, a executar e a validar, para que uma consulta pesada nunca pareça bloqueada."
+        "label": "Progresso ao vivo em operações longas",
+        "body": "Indicadores de conectando, na fila, executando e validando, para que uma consulta pesada nunca pareça travada."
       },
       "hardening": {
         "label": "Robustez interna da plataforma",
-        "body": "Mais testes automatizados sobre a camada de administração e faturação do produto. Não afeta as instâncias dos seus clientes; é solidez nossa."
+        "body": "Mais testes automatizados sobre a camada de administração e faturamento do produto. Não afeta as instâncias dos seus clientes; é solidez nossa."
       },
-      "cta": "Diga-nos o que lhe seria mais útil",
-      "ctaNote": "Vai diretamente por email para quem o constrói. Sem formulários nem tickets.",
+      "cta": "Conte o que seria mais útil para você",
+      "ctaNote": "Vai direto por e-mail para quem o constrói. Sem formulários nem tickets.",
       "emailSubject": "Roadmap TheOdooAgent — feedback de implementador"
     },
     "closing": {
-      "heading": "Quer experimentá-lo numa instância real?",
-      "body": "Ligue uma instância com o seu próprio utilizador do Odoo e teste-a com dados reais antes de a oferecer a um cliente. A ligação é por chave de API: não instala módulos nem altera a estrutura do seu Odoo.",
-      "primary": "Ligar uma instância",
+      "heading": "Quer experimentá-lo em uma instância real?",
+      "body": "Conecte uma instância com seu próprio usuário do Odoo e teste com dados reais antes de oferecê-lo a um cliente. A conexão é por chave de API: não instala módulos nem altera a estrutura do seu Odoo.",
+      "primary": "Conectar uma instância",
       "secondary": "Ver planos"
     }
   },
@@ -1691,15 +1691,15 @@
       "new": "sem base de comparação",
       "flat": "sem alterações",
       "title": {
-        "up": "Subiu face ao período de comparação",
-        "down": "Caiu face ao período de comparação",
-        "flat": "Sem alterações face ao período de comparação",
+        "up": "Subiu em relação ao período de comparação",
+        "down": "Caiu em relação ao período de comparação",
+        "flat": "Sem alterações em relação ao período de comparação",
         "nuevo": "Não havia período de comparação com dados"
       }
     },
     "attribution": {
       "title": "O que explica a mudança",
-      "rest": "O resto, repartido entre {count}",
+      "rest": "O resto, distribuído entre {count}",
       "empty": "Nada para atribuir.",
       "kind": {
         "alta": "começou",
@@ -1802,7 +1802,7 @@
       "create": "Criar Rotina",
       "saveFailed": "Não conseguimos salvar as alterações.",
       "noUsableSteps": "Nenhuma das perguntas consegue rodar sozinha. Revise os avisos de cada uma.",
-      "versionNote": "Versão atual: {version}. Alterar as perguntas cria uma nova versão; as execuções anteriores ficam guardadas com a versão em que rodaram.",
+      "versionNote": "Versão atual: {version}. Alterar as perguntas cria uma nova versão; as execuções anteriores ficam salvas com a versão em que rodaram.",
       "stepStatus": {
         "ok": "OK",
         "error": "Falhou",
@@ -1830,7 +1830,7 @@
         "private": "Privada"
       },
       "usersFailed": "Não conseguimos carregar os usuários da organização. O que você vê abaixo pode estar incompleto.",
-      "inheritMeaning": "«Por defeito» significa agora: visível para os administradores da sua organização e invisível para os clientes. Para que um cliente veja uma Rotina, coloque «Sim» na linha dele."
+      "inheritMeaning": "«Padrão» significa agora: visível para os administradores da sua organização e invisível para os clientes. Para que um cliente veja uma Rotina, marque «Sim» na linha dele."
     },
     "cancel": "Cancelar",
     "schedule": "Agendar",
@@ -1843,7 +1843,7 @@
     "scheduleShortMonthNote": "Nos meses mais curtos chega no último dia do mês.",
     "scheduleTimezone": "Hora de {timezone}.",
     "scheduleChangeTimezone": "Mudar fuso horário",
-    "scheduleDeliveryNote": "Você recebe um email com o resumo e o PDF anexo. Se num dia não houver dados, nada é enviado.",
+    "scheduleDeliveryNote": "Você recebe um e-mail com o resumo e o PDF anexo. Se em algum dia não houver dados, nada é enviado.",
     "scheduleConfirm": "Agendar",
     "scheduleFailed": "Não foi possível agendar.",
     "scheduleNotAvailable": "Sua instância não pode rodar esta Rotina.",
@@ -1883,13 +1883,13 @@
       "year": "Ano",
       "days": "dias"
     },
-    "rerunUnavailable": "Esta Rotina já não está disponível.",
-    "deletedRoutine": "Rotina eliminada",
-    "deleteRun": "Apagar do histórico",
-    "deleteRunConfirm": "Apagar?",
-    "deleteRunFailed": "Não foi possível apagar a execução.",
+    "rerunUnavailable": "Esta Rotina não está mais disponível.",
+    "deletedRoutine": "Rotina excluída",
+    "deleteRun": "Excluir do histórico",
+    "deleteRunConfirm": "Excluir?",
+    "deleteRunFailed": "Não foi possível excluir a execução.",
     "clearHistory": "Limpar histórico",
-    "clearHistoryConfirm": "Apagar tudo?",
+    "clearHistoryConfirm": "Excluir tudo?",
     "clearHistoryFailed": "Não foi possível limpar o histórico.",
     "confirmYes": "Sim",
     "confirmNo": "Não",
@@ -1908,10 +1908,10 @@
     "openInOdoo": "Abrir no Odoo"
   },
   "Snapshot": {
-    "title": "O seu negócio em números",
-    "hint": "Pergunte-me sobre qualquer um destes números.",
+    "title": "Seu negócio em números",
+    "hint": "Pergunte sobre qualquer um destes números.",
     "model": {
-      "resPartner": "Contactos",
+      "resPartner": "Contatos",
       "productProduct": "Produtos",
       "saleOrder": "Vendas",
       "accountMove": "Faturas",
