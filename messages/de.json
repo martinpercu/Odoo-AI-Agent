@@ -1545,7 +1545,7 @@
       },
       "hr": {
         "name": "Personal",
-        "read": "Personalakten und Belegschaftsübersicht mit Gehaltsabrechnungen und deren Positionen. Die Spalten richten sich selbst nach dem, was in der Instanz tatsächlich gefüllt ist: keine leeren Spalten."
+        "read": "Personalakten und Belegschaftsübersicht. Die Spalten richten sich selbst nach dem, was in der Instanz tatsächlich gefüllt ist: keine leeren Spalten."
       },
       "projects": {
         "name": "Projekte",
@@ -1561,7 +1561,7 @@
         },
         "languages": {
           "label": "Mehrsprachig",
-          "body": "Die Konversations-Engine versteht und antwortet auf Spanisch, Englisch, Französisch, Deutsch, Portugiesisch und Italienisch. Die Oberfläche ergänzt Hindi, Gujarati, Tamil, Kannada und Marathi: insgesamt 11 Sprachen."
+          "body": "Die Konversations-Engine ist auf Spanisch und Englisch gemessen. Sie versteht und antwortet auch auf Französisch, Deutsch, Portugiesisch und Italienisch, diese Sprachen wurden aber noch nicht gemessen."
         },
         "reports": {
           "label": "Berichte als PDF und Excel",
@@ -1569,11 +1569,11 @@
         },
         "adapts": {
           "label": "Für echte Instanzen gebaut",
-          "body": "Edition (Community, Enterprise, OCA) und Odoo-Version von 14 bis 19 werden automatisch erkannt. Wird etwas gefragt, das dieses Modul oder Feld nicht installiert hat, wird das ausdrücklich gesagt, statt eine Antwort zu erfinden."
+          "body": "Edition (Community, Enterprise, OCA) und Odoo-Version von 14 bis 19 werden automatisch erkannt. Getestet wurde auf den Versionen 14, 18 und 19; 15, 16 und 17 werden genauso erkannt, wurden aber nicht getestet. Wird etwas gefragt, das dieses Modul oder Feld nicht installiert hat, wird das ausdrücklich gesagt, statt eine Antwort zu erfinden."
         },
         "customModules": {
           "label": "Ihre eigenen Module, automatisch erkannt",
-          "body": "Wenn Sie eigene Module oder Studio-Modelle haben, kann der Agent lernen, Fragen zu diesen Modellen zu beantworten, indem er die Menüs und Ansichten liest, die Odoo bereits hat: Namen, Bezeichnungen und in den Suchfiltern deklarierte Geschäftsregeln. Niemand muss es ihm von Hand beibringen: Es wird für Ihre Instanz aktiviert, wenn Sie sie verbinden, und hält sich selbst auf dem neuesten Stand."
+          "body": "Wenn Sie eigene Module oder Studio-Modelle haben, kann der Agent lernen, Fragen zu diesen Modellen zu beantworten, indem er die Menüs und Ansichten liest, die Odoo bereits hat: Namen, Bezeichnungen und in den Suchfiltern deklarierte Geschäftsregeln. Er lernt sie aus den Menüs und Ansichten Ihrer eigenen Instanz, in der Sprache Ihrer Instanz. Niemand muss es ihm von Hand beibringen: Es wird für Ihre Instanz aktiviert, wenn Sie sie verbinden, und hält sich selbst auf dem neuesten Stand."
         }
       }
     },
@@ -1627,7 +1627,7 @@
       "lead": "Das ist kein Changelog und keine Liste von Versprechen: es ist die offene Auswahl der Themen, die heute auf unserem Tisch liegen. Es gibt keine zugesagten Termine, und die Reihenfolge bestimmt weitgehend, was Implementierer von uns verlangen. Wenn etwas hier bei Ihnen einen konkreten Kunden freischaltet, wollen wir das wissen.",
       "queries": {
         "label": "Mehr Fragen pro Domäne",
-        "body": "Land und Geografie, Tags, Kategorien bei Einkäufen und Point of Sale als eigener Bereich. Was fehlt Ihnen zuerst?"
+        "body": "Land und Geografie in Verkauf und Rechnungsstellung (Kontakte filtern bereits nach Bundesland bzw. Provinz), Tags, Kategorien bei Einkäufen und Point of Sale als eigener Bereich. Was fehlt Ihnen zuerst?"
       },
       "custom": {
         "label": "Mehr Tiefe bei eigenen und OCA-Modulen",

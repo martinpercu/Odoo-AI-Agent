@@ -1545,7 +1545,7 @@
       },
       "hr": {
         "name": "HR",
-        "read": "Employee records and roster, with payslips and their lines. Columns adjust themselves to what the instance actually has filled in: no empty columns."
+        "read": "Employee records and roster. Columns adjust themselves to what the instance actually has filled in: no empty columns."
       },
       "projects": {
         "name": "Projects",
@@ -1561,7 +1561,7 @@
         },
         "languages": {
           "label": "Multi-language",
-          "body": "The conversation engine understands and answers in Spanish, English, French, German, Portuguese and Italian. The interface adds Hindi, Gujarati, Tamil, Kannada and Marathi: 11 languages in total."
+          "body": "The conversation engine is measured in Spanish and English. It also understands and answers in French, German, Portuguese and Italian, but those haven't been measured yet."
         },
         "reports": {
           "label": "PDF and Excel reports",
@@ -1569,11 +1569,11 @@
         },
         "adapts": {
           "label": "Built for real instances, not ideal ones",
-          "body": "It automatically detects the edition (Community, Enterprise, OCA) and the Odoo version, from 14 to 19. If someone asks for something that module or field does not have installed, it says so explicitly instead of inventing an answer."
+          "body": "It automatically detects the edition (Community, Enterprise, OCA) and the Odoo version, from 14 to 19. It has been tested on versions 14, 18 and 19; 15, 16 and 17 are detected the same way but haven't been tested. If someone asks for something that module or field does not have installed, it says so explicitly instead of inventing an answer."
         },
         "customModules": {
           "label": "Your own modules, picked up automatically",
-          "body": "If you have your own modules or Studio models, the agent can learn to answer queries about those models by reading the menus and views Odoo already has: names, labels and business rules declared in the search filters. Nobody has to teach it by hand: it switches on for your instance when you connect it and keeps itself up to date."
+          "body": "If you have your own modules or Studio models, the agent can learn to answer queries about those models by reading the menus and views Odoo already has: names, labels and business rules declared in the search filters. It learns them from your instance's own menus and screens, in your instance's language. Nobody has to teach it by hand: it switches on for your instance when you connect it and keeps itself up to date."
         }
       }
     },
@@ -1627,7 +1627,7 @@
       "lead": "This is not a changelog or a list of promises: it is the open menu of the fronts on our table today. There are no committed dates, and the order is largely defined by what implementers ask us for. If something here unblocks a specific client of yours, we want to hear it.",
       "queries": {
         "label": "More questions per domain",
-        "body": "Country and geography, tags, categories on purchases, and point-of-sale as an area of its own. Which one do you need first?"
+        "body": "Country and geography in sales and invoicing (contacts already filter by state or province), tags, categories on purchases, and point-of-sale as an area of its own. Which one do you need first?"
       },
       "custom": {
         "label": "More depth on custom and OCA modules",

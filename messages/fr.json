@@ -1545,7 +1545,7 @@
       },
       "hr": {
         "name": "RH",
-        "read": "Dossiers et trombinoscope des employés, avec les fiches de paie et leurs lignes. Les colonnes s'ajustent d'elles-mêmes à ce que l'instance contient réellement : pas de colonnes vides."
+        "read": "Dossiers et trombinoscope des employés. Les colonnes s'ajustent d'elles-mêmes à ce que l'instance contient réellement : pas de colonnes vides."
       },
       "projects": {
         "name": "Projets",
@@ -1561,7 +1561,7 @@
         },
         "languages": {
           "label": "Multilingue",
-          "body": "Le moteur de conversation comprend et répond en espagnol, anglais, français, allemand, portugais et italien. L'interface ajoute le hindi, le gujarati, le tamoul, le kannada et le marathi : 11 langues au total."
+          "body": "Le moteur de conversation est mesuré en espagnol et en anglais. Il comprend et répond aussi en français, allemand, portugais et italien, mais ces langues n'ont pas encore été mesurées."
         },
         "reports": {
           "label": "Rapports PDF et Excel",
@@ -1569,11 +1569,11 @@
         },
         "adapts": {
           "label": "Pensé pour de vraies instances",
-          "body": "Il détecte automatiquement l'édition (Community, Enterprise, OCA) et la version d'Odoo, de la 14 à la 19. Si l'on demande quelque chose que ce module ou ce champ n'a pas installé, il le dit explicitement au lieu d'inventer une réponse."
+          "body": "Il détecte automatiquement l'édition (Community, Enterprise, OCA) et la version d'Odoo, de la 14 à la 19. Il a été testé sur les versions 14, 18 et 19 ; les 15, 16 et 17 sont détectées de la même manière mais n'ont pas été testées. Si l'on demande quelque chose que ce module ou ce champ n'a pas installé, il le dit explicitement au lieu d'inventer une réponse."
         },
         "customModules": {
           "label": "Vos propres modules, pris en compte tout seuls",
-          "body": "Si vous avez vos propres modules ou des modèles Studio, l'agent peut apprendre à répondre aux questions sur ces modèles en lisant les menus et les vues qu'Odoo possède déjà : noms, libellés et règles métier déclarées dans les filtres de recherche. Personne n'a besoin de le lui apprendre à la main : il s'active pour votre instance quand vous la connectez et se tient à jour tout seul."
+          "body": "Si vous avez vos propres modules ou des modèles Studio, l'agent peut apprendre à répondre aux questions sur ces modèles en lisant les menus et les vues qu'Odoo possède déjà : noms, libellés et règles métier déclarées dans les filtres de recherche. Il les apprend à partir des menus et des écrans de votre propre instance, dans la langue de votre instance. Personne n'a besoin de le lui apprendre à la main : il s'active pour votre instance quand vous la connectez et se tient à jour tout seul."
         }
       }
     },
@@ -1627,7 +1627,7 @@
       "lead": "Ce n'est ni un changelog ni une liste de promesses : c'est le menu ouvert des chantiers que nous avons sur la table aujourd'hui. Aucune date n'est engagée, et l'ordre dépend largement de ce que les intégrateurs nous demandent. Si quelque chose ici débloque un client précis chez vous, nous voulons le savoir.",
       "queries": {
         "label": "Plus de questions par domaine",
-        "body": "Pays et géographie, étiquettes, catégories sur les achats, et le point de vente comme domaine à part entière. Lequel vous manque en premier ?"
+        "body": "Pays et géographie dans les ventes et la facturation (les contacts filtrent déjà par état ou province), étiquettes, catégories sur les achats, et le point de vente comme domaine à part entière. Lequel vous manque en premier ?"
       },
       "custom": {
         "label": "Plus de profondeur sur les modules propres et OCA",
