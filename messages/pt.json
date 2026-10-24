@@ -1545,7 +1545,7 @@
       },
       "hr": {
         "name": "RH",
-        "read": "Fichas e lista de funcionários, com holerites e suas linhas. As colunas se ajustam sozinhas ao que a instância realmente tem preenchido: não mostra colunas vazias."
+        "read": "Fichas e lista de funcionários. As colunas se ajustam sozinhas ao que a instância realmente tem preenchido: não mostra colunas vazias."
       },
       "projects": {
         "name": "Projetos",
@@ -1561,7 +1561,7 @@
         },
         "languages": {
           "label": "Multi-idioma",
-          "body": "O motor de conversa entende e responde em espanhol, inglês, francês, alemão, português e italiano. A interface acrescenta híndi, guzerate, tâmil, canarim e marata: 11 idiomas no total."
+          "body": "O motor de conversa é medido em espanhol e inglês. Também entende e responde em francês, alemão, português e italiano, mas esses ainda não foram medidos."
         },
         "reports": {
           "label": "Relatórios em PDF e Excel",
@@ -1569,11 +1569,11 @@
         },
         "adapts": {
           "label": "Feito para instâncias reais",
-          "body": "Detecta automaticamente a edição (Community, Enterprise, OCA) e a versão do Odoo, da 14 à 19. Se for pedido algo que esse módulo ou campo não tem instalado, diz isso explicitamente em vez de inventar uma resposta."
+          "body": "Detecta automaticamente a edição (Community, Enterprise, OCA) e a versão do Odoo, da 14 à 19. Foi testado nas versões 14, 18 e 19; a 15, a 16 e a 17 são detectadas da mesma forma, mas não foram testadas. Se for pedido algo que esse módulo ou campo não tem instalado, diz isso explicitamente em vez de inventar uma resposta."
         },
         "customModules": {
           "label": "Seus módulos próprios, incorporados sozinhos",
-          "body": "Se você tem módulos próprios ou modelos do Studio, o agente pode aprender a responder a consultas sobre esses modelos lendo os menus e as visões que o Odoo já tem: nomes, rótulos e regras de negócio declaradas nos filtros de busca. Ninguém precisa ensiná-lo à mão: ele é ativado para sua instância quando você a conecta e se mantém atualizado sozinho."
+          "body": "Se você tem módulos próprios ou modelos do Studio, o agente pode aprender a responder a consultas sobre esses modelos lendo os menus e as visões que o Odoo já tem: nomes, rótulos e regras de negócio declaradas nos filtros de busca. Ele os aprende dos menus e das telas da sua própria instância, no idioma da sua instância. Ninguém precisa ensiná-lo à mão: ele é ativado para sua instância quando você a conecta e se mantém atualizado sozinho."
         }
       }
     },
@@ -1627,7 +1627,7 @@
       "lead": "Isto não é um changelog nem uma lista de promessas: é o menu aberto das frentes que temos hoje sobre a mesa. Não há datas comprometidas e a ordem é definida em boa medida pelo que os implementadores nos pedem. Se algo aqui destrava um cliente concreto seu, queremos saber.",
       "queries": {
         "label": "Mais perguntas por domínio",
-        "body": "País e geografia, etiquetas, categorias nas compras e o ponto de venda como uma área própria. Qual delas faz mais falta para você?"
+        "body": "País e geografia em vendas e faturamento (os contatos já filtram por estado), etiquetas, categorias nas compras e o ponto de venda como uma área própria. Qual delas faz mais falta para você?"
       },
       "custom": {
         "label": "Mais profundidade em módulos próprios e OCA",

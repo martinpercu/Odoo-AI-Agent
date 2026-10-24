@@ -1545,7 +1545,7 @@
       },
       "hr": {
         "name": "Risorse umane",
-        "read": "Fascicoli e organico dei dipendenti, con buste paga e relative righe. Le colonne si adattano da sole a ciò che l'istanza ha effettivamente compilato: nessuna colonna vuota."
+        "read": "Fascicoli e organico dei dipendenti. Le colonne si adattano da sole a ciò che l'istanza ha effettivamente compilato: nessuna colonna vuota."
       },
       "projects": {
         "name": "Progetti",
@@ -1561,7 +1561,7 @@
         },
         "languages": {
           "label": "Multilingua",
-          "body": "Il motore di conversazione capisce e risponde in spagnolo, inglese, francese, tedesco, portoghese e italiano. L'interfaccia aggiunge hindi, gujarati, tamil, kannada e marathi: 11 lingue in totale."
+          "body": "Il motore di conversazione è misurato in spagnolo e inglese. Capisce e risponde anche in francese, tedesco, portoghese e italiano, ma queste lingue non sono ancora state misurate."
         },
         "reports": {
           "label": "Report in PDF ed Excel",
@@ -1569,11 +1569,11 @@
         },
         "adapts": {
           "label": "Pensato per istanze reali",
-          "body": "Rileva automaticamente l'edizione (Community, Enterprise, OCA) e la versione di Odoo, dalla 14 alla 19. Se viene chiesto qualcosa che quel modulo o campo non ha installato, lo dice esplicitamente invece di inventare una risposta."
+          "body": "Rileva automaticamente l'edizione (Community, Enterprise, OCA) e la versione di Odoo, dalla 14 alla 19. È stato testato sulle versioni 14, 18 e 19; la 15, la 16 e la 17 vengono rilevate allo stesso modo ma non sono state testate. Se viene chiesto qualcosa che quel modulo o campo non ha installato, lo dice esplicitamente invece di inventare una risposta."
         },
         "customModules": {
           "label": "I tuoi moduli, riconosciuti da soli",
-          "body": "Se hai moduli propri o modelli di Studio, l'agente può imparare a rispondere a domande su quei modelli leggendo i menu e le viste che Odoo già possiede: nomi, etichette e regole di business dichiarate nei filtri di ricerca. Nessuno deve insegnarglielo a mano: si attiva per la tua istanza quando la colleghi e si mantiene aggiornato da solo."
+          "body": "Se hai moduli propri o modelli di Studio, l'agente può imparare a rispondere a domande su quei modelli leggendo i menu e le viste che Odoo già possiede: nomi, etichette e regole di business dichiarate nei filtri di ricerca. Li impara dai menu e dalle schermate della tua istanza, nella lingua della tua istanza. Nessuno deve insegnarglielo a mano: si attiva per la tua istanza quando la colleghi e si mantiene aggiornato da solo."
         }
       }
     },
@@ -1627,7 +1627,7 @@
       "lead": "Questo non è un changelog né un elenco di promesse: è il menu aperto dei fronti che abbiamo oggi sul tavolo. Non ci sono date impegnate e l'ordine è definito in buona parte da ciò che ci chiedono gli implementatori. Se qualcosa qui ti sblocca un cliente concreto, vogliamo saperlo.",
       "queries": {
         "label": "Più domande per dominio",
-        "body": "Paese e geografia, etichette, categorie negli acquisti e il punto vendita come area a sé. Quale ti manca per prima?"
+        "body": "Paese e geografia in vendite e fatturazione (i contatti filtrano già per stato o provincia), etichette, categorie negli acquisti e il punto vendita come area a sé. Quale ti manca per prima?"
       },
       "custom": {
         "label": "Più profondità su moduli propri e OCA",
