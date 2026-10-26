@@ -1534,8 +1534,8 @@
         "name": "Magazzino / Acquisti",
         "read": "Giacenza di un prodotto indicato per magazzino (nella sua unità), prodotti con giacenza per magazzino, valore della giacenza (totale, per categoria e magazzino), esauriti e giacenza negativa. Riordino secondo le regole di riordino: cosa è sotto il minimo (in base alla giacenza disponibile, indicando quali hanno già acquisti in arrivo), cosa suggerisce di ordinare Odoo, quanto manca per arrivare al massimo, ordinato per mancanza. Ricevimenti e consegne: in sospeso, in ritardo, il più vecchio, quelli di un fornitore o cliente indicato. Acquisti: per mese o periodo, per fornitore (classifica, quota sul totale, dipendenza), ciò che resta da ricevere, tempi di consegna dichiarati, lo stesso mese rispetto all'anno precedente e di quanto sono saliti i prezzi d'acquisto per prodotto, categoria o in generale. Margine di listino per prodotto o categoria, e quale categoria pesa di più nelle vendite o nella giacenza.",
         "w1": "Prodotti di catalogo: creare e modificare",
-        "w2": "Ordini di acquisto esistenti: confermare e annullare. Ricevimenti e consegne: ricevere (per intero), convalidare e annullare — cercati per fornitore, cliente, anno o numero (se più di uno corrisponde, chiede quale).",
-        "limit": "Un nuovo ordine di acquisto viene proposto con fornitore e righe, da confermare. Ricevere una parte di un ordine e i trasferimenti tra magazzini non sono ancora disponibili: l'agente lo dice e spiega come farlo in Odoo."
+        "w2": "Ordini di acquisto: crearne uno nuovo con fornitore e righe (resta in bozza), confermare e annullare quelli esistenti. Ricevimenti e consegne: ricevere (per intero), convalidare e annullare — cercati per fornitore, cliente, anno o numero (se più di uno corrisponde, chiede quale).",
+        "limit": "Ricevere una parte di un ordine e i trasferimenti tra magazzini non sono ancora disponibili: l'agente lo dice e spiega come farlo in Odoo."
       },
       "contacts": {
         "name": "Contatti",
