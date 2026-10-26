@@ -1534,8 +1534,8 @@
         "name": "Inventario / Compras",
         "read": "Stock de un producto nombrado por depósito (en su unidad), productos con stock por depósito, valor del stock (total, por categoría y depósito), sin stock y en negativo. Reposición según tus reglas: qué está bajo el mínimo (por stock a mano, diciendo cuáles ya tienen compras en camino), qué sugiere pedir Odoo, cuánto falta para llegar al máximo, ordenado por faltante. Recepciones y entregas: pendientes, atrasadas, la más vieja, las de un proveedor o cliente nombrado. Compras: por mes o período, por proveedor (ranking, participación en el total, dependencia), lo pendiente de recibir, plazos declarados, el mismo mes contra el año anterior y cuánto subió el precio de compra por producto, categoría o en general. Margen de lista por producto o categoría, y qué categoría pesa más en ventas o en stock.",
         "w1": "Productos del catálogo: crear y editar",
-        "w2": "Órdenes de compra existentes: confirmar y cancelar. Recepciones y entregas: recibir (completas), validar y cancelar — buscándolas por proveedor, cliente, año o número (si hay varias, pregunta cuál).",
-        "limit": "Una orden de compra nueva se propone con proveedor y líneas para que la confirmes. Recibir una parte de un pedido y los traslados entre depósitos todavía no están disponibles: el agente lo dice y explica cómo hacerlo en Odoo."
+        "w2": "Órdenes de compra: crear una nueva con proveedor y líneas (queda en borrador), confirmar y cancelar las existentes. Recepciones y entregas: recibir (completas), validar y cancelar, buscándolas por proveedor, cliente, año o número (pregunta cuál cuando hay varias).",
+        "limit": "Todavía no se puede recibir una parte de un pedido ni hacer traslados entre depósitos: el agente lo dice y explica cómo hacerlo en Odoo."
       },
       "contacts": {
         "name": "Contactos",

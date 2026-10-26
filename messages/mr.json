@@ -1534,8 +1534,8 @@
         "name": "Inventory / Purchasing",
         "read": "Stock of a named product by warehouse (in its own unit), products in stock per warehouse, stock value (overall, by category and warehouse), out-of-stock and negative stock. Reordering from your reorder rules: what's below the minimum (by stock on hand, noting which already have purchases on the way), what Odoo suggests ordering, how much is missing to reach the maximum, sorted by shortfall. Receipts and deliveries: pending, overdue, the oldest, those of a named supplier or customer. Purchases: by month or period, by supplier (ranking, share of the total, dependency), what's still to be received, declared lead times, the same month against last year, and how much purchase prices went up per product, category or overall. Catalogue margin per product or category, and which category weighs most in sales or in stock.",
         "w1": "Catalogue products: create and edit",
-        "w2": "Existing purchase orders: confirm and cancel. Receipts and deliveries: receive (whole), validate and cancel — found by supplier, customer, year or number (it asks which one when several match).",
-        "limit": "A new purchase order is proposed with supplier and lines for you to confirm. Receiving part of an order and transfers between warehouses are not available yet: the agent says so and explains how to do it in Odoo."
+        "w2": "Purchase orders: create a new one with supplier and lines (it stays in draft), confirm and cancel existing ones. Receipts and deliveries: receive (whole), validate and cancel — found by supplier, customer, year or number (it asks which one when several match).",
+        "limit": "Receiving part of an order and transfers between warehouses are not available yet: the agent says so and explains how to do it in Odoo."
       },
       "contacts": {
         "name": "Contacts",

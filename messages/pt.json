@@ -1534,8 +1534,8 @@
         "name": "Inventário / Compras",
         "read": "Estoque de um produto nomeado por depósito (na unidade própria), produtos em estoque por depósito, valor do estoque (total, por categoria e depósito), sem estoque e negativo. Reposição segundo as regras de reposição: o que está abaixo do mínimo (pelo estoque disponível, indicando quais já têm compras a caminho), o que o Odoo sugere pedir, quanto falta para chegar ao máximo, ordenado pela falta. Recebimentos e entregas: pendentes, atrasados, o mais antigo, os de um fornecedor ou cliente nomeado. Compras: por mês ou período, por fornecedor (ranking, participação no total, dependência), o que ainda falta receber, prazos declarados, o mesmo mês contra o ano anterior e quanto subiram os preços de compra por produto, categoria ou no geral. Margem de lista por produto ou categoria, e qual categoria pesa mais nas vendas ou no estoque.",
         "w1": "Produtos do catálogo: criar e editar",
-        "w2": "Pedidos de compra existentes: confirmar e cancelar. Recebimentos e entregas: receber (completos), validar e cancelar — buscados por fornecedor, cliente, ano ou número (se houver vários, pergunta qual).",
-        "limit": "Um novo pedido de compra é proposto com fornecedor e linhas, para confirmação. Receber parte de um pedido e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo."
+        "w2": "Pedidos de compra: criar um novo com fornecedor e linhas (fica em rascunho), confirmar e cancelar os existentes. Recebimentos e entregas: receber (completos), validar e cancelar — buscados por fornecedor, cliente, ano ou número (se houver vários, pergunta qual).",
+        "limit": "Receber parte de um pedido e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo."
       },
       "contacts": {
         "name": "Contatos",

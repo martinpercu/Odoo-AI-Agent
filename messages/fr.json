@@ -1534,8 +1534,8 @@
         "name": "Inventaire / Achats",
         "read": "Stock d'un produit nommé par entrepôt (dans son unité), produits en stock par entrepôt, valeur du stock (total, par catégorie et entrepôt), ruptures et stock négatif. Réapprovisionnement selon les règles de réapprovisionnement : ce qui est sous le minimum (d'après le stock disponible, en précisant lesquels ont déjà des achats en route), ce qu'Odoo suggère de commander, ce qui manque pour atteindre le maximum, classé par manque. Réceptions et livraisons : en attente, en retard, la plus ancienne, celles d'un fournisseur ou d'un client nommé. Achats : par mois ou période, par fournisseur (classement, part du total, dépendance), ce qui reste à recevoir, délais déclarés, le même mois par rapport à l'année précédente, et de combien ont augmenté les prix d'achat par produit, catégorie ou globalement. Marge catalogue par produit ou catégorie, et quelle catégorie pèse le plus dans les ventes ou le stock.",
         "w1": "Produits du catalogue : créer et modifier",
-        "w2": "Bons de commande fournisseur existants : confirmer et annuler. Réceptions et livraisons : recevoir (en totalité), valider et annuler — recherchés par fournisseur, client, année ou numéro (si plusieurs correspondent, l'agent demande lequel).",
-        "limit": "Un nouveau bon de commande est proposé avec le fournisseur et les lignes, pour confirmation. Recevoir une partie d'une commande et les transferts entre entrepôts ne sont pas encore disponibles : l'agent le dit et explique comment faire dans Odoo."
+        "w2": "Bons de commande fournisseur : créer un nouveau avec le fournisseur et les lignes (il reste en brouillon), confirmer et annuler les existants. Réceptions et livraisons : recevoir (en totalité), valider et annuler — recherchés par fournisseur, client, année ou numéro (si plusieurs correspondent, l'agent demande lequel).",
+        "limit": "Recevoir une partie d'une commande et les transferts entre entrepôts ne sont pas encore disponibles : l'agent le dit et explique comment faire dans Odoo."
       },
       "contacts": {
         "name": "Contacts",
