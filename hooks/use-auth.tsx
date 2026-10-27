@@ -47,10 +47,9 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  // DEV MODE: skip all Supabase logic
+  // DEV MODE: skip all Supabase logic. The check comes before any hook on purpose: the hooks
+  // live in SupabaseAuthProvider, so every component always runs the same hooks in the same
+  // order (rules-of-hooks).
   if (!IS_AUTH_ENABLED) {
     const devValue: AuthContextValue = {
       user: DEV_USER,
@@ -66,16 +65,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return <AuthContext.Provider value={devValue}>{children}</AuthContext.Provider>;
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return <SupabaseAuthProvider>{children}</SupabaseAuthProvider>;
+}
+
+function SupabaseAuthProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [user, setUser] = useState<User | null>(null);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isLoading, setIsLoading] = useState(true);
 
   const getLocale = useCallback(() => {
     return pathname?.split("/")[1] || "en";
   }, [pathname]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     // Restore session on mount
     supabase!.auth.getSession().then(({ data }) => {
@@ -154,7 +157,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { accessToken: data.session?.access_token };
   }, []);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const requestPasswordReset = useCallback(async (email: string) => {
     // OTP flow: do NOT pass { redirectTo } — that's for magic links.
     const { error } = await supabase!.auth.resetPasswordForEmail(email);
@@ -167,7 +169,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   }, []);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const verifyRecoveryCode = useCallback(async (email: string, code: string) => {
     const { error } = await supabase!.auth.verifyOtp({
       email,
@@ -178,14 +179,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   }, []);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const updatePassword = useCallback(async (newPassword: string) => {
     const { error } = await supabase!.auth.updateUser({ password: newPassword });
     if (error) return { error: error.message };
     return {};
   }, []);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const updateUserLang = useCallback(async (lang: string) => {
     const emailLang = normalizeEmailLang(lang);
     if (!emailLang) return; // unsupported locale → leave metadata untouched
