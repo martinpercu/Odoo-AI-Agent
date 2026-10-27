@@ -1497,7 +1497,7 @@
       "eyebrow": "For Odoo implementers",
       "title": "Technical manual",
       "subtitle": "Which parts of Odoo the agent covers today and how deeply, how it is built underneath, and what we are considering building next. Written for whoever installs and maintains Odoo in production for their clients.",
-      "updated": "Content verified against the production system"
+      "updated": "Content verified against the agent's test runs and copies of the demo instances, October 2026"
     },
     "nav": {
       "label": "Sections on this page",
@@ -1516,26 +1516,30 @@
       "sales": {
         "name": "Sales / CRM",
         "read": "Counts, rankings (“top 5 best-selling products”) and breakdowns by salesperson, team, stage, lost reason, category or month. The pipeline is your open opportunities; won and lost deals are counted by the date they closed, and two periods can be compared (“this quarter vs last”). Filters by date — including future closing dates (“closing next month”) and overdue closing dates —, by stage (“in negotiation”), by team (just by naming it: “the southeast ones”), by lost reason (“deals lost on price”), by priority and by a named salesperson or customer, with disambiguation when several match. Win rate (overall or per salesperson or team), probability-weighted pipeline and sales cycle length (days to win) are computed in the backend, never by the language model. It understands “my opportunities”, short follow-ups (“and last quarter?”, “and the West team?”), and activities by customer or type. It summarizes how a team, customer or salesperson is doing (“how's the West team doing this quarter?”), puts two teams side by side, finds stalled deals (time since the last stage change), reads your monthly sales targets and crosses won deals with invoicing (“how much did we invoice the customers we won this year?”). If a field is empty in your instance (campaigns, sources, tags, targets) it says so. Margin per product, from the product's cost (today's cost, and the answer says so).",
-        "w1": "Sales orders: create, edit, confirm and cancel",
+        "w1": "Sales orders: create, edit, confirm and cancel, and invoice a confirmed one as a draft (the lines and total are shown before you confirm)",
         "w2": "Opportunities: move stage, mark won or lost with a reason, assign a salesperson",
         "w3": "Convert a lead into an opportunity",
-        "w4": "Create an opportunity from scratch (customer, amount, closing date, team, salesperson, stage), schedule a call, a meeting or a to-do on the date you ask for (“tomorrow”, “on Friday”, “in 3 days”), and move an opportunity to another stage or reassign it by name, picking it from a list when several share a name (or by saying “the one in Outreach”, “#809”)",
-        "limit": "Not available yet: deleting opportunities over chat, adding tags when creating them, or sending a quote or order by email."
+        "w4": "Create an opportunity from scratch (customer, amount, closing date, team, salesperson, stage, existing tags), schedule a call, a meeting or a to-do on the date you ask for (“tomorrow”, “on Friday”, “in 3 days”), and move an opportunity to another stage or reassign it by name — even when several share a name (“the one in Outreach”, “#809”)",
+        "w5": "Email: send a quotation to its customer, with its PDF. It is marked as sent in Odoo when the message is prepared.",
+        "limit": "Not available yet: deleting opportunities over chat. Sending a quotation by email is offered on your own instance (you confirm first); in the demo it isn't offered."
       },
       "finance": {
         "name": "Finance",
         "read": "Receivables and payables: who owes what and since when (30, 60 and 90+ day buckets), what falls due this week or in the next N days, and overdue, paid, partially paid and draft invoices, credit notes and vendor bills, all computed in Python without Enterprise modules. Payments received and made, also by journal; how many days customers take to pay (mean and median), payment terms, how much of what came in went to invoices that were already overdue, and a customer's payments matched to the invoice each one settled. Period summaries and month-end close in one answer (invoiced, collected, purchases, VAT, overdue to date), monthly averages and period-over-period comparisons. VAT: output, input, the net position and the taxable base for any period, split by document letter (A/B) on the Argentine localization. It counts customers, not invoices (“how many customers owe us?”, “new customers this month”, “owe us and haven't bought in 60 days”), ranks debtors and follows up on the ranking (“without that one, what's the total?”, “of those, how much does each owe?”), and breaks invoicing down by salesperson, product category, warehouse (point-of-sale sales shown apart) and day. A once-over of the month flags spikes, unusually large invoices and old drafts. When a question has two reasonable readings (“pending this month”: all debt to date, or only what falls due this month?) it answers the default one and offers the other with one tap. Any result can be downloaded as PDF or Excel with a totals row.",
-        "w1": "Invoices: create and edit",
+        "w1": "Invoices: create and edit, and invoice a confirmed sales order as a draft, with its lines and total shown before you confirm",
         "w2": "Existing invoices: validate (post) and cancel",
         "w3": "Post several draft invoices at once, for a customer or a period (up to 20), listed with their total before you confirm",
-        "limit": "Not available over chat yet: registering or applying a payment, invoicing a sales order, and sending by email. When asked, it says so plainly (it never claims it did it) and shows what helps instead, such as the customer's unpaid invoices, oldest first."
+        "w4": "Payments: register a payment on one or more unpaid invoices, oldest first, with the amount (or the full balance) and the journal shown before you confirm",
+        "w5": "Email: send a customer invoice to its customer, with its PDF. The chat shows who receives it and from which address, and you confirm before anything is sent.",
+        "limit": "Sending by email from your own Odoo is offered on your instance: you confirm first, and the chat says what Odoo did with the message (queued, sent, or why it failed). In the demo it isn't offered; if it's asked for there, the chat says so plainly and shows what helps instead, such as the customer's unpaid invoices, oldest first."
       },
       "inventory": {
         "name": "Inventory / Purchasing",
         "read": "Stock of a named product by warehouse (in its own unit), products in stock per warehouse, stock value (overall, by category and warehouse), out-of-stock and negative stock. Reordering from your reorder rules: what's below the minimum (by stock on hand, noting which already have purchases on the way), what Odoo suggests ordering, how much is missing to reach the maximum, sorted by shortfall. Receipts and deliveries: pending, overdue, the oldest, those of a named supplier or customer. Purchases: by month or period, by supplier (ranking, share of the total, dependency), what's still to be received, declared lead times, the same month against last year, and how much purchase prices went up per product, category or overall. Catalogue margin per product or category, and which category weighs most in sales or in stock.",
         "w1": "Catalogue products: create and edit",
         "w2": "Purchase orders: create a new one with supplier and lines (it stays in draft), confirm and cancel existing ones. Receipts and deliveries: receive (whole), validate and cancel — found by supplier, customer, year or number (it asks which one when several match).",
-        "limit": "Receiving part of an order and transfers between warehouses are not available yet: the agent says so and explains how to do it in Odoo."
+        "w3": "Email: send a purchase order to its supplier, with its PDF. It is marked as sent in Odoo when the message is prepared.",
+        "limit": "Receiving part of an order and transfers between warehouses are not available yet: the agent says so and explains how to do it in Odoo. Sending a purchase order by email is offered on your own instance (you confirm first); in the demo it isn't offered."
       },
       "contacts": {
         "name": "Contacts",
@@ -1551,7 +1555,9 @@
         "name": "Projects",
         "read": "Projects, tasks and logged hours (timesheets). Hours by person, customer or project for any period, billable vs. non-billable, who is most loaded (hours logged, or open tasks per person — it asks when you don't say which), and invoicing and hours side by side against last year. Budget vs. hours: which projects are on track, about to go over (90 % or more) or already over, ranked by overrun in hours, which one is worst, and a one-project summary (hours, budget, open, overdue and blocked tasks). Tasks: open, overdue, blocked or in review, broken down by project and by assignee; \"my tasks\" and anyone's tasks by name, with follow-ups (\"and the overdue ones?\", \"and Marta's?\", \"sort them by date\").",
         "w1": "Existing tasks: mark as done or move to another stage, found by name and project (it asks which one when several match).",
-        "limit": "Creating projects or tasks and logging hours over chat is not available yet: the agent says so and shows what helps (for example, the hours already logged on that task). It doesn't compute profitability in currency per project."
+        "w2": "New task in a project, with its name in quotes or “called …” (it asks for the project if you don't say it). The proposal says who it will be assigned to: the Odoo user the agent connects with.",
+        "w3": "New project, with its name in quotes or “called …”, the client after “for …” and the person in charge after “assigned to …” (if you don't name one, the Odoo user the agent connects with). The proposal says who is in charge; it sets no dates.",
+        "limit": "Setting a task's assignee or deadline and logging hours over chat are not available yet: the agent says so and shows what helps (for example, the hours already logged on that task). It doesn't compute profitability in currency per project."
       },
       "cross": {
         "heading": "Cross-cutting capabilities",

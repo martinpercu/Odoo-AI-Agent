@@ -93,7 +93,7 @@ const DOMAINS: readonly {
       "res.users",
       "mail.activity",
     ],
-    writeCount: 4,
+    writeCount: 5,
     hasLimit: true,
   },
   {
@@ -105,7 +105,7 @@ const DOMAINS: readonly {
       "account.bank.statement",
       "account.payment.term",
     ],
-    writeCount: 3,
+    writeCount: 5,
     hasLimit: true,
   },
   {
@@ -121,7 +121,7 @@ const DOMAINS: readonly {
       "stock.warehouse.orderpoint",
       "product.supplierinfo",
     ],
-    writeCount: 2,
+    writeCount: 3,
     hasLimit: true,
   },
   {
@@ -142,7 +142,7 @@ const DOMAINS: readonly {
     key: "projects",
     icon: FolderKanban,
     models: ["project.project", "project.task", "account.analytic.line"],
-    writeCount: 1,
+    writeCount: 3,
     hasLimit: true,
   },
 ];

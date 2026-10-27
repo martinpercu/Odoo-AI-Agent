@@ -1497,7 +1497,7 @@
       "eyebrow": "Para implementadores de Odoo",
       "title": "Manual técnico",
       "subtitle": "Que partes do Odoo o agente cobre hoje e com que profundidade, como está construído por dentro e o que estamos avaliando construir em seguida. Escrito para quem instala e mantém Odoo em produção para seus clientes.",
-      "updated": "Conteúdo verificado no sistema em produção"
+      "updated": "Conteúdo verificado com os testes do agente e cópias das instâncias de demonstração, outubro de 2026"
     },
     "nav": {
       "label": "Seções desta página",
@@ -1516,26 +1516,30 @@
       "sales": {
         "name": "Vendas / CRM",
         "read": "Contagens, rankings (“os 5 produtos mais vendidos”) e detalhamentos por vendedor, equipe, etapa, motivo de perda, categoria ou mês. O pipeline são suas oportunidades abertas; as ganhas e as perdidas são contadas pela data em que foram fechadas, e é possível comparar dois períodos (“este trimestre em relação ao anterior”). Filtra por data — incluindo datas de fechamento futuras (“as que fecham no próximo mês”) e datas de fechamento já vencidas —, por etapa (“em negociação”), por equipe (basta citá-la: “as do southeast”), por motivo de perda (“perdidas por preço”), por prioridade e por vendedor ou cliente citado pelo nome, com desambiguação quando há várias correspondências. A taxa de conversão (total ou por vendedor ou equipe), o pipeline ponderado por probabilidade e a duração do ciclo de venda (dias até ganhar) são calculados no backend, nunca pelo modelo de linguagem. Entende “minhas oportunidades”, perguntas de continuação curtas (“e o trimestre passado?”, “e as da equipe West?”) e atividades por cliente ou por tipo. Resume como está uma equipe, um cliente ou um vendedor (“como está a equipe West neste trimestre?”), coloca duas equipes lado a lado, encontra oportunidades paradas (tempo desde a última mudança de etapa), lê suas metas mensais de vendas e cruza as oportunidades ganhas com o faturamento (“quanto faturamos dos clientes que ganhamos este ano?”). Se um dado estiver vazio na sua instância (campanhas, origens, etiquetas, metas), informa isso. Margem por produto, sobre o custo do produto (o custo de hoje, e a resposta deixa isso claro).",
-        "w1": "Pedidos de venda: criar, editar, confirmar e cancelar",
+        "w1": "Pedidos de venda: criar, editar, confirmar e cancelar, e faturar um pedido confirmado como rascunho (as linhas e o total aparecem antes de confirmar)",
         "w2": "Oportunidades: mudar de etapa, marcar como ganha ou perdida com motivo, atribuir vendedor",
         "w3": "Converter um lead em oportunidade",
-        "w4": "Criar uma oportunidade do zero (cliente, valor, data de fechamento, equipe, vendedor, etapa), agendar uma ligação, uma reunião ou uma tarefa na data que você pedir (“amanhã”, “na sexta”, “daqui a 3 dias”), e mudar uma oportunidade de etapa ou reatribuí-la pelo nome, escolhendo-a em uma lista quando várias têm o mesmo nome (ou dizendo “a que está em Outreach”, “#809”)",
-        "limit": "Ainda não disponível: excluir oportunidades pelo chat, adicionar etiquetas ao criá-las e enviar um orçamento ou um pedido por e-mail."
+        "w4": "Criar uma oportunidade do zero (cliente, valor, data de fechamento, equipe, vendedor, etapa e etiquetas que já existam), agendar uma ligação, uma reunião ou uma tarefa na data pedida (“amanhã”, “na sexta”, “em 3 dias”), e mover uma oportunidade de etapa ou reatribuí-la pelo nome, mesmo quando várias têm o mesmo nome (“a que está em Outreach”, “#809”)",
+        "w5": "E-mail: enviar um orçamento ao cliente, com o PDF. Fica marcado como enviado no Odoo ao preparar a mensagem.",
+        "limit": "Ainda não disponível: excluir oportunidades pelo chat. Enviar um orçamento por e-mail é oferecido na própria instância do Odoo (confirmação antes); na demo não é oferecido."
       },
       "finance": {
         "name": "Finanças",
         "read": "Contas a receber e a pagar: quem deve quanto e desde quando (faixas de 30, 60 e mais de 90 dias), o que vence esta semana ou nos próximos N dias, e faturas vencidas, pagas, parcialmente pagas e em rascunho, notas de crédito e faturas de fornecedor, tudo calculado em Python sem módulos Enterprise. Recebimentos e pagamentos, também por diário; quantos dias os clientes demoram para pagar (média e mediana), condições de pagamento, quanto do recebido foi para faturas já vencidas, e os recebimentos de um cliente com a fatura que cada um quitou. Resumo de um período e fechamento do mês em uma só resposta (faturado, recebido, compras, IVA, vencido até hoje), médias mensais e comparação entre períodos. IVA: cobrado, dedutível, a posição líquida e a base tributável de qualquer período, separados por letra de documento (A/B) na localização argentina. Conta clientes, não faturas (“quantos clientes nos devem?”, “clientes novos este mês”, “nos devem e não compram há 60 dias”), faz o ranking de devedores e continua a conversa sobre ele (“sem esse, quanto fica?”, “desses, quanto cada um deve?”), e distribui o faturado por vendedor, categoria de produto, depósito (com as vendas de balcão à parte) e dia. Uma revisão do mês aponta picos, faturas fora do comum e rascunhos antigos. Quando uma pergunta admite duas leituras razoáveis (“pendentes este mês”: toda a dívida até hoje ou só o que vence este mês?), responde a mais comum e oferece a outra com um toque. Qualquer resultado pode ser baixado em PDF ou Excel com linha de totais.",
-        "w1": "Faturas: criar e editar",
+        "w1": "Faturas: criar e editar, e faturar um pedido de venda confirmado como rascunho, com suas linhas e total mostrados antes de confirmar",
         "w2": "Faturas existentes: validar (lançar) e cancelar",
         "w3": "Lançar várias faturas em rascunho de uma vez, de um cliente ou de um período (até 20), com a lista e o total antes de confirmar",
-        "limit": "Ainda não disponível pelo chat: registrar ou aplicar um recebimento, faturar um pedido de venda e enviar por e-mail. Se você pedir, o agente diz isso com clareza (nunca afirma ter feito) e mostra o que ajuda, como as faturas em aberto do cliente, a mais antiga primeiro."
+        "w4": "Recebimentos: registrar um pagamento sobre uma ou várias faturas em aberto, a mais antiga primeiro, com o valor (ou o saldo total) e o diário mostrados antes de confirmar",
+        "w5": "E-mail: enviar uma fatura de cliente ao seu cliente, com o PDF. O chat mostra quem recebe e de qual endereço, e nada sai sem confirmação.",
+        "limit": "Enviar por e-mail a partir do Odoo da própria instância é oferecido nela: confirmação antes, e o chat informa o que o Odoo fez com a mensagem (na fila, enviada ou por que falhou). Na demo não é oferecido; se pedirem ali, o chat diz isso com clareza e mostra o que ajuda no lugar, como as faturas em aberto do cliente, a mais antiga primeiro."
       },
       "inventory": {
         "name": "Inventário / Compras",
         "read": "Estoque de um produto nomeado por depósito (na unidade própria), produtos em estoque por depósito, valor do estoque (total, por categoria e depósito), sem estoque e negativo. Reposição segundo as regras de reposição: o que está abaixo do mínimo (pelo estoque disponível, indicando quais já têm compras a caminho), o que o Odoo sugere pedir, quanto falta para chegar ao máximo, ordenado pela falta. Recebimentos e entregas: pendentes, atrasados, o mais antigo, os de um fornecedor ou cliente nomeado. Compras: por mês ou período, por fornecedor (ranking, participação no total, dependência), o que ainda falta receber, prazos declarados, o mesmo mês contra o ano anterior e quanto subiram os preços de compra por produto, categoria ou no geral. Margem de lista por produto ou categoria, e qual categoria pesa mais nas vendas ou no estoque.",
         "w1": "Produtos do catálogo: criar e editar",
         "w2": "Pedidos de compra: criar um novo com fornecedor e linhas (fica em rascunho), confirmar e cancelar os existentes. Recebimentos e entregas: receber (completos), validar e cancelar — buscados por fornecedor, cliente, ano ou número (se houver vários, pergunta qual).",
-        "limit": "Receber parte de um pedido e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo."
+        "w3": "E-mail: enviar um pedido de compra ao fornecedor, com o PDF. Fica marcado como enviado no Odoo ao preparar a mensagem.",
+        "limit": "Receber parte de um pedido e transferências entre depósitos ainda não estão disponíveis: o agente diz isso e explica como fazer no Odoo. Enviar um pedido de compra por e-mail é oferecido na própria instância do Odoo (confirmação antes); na demo não é oferecido."
       },
       "contacts": {
         "name": "Contatos",
@@ -1551,7 +1555,9 @@
         "name": "Projetos",
         "read": "Projetos, tarefas e horas lançadas (timesheets). Horas por pessoa, cliente ou projeto em qualquer período, faturáveis contra não faturáveis, quem tem mais carga (horas lançadas, ou tarefas abertas por pessoa — se não se indicar qual, pergunta), e faturamento e horas lado a lado em comparação com o ano anterior. Orçamento contra horas: quais projetos estão dentro do previsto, quais estão prestes a ultrapassar (90 % ou mais) ou já ultrapassaram, ordenados pelo desvio em horas, qual está pior, e o resumo de um projeto (horas, orçamento, tarefas abertas, atrasadas e bloqueadas). Tarefas: abertas, atrasadas, bloqueadas ou em revisão, separadas por projeto e por pessoa; «minhas tarefas» e as de alguém pelo nome, com perguntas de continuação («e as atrasadas?», «e as da Marta?», «ordene por data»).",
         "w1": "Tarefas já existentes: marcá-las como concluídas ou passá-las para outra etapa, buscando-as pelo nome e pelo projeto (se várias coincidirem, pergunta qual).",
-        "limit": "Criar projetos ou tarefas e lançar horas pelo chat ainda não está disponível: o agente diz isso e mostra o que ajuda (por exemplo, as horas já lançadas nessa tarefa). Não calcula a rentabilidade em dinheiro por projeto."
+        "w2": "Nova tarefa em um projeto, com o nome entre aspas ou “chamada …” (se o projeto não for dito, ele pergunta). A proposta diz para quem ela fica atribuída: o usuário do Odoo com o qual o agente se conecta.",
+        "w3": "Projeto novo, com o nome entre aspas ou “chamado …”, o cliente depois de “para …” e o responsável depois de “responsável …” (se nenhum for nomeado, o usuário do Odoo com o qual o agente se conecta). A proposta diz quem fica responsável; não define datas.",
+        "limit": "Definir o responsável ou o prazo de uma tarefa e lançar horas pelo chat ainda não estão disponíveis: o agente diz isso e mostra o que ajuda (por exemplo, as horas já lançadas nessa tarefa). Não calcula a rentabilidade em dinheiro por projeto."
       },
       "cross": {
         "heading": "Capacidades transversais",
