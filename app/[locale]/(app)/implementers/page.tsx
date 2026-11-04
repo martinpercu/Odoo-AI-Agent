@@ -134,9 +134,17 @@ const DOMAINS: readonly {
   {
     key: "hr",
     icon: IdCard,
-    models: ["hr.employee"],
-    writeCount: 0,
-    hasLimit: false,
+    models: [
+      "hr.employee",
+      "hr.leave",
+      "hr.attendance",
+      "hr.payslip",
+      "hr.payslip.line",
+      "hr.expense",
+      "hr.employee.skill",
+    ],
+    writeCount: 2,
+    hasLimit: true,
   },
   {
     key: "projects",

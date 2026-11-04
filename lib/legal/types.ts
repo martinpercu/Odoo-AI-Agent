@@ -8,8 +8,8 @@
 // ⚠️ Bump `LEGAL_VERSION` on any material change: it is what `register()` stores in the
 // Supabase user_metadata (`terms_version`) as proof of WHICH text the person accepted.
 
-export const LEGAL_VERSION = "2026-10-07";
-export const LEGAL_UPDATED = "October 7, 2026";
+export const LEGAL_VERSION = "2026-11-04";
+export const LEGAL_UPDATED = "November 4, 2026";
 export const LEGAL_OPERATOR = "Martin Mendez";
 export const LEGAL_CONTACT = "martin@theodooagent.com";
 

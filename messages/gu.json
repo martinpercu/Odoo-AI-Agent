@@ -1497,7 +1497,7 @@
       "eyebrow": "For Odoo implementers",
       "title": "Technical manual",
       "subtitle": "Which parts of Odoo the agent covers today and how deeply, how it is built underneath, and what we are considering building next. Written for whoever installs and maintains Odoo in production for their clients.",
-      "updated": "Content verified against the agent's test runs and copies of the demo instances, October 2026"
+      "updated": "Content verified against the agent's test runs and copies of the demo instances, November 2026"
     },
     "nav": {
       "label": "Sections on this page",
@@ -1549,7 +1549,10 @@
       },
       "hr": {
         "name": "HR",
-        "read": "Employee records and roster. Columns adjust themselves to what the instance actually has filled in: no empty columns."
+        "read": "Headcount and employee records: how many people and by department, the roster with job title, department and manager, a named person's record, who reports to whom, length of service counted from the hire date (not from when the company moved to Odoo), birthdays, age, hires, leavers and turnover. Columns adjust to what the instance actually has filled in. Time off: each person's balance as Odoo computes it (pending requests and accrual included), who is off today or in the coming weeks, when someone is back, who took the most days, leave types, public holidays and the requests waiting for approval. Attendance: who clocked in and never clocked out, who hasn't clocked in today, hours by person and period, and overtime. Payroll (OCA): employer cost, gross and net for a month, by employee, department or pay period with the total always stated, comparisons, extra payments, one person's payslip, the salary rules (income tax, social security, FICA, 401(k)…) and the pay structure. Expenses: waiting for approval (in Odoo 18, the expense reports), approved but not reimbursed, totals by person, category, month or department, and “my expenses”. Skills: who knows or speaks X and at what level, by department, and one person's skills. With a user who can't see HR in Odoo it says “you don't have permission”, never “there are none”.",
+        "w1": "Time off and expenses: approve or refuse a request or an expense (in Odoo 18, the expense report), with the reason when refusing, and request time off against your balance. If Odoo doesn't let you approve, or there's no balance left, the chat says so. Only on your own instance; in the demo it isn't offered.",
+        "w2": "Payroll and attendance: confirm a payroll batch that is already in draft, and fix an attendance (for example, a check-out you forgot). As a proposal you confirm, only on your own instance.",
+        "limit": "Not available: generating a new payroll batch (only confirming one already in draft); appraisals, training, surveys and recruitment (it says they aren't there); and Odoo Enterprise payroll (hr_payroll), not measured yet. In the demo, changes to HR records aren't offered."
       },
       "projects": {
         "name": "Projects",
