@@ -1497,7 +1497,7 @@
       "eyebrow": "Para implementadores de Odoo",
       "title": "Manual técnico",
       "subtitle": "Qué partes de Odoo cubre el agente hoy y con qué profundidad, cómo está construido por dentro, y qué estamos evaluando construir después. Escrito para quien instala y mantiene Odoo en producción para sus clientes.",
-      "updated": "Contenido verificado con las pruebas del agente y copias de las instancias del demo, octubre 2026"
+      "updated": "Contenido verificado con las pruebas del agente y copias de las instancias del demo, noviembre 2026"
     },
     "nav": {
       "label": "Secciones de esta página",
@@ -1549,7 +1549,10 @@
       },
       "hr": {
         "name": "RRHH",
-        "read": "Ficha y listado de empleados. Las columnas se ajustan solas a lo que la instancia realmente tiene cargado: no muestra columnas vacías."
+        "read": "Plantilla y legajo: cuántas personas hay y por departamento, el listado con puesto, departamento y jefe, la ficha de una persona nombrada, quién reporta a quién, la antigüedad contada desde el ingreso (no desde que la empresa pasó a Odoo), cumpleaños, edad, altas, bajas y rotación. Las columnas se ajustan a lo que la instancia realmente tiene cargado. Ausencias: el saldo de cada persona como lo calcula Odoo (con lo pendiente y el prorrateo), quién está fuera hoy o en las próximas semanas, cuándo vuelve alguien, quién se tomó más días, los tipos de ausencia, los feriados y las solicitudes pendientes de aprobar. Fichadas: quién fichó y no salió, quién no fichó hoy, las horas por persona y período y las horas extra. Nómina (OCA): costo para la empresa, bruto y neto de un mes, por empleado, departamento o quincena y siempre con el total, comparaciones, pagas extra, el recibo de una persona, los conceptos (IRPF, Seguridad Social, FICA, 401(k)…) y la estructura salarial. Gastos: pendientes de aprobar (en Odoo 18, los informes), aprobados sin reembolsar, totales por persona, categoría, mes o departamento, y «mis gastos». Habilidades: quién sabe o habla X y con qué nivel, por departamento, y las de una persona. Con un usuario que en Odoo no ve RR. HH., dice «no tienes permiso», nunca «no hay».",
+        "w1": "Ausencias y gastos: aprobar o rechazar una solicitud o un gasto (en Odoo 18, el informe de gastos), con el motivo al rechazar, y pedir una ausencia contra tu saldo. Si Odoo no te deja aprobar o no queda saldo, el chat lo dice. Sólo en tu propia instancia; en el demo no se ofrece.",
+        "w2": "Nómina y fichadas: confirmar un lote de nómina que ya está en borrador y regularizar una fichada (por ejemplo, una salida que te olvidaste de marcar). Como propuesta que confirmas, sólo en tu propia instancia.",
+        "limit": "No disponible: generar un lote de nómina nuevo (sólo confirmar uno que ya está en borrador); evaluaciones, formación, encuestas y reclutamiento (dice que no están), y la nómina de Odoo Enterprise (hr_payroll), todavía sin medir. En el demo no se ofrecen cambios en RR. HH."
       },
       "projects": {
         "name": "Proyectos",

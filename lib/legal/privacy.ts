@@ -6,6 +6,8 @@ import { LEGAL_CONTACT, LEGAL_OPERATOR, type LegalDocument } from "./types";
 // hashed IP in analytics (`analytics.py`), OpenAI as the default LLM (`llm.py`), Groq for
 // STT (`voice/stt.py`), Unreal Speech for TTS (`voice/tts.py`). If any of those changes,
 // this text changes with it — and bump LEGAL_VERSION.
+// 2026-11-04 (M-04, RR. HH.): the agent reads payroll, absences by type (sick leave
+// included), attendance and expenses, only with Odoo's own access rules — §1 and §2 say so.
 
 export const PRIVACY: LegalDocument = {
   title: "Privacy Policy",
@@ -32,7 +34,7 @@ export const PRIVACY: LegalDocument = {
           list: [
             "Account data: your email address, your organization, your role and your preferences (language, time zone). Passwords are handled by our authentication provider. We never see them in plain text.",
             "Odoo connection data: instance URL, database name, username and API key. API keys are encrypted before they are stored.",
-            "Conversations: the questions you ask and the answers you receive. Answers can include data from your Odoo (for example a customer's name or an amount), so that data stays in the conversation until you delete it.",
+            "Conversations: the questions you ask and the answers you receive. Answers can include data from your Odoo (for example a customer's name, an amount or, if your Odoo has the HR apps, an employee's salary or absences), so that data stays in the conversation until you delete it.",
             "Things you save: dashboard items (pins), routines and their results, and exports you generate.",
             "Action log: a record of the changes to Odoo that a user confirmed through the Service.",
             "Feedback: when you report an answer, we store your comment, the category, the recent messages of that conversation and who sent the report, so we can reproduce and fix the problem.",
@@ -49,6 +51,7 @@ export const PRIVACY: LegalDocument = {
         "When you ask a question, the Service queries your Odoo instance live using the API key of the user asking. Odoo's own access rules apply, so the agent can only read or change what that user is allowed to.",
         "Results are kept in memory for at most 45 seconds to avoid repeating identical queries, and are discarded after that. We do not keep a copy of your Odoo database.",
         "Figures are computed by our own code. To write the answer, the AI model receives your question, the already computed result and recent turns of the conversation. It does not receive your API keys or direct access to your Odoo.",
+        "If your Odoo holds employee data (payroll, absences — which can include sick leave —, attendance or expenses), the agent reads it only for users Odoo already lets see it. As the controller, your organization decides who those users are.",
       ],
     },
     {

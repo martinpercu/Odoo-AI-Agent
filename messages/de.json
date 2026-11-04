@@ -1497,7 +1497,7 @@
       "eyebrow": "Für Odoo-Implementierer",
       "title": "Technisches Handbuch",
       "subtitle": "Welche Teile von Odoo der Agent heute abdeckt und wie tief, wie er innen aufgebaut ist und was wir als Nächstes zu bauen erwägen. Geschrieben für alle, die Odoo für ihre Kunden produktiv installieren und betreuen.",
-      "updated": "Inhalt geprüft mit den Testläufen des Agenten und Kopien der Demo-Instanzen, Oktober 2026"
+      "updated": "Inhalt geprüft mit den Testläufen des Agenten und Kopien der Demo-Instanzen, November 2026"
     },
     "nav": {
       "label": "Abschnitte dieser Seite",
@@ -1549,7 +1549,10 @@
       },
       "hr": {
         "name": "Personal",
-        "read": "Personalakten und Belegschaftsübersicht. Die Spalten richten sich selbst nach dem, was in der Instanz tatsächlich gefüllt ist: keine leeren Spalten."
+        "read": "Belegschaft und Personalakten: wie viele Personen, auch nach Abteilung, die Liste mit Position, Abteilung und Vorgesetztem, die Akte einer genannten Person, wer an wen berichtet, die Betriebszugehörigkeit ab dem Eintrittsdatum (nicht ab der Umstellung auf Odoo), Geburtstage, Alter, Ein- und Austritte und Fluktuation. Die Spalten passen sich an das an, was in der Instanz tatsächlich gepflegt ist. Abwesenheiten: der Saldo jeder Person, wie Odoo ihn berechnet (mit offenen Anträgen und anteiliger Zuteilung), wer heute oder in den nächsten Wochen fehlt, wann jemand zurück ist, wer die meisten Tage genommen hat, Abwesenheitsarten, Feiertage und die Anträge, die auf Genehmigung warten. Anwesenheiten: wer eingestempelt und nie ausgestempelt hat, wer heute noch nicht eingestempelt hat, Stunden pro Person und Zeitraum sowie Überstunden. Lohnabrechnung (OCA): Arbeitgeberkosten, Brutto und Netto eines Monats, pro Mitarbeiter, Abteilung oder Abrechnungszeitraum, immer mit der Summe, Vergleiche, Sonderzahlungen, die Abrechnung einer Person, die Lohnarten (Einkommensteuer, Sozialversicherung, FICA, 401(k)…) und die Gehaltsstruktur. Spesen: zur Genehmigung offen (in Odoo 18 die Spesenberichte), genehmigt, aber nicht erstattet, Summen pro Person, Kategorie, Monat oder Abteilung und „meine Spesen“. Fähigkeiten: wer X kann oder spricht und auf welchem Niveau, nach Abteilung, und die Fähigkeiten einer Person. Bei einem Benutzer, der in Odoo keine Personaldaten sieht, sagt es „keine Berechtigung“, nie „es gibt keine“.",
+        "w1": "Abwesenheiten und Spesen: einen Antrag oder eine Ausgabe genehmigen oder ablehnen (in Odoo 18 den Spesenbericht), mit Begründung bei einer Ablehnung, und eine Abwesenheit gegen Ihren Saldo beantragen. Wenn Odoo Ihnen das Genehmigen nicht erlaubt oder kein Saldo mehr übrig ist, sagt der Chat es. Nur auf Ihrer eigenen Instanz; in der Demo wird es nicht angeboten.",
+        "w2": "Lohnabrechnung und Anwesenheiten: einen Abrechnungslauf bestätigen, der bereits im Entwurf ist, und eine Anwesenheit korrigieren (zum Beispiel ein vergessenes Ausstempeln). Als Vorschlag, den Sie bestätigen, nur auf Ihrer eigenen Instanz.",
+        "limit": "Nicht verfügbar: einen neuen Abrechnungslauf erzeugen (nur einen bereits entworfenen bestätigen); Beurteilungen, Schulungen, Umfragen und Recruiting (es sagt, dass sie nicht vorhanden sind); und die Lohnabrechnung von Odoo Enterprise (hr_payroll), noch nicht gemessen. In der Demo werden Änderungen an Personaldaten nicht angeboten."
       },
       "projects": {
         "name": "Projekte",

@@ -1497,7 +1497,7 @@
       "eyebrow": "Per gli implementatori Odoo",
       "title": "Manuale tecnico",
       "subtitle": "Quali parti di Odoo l'agente copre oggi e con quanta profondità, com'è costruito all'interno e cosa stiamo valutando di costruire dopo. Scritto per chi installa e mantiene Odoo in produzione per i propri clienti.",
-      "updated": "Contenuto verificato con i test dell'agente e copie delle istanze demo, ottobre 2026"
+      "updated": "Contenuto verificato con i test dell'agente e copie delle istanze demo, novembre 2026"
     },
     "nav": {
       "label": "Sezioni di questa pagina",
@@ -1549,7 +1549,10 @@
       },
       "hr": {
         "name": "Risorse umane",
-        "read": "Fascicoli e organico dei dipendenti. Le colonne si adattano da sole a ciò che l'istanza ha effettivamente compilato: nessuna colonna vuota."
+        "read": "Organico e anagrafiche: quante persone e per reparto, l'elenco con ruolo, reparto e responsabile, la scheda di una persona nominata, chi riporta a chi, l'anzianità contata dall'assunzione (non da quando l'azienda è passata a Odoo), compleanni, età, assunzioni, cessazioni e turnover. Le colonne si adattano a ciò che l'istanza ha davvero compilato. Assenze: il saldo di ogni persona come lo calcola Odoo (con le richieste in sospeso e la maturazione pro rata), chi è assente oggi o nelle prossime settimane, quando rientra qualcuno, chi ha preso più giorni, i tipi di assenza, i festivi e le richieste in attesa di approvazione. Presenze: chi ha timbrato l'entrata e non l'uscita, chi non ha timbrato oggi, le ore per persona e periodo e gli straordinari. Paghe (OCA): costo aziendale, lordo e netto di un mese, per dipendente, reparto o periodo di paga e sempre con il totale, confronti, mensilità aggiuntive, la busta paga di una persona, le voci (imposta sul reddito, contributi, FICA, 401(k)…) e la struttura retributiva. Note spese: in attesa di approvazione (in Odoo 18, i report), approvate ma non rimborsate, totali per persona, categoria, mese o reparto, e “le mie spese”. Competenze: chi conosce o parla X e a che livello, per reparto, e quelle di una persona. Con un utente che in Odoo non vede le risorse umane risponde “non hai il permesso”, mai “non ce ne sono”.",
+        "w1": "Assenze e note spese: approvare o rifiutare una richiesta o una spesa (in Odoo 18, il report spese), con il motivo in caso di rifiuto, e chiedere un'assenza sul tuo saldo. Se Odoo non ti consente di approvare o il saldo è esaurito, la chat lo dice. Solo sulla tua istanza; nella demo non è proposto.",
+        "w2": "Paghe e presenze: confermare un lotto di buste paga già in bozza e regolarizzare una timbratura (per esempio, un'uscita che hai dimenticato di registrare). Come proposta da confermare, solo sulla tua istanza.",
+        "limit": "Non disponibile: generare un nuovo lotto di buste paga (solo confermarne uno già in bozza); valutazioni, formazione, sondaggi e selezione del personale (dice che non ci sono); e le paghe di Odoo Enterprise (hr_payroll), non ancora misurate. Nella demo le modifiche alle risorse umane non sono proposte."
       },
       "projects": {
         "name": "Progetti",
