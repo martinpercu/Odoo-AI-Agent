@@ -52,7 +52,7 @@ The Response LLM is configurable via the `RESPONSE_LLM_PROVIDER` env var:
 
 | Provider | Model |
 |----------|-------|
-| OpenAI _(default)_ | `gpt-4.1-nano` |
+| OpenAI _(default)_ | `gpt-6-luna` (sin razonamiento) |
 | Google | `gemini-2.5-flash-lite` |
 | Anthropic | `claude-sonnet-4-5` |
 
@@ -196,7 +196,7 @@ graph TD
 | Layer | Technology |
 |-------|-----------|
 | 🧩 AI Framework | LangGraph + LangChain |
-| 💬 Response LLM | OpenAI `gpt-4.1-nano` (configurable: Google, Anthropic) |
+| 💬 Response LLM | OpenAI `gpt-6-luna` (configurable: Google, Anthropic) |
 | ⚡ Backend | FastAPI (SSE streaming) |
 | 🗄️ Database | PostgreSQL 15 (checkpointer + tenancy + pins + notifications + audit) |
 | 🔐 Auth | Supabase JWT (ES256 via JWKS) |
